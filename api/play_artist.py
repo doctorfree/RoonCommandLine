@@ -1,12 +1,25 @@
 import argparse
+import os.path
+from os import path
+
+# Set to IP address of your Roon Core
+server = "10.0.1.81"
+# Name of the file that holds a Roon API token
+tokenfile = "roontoken.txt"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--artist", help="artist selection")
+parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
+
 if args.artist:
     artist = args.artist
 else:
     artist = "Jethro Tull"
+if args.zone:
+    target_zone = args.zone
+else:
+    target_zone = "Living Room"
 
 from roonapi import RoonApi
 appinfo = {
@@ -17,10 +30,11 @@ appinfo = {
     "email": "mygreat@emailaddress.com",
 }
 
-server = "10.0.1.81"
-target_zone = "Living Room"
 # Can be None if you don't yet have a token
-token = open("mytokenfile").read()
+if path.exists(tokenfile):
+    token = open(tokenfile).read()
+else:
+    token = "None"
 
 roonapi = RoonApi(appinfo, token, server)
 
@@ -38,5 +52,5 @@ print("SINGLE ARTIST")
 items = roonapi.play_media(output_id, ["Library", "Artists", artist])
 
 # save the token for next time
-with open("mytokenfile", "w") as f:
+with open(tokenfile, "w") as f:
     f.write(roonapi.token)

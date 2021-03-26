@@ -1,4 +1,4 @@
-from roonapi import RoonApi
+import argparse
 import os.path
 from os import path
 
@@ -7,6 +7,16 @@ server = "10.0.1.81"
 # Name of the file that holds a Roon API token
 tokenfile = "roontoken.txt"
 
+parser = argparse.ArgumentParser()
+parser.add_argument("-z", "--zone", help="zone selection")
+args = parser.parse_args()
+
+if args.zone:
+    target_zone = args.zone
+else:
+    target_zone = "Living Room"
+
+from roonapi import RoonApi
 appinfo = {
     "extension_id": "python_roon_test",
     "display_name": "Python library for Roon",
@@ -15,7 +25,6 @@ appinfo = {
     "email": "mygreat@emailaddress.com",
 }
 
-target_zone = "Living Room"
 # Can be None if you don't yet have a token
 if path.exists(tokenfile):
     token = open(tokenfile).read()
@@ -31,11 +40,9 @@ output_id = [
     for output in zones.values()
     if output["display_name"] == target_zone
 ][0]
-print("OUTPUT ID", output_id)
 
-# Play Radio Paradise Main 
-print("RADIO")
-items = roonapi.play_media(output_id, ["My Live Radio", "Radio Paradise: Main mix"])
+# Stop playing in specified zone
+roonapi.playback_control(output_id, "stop")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

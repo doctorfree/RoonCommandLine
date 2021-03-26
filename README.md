@@ -12,4 +12,6 @@ Contents
 
 [**play_tull**](Roon/play_tull) - Shell script front-end for playing Jethro Tull songs in my Roon library
 
+[**stop_zone**](Roon/stop_zone) - Shell script front-end for stopping output on a specified zone
+
 [**api**](Roon/api/README.md) - Python scripts to call the Roon API with appropriate arguments

@@ -1,4 +1,11 @@
 from roonapi import RoonApi
+import os.path
+from os import path
+
+# Set to IP address of your Roon Core
+server = "10.0.1.81"
+# Name of the file that holds a Roon API token
+tokenfile = "roontoken.txt"
 
 appinfo = {
     "extension_id": "python_roon_test",
@@ -11,7 +18,10 @@ appinfo = {
 server = "10.0.1.81"
 target_zone = "Living Room"
 # Can be None if you don't yet have a token
-token = open("mytokenfile").read()
+if path.exists(tokenfile):
+    token = open(tokenfile).read()
+else:
+    token = "None"
 
 roonapi = RoonApi(appinfo, token, server)
 
@@ -29,5 +39,5 @@ print("SINGLE ARTIST")
 items = roonapi.play_media(output_id, ["Library", "Artists", "Jethro Tull"])
 
 # save the token for next time
-with open("mytokenfile", "w") as f:
+with open(tokenfile, "w") as f:
     f.write(roonapi.token)
