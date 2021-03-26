@@ -1,0 +1,12 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+PLAY=play_tull.py
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $PLAY ] || exit 2
+
+python $PLAY

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+PLAY=play_artist.py
+ARTIST="Deep Purple"
+
+export PYTHONUSERBASE=/home/doctor/Python3
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $PLAY ] || exit 2
+
+[ "$1" ] && ARTIST="$1"
+
+python $PLAY -a "$ARTIST"
