@@ -12,6 +12,6 @@ cd $ROON
 
 [ -f $PLAY ] || exit 2
 
-[ "$1" ] && ARTIST="$1"
+[ "$1" ] && ARTIST="$*"
 
 python $PLAY -a "$ARTIST"

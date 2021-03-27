@@ -30,6 +30,8 @@ shell script the SSH session executes.
 Contents
 --------
 
+[**roon**](Roon/roon) - Shell script front-end to run on systems that can SSH in to the Roon API server. This script can be used to issue Roon commands via the command line and SSH.
+
 [**play_artist**](Roon/play_artist) - Shell script front-end for playing a specified artist in my Roon library
 
 [**play_rp**](Roon/play_rp) - Shell script front-end for playing Radio Paradise Main Channel in a Roon zone

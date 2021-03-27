@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# roon - frontend shell script to issue remote commands to Roon via SSH and the Roon API
+
+server="10.0.1.22"
+user="doctor"
+zone="Living Room"
+radio=
+comm=
+
+usage() {
+  printf "\n\troon -a artist -z zone -c [stop|next|previous|mute|unmute] -r -u\n\n"
+  exit 1
+}
+
+[ "$1" ] || usage
+
+while getopts a:z:c:ru flag; do
+    case $flag in
+        a)
+            artist="$OPTARG"
+            ssh $user@$server "bash -l -c \"play_artist $artist\""
+            ;;
+        z)
+            zone="$OPTARG"
+            ;;
+        c)
+            comm="$OPTARG"
+            ;;
+        r)
+            radio=1
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+
+[ "$radio" ] && ssh $user@$server "bash -l -c play_rp"
+[ "$comm" ] && {
+    [ "$comm" == "mute" ] && ssh $user@$server "bash -l -c \"mute_zone $zone\""
+    [ "$comm" == "next" ] && ssh $user@$server "bash -l -c \"next_track $zone\""
+    [ "$comm" == "previous" ] && ssh $user@$server "bash -l -c \"previous_track $zone\""
+    [ "$comm" == "unmute" ] && ssh $user@$server "bash -l -c \"unmute_zone $zone\""
+    [ "$comm" == "stop" ] && ssh $user@$server "bash -l -c \"stop_zone $zone\""
+}
+
+exit 0

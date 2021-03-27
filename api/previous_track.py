@@ -38,7 +38,7 @@ zones = roonapi.zones
 output_id = [
     output["zone_id"]
     for output in zones.values()
-    if output["display_name"] == target_zone
+    if target_zone in output["display_name"]
 ][0]
 
 # Play previous track
