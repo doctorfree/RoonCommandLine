@@ -1,0 +1,17 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+PREV=previous_track.py
+ZONE="Living Room"
+
+export PYTHONUSERBASE=/home/doctor/Python3
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $PREV ] || exit 2
+
+[ "$1" ] && ZONE="$1"
+
+python $PREV -z "$ZONE"

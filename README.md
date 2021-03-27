@@ -36,6 +36,14 @@ Contents
 
 [**play_tull**](Roon/play_tull) - Shell script front-end for playing Jethro Tull songs in my Roon library
 
+[**next_track**](Roon/next_track) - Shell script front-end for playing the next track in a specified zone
+
+[**previous_track**](Roon/previous_track) - Shell script front-end for playing the previous track in a specified zone
+
+[**mute_zone**](Roon/mute_zone) - Shell script front-end for muting a specified zone
+
+[**unmute_zone**](Roon/unmute_zone) - Shell script front-end for unmuting a specified zone
+
 [**stop_zone**](Roon/stop_zone) - Shell script front-end for stopping output on a specified zone
 
 [**api**](Roon/api/README.md) - Python scripts to call the Roon API with appropriate arguments
