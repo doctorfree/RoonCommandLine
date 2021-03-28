@@ -1,11 +1,15 @@
 import argparse
+import configparser
 import os.path
 from os import path
 
+config = configparser.ConfigParser()
+config.read('roonapi.ini')
+
 # Set to IP address of your Roon Core
-server = "10.0.1.81"
+server = config['DEFAULT']['RoonCoreIP']
 # Name of the file that holds a Roon API token
-tokenfile = "roontoken.txt"
+tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--artist", help="artist selection")
@@ -15,11 +19,11 @@ args = parser.parse_args()
 if args.artist:
     artist = args.artist
 else:
-    artist = "Jethro Tull"
+    artist = config['DEFAULT']['DefaultArtist']
 if args.zone:
     target_zone = args.zone
 else:
-    target_zone = "Living Room"
+    target_zone = config['DEFAULT']['DefaultZone']
 
 from roonapi import RoonApi
 appinfo = {

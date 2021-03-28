@@ -7,13 +7,18 @@ The "roon" shell script is a frontend for the other scripts in this project.
 It should be installed in the execution PATH on all systems from which remote
 Roon command-line execution is desired. The systems on which "roon" is
 installed must have SSH access to the system on which pyroon and accompanying
-scripts are installed.
+scripts are installed. Edit the "roon" script to set the IP address of your
+Python Roon API server and the user name (these are the two variables near the
+top of the file, "server" and "user"). Also edit the "zone" setting to the name
+of a Roon Zone you wish to use for the default zone.
 
 Copy all of the scripts in this directory to ~/bin on the system on which pyroon
 is installed (cp *_* ~/bin).
 
-Copy all of the Pythong scripts in the api subdirectory to ~/Roon on the system
-on which pyroon is installed (cp api/*_* ~/Roon).
+Copy all of the Python scripts and the "roon_api.ini" configuration file in the
+api subdirectory to ~/Roon on the system on which pyroon is installed
+(cp api/*_* ~/Roon). Edit ~/Roon/roon_api.ini to set the default values and
+Roon Core IP address.
 
 No passwords are used in the SSH invocations in this project. It is assumed that
 appropriate SSH Public Key Authentication has been configured for all systems
