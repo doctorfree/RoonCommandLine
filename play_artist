@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
 PLAY=play_artist.py
 ARTIST="Deep Purple"
 
@@ -14,4 +15,11 @@ cd $ROON
 
 [ "$1" ] && ARTIST="$*"
 
-python $PLAY -a "$ARTIST"
+# Get the zone if it is set
+if [ -f ${ZONECONF} ]
+then
+    . ${ZONECONF}
+else
+    ROON_ZONE="Living Room"
+fi
+python $PLAY -a "$ARTIST" -z "$ROON_ZONE"

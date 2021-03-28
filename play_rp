@@ -1,7 +1,10 @@
 #!/bin/bash
 
 ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
 PLAY=play_rp.py
+
+export PYTHONUSERBASE=/home/doctor/Python3
 
 [ -d $ROON ] || exit 1
 
@@ -9,4 +12,12 @@ cd $ROON
 
 [ -f $PLAY ] || exit 2
 
-python $PLAY
+# Get the zone if it is set
+if [ -f ${ZONECONF} ]
+then
+    . ${ZONECONF}
+else
+    ROON_ZONE="Living Room"
+fi
+
+python $PLAY -z "$ROON_ZONE"

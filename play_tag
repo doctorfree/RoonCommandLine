@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
 PLAY=play_tag.py
 TAG="Prog"
 
@@ -14,4 +15,12 @@ cd $ROON
 
 [ "$1" ] && TAG="$*"
 
-python $PLAY -t "$TAG"
+# Get the zone if it is set
+if [ -f ${ZONECONF} ]
+then
+    . ${ZONECONF}
+else
+    ROON_ZONE="Living Room"
+fi
+
+python $PLAY -t "$TAG" -z "$ROON_ZONE"

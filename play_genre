@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
 PLAY=play_genre.py
 GENRE="Classical"
 
@@ -14,4 +15,12 @@ cd $ROON
 
 [ "$1" ] && GENRE="$*"
 
-python $PLAY -g "$GENRE"
+# Get the zone if it is set
+if [ -f ${ZONECONF} ]
+then
+    . ${ZONECONF}
+else
+    ROON_ZONE="Living Room"
+fi
+
+python $PLAY -g "$GENRE" -z "$ROON_ZONE"

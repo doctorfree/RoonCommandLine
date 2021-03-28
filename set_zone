@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ROONCONF=$HOME/.roonzone
+
+[ "$1" ] && ZONE="$*"
+
+echo "ROON_ZONE=\"$ZONE\"" > $ROONCONF

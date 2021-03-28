@@ -13,7 +13,7 @@
 
 server="10.0.1.22"
 user="doctor"
-zone="Living Room"
+zone=
 radio=
 comm=
 artist=
@@ -51,6 +51,9 @@ while getopts a:g:t:z:c:ru flag; do
             ;;
     esac
 done
+
+# Set Zone
+[ "$zone" ] && ssh $user@$server "bash -l -c \"set_zone $zone\""
 
 [ "$artist" ] && ssh $user@$server "bash -l -c \"play_artist $artist\""
 [ "$genre" ] && ssh $user@$server "bash -l -c \"play_genre $genre\""

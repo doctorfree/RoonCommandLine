@@ -1,4 +1,4 @@
-from roonapi import RoonApi
+import argparse
 import configparser
 import os.path
 from os import path
@@ -11,6 +11,16 @@ server = config['DEFAULT']['RoonCoreIP']
 # Name of the file that holds a Roon API token
 tokenfile = config['DEFAULT']['TokenFileName']
 
+parser = argparse.ArgumentParser()
+parser.add_argument("-z", "--zone", help="zone selection")
+args = parser.parse_args()
+
+if args.zone:
+    target_zone = args.zone
+else:
+    target_zone = config['DEFAULT']['DefaultZone']
+
+from roonapi import RoonApi
 appinfo = {
     "extension_id": "python_roon_test",
     "display_name": "Python library for Roon",
@@ -19,7 +29,6 @@ appinfo = {
     "email": "mygreat@emailaddress.com",
 }
 
-target_zone = config['DEFAULT']['DefaultZone']
 # Can be None if you don't yet have a token
 if path.exists(tokenfile):
     token = open(tokenfile).read()

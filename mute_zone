@@ -12,6 +12,6 @@ cd $ROON
 
 [ -f $MUTE ] || exit 2
 
-[ "$1" ] && ZONE="$1"
+[ "$1" ] && ZONE="$*"
 
 python $MUTE -z "$ZONE"

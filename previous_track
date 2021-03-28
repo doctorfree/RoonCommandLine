@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
 PREV=previous_track.py
-ZONE="Living Room"
 
 export PYTHONUSERBASE=/home/doctor/Python3
 
@@ -12,6 +12,13 @@ cd $ROON
 
 [ -f $PREV ] || exit 2
 
-[ "$1" ] && ZONE="$1"
+# Get the zone if it is set
+if [ -f ${ZONECONF} ]
+then
+    . ${ZONECONF}
+else
+    ROON_ZONE="Living Room"
+fi
+[ "$1" ] && ROON_ZONE="$*"
 
-python $PREV -z "$ZONE"
+python $PREV -z "$ROON_ZONE"

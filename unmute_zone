@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
 UNMUTE=unmute_zone.py
-ZONE="Living Room"
 
 export PYTHONUSERBASE=/home/doctor/Python3
 
@@ -12,6 +12,13 @@ cd $ROON
 
 [ -f $UNMUTE ] || exit 2
 
-[ "$1" ] && ZONE="$1"
+# Get the zone if it is set
+if [ -f ${ZONECONF} ]
+then
+    . ${ZONECONF}
+else
+    ROON_ZONE="Living Room"
+fi
+[ "$1" ] && ROON_ZONE="$*"
 
-python $UNMUTE -z "$ZONE"
+python $UNMUTE -z "$ROON_ZONE"

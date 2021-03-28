@@ -12,6 +12,6 @@ cd $ROON
 
 [ -f $NEXT ] || exit 2
 
-[ "$1" ] && ZONE="$1"
+[ "$1" ] && ZONE="$*"
 
 python $NEXT -z "$ZONE"
