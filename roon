@@ -38,11 +38,18 @@ done
 
 [ "$radio" ] && ssh $user@$server "bash -l -c play_rp"
 [ "$comm" ] && {
-    [ "$comm" == "mute" ] && ssh $user@$server "bash -l -c \"mute_zone $zone\""
-    [ "$comm" == "next" ] && ssh $user@$server "bash -l -c \"next_track $zone\""
-    [ "$comm" == "previous" ] && ssh $user@$server "bash -l -c \"previous_track $zone\""
-    [ "$comm" == "unmute" ] && ssh $user@$server "bash -l -c \"unmute_zone $zone\""
-    [ "$comm" == "stop" ] && ssh $user@$server "bash -l -c \"stop_zone $zone\""
+    case "$comm" in
+    "mute" | "unmute" | "stop")
+        ssh $user@$server "bash -l -c \"${comm}_zone $zone\""
+        ;;
+    "next" | "previous")
+        ssh $user@$server "bash -l -c \"${comm}_track $zone\""
+        ;;
+    *)
+        echo "Unrecognized Roon command: $comm"
+        usage
+        ;;
+    esac
 }
 
 exit 0
