@@ -1,0 +1,20 @@
+
+Install the Python Roon API (pyrooon) on a system that has Python 3 and that
+can access your Roon Core. To install the Python Roon API execute the command:
+    pip install roonapi
+
+The "roon" shell script is a frontend for the other scripts in this project.
+It should be installed in the execution PATH on all systems from which remote
+Roon command-line execution is desired. The systems on which "roon" is
+installed must have SSH access to the system on which pyroon and accompanying
+scripts are installed.
+
+Copy all of the scripts in this directory to ~/bin on the system on which pyroon
+is installed (cp *_* ~/bin).
+
+Copy all of the Pythong scripts in the api subdirectory to ~/Roon on the system
+on which pyroon is installed (cp api/*_* ~/Roon).
+
+No passwords are used in the SSH invocations in this project. It is assumed that
+appropriate SSH Public Key Authentication has been configured for all systems
+that will be using SSH to execute commands on the remote pyroon server.
