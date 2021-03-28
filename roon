@@ -20,7 +20,26 @@ artist=
 tag=
 
 usage() {
-  printf "\n\troon -a artist -g genre -t tag -z zone -c [stop|next|previous|mute|unmute] -r -u\n\n"
+  printf "\nUsage: roon -a artist -g genre -t tag -z zone -c [stop|next|previous|mute|unmute] -r -u"
+  printf "\n\tWhere:\n\t\t-a artist selects an artist to play"
+  printf "\n\t\t-g genre selects a genre to play"
+  printf "\n\t\t-r indicates play Radio Paradise"
+  printf "\n\t\t-t tag selects an tag to play (not yet working)"
+  printf "\n\t\t-z zone selects the Roon Zone in which to play"
+  printf "\n\t\t-c [stop|next|previous|mute|unmute] issues the specified command"
+  printf "\n\n\tExample invocations"
+  printf "\n\t\tPlay artist:"
+  printf "\n\t\t\troon -a \"Deep Purple\""
+  printf "\n\t\tPlay artist in specified zone:"
+  printf "\n\t\t\troon -a \"Jethro Tull\" -z \"Living Room\""
+  printf "\n\t\tPlay genre:"
+  printf "\n\t\t\troon -g Classical"
+  printf "\n\t\tPlay next track:"
+  printf "\n\t\t\troon -c next"
+  printf "\n\t\tStop play in specified zone:"
+  printf "\n\t\t\troon -c stop -z Kitchen"
+  printf "\n\t\tMute a specified zone:"
+  printf "\n\t\t\troon -c mute -z \"Living Room\"\n\n"
   exit 1
 }
 
