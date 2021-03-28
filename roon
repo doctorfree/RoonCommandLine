@@ -1,25 +1,41 @@
 #!/bin/bash
 #
 # roon - frontend shell script to issue remote commands to Roon via SSH and the Roon API
+#
+# Example invocations
+# Play artist:
+#    roon -a "Deep Purple"
+# Play genre:
+#    roon -g Classical
+# Play next track:
+#    roon -c next
+# Play tag not yet working
 
 server="10.0.1.22"
 user="doctor"
 zone="Living Room"
 radio=
 comm=
+artist=
+tag=
 
 usage() {
-  printf "\n\troon -a artist -z zone -c [stop|next|previous|mute|unmute] -r -u\n\n"
+  printf "\n\troon -a artist -g genre -t tag -z zone -c [stop|next|previous|mute|unmute] -r -u\n\n"
   exit 1
 }
 
 [ "$1" ] || usage
 
-while getopts a:z:c:ru flag; do
+while getopts a:g:t:z:c:ru flag; do
     case $flag in
         a)
             artist="$OPTARG"
-            ssh $user@$server "bash -l -c \"play_artist $artist\""
+            ;;
+        g)
+            genre="$OPTARG"
+            ;;
+        t)
+            tag="$OPTARG"
             ;;
         z)
             zone="$OPTARG"
@@ -36,7 +52,11 @@ while getopts a:z:c:ru flag; do
     esac
 done
 
+[ "$artist" ] && ssh $user@$server "bash -l -c \"play_artist $artist\""
+[ "$genre" ] && ssh $user@$server "bash -l -c \"play_genre $genre\""
+[ "$tag" ] && ssh $user@$server "bash -l -c \"play_tag $tag\""
 [ "$radio" ] && ssh $user@$server "bash -l -c play_rp"
+
 [ "$comm" ] && {
     case "$comm" in
     "mute" | "unmute" | "stop")

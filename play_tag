@@ -1,0 +1,17 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+PLAY=play_tag.py
+TAG="Prog"
+
+export PYTHONUSERBASE=/home/doctor/Python3
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $PLAY ] || exit 2
+
+[ "$1" ] && TAG="$*"
+
+python $PLAY -t "$TAG"
