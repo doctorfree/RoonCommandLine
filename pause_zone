@@ -1,0 +1,24 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
+PAUSE=pause_zone.py
+
+export PYTHONUSERBASE=/home/doctor/Python3
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $PAUSE ] || exit 2
+
+# Get the zone if it is set
+if [ -f ${ZONECONF} ]
+then
+    . ${ZONECONF}
+else
+    ROON_ZONE="Living Room"
+fi
+[ "$1" ] && ROON_ZONE="$*"
+
+python $PAUSE -z "$ROON_ZONE"

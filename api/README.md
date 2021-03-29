@@ -16,8 +16,6 @@ Contents
 
 [**play_tag.py**](Roon/api/play_tag.py) - Python script backend for playing a specified tag in my Roon library (not yet working)
 
-[**play_tull.py**](Roon/api/play_tull.py) - Python script backend for playing Jethro Tull songs in my Roon library
-
 [**next_track.py**](Roon/api/next_track.py) - Python script backend for playing the next track in a specified zone
 
 [**previous_track.py**](Roon/api/previous_track.py) - Python script backend for playing the previous track in a specified zone

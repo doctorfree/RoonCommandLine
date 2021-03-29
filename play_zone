@@ -2,7 +2,9 @@
 
 ROON=$HOME/Roon
 ZONECONF=$HOME/.roonzone
-PLAY=play_tull.py
+PLAY=play_zone.py
+
+export PYTHONUSERBASE=/home/doctor/Python3
 
 [ -d $ROON ] || exit 1
 
@@ -17,5 +19,6 @@ then
 else
     ROON_ZONE="Living Room"
 fi
+[ "$1" ] && ROON_ZONE="$*"
 
 python $PLAY -z "$ROON_ZONE"

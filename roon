@@ -21,14 +21,14 @@ artist=
 tag=
 
 usage() {
-  printf "\nUsage: roon -a artist -g genre -t tag -z zone -c [stop|next|previous|mute|unmute] -l -r -u"
+  printf "\nUsage: roon -a artist -g genre -t tag -z zone -c [play|pause|stop|next|previous|mute|unmute] -l -r -u"
   printf "\n\tWhere:\n\t\t-a artist selects an artist to play"
   printf "\n\t\t-g genre selects a genre to play"
   printf "\n\t\t-l indicates list Roon Zones"
   printf "\n\t\t-r indicates play Radio Paradise"
   printf "\n\t\t-t tag selects an tag to play (not yet working)"
   printf "\n\t\t-z zone selects the Roon Zone in which to play"
-  printf "\n\t\t-c [stop|next|previous|mute|unmute] issues the specified command"
+  printf "\n\t\t-c [play|pause|stop|next|previous|mute|unmute] issues the specified command"
   printf "\n\n\tExample invocations"
   printf "\n\t\tPlay artist:"
   printf "\n\t\t\troon -a \"Deep Purple\""
@@ -87,7 +87,7 @@ done
 
 [ "$comm" ] && {
     case "$comm" in
-    "mute" | "unmute" | "stop")
+    "mute" | "unmute" | "play" | "pause" | "stop")
         ssh $user@$server "bash -l -c \"${comm}_zone $zone\""
         ;;
     "next" | "previous")

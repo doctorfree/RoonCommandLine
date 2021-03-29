@@ -1,4 +1,3 @@
-from roonapi import RoonApi
 import argparse
 import configparser
 import os.path
@@ -21,6 +20,7 @@ if args.zone:
 else:
     target_zone = config['DEFAULT']['DefaultZone']
 
+from roonapi import RoonApi
 appinfo = {
     "extension_id": "python_roon_test",
     "display_name": "Python library for Roon",
@@ -44,11 +44,9 @@ output_id = [
     for output in zones.values()
     if target_zone in output["display_name"]
 ][0]
-print("OUTPUT ID", output_id)
 
-# Play Jethro Tull from Library
-print("SINGLE ARTIST")
-items = roonapi.play_media(output_id, ["Library", "Artists", "Jethro Tull"])
+# Pause playing in specified zone
+roonapi.playback_control(output_id, "pause")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

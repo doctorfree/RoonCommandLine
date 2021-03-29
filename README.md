@@ -40,8 +40,6 @@ Contents
 
 [**play_tag**](Roon/play_tag) - Shell script frontend to play a specified tag (not yet working)
 
-[**play_tull**](Roon/play_tull) - Shell script frontend for playing Jethro Tull songs in my Roon library
-
 [**next_track**](Roon/next_track) - Shell script frontend for playing the next track in a specified zone
 
 [**previous_track**](Roon/previous_track) - Shell script frontend for playing the previous track in a specified zone
