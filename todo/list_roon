@@ -1,0 +1,29 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
+LIST=list_zones.py
+
+export PYTHONUSERBASE=/home/doctor/Python3
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $LIST ] || exit 2
+
+while getopts "agz" flag; do
+    case $flag in
+        a)
+            LIST=list_artists.py
+            ;;
+        g)
+            LIST=list_genres.py
+            ;;
+        z)
+            LIST=list_zones.py
+            ;;
+    esac
+done
+
+python $LIST
