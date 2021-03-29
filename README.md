@@ -50,6 +50,8 @@ Contents
 
 [**unmute_zone**](Roon/unmute_zone) - Shell script frontend for unmuting a specified zone
 
+[**list_zones**](Roon/list_zones) - List the available Roon Zones
+
 [**set_zone**](Roon/set_zone) - Set the Roon Zone in which subsequent commands will run
 
 [**stop_zone**](Roon/stop_zone) - Shell script frontend for stopping output on a specified zone

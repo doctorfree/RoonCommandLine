@@ -22,6 +22,8 @@ Contents
 
 [**previous_track.py**](Roon/api/previous_track.py) - Python script backend for playing the previous track in a specified zone
 
+[**list_zones.py**](Roon/api/list_zones.py) - Python script backend for listing available Roon Zones
+
 [**mute_zone.py**](Roon/api/mute_zone.py) - Python script backend for muting output on a specified zone
 
 [**unmute_zone.py**](Roon/api/unmute_zone.py) - Python script backend for unmuting output on a specified zone

@@ -9,8 +9,8 @@ cp *_* $LBIN
 cp api/*_* $ROON
 
 echo "Install the Python Roon API project with 'pip install roonapi'"
-
+echo ""
 echo "Copy the 'roon' frontend shell script to a location in your execution PATH"
 echo "on all systems from which you wish to control Roon via SSH"
-
+echo ""
 echo "Edit the Python Roon API configuration settings at $ROON/roon_api.ini"

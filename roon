@@ -13,6 +13,7 @@
 
 server="10.0.1.22"
 user="doctor"
+list=
 zone=
 radio=
 comm=
@@ -20,9 +21,10 @@ artist=
 tag=
 
 usage() {
-  printf "\nUsage: roon -a artist -g genre -t tag -z zone -c [stop|next|previous|mute|unmute] -r -u"
+  printf "\nUsage: roon -a artist -g genre -t tag -z zone -c [stop|next|previous|mute|unmute] -l -r -u"
   printf "\n\tWhere:\n\t\t-a artist selects an artist to play"
   printf "\n\t\t-g genre selects a genre to play"
+  printf "\n\t\t-l indicates list Roon Zones"
   printf "\n\t\t-r indicates play Radio Paradise"
   printf "\n\t\t-t tag selects an tag to play (not yet working)"
   printf "\n\t\t-z zone selects the Roon Zone in which to play"
@@ -45,7 +47,7 @@ usage() {
 
 [ "$1" ] || usage
 
-while getopts a:g:t:z:c:ru flag; do
+while getopts a:g:t:z:c:lru flag; do
     case $flag in
         a)
             artist="$OPTARG"
@@ -62,6 +64,9 @@ while getopts a:g:t:z:c:ru flag; do
         c)
             comm="$OPTARG"
             ;;
+        l)
+            list=1
+            ;;
         r)
             radio=1
             ;;
@@ -74,6 +79,7 @@ done
 # Set Zone
 [ "$zone" ] && ssh $user@$server "bash -l -c \"set_zone $zone\""
 
+[ "$list" ] && ssh $user@$server "bash -l -c list_zones"
 [ "$artist" ] && ssh $user@$server "bash -l -c \"play_artist $artist\""
 [ "$genre" ] && ssh $user@$server "bash -l -c \"play_genre $genre\""
 [ "$tag" ] && ssh $user@$server "bash -l -c \"play_tag $tag\""
