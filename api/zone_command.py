@@ -55,6 +55,14 @@ if zone_command == "mute":
     roonapi.mute(output_id, True)
 elif zone_command == "unmute":
     roonapi.mute(output_id, False)
+elif zone_command == "shuffle":
+    roonapi.shuffle(output_id, True)
+elif zone_command == "unshuffle":
+    roonapi.shuffle(output_id, False)
+elif zone_command == "repeat":
+    roonapi.repeat(output_id, True)
+elif zone_command == "unrepeat":
+    roonapi.repeat(output_id, False)
 else:
     roonapi.playback_control(output_id, zone_command)
 
