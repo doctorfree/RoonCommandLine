@@ -12,13 +12,16 @@ cd $ROON
 
 [ -f $LIST ] || exit 2
 
-while getopts "agz" flag; do
+while getopts "agpz" flag; do
     case $flag in
         a)
             LIST=list_artists.py
             ;;
         g)
             LIST=list_genres.py
+            ;;
+        p)
+            LIST=list_playlists.py
             ;;
         z)
             LIST=list_zones.py

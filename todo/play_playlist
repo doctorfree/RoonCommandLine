@@ -1,0 +1,26 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
+PLAY=play_playlist.py
+PLAYLIST="Bowie Favs"
+
+export PYTHONUSERBASE=/home/doctor/Python3
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $PLAY ] || exit 2
+
+[ "$1" ] && PLAYLIST="$*"
+
+# Get the zone if it is set
+if [ -f ${ZONECONF} ]
+then
+    . ${ZONECONF}
+else
+    ROON_ZONE="Living Room"
+fi
+
+python $PLAY -p "$PLAYLIST" -z "$ROON_ZONE"
