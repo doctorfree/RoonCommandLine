@@ -28,7 +28,8 @@ usage() {
   printf "\n\t\t-r indicates play Radio Paradise"
   printf "\n\t\t-t tag selects an tag to play (not yet working)"
   printf "\n\t\t-z zone selects the Roon Zone in which to play"
-  printf "\n\t\t-c [play|pause|stop|next|previous|mute|unmute] issues the specified command"
+  printf "\n\t\t-c [play|pause|playpause|stop|next|previous|mute|unmute]"
+  printf "\n\t\t\tissues the command in the selected zone"
   printf "\n\n\tExample invocations"
   printf "\n\t\tPlay artist:"
   printf "\n\t\t\troon -a \"Deep Purple\""
@@ -87,11 +88,8 @@ done
 
 [ "$comm" ] && {
     case "$comm" in
-    "mute" | "unmute" | "play" | "pause" | "stop")
-        ssh $user@$server "bash -l -c \"${comm}_zone $zone\""
-        ;;
-    "next" | "previous")
-        ssh $user@$server "bash -l -c \"${comm}_track $zone\""
+    "mute" | "unmute" | "next" | "previous" | "play" | "pause" | "stop" | "playpause")
+        ssh $user@$server "bash -l -c \"zone_command -c ${comm}\""
         ;;
     *)
         echo "Unrecognized Roon command: $comm"

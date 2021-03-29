@@ -1,0 +1,36 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
+SCRIPT=zone_command.py
+COMMAND="play"
+
+export PYTHONUSERBASE=/home/doctor/Python3
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $SCRIPT ] || exit 2
+
+# Get the zone if it is set
+if [ -f ${ZONECONF} ]
+then
+    . ${ZONECONF}
+else
+    ROON_ZONE="Living Room"
+fi
+
+# Parse the arguments to get the command and zone
+while getopts "c:z:" flag; do
+    case $flag in
+        c)
+            COMMAND="$OPTARG"
+            ;;
+        z)
+            ROON_ZONE="$OPTARG"
+            ;;
+    esac
+done
+
+python $SCRIPT -c "$COMMAND" -z "$ROON_ZONE"
