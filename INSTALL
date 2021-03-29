@@ -20,6 +20,10 @@ api subdirectory to ~/Roon on the system on which pyroon is installed
 (cp api/*_* ~/Roon). Edit ~/Roon/roon_api.ini to set the default values and
 Roon Core IP address.
 
+A convenience installation script, ./install.sh, is provided. Running this script
+on the system on which pyroon is installed will copy the Shell and Python scripts
+to their appropriate locations.
+
 No passwords are used in the SSH invocations in this project. It is assumed that
 appropriate SSH Public Key Authentication has been configured for all systems
 that will be using SSH to execute commands on the remote pyroon server.

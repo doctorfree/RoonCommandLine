@@ -30,22 +30,32 @@ shell script the SSH session executes.
 Contents
 --------
 
-[**roon**](Roon/roon) - Shell script front-end to run on systems that can SSH in to the Roon API server. This script can be used to issue Roon commands via the command line and SSH.
+[**roon**](Roon/roon) - Shell script frontend to run on systems that can SSH in to the Roon API server. This script can be used to issue Roon commands via the command line and SSH.
 
-[**play_artist**](Roon/play_artist) - Shell script front-end for playing a specified artist in my Roon library
+[**play_artist**](Roon/play_artist) - Shell script frontend for playing a specified artist in my Roon library
 
-[**play_rp**](Roon/play_rp) - Shell script front-end for playing Radio Paradise Main Channel in a Roon zone
+[**play_genre**](Roon/play_genre) - Shell script frontend to play a specified genre
 
-[**play_tull**](Roon/play_tull) - Shell script front-end for playing Jethro Tull songs in my Roon library
+[**play_rp**](Roon/play_rp) - Shell script frontend for playing Radio Paradise Main Channel in a Roon zone
 
-[**next_track**](Roon/next_track) - Shell script front-end for playing the next track in a specified zone
+[**play_tag**](Roon/play_tag) - Shell script frontend to play a specified tag (not yet working)
 
-[**previous_track**](Roon/previous_track) - Shell script front-end for playing the previous track in a specified zone
+[**play_tull**](Roon/play_tull) - Shell script frontend for playing Jethro Tull songs in my Roon library
 
-[**mute_zone**](Roon/mute_zone) - Shell script front-end for muting a specified zone
+[**next_track**](Roon/next_track) - Shell script frontend for playing the next track in a specified zone
 
-[**unmute_zone**](Roon/unmute_zone) - Shell script front-end for unmuting a specified zone
+[**previous_track**](Roon/previous_track) - Shell script frontend for playing the previous track in a specified zone
 
-[**stop_zone**](Roon/stop_zone) - Shell script front-end for stopping output on a specified zone
+[**mute_zone**](Roon/mute_zone) - Shell script frontend for muting a specified zone
+
+[**unmute_zone**](Roon/unmute_zone) - Shell script frontend for unmuting a specified zone
+
+[**set_zone**](Roon/set_zone) - Set the Roon Zone in which subsequent commands will run
+
+[**stop_zone**](Roon/stop_zone) - Shell script frontend for stopping output on a specified zone
+
+[**INSTALL**](Roon/INSTALL) - Describes the installation process
+
+[**install.sh**](Roon/install.sh) - Convenience script to copy scripts into place
 
 [**api**](Roon/api/README.md) - Python scripts to call the Roon API with appropriate arguments
