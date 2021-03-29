@@ -40,19 +40,11 @@ Contents
 
 [**play_tag**](Roon/play_tag) - Shell script frontend to play a specified tag (not yet working)
 
-[**next_track**](Roon/next_track) - Shell script frontend for playing the next track in a specified zone
-
-[**previous_track**](Roon/previous_track) - Shell script frontend for playing the previous track in a specified zone
-
-[**mute_zone**](Roon/mute_zone) - Shell script frontend for muting a specified zone
-
-[**unmute_zone**](Roon/unmute_zone) - Shell script frontend for unmuting a specified zone
-
 [**list_zones**](Roon/list_zones) - List the available Roon Zones
 
 [**set_zone**](Roon/set_zone) - Set the Roon Zone in which subsequent commands will run
 
-[**stop_zone**](Roon/stop_zone) - Shell script frontend for stopping output on a specified zone
+[**zone_command**](Roon/zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, mute, unmute, next track, previous track)
 
 [**INSTALL**](Roon/INSTALL) - Describes the installation process
 
