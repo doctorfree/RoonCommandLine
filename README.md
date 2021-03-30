@@ -50,4 +50,6 @@ Contents
 
 [**install.sh**](Roon/install.sh) - Convenience script to copy scripts into place
 
+[**usage.txt**](Roon/usage.txt) - Frontend "roon" script usage documentation
+
 [**api**](Roon/api/README.md) - Python scripts to call the Roon API with appropriate arguments
