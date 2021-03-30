@@ -36,6 +36,8 @@ Contents
 
 [**play_genre**](Roon/play_genre) - Shell script frontend to play a specified genre
 
+[**play_playlist**](Roon/play_playlist) - Shell script frontend to play a specified playlist
+
 [**play_rp**](Roon/play_rp) - Shell script frontend for playing Radio Paradise Main Channel in a Roon zone
 
 [**play_tag**](Roon/play_tag) - Shell script frontend to play a specified tag (not yet working)

@@ -1,17 +1,17 @@
 
-Usage: roon -a artist -g genre -t tag -z zone
-    -c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+Usage: roon -a artist -g genre -p playlist -t tag -z zone
+	-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 	-l -r -u
 
 	Where:
 		-a artist selects an artist to play
 		-g genre selects a genre to play
+		-p playlist selects a playlist to play
 		-l indicates list Roon Zones
 		-r indicates play Radio Paradise
 		-t tag selects an tag to play (not yet working)
 		-z zone selects the Roon Zone in which to play
-		-c [play|pause|playpause|stop|next|previous|
-		    shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+		-c [play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 			issues the command in the selected zone
 
 	Example invocations
@@ -21,6 +21,8 @@ Usage: roon -a artist -g genre -t tag -z zone
 			roon -a "Jethro Tull" -z "Living Room"
 		Play genre:
 			roon -g Classical
+		Play playlist:
+			roon -p "Bowie Favs"
 		Play next track:
 			roon -c next
 		Stop play in specified zone:

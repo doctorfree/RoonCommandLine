@@ -13,17 +13,20 @@
 
 server="10.0.1.22"
 user="doctor"
-list=
-zone=
-radio=
-comm=
+
 artist=
+comm=
+list=
+playlist=
+radio=
 tag=
+zone=
 
 usage() {
-  printf "\nUsage: roon -a artist -g genre -t tag -z zone -c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute] -l -r -u"
+  printf "\nUsage: roon -a artist -g genre -p playlist -t tag -z zone\n\t-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-l -r -u"
   printf "\n\tWhere:\n\t\t-a artist selects an artist to play"
   printf "\n\t\t-g genre selects a genre to play"
+  printf "\n\t\t-p playlist selects a playlist to play"
   printf "\n\t\t-l indicates list Roon Zones"
   printf "\n\t\t-r indicates play Radio Paradise"
   printf "\n\t\t-t tag selects an tag to play (not yet working)"
@@ -37,6 +40,8 @@ usage() {
   printf "\n\t\t\troon -a \"Jethro Tull\" -z \"Living Room\""
   printf "\n\t\tPlay genre:"
   printf "\n\t\t\troon -g Classical"
+  printf "\n\t\tPlay playlist:"
+  printf "\n\t\t\troon -p \"Bowie Favs\""
   printf "\n\t\tPlay next track:"
   printf "\n\t\t\troon -c next"
   printf "\n\t\tStop play in specified zone:"
@@ -48,13 +53,16 @@ usage() {
 
 [ "$1" ] || usage
 
-while getopts a:g:t:z:c:lru flag; do
+while getopts a:g:p:t:z:c:lru flag; do
     case $flag in
         a)
             artist="$OPTARG"
             ;;
         g)
             genre="$OPTARG"
+            ;;
+        p)
+            playlist="$OPTARG"
             ;;
         t)
             tag="$OPTARG"
@@ -83,6 +91,7 @@ done
 [ "$list" ] && ssh $user@$server "bash -l -c list_zones"
 [ "$artist" ] && ssh $user@$server "bash -l -c \"play_artist $artist\""
 [ "$genre" ] && ssh $user@$server "bash -l -c \"play_genre $genre\""
+[ "$playlist" ] && ssh $user@$server "bash -l -c \"play_playlist $playlist\""
 [ "$tag" ] && ssh $user@$server "bash -l -c \"play_tag $tag\""
 [ "$radio" ] && ssh $user@$server "bash -l -c play_rp"
 

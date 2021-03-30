@@ -51,9 +51,9 @@ output_id = [
 ][0]
 print("OUTPUT ID", output_id)
 
-# Play playlist from Library
+# Play playlist
 print("PLAYLIST")
-items = roonapi.play_media(output_id, ["Library", "Playlists", playlist])
+items = roonapi.play_media(output_id, ["Playlists", playlist])
 
 # save the token for next time
 with open(tokenfile, "w") as f:

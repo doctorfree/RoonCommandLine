@@ -12,6 +12,8 @@ Contents
 
 [**play_genre.py**](Roon/api/play_genre.py) - Python script backend for playing a specified genre in my Roon library
 
+[**play_playlist.py**](Roon/api/play_playlist.py) - Python script backend for playing a specified playlist in my Roon library
+
 [**play_rp.py**](Roon/api/play_rp.py) - Python script backend for playing Radio Paradise Main Channel in a Roon zone
 
 [**play_tag.py**](Roon/api/play_tag.py) - Python script backend for playing a specified tag in my Roon library (not yet working)
