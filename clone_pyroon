@@ -1,0 +1,14 @@
+#!/bin/bash
+
+project="pyroon"
+patch="$HOME/src/Scripts/Roon/patches/pyroon-listplaylist.patch"
+
+[ -d ${project} ] && {
+    rm -rf ${project}
+}
+
+git clone https://github.com/pavoni/${project}.git
+
+[ -r ${patch} ] && {
+    patch -b -p0 < ${patch}
+}

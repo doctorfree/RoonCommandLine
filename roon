@@ -2,32 +2,28 @@
 #
 # roon - frontend shell script to issue remote commands to Roon via SSH and the Roon API
 #
-# Example invocations
-# Play artist:
-#    roon -a "Deep Purple"
-# Play genre:
-#    roon -g Classical
-# Play next track:
-#    roon -c next
-# Play tag not yet working
 
 server="10.0.1.22"
 user="doctor"
 
 artist=
 comm=
-list=
+artistlist=
+playlistlist=
+zonelist=
 playlist=
 radio=
+search=
 tag=
 zone=
 
 usage() {
-  printf "\nUsage: roon -a artist -g genre -p playlist -t tag -z zone\n\t-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-l -r -u"
+  printf "\nUsage: roon -a artist -g genre -l [artists|playlists|zones] -s search -p playlist -t tag -z zone\n\t-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-r -u"
   printf "\n\tWhere:\n\t\t-a artist selects an artist to play"
   printf "\n\t\t-g genre selects a genre to play"
   printf "\n\t\t-p playlist selects a playlist to play"
-  printf "\n\t\t-l indicates list Roon Zones"
+  printf "\n\t\t-l [artists|playlists|zones] indicates list artists, playlists, or Roon zones"
+  printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
   printf "\n\t\t-r indicates play Radio Paradise"
   printf "\n\t\t-t tag selects an tag to play (not yet working)"
   printf "\n\t\t-z zone selects the Roon Zone in which to play"
@@ -47,13 +43,15 @@ usage() {
   printf "\n\t\tStop play in specified zone:"
   printf "\n\t\t\troon -c stop -z Kitchen"
   printf "\n\t\tMute a specified zone:"
-  printf "\n\t\t\troon -c mute -z \"Living Room\"\n\n"
+  printf "\n\t\t\troon -c mute -z \"Living Room\""
+  printf "\n\t\tList all playlists containing the string 'Best':"
+  printf "\n\t\t\troon -l playlists -s \"Best\"\n\n"
   exit 1
 }
 
 [ "$1" ] || usage
 
-while getopts a:g:p:t:z:c:lru flag; do
+while getopts a:g:p:t:z:c:l:s:ru flag; do
     case $flag in
         a)
             artist="$OPTARG"
@@ -74,10 +72,27 @@ while getopts a:g:p:t:z:c:lru flag; do
             comm="$OPTARG"
             ;;
         l)
-            list=1
+            listname="$OPTARG"
+            if [ "$listname" == "artists" ] || [ "$listname" == "artist" ]
+            then
+                artistlist=1
+            elif [ "$listname" == "playlists" ] || [ "$listname" == "playlist" ]
+            then
+                playlistlist=1
+            elif [ "$listname" == "zones" ] || [ "$listname" == "zone" ]
+            then
+                zonelist=1
+            else
+                echo "Unknown list type: $listname"
+                usage
+            fi
+
             ;;
         r)
             radio=1
+            ;;
+        s)
+            search="$OPTARG"
             ;;
         u)
             usage
@@ -85,10 +100,14 @@ while getopts a:g:p:t:z:c:lru flag; do
     esac
 done
 
+[ "$search" ] || search="all"
+
 # Set Zone
 [ "$zone" ] && ssh $user@$server "bash -l -c \"set_zone $zone\""
 
-[ "$list" ] && ssh $user@$server "bash -l -c list_zones"
+[ "$artistlist" ] && ssh $user@$server "bash -l -c \"list_artists $search\""
+[ "$playlistlist" ] && ssh $user@$server "bash -l -c \"list_playlists $search\""
+[ "$zonelist" ] && ssh $user@$server "bash -l -c list_zones"
 [ "$artist" ] && ssh $user@$server "bash -l -c \"play_artist $artist\""
 [ "$genre" ] && ssh $user@$server "bash -l -c \"play_genre $genre\""
 [ "$playlist" ] && ssh $user@$server "bash -l -c \"play_playlist $playlist\""

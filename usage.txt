@@ -1,13 +1,14 @@
 
-Usage: roon -a artist -g genre -p playlist -t tag -z zone
+Usage: roon -r -u -a artist -g genre -l [artists|playlists|zones]
+    -s search -p playlist -t tag -z zone
 	-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
-	-l -r -u
 
 	Where:
 		-a artist selects an artist to play
 		-g genre selects a genre to play
 		-p playlist selects a playlist to play
-		-l indicates list Roon Zones
+		-l [artists|playlists|zones] indicates list artists, playlists, or Roon zones
+		-s search specifies a term to search for in the lists retrieved with -l
 		-r indicates play Radio Paradise
 		-t tag selects an tag to play (not yet working)
 		-z zone selects the Roon Zone in which to play
@@ -29,4 +30,6 @@ Usage: roon -a artist -g genre -p playlist -t tag -z zone
 			roon -c stop -z Kitchen
 		Mute a specified zone:
 			roon -c mute -z "Living Room"
+		List all playlists containing the string 'Best':
+			roon -l playlists -s "Best"
 

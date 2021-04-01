@@ -1,0 +1,15 @@
+#!/bin/bash
+
+PYDIR=$HOME/Python3
+SITEDIR=lib/python3.8/site-packages
+
+[ -d $PYDIR/$SITEDIR/roonapi-bak ] || {
+    echo "Roon API Python backup does not exist. Exiting."
+    exit 1
+}
+
+cd $PYDIR
+
+[ -d ~/src/patches ] || mkdir ~/src/patches
+
+diff -Naur ${SITEDIR}/roonapi-bak ${SITEDIR}/roonapi > ~/src/patches/roonapi-listplaylist.patch

@@ -32,6 +32,8 @@ Contents
 
 [**roon**](Roon/roon) - Shell script frontend to run on systems that can SSH in to the Roon API server. This script can be used to issue Roon commands via the command line and SSH.
 
+[**clone_pyroon**](Roon/clone_pyroon) - Shell script to retrieve the pyroon project source code from Github and apply my patches
+
 [**play_artist**](Roon/play_artist) - Shell script frontend for playing a specified artist in my Roon library
 
 [**play_genre**](Roon/play_genre) - Shell script frontend to play a specified genre
@@ -41,6 +43,8 @@ Contents
 [**play_rp**](Roon/play_rp) - Shell script frontend for playing Radio Paradise Main Channel in a Roon zone
 
 [**play_tag**](Roon/play_tag) - Shell script frontend to play a specified tag (not yet working)
+
+[**list_playlists**](Roon/list_playlists) - Search and list the available Roon Playlists
 
 [**list_zones**](Roon/list_zones) - List the available Roon Zones
 
@@ -55,3 +59,5 @@ Contents
 [**usage.txt**](Roon/usage.txt) - Frontend "roon" script usage documentation
 
 [**api**](Roon/api/README.md) - Python scripts to call the Roon API with appropriate arguments
+
+[**patches**](Roon/patches/README.md) - Patches to the Python Roon API to extend its capabilities

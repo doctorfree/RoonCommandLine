@@ -1,0 +1,24 @@
+#!/bin/bash
+
+SRCDIR=$HOME/src
+PYRDIR=pyroon/roonapi
+SUFF="00"
+
+[ -f $SRCDIR/$PYRDIR/roonapi.py.00 ] || {
+    echo "Roon API Python backup does not exist. Exiting."
+    exit 1
+}
+
+cd $SRCDIR
+
+[ -d ~/src/patches ] || mkdir ~/src/patches
+
+[ -f ${PYDIR}/roonapi.py.${SUFF} ] || {
+    SUFF="orig"
+    [ -f ${PYDIR}/roonapi.py.${SUFF} ] || {
+        echo "Cannot locate backup for file ${PYDIR}/roonapi.py. Exiting."
+        exit 1
+    }
+}
+
+diff -Naur ${PYRDIR}/roonapi.py.${SUFF} ${PYRDIR}/roonapi.py > ~/src/patches/pyroon-listplaylist.patch
