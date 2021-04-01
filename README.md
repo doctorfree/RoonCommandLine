@@ -54,10 +54,38 @@ $HOME/bin and the backend Python scripts into $HOME/Roon.
 
 For example, on the system where the Python Roon API is installed:
 
+	$ mkdir -p $HOME/src
+	$ cd $HOME/src
     $ git clone ssh://gitlab.com/doctorfree/Scripts.git
     $ cd Scripts/Roon
     $ ./install.sh
     # copy the "roon" script to all systems you wish to act as Roon command line
+
+Some of the commands require a patch to the Python Roon API to be applied.
+I wrote this patch to enable searching and retrieving lists of various
+objects in my Roon library. If you wish to enable the "list" feature of
+these scripts then apply the Python Roon API patch. Performing this step
+is optional. Most commands will function properly without it. Only the
+listing feature will not work. To apply the patch, after performing the
+steps above, execute the following:
+
+    $ cd $HOME/src
+	$ $HOME/bin/clone_pyroon
+	$ cd pyroon/roonapi
+	$ cp *.py $HOME/Python3/lib/python3.8/site-packages/roonapi
+
+Note this last command, copying the Python scripts to the site-packages/roonapi
+directory, needs to provide the correct path to your installed Python
+site-packages/roonapi directory. The command above is correct for my system
+but your system may differ. Double check where this directory got created
+by the "pip install roonapi" command.
+
+Alternatively, you can patch the Python Roon API roonapi module directly rather
+than patching the pyroon source code and copying it in. To perform this
+direct patch, follow these steps:
+
+    $ cd $HOME/Python3 # Or wherever your Pip roonapi module is installed
+	$ patch -b -p0 < $HOME/src/Scripts/Roon/patches/roonapi-listplaylist.patch
 
 Finally, note that the roon shell script is not passing credentials in the
 SSH invocations. SSH authentication via public key needs to be enabled and
