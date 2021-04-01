@@ -36,11 +36,16 @@ command via SSH. But what we have here in the repository are the command line to
 Installation
 ------------
 
-There are three components to install. The first is the "roon" shell script.
-This should be copied to a location in your shell execution PATH on all of
-the systems from which you wish to issue command line Roon controls.
+There are four components to install. First, install the Python Roon API
+on a system which is on the same local network as your Roon Core.
 
-The second and third components are the Python Roon API frontend shell scripts
+    $ pip install roonapi
+
+The second component is the "roon" shell script. This should be copied to
+a location in your shell execution PATH on all of the systems from which
+you wish to issue command line Roon controls.
+
+The third and fourth components are the Python Roon API frontend shell scripts
 and the Python Roon API backend Python scripts. These both get installed on
 the system on which the Python Roon API is installed. Copy this entire repository
 to the target system. Change directory into the Roon subdirectory and execute
@@ -53,6 +58,11 @@ For example, on the system where the Python Roon API is installed:
     $ cd Scripts/Roon
     $ ./install.sh
     # copy the "roon" script to all systems you wish to act as Roon command line
+
+Finally, note that the roon shell script is not passing credentials in the
+SSH invocations. SSH authentication via public key needs to be enabled and
+appropriate keys generated and propogated. This topic is addressed in various
+guides on setting up SSH.
 
 Usage
 -----
