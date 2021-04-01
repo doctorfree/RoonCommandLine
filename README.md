@@ -6,9 +6,10 @@ Scripts to access the Roon API providing command line support for playing specif
 History
 -------
 
-Several users have posted in the Roon forums various ways to use Siri to control Roon.
-These usually take the form of a fake device in HomeBridge that then communicates with
-HomeKit and Siri. This seems cool but maybe overkill. I was able to get Siri voice
+This project began as an attempt to control Roon with Siri voice commands.
+Several users had posted in the Roon forums various ways to use Siri to control Roon.
+These usually took the form of a fake device in HomeBridge that then communicates with
+HomeKit and Siri. This seemed cool but maybe overkill. I was able to get Siri voice
 control of Roon working with simple SSH shortcuts that execute Python scripts which
 utilize the Roon API to control Roon. People don’t seem to know about Apple’s SSH
 shortcuts. They can be used to execute commands on systems that allow SSH access.
@@ -26,6 +27,81 @@ need to specify an environment variable telling Python where the Pip modules are
 So I needed a login shell to pick that up but I could not figure out how to tell the
 Apple shortcut to give me an SSH login shell. The Python env variable is set in the
 shell script the SSH session executes.
+
+Currently this project has morphed primarily into a set of command line tools to control
+various aspects of Roon remotely. There is still the capability to augment this command
+line control with Siri voice commands that trigger an Apple Shortcut which executes a
+command via SSH. But what we have here in the repository are the command line tools.
+
+Installation
+------------
+
+There are three components to install. The first is the "roon" shell script.
+This should be copied to a location in your shell execution PATH on all of
+the systems from which you wish to issue command line Roon controls.
+
+The second and third components are the Python Roon API frontend shell scripts
+and the Python Roon API backend Python scripts. These both get installed on
+the system on which the Python Roon API is installed. Copy this entire repository
+to the target system. Change directory into the Roon subdirectory and execute
+the "install.sh" script. This will copy the frontend shell scripts into
+$HOME/bin and the backend Python scripts into $HOME/Roon.
+
+For example, on the system where the Python Roon API is installed:
+
+    $ git clone ssh://gitlab.com/doctorfree/Scripts.git
+    $ cd Scripts/Roon
+    $ ./install.sh
+    # copy the "roon" script to all systems you wish to act as Roon command line
+
+Usage
+-----
+
+The "roon" shell script is installed on any system that you want to utilize
+for command line control of Roon. It must be on a system that is able to SSH
+to the system on which the Python Roon API scripts are installed.
+
+The Python Roon API scripts must be installed on a system that is on the same
+local network as the Roon Core. The "roon" shell script is the primary user
+interface. It accepts a wide variety of arguments and sends a command to the
+Python Roon API system via SSH.
+
+Here is the current output of "roon -u" which displays a usage message.
+
+Usage: roon -r -u -a artist -g genre -l [artists|playlists|zones]
+    -s search -p playlist -t tag -z zone
+	-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+
+	Where:
+		-a artist selects an artist to play
+		-g genre selects a genre to play
+		-p playlist selects a playlist to play
+		-l [artists|playlists|zones] indicates list artists, playlists, or Roon zones
+		-s search specifies a term to search for in the lists retrieved with -l
+		-r indicates play Radio Paradise
+		-t tag selects an tag to play (not yet working)
+		-z zone selects the Roon Zone in which to play
+		-c [play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+			issues the command in the selected zone
+
+	Example invocations
+		Play artist:
+			roon -a "Deep Purple"
+		Play artist in specified zone:
+			roon -a "Jethro Tull" -z "Living Room"
+		Play genre:
+			roon -g Classical
+		Play playlist:
+			roon -p "Bowie Favs"
+		Play next track:
+			roon -c next
+		Stop play in specified zone:
+			roon -c stop -z Kitchen
+		Mute a specified zone:
+			roon -c mute -z "Living Room"
+		List all playlists containing the string 'Best':
+			roon -l playlists -s "Best"
+
 
 Contents
 --------
