@@ -78,9 +78,7 @@ Python Roon API system via SSH.
 
 Here is the current output of "roon -u" which displays a usage message.
 
-Usage: roon -r -u -a artist -g genre -l [artists|playlists|zones]
-    -s search -p playlist -t tag -z zone
-	-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+    Usage: roon -r -u -a artist -g genre -l [artists|playlists|zones] -s search -p playlist -t tag -z zone -c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 
 	Where:
 		-a artist selects an artist to play
