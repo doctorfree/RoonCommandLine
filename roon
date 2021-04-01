@@ -107,7 +107,7 @@ done
 
 [ "$artistlist" ] && ssh $user@$server "bash -l -c \"list_artists $search\""
 [ "$playlistlist" ] && ssh $user@$server "bash -l -c \"list_playlists $search\""
-[ "$zonelist" ] && ssh $user@$server "bash -l -c list_zones"
+[ "$zonelist" ] && ssh $user@$server "bash -l -c \"list_zones $search\""
 [ "$artist" ] && ssh $user@$server "bash -l -c \"play_artist $artist\""
 [ "$genre" ] && ssh $user@$server "bash -l -c \"play_genre $genre\""
 [ "$playlist" ] && ssh $user@$server "bash -l -c \"play_playlist $playlist\""

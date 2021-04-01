@@ -12,13 +12,18 @@ server = config['DEFAULT']['RoonCoreIP']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-a", "--artist", help="artist search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
-if args.zone:
-    searchterm = args.zone
+if args.artist:
+    searchterm = args.artist
 else:
-    searchterm = config['DEFAULT']['DefaultZone']
+    searchterm = config['DEFAULT']['DefaultArtist']
+if args.zone:
+    target_zone = args.zone
+else:
+    target_zone = config['DEFAULT']['DefaultZone']
 
 from roonapi import RoonApi
 appinfo = {
@@ -37,13 +42,21 @@ else:
 
 roonapi = RoonApi(appinfo, token, server)
 
+# get target zone output_id
 zones = roonapi.zones
-for output in zones.values():
-    zone_name = output["display_name"]
-    if searchterm == "all":
-        print(zone_name)
-    elif searchterm in zone_name:
-        print(zone_name)
+output_id = [
+    output["zone_id"]
+    for output in zones.values()
+    if target_zone in output["display_name"]
+][0]
+
+# List matching artists
+artists = roonapi.list_media(output_id, ["Library", "Artists", searchterm])
+
+if artists:
+    print(*artists, sep = "\n")
+else:
+    print("No artists found matching ", searchterm)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

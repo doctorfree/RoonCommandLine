@@ -1,0 +1,26 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+ZONECONF=$HOME/.roonzone
+LIST=list_artists.py
+ARTIST="David Bowie"
+
+export PYTHONUSERBASE=/home/doctor/Python3
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $LIST ] || exit 2
+
+[ "$1" ] && ARTIST="$*"
+
+# Get the zone if it is set
+if [ -f ${ZONECONF} ]
+then
+    . ${ZONECONF}
+else
+    ROON_ZONE="Living Room"
+fi
+
+python $LIST -a "$ARTIST" -z "$ROON_ZONE"

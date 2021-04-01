@@ -3,6 +3,7 @@
 ROON=$HOME/Roon
 ZONECONF=$HOME/.roonzone
 LIST=list_zones.py
+ZONE="Living"
 
 export PYTHONUSERBASE=/home/doctor/Python3
 
@@ -12,4 +13,6 @@ cd $ROON
 
 [ -f $LIST ] || exit 2
 
-python $LIST
+[ "$1" ] && ZONE="$*"
+
+python $LIST -z $ZONE
