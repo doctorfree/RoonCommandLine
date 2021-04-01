@@ -44,6 +44,8 @@ Contents
 
 [**play_tag**](Roon/play_tag) - Shell script frontend to play a specified tag (not yet working)
 
+[**list_artists**](Roon/list_artists) - Search and list the available Artists in your Roon Library
+
 [**list_playlists**](Roon/list_playlists) - Search and list the available Roon Playlists
 
 [**list_zones**](Roon/list_zones) - List the available Roon Zones

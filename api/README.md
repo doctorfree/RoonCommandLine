@@ -18,6 +18,8 @@ Contents
 
 [**play_tag.py**](Roon/api/play_tag.py) - Python script backend for playing a specified tag in my Roon library (not yet working)
 
+[**list_artists.py**](Roon/api/list_artists.py) - Python script backend for listing available Artists in your Roon Library
+
 [**list_playlists.py**](Roon/api/list_playlists.py) - Python script backend for listing available Roon Playlists
 
 [**list_zones.py**](Roon/api/list_zones.py) - Python script backend for listing available Roon Zones
