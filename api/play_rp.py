@@ -44,10 +44,8 @@ output_id = [
     for output in zones.values()
     if target_zone in output["display_name"]
 ][0]
-print("OUTPUT ID", output_id)
 
 # Play Radio Paradise Main 
-print("RADIO")
 items = roonapi.play_media(output_id, ["My Live Radio", "Radio Paradise: Main mix"])
 
 # save the token for next time

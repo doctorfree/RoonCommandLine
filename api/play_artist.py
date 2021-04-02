@@ -49,11 +49,23 @@ output_id = [
     for output in zones.values()
     if target_zone in output["display_name"]
 ][0]
-print("OUTPUT ID", output_id)
 
 # Play artist from Library
-print("SINGLE ARTIST")
 items = roonapi.play_media(output_id, ["Library", "Artists", artist])
+
+if items:
+    print("Found artist:", *items, sep = "\n")
+else:
+    print("\nSearching for partial matches")
+    artists = roonapi.list_media(output_id, ["Library", "Artists", artist])
+    print("\nArtist names partially matching", artist, ":\n")
+    print(*artists, sep = "\n")
+    if len(artists) == 1:
+        artist = artists[0]
+        roonapi.play_media(output_id, ["Library", "Artists", artist])
+    else:
+        print("\nTo play an artist by name either specify the full name")
+        print("or enough of a substring to provide a single match")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

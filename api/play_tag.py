@@ -49,11 +49,23 @@ output_id = [
     for output in zones.values()
     if target_zone in output["display_name"]
 ][0]
-print("OUTPUT ID", output_id)
 
 # Play tag
-print("PLAY TAG")
 items = roonapi.shuffle(output_id, ["Library", "Tags", tag])
+
+if items:
+    print("Found tag:", *items, sep = "\n")
+else:
+    print("\nSearching for partial matches")
+    tags = roonapi.list_media(output_id, ["Library", "Tags", tag])
+    print("\nTags partially matching", tag, ":\n")
+    print(*tags, sep = "\n")
+    if len(tags) == 1:
+        tag = tags[0]
+        roonapi.play_media(output_id, ["Library", "Tags", tag])
+    else:
+        print("\nTo play a tag by name either specify the full name")
+        print("or enough of a substring to provide a single match")
 
 # save the token for next time
 with open(tokenfile, "w") as f:
