@@ -200,10 +200,14 @@ Contents
 
 [**INSTALL**](Roon/INSTALL) - Describes the installation process
 
+[**LICENSE**](Roon/LICENSE) - Apache License version 2.0
+
+[**NOTICE**](Roon/NOTICE) - Copyright notice
+
 [**install.sh**](Roon/install.sh) - Convenience script to copy scripts into place
 
 [**usage.txt**](Roon/usage.txt) - Frontend "roon" script usage documentation
 
-[**api**](Roon/api/README.md) - Python scripts to call the Roon API with appropriate arguments
+[**api/**](Roon/api/README.md) - Python scripts to call the Roon API with appropriate arguments
 
-[**patches**](Roon/patches/README.md) - Patches to the Python Roon API to extend its capabilities
+[**patches/**](Roon/patches/README.md) - Patches to the Python Roon API to extend its capabilities
