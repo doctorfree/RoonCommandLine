@@ -1,0 +1,15 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+CORE=get_core_ip.py
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $CORE ] || exit 2
+
+# echo "When prompted for authorization, go to a Roon Remote client window,"
+# echo "click on 'Settings' then click on 'Extensions' then 'Enable' the extension"
+
+python $CORE

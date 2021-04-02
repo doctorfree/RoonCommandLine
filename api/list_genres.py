@@ -1,3 +1,4 @@
+import argparse
 import configparser
 import os.path
 from os import path
@@ -9,6 +10,20 @@ config.read('roon_api.ini')
 server = config['DEFAULT']['RoonCoreIP']
 # Name of the file that holds a Roon API token
 tokenfile = config['DEFAULT']['TokenFileName']
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-g", "--genre", help="genre search term")
+parser.add_argument("-z", "--zone", help="zone selection")
+args = parser.parse_args()
+
+if args.genre:
+    searchterm = args.genre
+else:
+    searchterm = config['DEFAULT']['DefaultGenre']
+if args.zone:
+    target_zone = args.zone
+else:
+    target_zone = config['DEFAULT']['DefaultZone']
 
 from roonapi import RoonApi
 appinfo = {
@@ -27,9 +42,21 @@ else:
 
 roonapi = RoonApi(appinfo, token, server)
 
-genres = roonapi.genres()
-print("number of genres: %s" % genres["list"]["count"])
-print([item["title"] for item in genres["items"]])
+# get target zone output_id
+zones = roonapi.zones
+output_id = [
+    output["zone_id"]
+    for output in zones.values()
+    if target_zone in output["display_name"]
+][0]
+
+# List matching genres
+genres = roonapi.list_media(output_id, ["Genres", searchterm])
+
+if genres:
+    print(*genres, sep = "\n")
+else:
+    print("No genres found matching ", searchterm)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

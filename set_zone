@@ -1,7 +1,19 @@
 #!/bin/bash
 
-ROONCONF=$HOME/.roonzone
+ROONCONF=$HOME/.pyroonconf
 
 [ "$1" ] && ZONE="$*"
 
-echo "ROON_ZONE=\"$ZONE\"" > $ROONCONF
+if [ -f $ROONCONF ]
+then
+    grep -v ^ROON_ZONE $ROONCONF > /tmp/roonconf$$
+    echo "ROON_ZONE=\"$ZONE\"" >> /tmp/roonconf$$
+    cp /tmp/roonconf$$ $ROONCONF
+    rm -f /tmp/roonconf$$
+    grep PYTHONUSERBASE $ROONCONF > /dev/null || {
+        echo "export PYTHONUSERBASE=$HOME/Python3" >> $ROONCONF
+    }
+else
+    echo "ROON_ZONE=\"$ZONE\"" > $ROONCONF
+    echo "export PYTHONUSERBASE=$HOME/Python3" >> $ROONCONF
+fi

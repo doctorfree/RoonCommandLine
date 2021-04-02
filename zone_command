@@ -1,11 +1,9 @@
 #!/bin/bash
 
 ROON=$HOME/Roon
-ZONECONF=$HOME/.roonzone
+ROONCONF=$HOME/.pyroonconf
 SCRIPT=zone_command.py
 COMMAND="play"
-
-export PYTHONUSERBASE=/home/doctor/Python3
 
 [ -d $ROON ] || exit 1
 
@@ -14,11 +12,13 @@ cd $ROON
 [ -f $SCRIPT ] || exit 2
 
 # Get the zone if it is set
-if [ -f ${ZONECONF} ]
+if [ -f ${ROONCONF} ]
 then
-    . ${ZONECONF}
+    . ${ROONCONF}
 else
-    ROON_ZONE="Living Room"
+    DEFZONE=`grep ^DefaultZone $HOME/Roon/roon_api.ini | awk -F '=' ' { print $2 } '`
+    set_zone $DEFZONE
+    . ${ROONCONF}
 fi
 
 # Parse the arguments to get the command and zone

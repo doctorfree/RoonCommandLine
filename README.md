@@ -59,7 +59,20 @@ For example, on the system where the Python Roon API is installed:
     $ git clone ssh://gitlab.com/doctorfree/Scripts.git
     $ cd Scripts/Roon
     $ ./install.sh
-    # copy the "roon" script to all systems you wish to act as Roon command line
+
+	# Edit the Python Roon API command line configuration file
+	$ vi $HOME/Roon/roon_api.ini
+
+	# At a minimum you will need to set RoonCoreIP to your Roon Core IP address
+	# If you do not know your Roon Core IP, run the discovery script
+	$ $HOME/bin/get_core_ip
+	# Authorize the extension when prompted
+	# In a Roon Remote client window click "Settings" -> "Extensions" -> "Enable"
+
+    # Copy the "roon" script to all systems on which you wish to use
+	# the Python Roon API command line tools, every system you want to
+	# enable as a command line Roon remote. Each system must be able to
+	# access the Python Roon API installed system via SSH
 
 Some of the commands require a patch to the Python Roon API to be applied.
 I wrote this patch to enable searching and retrieving lists of various
@@ -148,6 +161,10 @@ Contents
 
 [**clone_pyroon**](Roon/clone_pyroon) - Shell script to retrieve the pyroon project source code from Github and apply my patches
 
+[**get_core_ip**](Roon/get_core_ip) - Shell script to retrieve the Roon Core IP address
+
+[**get_zones**](Roon/get_zones) - Shell script to retrieve the Roon output Zone names
+
 [**play_artist**](Roon/play_artist) - Shell script frontend for playing a specified artist in my Roon library
 
 [**play_genre**](Roon/play_genre) - Shell script frontend to play a specified genre
@@ -158,7 +175,11 @@ Contents
 
 [**play_tag**](Roon/play_tag) - Shell script frontend to play a specified tag (not yet working)
 
+[**list_albums**](Roon/list_albums) - Search and list the available Albums in your Roon Library
+
 [**list_artists**](Roon/list_artists) - Search and list the available Artists in your Roon Library
+
+[**list_genres**](Roon/list_genres) - Search and list the available Genres in your Roon Library
 
 [**list_playlists**](Roon/list_playlists) - Search and list the available Roon Playlists
 

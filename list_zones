@@ -1,17 +1,24 @@
 #!/bin/bash
 
 ROON=$HOME/Roon
-ZONECONF=$HOME/.roonzone
+ROONCONF=$HOME/.pyroonconf
 LIST=list_zones.py
 ZONE="Living"
-
-export PYTHONUSERBASE=/home/doctor/Python3
 
 [ -d $ROON ] || exit 1
 
 cd $ROON
 
 [ -f $LIST ] || exit 2
+
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone $HOME/Roon/roon_api.ini | awk -F '=' ' { print $2 } '`
+    set_zone $DEFZONE
+    . ${ROONCONF}
+fi
 
 [ "$1" ] && ZONE="$*"
 

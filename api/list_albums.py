@@ -1,3 +1,4 @@
+import argparse
 import configparser
 import os.path
 from os import path
@@ -9,6 +10,20 @@ config.read('roon_api.ini')
 server = config['DEFAULT']['RoonCoreIP']
 # Name of the file that holds a Roon API token
 tokenfile = config['DEFAULT']['TokenFileName']
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-a", "--album", help="album search term")
+parser.add_argument("-z", "--zone", help="zone selection")
+args = parser.parse_args()
+
+if args.album:
+    searchterm = args.album
+else:
+    searchterm = config['DEFAULT']['DefaultArtist']
+if args.zone:
+    target_zone = args.zone
+else:
+    target_zone = config['DEFAULT']['DefaultZone']
 
 from roonapi import RoonApi
 appinfo = {
@@ -27,10 +42,21 @@ else:
 
 roonapi = RoonApi(appinfo, token, server)
 
-artists = roonapi.artists()
-print("number of artists: %s" % artists["list"]["count"])
-#for output in artists.values():
-#    print(output["display_name"])
+# get target zone output_id
+zones = roonapi.zones
+output_id = [
+    output["zone_id"]
+    for output in zones.values()
+    if target_zone in output["display_name"]
+][0]
+
+# List matching albums
+albums = roonapi.list_media(output_id, ["Library", "Albums", searchterm])
+
+if albums:
+    print(*albums, sep = "\n")
+else:
+    print("No albums found matching ", searchterm)
 
 # save the token for next time
 with open(tokenfile, "w") as f:
