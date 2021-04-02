@@ -154,6 +154,12 @@ Here is the current output of "roon -u" which displays a usage message.
 		List all playlists containing the string 'Best':
 			roon -l playlists -s "Best"
 
+When playing media from the command line it is possible to specify a substring
+with which a partial match can be made. In order to play media, either the full
+name of the desired media or enough of a substring to uniquely match must be
+supplied. This applies to playing an album, artist, genre, playlist, or tag.
+For example, the command "roon -a Tull" would play media by artist "Jethro Tull"
+unless there were multiple artist name matches to the substring "Tull".
 
 Contents
 --------
