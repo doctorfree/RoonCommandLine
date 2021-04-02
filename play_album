@@ -1,0 +1,25 @@
+#!/bin/bash
+
+ROON=$HOME/Roon
+ROONCONF=$HOME/.pyroonconf
+PLAY=play_album.py
+ALBUM="Catch the Wind"
+
+[ -d $ROON ] || exit 1
+
+cd $ROON
+
+[ -f $PLAY ] || exit 2
+
+[ "$1" ] && ALBUM="$*"
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone $HOME/Roon/roon_api.ini | awk -F '=' ' { print $2 } '`
+    set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+python $PLAY -a "$ALBUM" -z "$ROON_ZONE"

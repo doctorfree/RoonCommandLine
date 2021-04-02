@@ -165,6 +165,8 @@ Contents
 
 [**get_zones**](Roon/get_zones) - Shell script to retrieve the Roon output Zone names
 
+[**play_album**](Roon/play_album) - Shell script frontend for playing a specified album in my Roon library
+
 [**play_artist**](Roon/play_artist) - Shell script frontend for playing a specified artist in my Roon library
 
 [**play_genre**](Roon/play_genre) - Shell script frontend to play a specified genre

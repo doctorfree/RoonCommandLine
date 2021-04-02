@@ -42,8 +42,6 @@ cp /tmp/core$$ $HOME/Roon/roon_api.ini
 rm -f /tmp/core$$ /tmp/discover$$
 
 echo ""
-echo "Install the Python Roon API project with 'pip install roonapi'"
-echo ""
 echo "Verify the 'server' and 'user' settings in the roon script are correct"
 echo "and copy the 'roon' frontend shell script to a location in your execution"
 echo "PATH on all systems from which you wish to control Roon via SSH"

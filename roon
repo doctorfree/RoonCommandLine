@@ -8,6 +8,7 @@ server="XX.X.X.XXX"
 #   The username that has public key authorized SSH access to the Python Roon API system
 user="SSH_USERNAME"
 
+album=
 artist=
 comm=
 albumlist=
@@ -22,8 +23,9 @@ tag=
 zone=
 
 usage() {
-  printf "\nUsage: roon -a artist -g genre -l [albums|artists|genres|playlists|zones] -s search -p playlist -t tag -z zone\n\t-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-r -u"
-  printf "\n\tWhere:\n\t\t-a artist selects an artist to play"
+  printf "\nUsage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|zones] -s search -p playlist -t tag -z zone\n\t-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-r -u"
+  printf "\n\tWhere:\n\t\t-A album selects an album to play"
+  printf "\n\t\t-a artist selects an artist to play"
   printf "\n\t\t-g genre selects a genre to play"
   printf "\n\t\t-p playlist selects a playlist to play"
   printf "\n\t\t-l [albums|artists|genres|playlists|zones] indicates list albums, artists, genres, playlists, or Roon zones"
@@ -55,8 +57,11 @@ usage() {
 
 [ "$1" ] || usage
 
-while getopts a:g:p:t:z:c:l:s:ru flag; do
+while getopts A:a:g:p:t:z:c:l:s:ru flag; do
     case $flag in
+        A)
+            album="$OPTARG"
+            ;;
         a)
             artist="$OPTARG"
             ;;
@@ -120,6 +125,7 @@ done
 [ "$genrelist" ] && ssh $user@$server "bash -l -c \"list_genres $search\""
 [ "$playlistlist" ] && ssh $user@$server "bash -l -c \"list_playlists $search\""
 [ "$zonelist" ] && ssh $user@$server "bash -l -c \"list_zones $search\""
+[ "$album" ] && ssh $user@$server "bash -l -c \"play_album $album\""
 [ "$artist" ] && ssh $user@$server "bash -l -c \"play_artist $artist\""
 [ "$genre" ] && ssh $user@$server "bash -l -c \"play_genre $genre\""
 [ "$playlist" ] && ssh $user@$server "bash -l -c \"play_playlist $playlist\""

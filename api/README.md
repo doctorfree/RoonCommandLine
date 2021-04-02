@@ -8,6 +8,12 @@ Contents
 
 [**roon_api.ini**](Roon/api/roon_api.ini) - Python Roon API default settings
 
+[**get_core_ip.py**](Roon/api/get_core_ip.py) - Python script backend to retrieve the Roon Core IP address
+
+[**get_zones.py**](Roon/api/get_zones.py) - Python script backend to retrieve the Roon output Zone names
+
+[**play_album.py**](Roon/api/play_album.py) - Python script backend for playing a specified album in my Roon library
+
 [**play_artist.py**](Roon/api/play_artist.py) - Python script backend for playing a specified artist in my Roon library
 
 [**play_genre.py**](Roon/api/play_genre.py) - Python script backend for playing a specified genre in my Roon library
@@ -18,7 +24,11 @@ Contents
 
 [**play_tag.py**](Roon/api/play_tag.py) - Python script backend for playing a specified tag in my Roon library (not yet working)
 
+[**list_albums.py**](Roon/api/list_albums.py) - Python script backend for listing available Albums in your Roon Library
+
 [**list_artists.py**](Roon/api/list_artists.py) - Python script backend for listing available Artists in your Roon Library
+
+[**list_genres.py**](Roon/api/list_genres.py) - Python script backend for listing available Genres in your Roon Library
 
 [**list_playlists.py**](Roon/api/list_playlists.py) - Python script backend for listing available Roon Playlists
 
