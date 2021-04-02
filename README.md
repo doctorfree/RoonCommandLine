@@ -1,7 +1,19 @@
 Scripts/Roon
 ============
 
-Scripts to access the Roon API providing command line support for playing specified artists, tracks, radio, or other Roon audio
+Scripts to access the Python Roon API providing command line support for
+playing specified albums, artists, genres, playlists, tags, radio, or other
+Roon library media. In addition, search capabilities have been added to the
+scripts with partial matching facilities. Thus a substring can be supplied
+to use as a search term with partial matching returning albums, artists,
+playlists, genres, or tags which contain the specified substring.
+
+In addition to media search and playback, the Python Roon API Command Line
+supports Roon command control. Commands currently supported include:
+    play, pause, playpause, stop, next, previous,
+	shuffle, unshuffle, repeat, unrepeat, mute, unmute
+
+All commands and playback can target a specified Roon output zone.
 
 History
 -------
