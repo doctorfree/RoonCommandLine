@@ -1,5 +1,5 @@
-Scripts/Roon/patches
-====================
+RoonCommandLine/patches
+=======================
 
 Patches to the Python Roon API. Currently these patches add a method to search and display a list of objects in your Roon library matching the search criteria. For instance, display a list of Playlists that contain the term "Best".
 

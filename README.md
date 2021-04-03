@@ -1,17 +1,28 @@
-Scripts/Roon
-============
+RoonCommandLine
+===============
 
-Scripts to access the Python Roon API providing command line support for
-playing specified albums, artists, genres, playlists, tags, radio, or other
-Roon library media. In addition, search capabilities have been added to the
-scripts with partial matching facilities. Thus a substring can be supplied
-to use as a search term with partial matching returning albums, artists,
-playlists, genres, or tags which contain the specified substring.
+The Roon Command Line project provides Bash and Python scripts to enable
+command line control of the Roon audio system over a local network.
+
+It requires a Roon Core system as well as the Python Roon API from
+https://github.com/pavoni/pyroon
+
+A frontend Bash script can be installed wherever you want to issue Roon
+commands. Roon commands are issued via public key authenticated SSH commands
+sent to a system with the Python Roon API installed. That system then parses
+the commands and communicates with the Roon Core via the Roon API.
+
+Currently the command line Roon control scripts provide support for playing
+specified albums, artists, genres, playlists, tags, radio, or other Roon
+library media. In addition, search capabilities have been added to the scripts
+with partial matching facilities. Thus a substring can be supplied to use as a
+search term with partial matching returning albums, artists, playlists, genres,
+or tags which contain the specified substring.
 
 In addition to media search and playback, the Python Roon API Command Line
 supports Roon command control. Commands currently supported include:
     play, pause, playpause, stop, next, previous,
-	shuffle, unshuffle, repeat, unrepeat, mute, unmute
+    shuffle, unshuffle, repeat, unrepeat, mute, unmute
 
 All commands and playback can target a specified Roon output zone.
 
@@ -68,8 +79,8 @@ For example, on the system where the Python Roon API is installed:
 
 	$ mkdir -p $HOME/src
 	$ cd $HOME/src
-    $ git clone ssh://gitlab.com/doctorfree/Scripts.git
-    $ cd Scripts/Roon
+    $ git clone git@gitlab.com:doctorfree/RoonCommandLine.git
+    $ cd RoonCommandLine
     $ ./install.sh
 
 	# Edit the Python Roon API command line configuration file
@@ -110,7 +121,7 @@ than patching the pyroon source code and copying it in. To perform this
 direct patch, follow these steps:
 
     $ cd $HOME/Python3 # Or wherever your Pip roonapi module is installed
-	$ patch -b -p0 < $HOME/src/Scripts/Roon/patches/roonapi-listplaylist.patch
+	$ patch -b -p0 < $HOME/src/RoonCommandLine/patches/roonapi-listplaylist.patch
 
 Finally, note that the roon shell script is not passing credentials in the
 SSH invocations. SSH authentication via public key needs to be enabled and

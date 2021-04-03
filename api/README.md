@@ -1,5 +1,5 @@
-Scripts/Roon/api
-================
+RoonCommandLine/api
+===================
 
 Python scripts to access the Roon API
 
