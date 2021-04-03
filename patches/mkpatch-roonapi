@@ -5,6 +5,7 @@ SITEDIR=lib/python3.8/site-packages
 USERSITE=$PYDIR/$SITEDIR
 
 [ -d $USERSITE/roonapi ] || {
+    # First check the Python User Site directory
     USERSITE=`python -m site --user-site`
     if [ -d $USERSITE/roonapi ]
     then
@@ -12,9 +13,23 @@ USERSITE=$PYDIR/$SITEDIR
         base=`basename $PYDIR`
         SITEDIR=`echo $USERSITE | awk -F "/${base}/" ' { print $2 } '`
     else
+        # Next check Python's global directories
+        SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+        for site in ${SITES[@]}
+        do
+            [ -d ${site}/roonapi ] && {
+                PYDIR=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
+                base=`basename $PYDIR`
+                SITEDIR=`echo ${site} | awk -F "/${base}/" ' { print $2 } '`
+                USERSITE=$PYDIR/$SITEDIR
+                break
+            }
+        done
+    fi
+    [ -d $USERSITE/roonapi ] || {
         echo "Roon API Python module not found. Exiting."
         exit 1
-    fi
+    }
 }
 
 [ -d $USERSITE/roonapi-bak ] || {
