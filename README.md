@@ -125,6 +125,17 @@ site-packages/roonapi directory. The command above is correct for my system
 but your system may differ. Double check where this directory got created
 by the "pip install roonapi" command.
 
+Python has global and per-user site-packages directories. To find your Python
+user site-packages directory, issue the command:
+
+    $ python -m site --user-site
+
+To find your Python global dist-packages directory, issue the command:
+
+    $ python -c 'import site; print(site.getsitepackages())'
+
+The roonapi module should be in your user site-packages directory.
+
 Alternatively, you can patch the Python Roon API roonapi module directly rather
 than patching the pyroon source code and copying it in. To perform this
 direct patch, follow these steps:

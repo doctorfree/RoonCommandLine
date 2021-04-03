@@ -2,8 +2,22 @@
 
 PYDIR=$HOME/Python3
 SITEDIR=lib/python3.8/site-packages
+USERSITE=$PYDIR/$SITEDIR
 
-[ -d $PYDIR/$SITEDIR/roonapi-bak ] || {
+[ -d $USERSITE/roonapi ] || {
+    USERSITE=`python -m site --user-site`
+    if [ -d $USERSITE/roonapi ]
+    then
+        PYDIR=`echo $USERSITE | awk -F "/lib/" ' { print $1 } '`
+        base=`basename $PYDIR`
+        SITEDIR=`echo $USERSITE | awk -F "/${base}/" ' { print $2 } '`
+    else
+        echo "Roon API Python module not found. Exiting."
+        exit 1
+    fi
+}
+
+[ -d $USERSITE/roonapi-bak ] || {
     echo "Roon API Python backup does not exist. Exiting."
     exit 1
 }
