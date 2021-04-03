@@ -6,10 +6,10 @@ Patches to the Python Roon API. Currently these patches add a method to search a
 Contents
 --------
 
-[**roonapi-listplaylist.patch**](Roon/patches/roonapi-listplaylist.patch) - Python Roon API patch to be applied to the installed Python module (e.g. after "pip install roonapi")
+[**roonapi-listplaylist.patch**](RoonCommandLine/patches/roonapi-listplaylist.patch) - Python Roon API patch to be applied to the installed Python module (e.g. after "pip install roonapi")
 
-[**pyroon-listplaylist.patch**](Roon/patches/pyroon-listplaylist.patch) - Python Roon API patch to be applied to a cloned git repository
+[**pyroon-listplaylist.patch**](RoonCommandLine/patches/pyroon-listplaylist.patch) - Python Roon API patch to be applied to a cloned git repository
 
-[**mkpatch-pyroon**](Roon/patches/mkpatch-pyroon) - Shell script used to create the pyroon patch above
+[**mkpatch-pyroon**](RoonCommandLine/patches/mkpatch-pyroon) - Shell script used to create the pyroon patch above
 
-[**mkpatch-roonapi**](Roon/patches/mkpatch-roonapi) - Shell script used to create the roonapi patch above
+[**mkpatch-roonapi**](RoonCommandLine/patches/mkpatch-roonapi) - Shell script used to create the roonapi patch above
