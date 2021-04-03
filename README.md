@@ -80,6 +80,10 @@ For example, on the system where the Python Roon API is installed:
 	$ mkdir -p $HOME/src
 	$ cd $HOME/src
     $ git clone git@gitlab.com:doctorfree/RoonCommandLine.git
+
+	# Alternatively, download the latest release:
+	# https://gitlab.com/doctorfree/RoonCommandLine/-/releases
+
     $ cd RoonCommandLine
     $ ./install.sh
 
@@ -107,6 +111,11 @@ steps above, execute the following:
 
     $ cd $HOME/src
 	$ $HOME/bin/clone_pyroon
+
+	# Alternatively, download the latest pyroon release and apply the patch by hand
+	# https://github.com/pavoni/pyroon/releases
+	# patch -b -p0 < $HOME/src/RoonCommandLine/patches/pyroon-listplaylist.patch
+
 	$ cd pyroon/roonapi
 	$ cp *.py $HOME/Python3/lib/python3.8/site-packages/roonapi
 
