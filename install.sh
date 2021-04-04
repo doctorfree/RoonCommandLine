@@ -1,7 +1,11 @@
 #!/bin/bash
 
+HERE=`pwd`
 ROON=$HOME/Roon
 LBIN=$HOME/bin
+ROONAPI_PATCH=roonapi-listmedia.patch
+ROONCONF=$HOME/.pyroonconf
+
 
 [ -d $LBIN ] || mkdir $LBIN
 cp *_* $LBIN
@@ -40,6 +44,67 @@ cat $HOME/Roon/roon_api.ini | sed -e "s/XX.X.X.XX/$CORE_IP/" > /tmp/core$$
 cp $HOME/Roon/roon_api.ini $HOME/Roon/roon_api.ini.orig
 cp /tmp/core$$ $HOME/Roon/roon_api.ini
 rm -f /tmp/core$$ /tmp/discover$$
+
+# Locate Python user base
+USERSITE=`python -m site --user-site`
+# First check the Python user site dir
+if [ -d $USERSITE/roonapi ]
+then
+    PYTHONUSERBASE=`echo $USERSITE | awk -F "/lib/" ' { print $1 } '`
+    base=`basename $PYTHONUSERBASE`
+    SITEDIR=`echo $USERSITE | awk -F "/${base}/" ' { print $2 } '`
+else
+    # Check the global site directories
+    SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+    for site in ${SITES[@]}
+    do
+        [ -d ${site}/roonapi ] && {
+            PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
+            base=`basename $PYTHONUSERBASE`
+            SITEDIR=`echo ${site} | awk -F "/${base}/" ' { print $2 } '`
+            break
+        }
+    done
+fi
+
+if [ "$PYTHONUSERBASE" ]
+then
+    if [ -f $ROONCONF ]
+    then
+        grep PYTHONUSERBASE $ROONCONF > /dev/null || {
+            echo "export PYTHONUSERBASE=$PYTHONUSERBASE" >> $ROONCONF
+        }
+    else
+        echo "export PYTHONUSERBASE=$PYTHONUSERBASE" > $ROONCONF
+    fi
+    # Apply the Python Roon API patch if it has not already been applied
+    grep ROONAPIPATCHED $ROONCONF > /dev/null || {
+        # Locate the patch file
+        patchfile=
+        if [ -f $HERE/patches/$ROONAPI_PATCH ]
+        then
+            patchfile=$HERE/patches/$ROONAPI_PATCH
+        else
+            if [ -f $HOME/src/patches/$ROONAPI_PATCH ]
+            then
+                patchfile=$HOME/src/patches/$ROONAPI_PATCH
+            else
+                echo "Cannot locate patch file $ROONAPI_PATCH"
+                echo "Python Roon API patch not applied."
+                echo "List commands will not function properly."
+            fi
+        fi
+        [ "$patchfile" ] && {
+            cd $PYTHONUSERBASE
+            patch -b -p0 < $patchfile
+            echo "ROONAPIPATCHED=true" >> $ROONCONF
+        }
+    }
+else
+    echo "Could not locate the roonapi Python module installation directory"
+    echo "Python Roon API patch not applied."
+    echo "List commands will not function properly."
+fi
 
 echo ""
 echo "Verify the 'server' and 'user' settings in the roon script are correct"

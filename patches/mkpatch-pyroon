@@ -21,4 +21,4 @@ cd $SRCDIR
     }
 }
 
-diff -Naur ${PYRDIR}/roonapi.py.${SUFF} ${PYRDIR}/roonapi.py > ~/src/patches/pyroon-listplaylist.patch
+diff -Naur ${PYRDIR}/roonapi.py.${SUFF} ${PYRDIR}/roonapi.py > ~/src/patches/pyroon-listmedia.patch

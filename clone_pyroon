@@ -1,7 +1,7 @@
 #!/bin/bash
 
 project="pyroon"
-patch="$HOME/src/RoonCommandLine/patches/pyroon-listplaylist.patch"
+patch="$HOME/src/RoonCommandLine/patches/pyroon-listmedia.patch"
 
 [ -d ${project} ] && {
     rm -rf ${project}

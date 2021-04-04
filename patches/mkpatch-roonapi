@@ -41,4 +41,4 @@ cd $PYDIR
 
 [ -d ~/src/patches ] || mkdir ~/src/patches
 
-diff -Naur ${SITEDIR}/roonapi-bak ${SITEDIR}/roonapi > ~/src/patches/roonapi-listplaylist.patch
+diff -Naur ${SITEDIR}/roonapi-bak ${SITEDIR}/roonapi > ~/src/patches/roonapi-listmedia.patch

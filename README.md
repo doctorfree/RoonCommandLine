@@ -113,20 +113,31 @@ you wish to issue command line Roon controls.
 	# enable as a command line Roon remote. Each system must be able to
 	# access the Python Roon API installed system via SSH
 
+Finally, note that the roon shell script is not passing credentials in the
+SSH invocations. SSH authentication via public key needs to be enabled and
+appropriate keys generated and propogated. This topic is addressed in various
+guides on setting up SSH.
+
+Manual Patch Application
+------------------------
+
 Some of the commands require a patch to the Python Roon API to be applied.
-I wrote this patch to enable searching and retrieving lists of various
-objects in my Roon library. If you wish to enable the "list" feature of
-these scripts then apply the Python Roon API patch. Performing this step
-is optional. Most commands will function properly without it. Only the
-listing feature will not work. To apply the patch, after performing the
-steps above, execute the following:
+This patch enables searching and retrieving lists of various objects in a
+Roon library. If the Python Roon API module and patch could be found during
+the execution of the install.sh script then this patch was automatically
+applited and you need do nothing. However, if the patch did not apply or
+failed to apply properly and you wish to enable the "list" feature of
+these scripts then apply the Python Roon API patch manually. Performing
+this step should not be necessary but instructions are provided should
+you at any point need to re-apply the patch manually. To apply the patch,
+after performing the steps above, execute the following:
 
     $ cd $HOME/src
 	$ $HOME/bin/clone_pyroon
 
 	# Alternatively, download the latest pyroon release and apply the patch by hand
 	# https://github.com/pavoni/pyroon/releases
-	# patch -b -p0 < $HOME/src/RoonCommandLine/patches/pyroon-listplaylist.patch
+	# patch -b -p0 < $HOME/src/RoonCommandLine/patches/pyroon-listmedia.patch
 
 	$ cd pyroon/roonapi
 	$ cp *.py $HOME/Python3/lib/python3.8/site-packages/roonapi
@@ -153,12 +164,7 @@ than patching the pyroon source code and copying it in. To perform this
 direct patch, follow these steps:
 
     $ cd $HOME/Python3 # Or wherever your Pip roonapi module is installed
-	$ patch -b -p0 < $HOME/src/RoonCommandLine/patches/roonapi-listplaylist.patch
-
-Finally, note that the roon shell script is not passing credentials in the
-SSH invocations. SSH authentication via public key needs to be enabled and
-appropriate keys generated and propogated. This topic is addressed in various
-guides on setting up SSH.
+	$ patch -b -p0 < $HOME/src/RoonCommandLine/patches/roonapi-listmedia.patch
 
 Usage
 -----
