@@ -11,8 +11,9 @@ do
 done
 rm -rf $ROON
 
-cp roon.orig roon
-rm -f roon.orig
+[ -f roon.orig ] && {
+    mv roon.orig roon
+}
 
 # Locate Python user base
 USERSITE=`python -m site --user-site`
@@ -20,7 +21,7 @@ ROON_SITE_DIR=
 # First check the Python user site dir
 if [ -d $USERSITE/roonapi ]
 then
-    ROON_SITE_DIR=${site}/roonapi
+    ROON_SITE_DIR=${USERSITE}/roonapi
 else
     # Check the global site directories
     SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
@@ -41,6 +42,7 @@ then
     cd $ROON_SITE_DIR
     for i in *.orig
     do
+        [ "$i" == "*.orig" ] && continue
         j=`echo $i | sed -e "s/.orig//"`
         mv $i $j
     done
