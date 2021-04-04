@@ -16,7 +16,7 @@ apis = [RoonApi(appinfo, None, server[0], server[1], False) for server in server
 
 auth_api = []
 while len(auth_api) == 0:
-    print("Waiting for authorization - in Roon, click Settings -> Extensions -> Enable", flush=True)
+    print("\nWaiting for authorization - in Roon, click \033[1mSettings -> Extensions -> Enable\033[0m\n", flush=True)
     time.sleep(15)
     auth_api = [api for api in apis if api.token is not None]
 
