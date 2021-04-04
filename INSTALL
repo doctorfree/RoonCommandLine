@@ -34,16 +34,16 @@ go to a Roon Remote window and click "Settings -> Extensions -> Enable"
 to authorize discovery.
 
 After performing the automated installation, edit the Python Roon API
-configuration settings at $HOME/Roon/roon_api.ini
+configuration settings at $HOME/RoonCommandLine/roon_api.ini
 
 Alternatively, a manual installation can be performed. Copy all of the scripts
 in this directory to ~/bin on the system on which pyroon is installed
     cp *_* ~/bin
 
 Copy all of the Python scripts and the "roon_api.ini" configuration file in the
-api subdirectory to ~/Roon on the system on which pyroon is installed
-    cp api/*_* ~/Roon
-Edit ~/Roon/roon_api.ini to set the default values and Roon Core IP address.
+api subdirectory to ~/RoonCommandLine on the system on which pyroon is installed
+    cp api/*_* ~/RoonCommandLine
+Edit ~/RoonCommandLine/roon_api.ini to set the default values and Roon Core IP address.
 
 No passwords are used in the SSH invocations in this project. It is assumed that
 appropriate SSH Public Key Authentication has been configured for all systems

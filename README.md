@@ -81,7 +81,7 @@ and the Python Roon API backend Python scripts. These both get installed on
 the system on which the Python Roon API is installed. Copy this entire repository
 to the target system. Change directory into the Roon subdirectory and execute
 the "install.sh" script. This will copy the frontend shell scripts into
-$HOME/bin and the backend Python scripts into $HOME/Roon.
+$HOME/bin and the backend Python scripts into $HOME/RoonCommandLine.
 
 For example, on the system where the Python Roon API is installed:
 
@@ -95,10 +95,12 @@ For example, on the system where the Python Roon API is installed:
     $ cd RoonCommandLine
     $ ./install.sh
 
-	# Edit the Python Roon API command line configuration file
-	$ vi $HOME/Roon/roon_api.ini
+	# Edit the Python Roon API command line configuration file.
+	# Several default settings are provided. You may wish to modify these.
+	$ vi $HOME/RoonCommandLine/roon_api.ini
 
-	# At a minimum you will need to set RoonCoreIP to your Roon Core IP address
+	# The RoonCoreIP setting shuuld have been configured during install.
+	# Verify the RoonCoreIP setting is correct.
 	# If you do not know your Roon Core IP, run the discovery script
 	$ $HOME/bin/get_core_ip
 	# Authorize the extension when prompted
@@ -108,6 +110,10 @@ The third component is the "roon" shell script. This should be copied to
 a location in your shell execution PATH on all of the systems from which
 you wish to issue command line Roon controls.
 
+	# The username and ip address of the Python Roon API server were
+	# configured during installation. Verify these settings in the
+	# roon script are correct.
+	#
     # Copy the "roon" script to all systems on which you wish to use
 	# the Python Roon API command line tools, every system you want to
 	# enable as a command line Roon remote. Each system must be able to
@@ -165,6 +171,15 @@ direct patch, follow these steps:
 
     $ cd $HOME/Python3 # Or wherever your Pip roonapi module is installed
 	$ patch -b -p0 < $HOME/src/RoonCommandLine/patches/roonapi-listmedia.patch
+
+Removal
+-------
+
+The Roon Command Line scripts, patches, and configuration can be removed by
+executing the "uninstall.sh" script in the RoonCommandLine source directory.
+
+    $ cd $HOME/src/RoonCommandLine
+	$ ./uninstall.sh
 
 Usage
 -----

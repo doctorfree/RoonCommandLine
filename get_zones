@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROON=$HOME/Roon
+ROON=$HOME/RoonCommandLine
 CORE=get_zones.py
 
 [ -d $ROON ] || exit 1

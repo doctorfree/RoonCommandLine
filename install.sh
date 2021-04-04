@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HERE=`pwd`
-ROON=$HOME/Roon
+ROON=$HOME/RoonCommandLine
 LBIN=$HOME/bin
 ROONAPI_PATCH=roonapi-listmedia.patch
 ROONCONF=$HOME/.pyroonconf
@@ -40,10 +40,10 @@ echo ""
 
 $HOME/bin/get_core_ip 2>&1 | grep -v roonapi | tee /tmp/discover$$
 CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
-cat $HOME/Roon/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
+cat $ROON/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
 echo "$CORE_IP" >> /tmp/core$$
-cp $HOME/Roon/roon_api.ini $HOME/Roon/roon_api.ini.orig
-cp /tmp/core$$ $HOME/Roon/roon_api.ini
+cp $ROON/roon_api.ini $ROON/roon_api.ini.orig
+cp /tmp/core$$ $ROON/roon_api.ini
 rm -f /tmp/core$$ /tmp/discover$$
 
 # Locate Python user base
