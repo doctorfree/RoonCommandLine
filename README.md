@@ -188,6 +188,10 @@ The "roon" shell script is installed on any system that you want to utilize
 for command line control of Roon. It must be on a system that is able to SSH
 to the system on which the Python Roon API scripts are installed.
 
+Note, the first time you execute the roon shell script you may have to enable
+the Python Roon API extension by clicking "Settings" -> "Extensions" -> "Enable"
+in a Roon Remote client window.
+
 The Python Roon API scripts must be installed on a system that is on the same
 local network as the Roon Core. The "roon" shell script is the primary user
 interface. It accepts a wide variety of arguments and sends a command to the

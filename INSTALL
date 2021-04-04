@@ -45,6 +45,10 @@ api subdirectory to ~/RoonCommandLine on the system on which pyroon is installed
     cp api/*_* ~/RoonCommandLine
 Edit ~/RoonCommandLine/roon_api.ini to set the default values and Roon Core IP address.
 
+Note, the first time you execute the roon shell script you may have to enable
+the Python Roon API extension by clicking "Settings" -> "Extensions" -> "Enable"
+in a Roon Remote client window.
+
 No passwords are used in the SSH invocations in this project. It is assumed that
 appropriate SSH Public Key Authentication has been configured for all systems
 that will be using SSH to execute commands on the remote pyroon server.

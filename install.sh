@@ -111,10 +111,10 @@ DEFZONE=`grep ^DefaultZone $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
 if [ -f $ROONCONF ]
 then
     grep ROON_ZONE $ROONCONF > /dev/null || {
-        echo "ROON_ZONE=$DEFZONE" >> $ROONCONF
+        echo "ROON_ZONE=\"$DEFZONE\"" >> $ROONCONF
     }
 else
-    echo "ROON_ZONE=$DEFZONE" > $ROONCONF
+    echo "ROON_ZONE=\"$DEFZONE\"" > $ROONCONF
 fi
 
 echo ""
