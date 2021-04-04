@@ -32,5 +32,8 @@ Usage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|zone
 		Mute a specified zone:
 			roon -c mute -z "Living Room"
 		List all playlists containing the string 'Best':
-			roon -l playlists -s "Best"
+			roon -l playlists -s Best
+		NOTE: Use quotes to specify media names which contain spaces.
+		For example, to play the album 'Love Bomb':
+			roon -A "Love Bomb"
 

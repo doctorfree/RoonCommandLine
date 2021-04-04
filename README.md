@@ -199,9 +199,9 @@ Python Roon API system via SSH.
 
 Here is the current output of "roon -u" which displays a usage message.
 
-    Usage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|zones]
-	    -r -u -s search -p playlist -t tag -z zone
-	    -c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+Usage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|zones]
+	-r -u -s search -p playlist -t tag -z zone
+	-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 
 	Where:
 		-A album selects an album to play
@@ -232,7 +232,10 @@ Here is the current output of "roon -u" which displays a usage message.
 		Mute a specified zone:
 			roon -c mute -z "Living Room"
 		List all playlists containing the string 'Best':
-			roon -l playlists -s "Best"
+			roon -l playlists -s Best
+		NOTE: Use quotes to specify media names which contain spaces.
+		For example, to play the album 'Love Bomb':
+			roon -A "Love Bomb"
 
 When playing media from the command line it is possible to specify a substring
 with which a partial match can be made. In order to play media, either the full

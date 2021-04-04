@@ -65,7 +65,10 @@ usage() {
   printf "\n\t\tMute a specified zone:"
   printf "\n\t\t\troon -c mute -z \"Living Room\""
   printf "\n\t\tList all playlists containing the string 'Best':"
-  printf "\n\t\t\troon -l playlists -s \"Best\"\n\n"
+  printf "\n\t\t\troon -l playlists -s Best"
+  printf "\n\t\tNOTE: Use quotes to specify media names which contain spaces."
+  printf "\n\t\tFor example, to play the album 'Love Bomb':"
+  printf "\n\t\t\troon -A \"Love Bomb\"\n\n"
   exit 1
 }
 
