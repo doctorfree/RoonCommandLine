@@ -22,4 +22,4 @@ while len(auth_api) == 0:
 
 api = auth_api[0]
 
-print(api.host)
+print("RoonCoreIP =", api.host)

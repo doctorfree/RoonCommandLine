@@ -39,8 +39,9 @@ echo "to authorize discovery"
 echo ""
 
 $HOME/bin/get_core_ip 2>&1 | tee /tmp/discover$$
-CORE_IP=`cat /tmp/discover$$ | grep -v Waiting`
-cat $HOME/Roon/roon_api.ini | sed -e "s/XX.X.X.XX/$CORE_IP/" > /tmp/core$$
+CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
+cat $HOME/Roon/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
+echo "$CORE_IP" >> /tmp/core$$
 cp $HOME/Roon/roon_api.ini $HOME/Roon/roon_api.ini.orig
 cp /tmp/core$$ $HOME/Roon/roon_api.ini
 rm -f /tmp/core$$ /tmp/discover$$
