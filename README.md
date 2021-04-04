@@ -59,16 +59,24 @@ command via SSH. But what we have here in the repository are the command line to
 Installation
 ------------
 
-There are four components to install. First, install the Python Roon API
+There are three components to install. First, install the Python Roon API
 on a system which is on the same local network as your Roon Core.
+
+Note, verify you have Python 3 and pip already installed. For example,
+on an Ubuntu 20.04 system I have installed, it was necessary to first configure
+Python 3 as the default Python executable, install pip3, and then
+configure pip3 as the default pip:
+
+    $ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+	$ sudo apt install python3-pip
+    $ sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+
+Once you have verified Python 3 and pip are installed appropriately, install
+the Python Roon API:
 
     $ pip install roonapi
 
-The second component is the "roon" shell script. This should be copied to
-a location in your shell execution PATH on all of the systems from which
-you wish to issue command line Roon controls.
-
-The third and fourth components are the Python Roon API frontend shell scripts
+The second component is the Python Roon API frontend shell scripts
 and the Python Roon API backend Python scripts. These both get installed on
 the system on which the Python Roon API is installed. Copy this entire repository
 to the target system. Change directory into the Roon subdirectory and execute
@@ -95,6 +103,10 @@ For example, on the system where the Python Roon API is installed:
 	$ $HOME/bin/get_core_ip
 	# Authorize the extension when prompted
 	# In a Roon Remote client window click "Settings" -> "Extensions" -> "Enable"
+
+The third component is the "roon" shell script. This should be copied to
+a location in your shell execution PATH on all of the systems from which
+you wish to issue command line Roon controls.
 
     # Copy the "roon" script to all systems on which you wish to use
 	# the Python Roon API command line tools, every system you want to

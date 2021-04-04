@@ -1,7 +1,20 @@
 
 Install the Python Roon API (pyrooon) on a system that has Python 3 and that
-can access your Roon Core. To install the Python Roon API execute the command:
-    pip install roonapi
+can access your Roon Core.
+
+Note, verify you have Python 3 and pip already installed. For example,
+on an Ubuntu 20.04 system I have installed, it was necessary to first configure
+Python 3 as the default Python executable, install pip3, and then
+configure pip3 as the default pip:
+
+    $ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+	$ sudo apt install python3-pip
+    $ sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+
+Once you have verified Python 3 and pip are installed appropriately, install
+the Python Roon API. To install the Python Roon API execute the command:
+
+    $ pip install roonapi
 
 The "roon" shell script is a frontend for the other scripts in this project.
 It should be installed in the execution PATH on all systems from which remote
