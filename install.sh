@@ -107,6 +107,8 @@ else
 fi
 
 DEFZONE=`grep ^DefaultZone $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+# Remove leading and trailing spaces in DEFZONE
+DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 # Set ROON_ZONE in .pyroonconf if not already set
 if [ -f $ROONCONF ]
 then
@@ -122,4 +124,5 @@ echo "Verify the 'server' and 'user' settings in the roon script are correct"
 echo "and copy the 'roon' frontend shell script to a location in your execution"
 echo "PATH on all systems from which you wish to control Roon via SSH"
 echo ""
-echo "Edit the Python Roon API configuration settings at $ROON/roon_api.ini"
+echo "Edit the Python Roon API configuration settings at"
+echo "$ROON/roon_api.ini"
