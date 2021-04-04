@@ -51,10 +51,10 @@ output_id = [
 ][0]
 
 # Play album from Library
-items = roonapi.play_media(output_id, ["Library", "Albums", album])
+found = roonapi.play_media(output_id, ["Library", "Albums", album])
 
-if items:
-    print("Found album:", *items, sep = "\n")
+if found:
+    print("Found media for album search term:", album)
 else:
     print("\nSearching for partial matches")
     albums = roonapi.list_media(output_id, ["Library", "Albums", album])

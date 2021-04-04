@@ -51,10 +51,10 @@ output_id = [
 ][0]
 
 # Play tag
-items = roonapi.shuffle(output_id, ["Library", "Tags", tag])
+found = roonapi.shuffle(output_id, ["Library", "Tags", tag])
 
-if items:
-    print("Found tag:", *items, sep = "\n")
+if found:
+    print("Found media for tag search term:", tag)
 else:
     print("\nSearching for partial matches")
     tags = roonapi.list_media(output_id, ["Library", "Tags", tag])

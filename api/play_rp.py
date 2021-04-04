@@ -46,7 +46,7 @@ output_id = [
 ][0]
 
 # Play Radio Paradise Main 
-items = roonapi.play_media(output_id, ["My Live Radio", "Radio Paradise: Main mix"])
+roonapi.play_media(output_id, ["My Live Radio", "Radio Paradise: Main mix"])
 
 # save the token for next time
 with open(tokenfile, "w") as f:

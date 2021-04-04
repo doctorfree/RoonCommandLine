@@ -51,10 +51,10 @@ output_id = [
 ][0]
 
 # Play playlist
-items = roonapi.play_media(output_id, ["Playlists", playlist])
+found = roonapi.play_media(output_id, ["Playlists", playlist])
 
-if items:
-    print("Found playlist:", *items, sep = "\n")
+if found:
+    print("Found media for playlist search term:", playlist)
 else:
     print("\nSearching for partial matches")
     playlists = roonapi.list_media(output_id, ["Playlists", playlist])

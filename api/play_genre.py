@@ -51,10 +51,10 @@ output_id = [
 ][0]
 
 # Play genre
-items = roonapi.play_media(output_id, ["Genres", genre])
+found = roonapi.play_media(output_id, ["Genres", genre])
 
-if items:
-    print("Found genre:", *items, sep = "\n")
+if found:
+    print("Found media for genre search term:", genre)
 else:
     print("\nSearching for partial matches")
     genres = roonapi.list_media(output_id, ["Genres", genre])
