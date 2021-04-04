@@ -6,7 +6,6 @@ LBIN=$HOME/bin
 ROONAPI_PATCH=roonapi-listmedia.patch
 ROONCONF=$HOME/.pyroonconf
 
-
 [ -d $LBIN ] || mkdir $LBIN
 cp *_* $LBIN
 [ -d $ROON ] || mkdir $ROON
@@ -105,6 +104,17 @@ else
     echo "Could not locate the roonapi Python module installation directory"
     echo "Python Roon API patch not applied."
     echo "List commands will not function properly."
+fi
+
+DEFZONE=`grep ^DefaultZone $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+# Set ROON_ZONE in .pyroonconf if not already set
+if [ -f $ROONCONF ]
+then
+    grep ROON_ZONE $ROONCONF > /dev/null || {
+        echo "ROON_ZONE=$DEFZONE" >> $ROONCONF
+    }
+else
+    echo "ROON_ZONE=$DEFZONE" > $ROONCONF
 fi
 
 echo ""
