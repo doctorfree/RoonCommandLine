@@ -38,7 +38,7 @@ echo "    Settings -> Extensions -> Enable"
 echo "to authorize discovery"
 echo ""
 
-$HOME/bin/get_core_ip 2>&1 | grep -v roonapi | tee /tmp/discover$$
+$HOME/bin/get_core_ip 2>&1 | tee /tmp/discover$$
 CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
 cat $ROON/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
 echo "$CORE_IP" >> /tmp/core$$
