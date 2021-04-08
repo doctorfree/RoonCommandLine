@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PYDIR=$HOME/Python3
+PYDIR=$HOME/.local
 SITEDIR=lib/python3.8/site-packages
 USERSITE=$PYDIR/$SITEDIR
 
@@ -32,13 +32,15 @@ USERSITE=$PYDIR/$SITEDIR
     }
 }
 
-[ -d $USERSITE/roonapi-bak ] || {
-    echo "Roon API Python backup does not exist. Exiting."
-    exit 1
-}
-
 cd $PYDIR
 
-[ -d ~/src/patches ] || mkdir ~/src/patches
+[ -d ~/src/RoonCommandLine/patches ] || mkdir ~/src/RoonCommandLine/patches
 
-diff -Naur ${SITEDIR}/roonapi-bak ${SITEDIR}/roonapi > ~/src/patches/roonapi-listmedia.patch
+OUT=$HOME/src/patches/roonapi-listmedia.patch
+rm -f $OUT
+touch $OUT
+for i in ${SITEDIR}/roonapi/*.orig
+do
+    j=`echo $i | sed -e "s/.orig//"`
+    diff -Naur $i $j >> $OUT
+done

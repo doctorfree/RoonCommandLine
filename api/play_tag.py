@@ -56,16 +56,18 @@ found = roonapi.shuffle(output_id, ["Library", "Tags", tag])
 if found:
     print("Found media for tag search term:", tag)
 else:
-    print("\nSearching for partial matches")
     tags = roonapi.list_media(output_id, ["Library", "Tags", tag])
-    print("\nTags partially matching", tag, ":\n")
-    print(*tags, sep = "\n")
-    if len(tags) == 1:
-        tag = tags[0]
-        roonapi.play_media(output_id, ["Library", "Tags", tag])
+    if len(tags) == 0:
+        print("\nNo tags partially matching", tag, "\n")
     else:
-        print("\nTo play a tag by name either specify the full name")
-        print("or enough of a substring to provide a single match")
+        print("\nTags partially matching", tag, ":\n")
+        print(*tags, sep = "\n")
+        if len(tags) == 1:
+            tag = tags[0]
+            roonapi.play_media(output_id, ["Library", "Tags", tag])
+        else:
+            print("\nTo play a tag by name either specify the full name")
+            print("or enough of a substring to provide a single match")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

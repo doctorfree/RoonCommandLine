@@ -56,16 +56,18 @@ found = roonapi.play_media(output_id, ["Library", "Albums", album])
 if found:
     print("Found media for album search term:", album)
 else:
-    print("\nSearching for partial matches")
     albums = roonapi.list_media(output_id, ["Library", "Albums", album])
-    print("\nAlbum titles partially matching", album, ":\n")
-    print(*albums, sep = "\n")
-    if len(albums) == 1:
-        album = albums[0]
-        roonapi.play_media(output_id, ["Library", "Albums", album])
+    if len(albums) == 0:
+        print("\nNo album titles partially matching", album, "\n")
     else:
-        print("\nTo play an album by name either specify the full name")
-        print("or enough of a substring to provide a single match")
+        print("\nAlbum titles partially matching", album, ":\n")
+        print(*albums, sep = "\n")
+        if len(albums) == 1:
+            album = albums[0]
+            roonapi.play_media(output_id, ["Library", "Albums", album])
+        else:
+            print("\nTo play an album by name either specify the full name")
+            print("or enough of a substring to provide a single match")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

@@ -1,7 +1,6 @@
-diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site-packages/roonapi/roonapi.py
---- lib/python3.8/site-packages/roonapi-bak/roonapi.py	2021-03-25 13:19:43.508449316 -0700
-+++ lib/python3.8/site-packages/roonapi/roonapi.py	2021-03-30 17:41:20.992239239 -0700
-@@ -344,6 +344,88 @@
+--- lib/python3.8/site-packages/roonapi/roonapi.py.orig	2021-04-04 08:26:00.718478679 -0700
++++ lib/python3.8/site-packages/roonapi/roonapi.py	2021-04-07 17:24:57.539008631 -0700
+@@ -344,6 +344,89 @@
          """
          return self._request(SERVICE_BROWSE + "/load", opts)
  
@@ -51,11 +50,12 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
 +
 +                load_opts["offset"] += PAGE_SIZE
 +            if searched >= total_count and found is None:
-+                LOGGER.error(
-+                    "Could not find media path element '%s' in %s",
-+                    element,
-+                    [item["title"] for item in items],
-+                )
++                # Don't log an error here, we will do a substring search
++                # LOGGER.error(
++                #     "Could not find media path element '%s' in %s",
++                #     element,
++                #     [item["title"] for item in items],
++                # )
 +                return None
 +
 +            opts["item_key"] = found["item_key"]
@@ -90,7 +90,25 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
      def play_media(self, zone_or_output_id, path, action=None):
          """
          Play the media specified.
-@@ -448,6 +530,7 @@
+@@ -390,11 +473,12 @@
+ 
+                 load_opts["offset"] += PAGE_SIZE
+             if searched >= total_count and found is None:
+-                LOGGER.error(
+-                    "Could not find media path element '%s' in %s",
+-                    element,
+-                    [item["title"] for item in items],
+-                )
++                # Don't log an error here, we will do a substring search
++                # LOGGER.error(
++                #     "Could not find media path element '%s' in %s",
++                #     element,
++                #     [item["title"] for item in items],
++                # )
+                 return None
+ 
+             opts["item_key"] = found["item_key"]
+@@ -448,6 +532,7 @@
          self.browse_browse(opts)
          return True
  
@@ -98,7 +116,7 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
      def play_id(self, zone_or_output_id, media_id):
          """Play based on the media_id from the browse api."""
          opts = {
-@@ -460,16 +543,17 @@
+@@ -460,16 +545,17 @@
          try:
              if header_result["list"]["level"] == 0:
                  LOGGER.info("Initial load started playback")
@@ -120,7 +138,7 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
  
          result = self.browse_load(opts)
  
-@@ -480,7 +564,7 @@
+@@ -480,7 +566,7 @@
                  "Playback requested but item is a list, not a playable action or action_list id: %s",
                  media_id,
              )
@@ -129,7 +147,7 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
  
          if hint == "action_list":
              opts["item_key"] = first_item["item_key"]
-@@ -490,7 +574,7 @@
+@@ -490,7 +576,7 @@
                      "Playback requested of unsupported id: %s",
                      media_id,
                  )
@@ -138,7 +156,7 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
              result = self.browse_load(opts)
              first_item = result["items"][0]
              hint = first_item["hint"]
-@@ -501,7 +585,7 @@
+@@ -501,7 +587,7 @@
                  media_id,
                  header_result,
              )
@@ -147,7 +165,7 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
  
          play_action = result["items"][0]
          hint = play_action["hint"]
-@@ -513,6 +597,9 @@
+@@ -513,6 +599,9 @@
                  "Playback requested of unsupported id: %s",
                  media_id,
              )
@@ -157,7 +175,7 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
  
      # private methods
      # pylint: disable=too-many-arguments
-@@ -574,7 +661,7 @@
+@@ -574,7 +663,7 @@
  
      def _server_discovered(self, host, port):
          """(Auto) discovered the roon server on the network."""
@@ -166,7 +184,7 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
          ws_address = "ws://%s:%s/api" % (host, port)
          self._host = host
          self._port = port
-@@ -587,7 +674,7 @@
+@@ -587,7 +676,7 @@
  
      def _socket_connected(self):
          """Successfully connected the websocket."""
@@ -175,7 +193,7 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
          self.ready = False
          # authenticate / register
          # warning: at first launch the user has to approve the app in the Roon settings.
-@@ -597,13 +684,13 @@
+@@ -597,13 +686,13 @@
          if self._token:
              appinfo["token"] = self._token
          if not self._token:
@@ -192,9 +210,8 @@ diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapi.py lib/python3.8/site
          LOGGER.debug(reginfo)
          self._token = reginfo["token"]
          self._core_id = reginfo["core_id"]
-diff -Naur lib/python3.8/site-packages/roonapi-bak/roonapisocket.py lib/python3.8/site-packages/roonapi/roonapisocket.py
---- lib/python3.8/site-packages/roonapi-bak/roonapisocket.py	2021-03-25 13:19:43.508449316 -0700
-+++ lib/python3.8/site-packages/roonapi/roonapisocket.py	2021-03-25 12:14:05.869963252 -0700
+--- lib/python3.8/site-packages/roonapi/roonapisocket.py.orig	2021-04-04 08:26:00.718478679 -0700
++++ lib/python3.8/site-packages/roonapi/roonapisocket.py	2021-04-04 14:27:21.379944182 -0700
 @@ -137,9 +137,9 @@
                  request_id = int(line_with_request_id[0].split("Request-Id: ")[1])
  

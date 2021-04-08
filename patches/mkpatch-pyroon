@@ -2,23 +2,26 @@
 
 SRCDIR=$HOME/src
 PYRDIR=pyroon/roonapi
-SUFF="00"
-
-[ -f $SRCDIR/$PYRDIR/roonapi.py.00 ] || {
-    echo "Roon API Python backup does not exist. Exiting."
-    exit 1
-}
+SUFF="orig"
 
 cd $SRCDIR
 
-[ -d ~/src/patches ] || mkdir ~/src/patches
-
-[ -f ${PYDIR}/roonapi.py.${SUFF} ] || {
-    SUFF="orig"
-    [ -f ${PYDIR}/roonapi.py.${SUFF} ] || {
-        echo "Cannot locate backup for file ${PYDIR}/roonapi.py. Exiting."
+[ -f ${PYRDIR}/roonapi.py.${SUFF} ] || {
+    SUFF="00"
+    [ -f ${PYRDIR}/roonapi.py.${SUFF} ] || {
+        echo "Cannot locate backup for file ${PYRDIR}/roonapi.py. Exiting."
         exit 1
     }
 }
 
-diff -Naur ${PYRDIR}/roonapi.py.${SUFF} ${PYRDIR}/roonapi.py > ~/src/patches/pyroon-listmedia.patch
+[ -d ~/src/RoonCommandLine ] || mkdir ~/src/RoonCommandLine
+[ -d ~/src/RoonCommandLine/patches ] || mkdir ~/src/RoonCommandLine/patches
+
+OUT=$HOME/src/RoonCommandLine/patches/pyroon-listmedia.patch
+rm -f $OUT
+touch $OUT
+for i in ${PYRDIR}/*.${SUFF}
+do
+    j=`echo $i | sed -e "s/.${SUFF}//"`
+    diff -Naur $i $j >> $OUT
+done
