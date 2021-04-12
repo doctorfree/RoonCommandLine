@@ -3,7 +3,7 @@
 ROON=$HOME/RoonCommandLine
 ROONCONF=$HOME/.pyroonconf
 LIST=list_artists.py
-ARTIST="David Bowie"
+ARTIST=
 
 [ -d $ROON ] || exit 1
 
@@ -22,5 +22,12 @@ else
     set_zone $DEFZONE
     . ${ROONCONF}
 fi
+
+# Get the default artist if one is not provided
+[ "${ARTIST}" ] || {
+    ARTIST=`grep ^DefaultArtist $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in ARTIST
+    ARTIST="$(echo -e "${ARTIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
 
 python $LIST -a "$ARTIST" -z "$ROON_ZONE"

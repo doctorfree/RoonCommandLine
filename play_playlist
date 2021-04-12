@@ -3,7 +3,7 @@
 ROON=$HOME/RoonCommandLine
 ROONCONF=$HOME/.pyroonconf
 PLAY=play_playlist.py
-PLAYLIST="Bowie Favs"
+PLAYLIST=
 
 [ -d $ROON ] || exit 1
 
@@ -22,5 +22,12 @@ else
     set_zone $DEFZONE
     . ${ROONCONF}
 fi
+
+# Get the default playlist if one is not provided
+[ "${PLAYLIST}" ] || {
+    PLAYLIST=`grep ^DefaultPlaylist $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in PLAYLIST
+    PLAYLIST="$(echo -e "${PLAYLIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
 
 python $PLAY -p "$PLAYLIST" -z "$ROON_ZONE"

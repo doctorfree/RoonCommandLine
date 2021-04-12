@@ -3,7 +3,7 @@
 ROON=$HOME/RoonCommandLine
 ROONCONF=$HOME/.pyroonconf
 LIST=list_zones.py
-ZONE="Living"
+ZONE=
 
 [ -d $ROON ] || exit 1
 
@@ -16,10 +16,22 @@ then
     . ${ROONCONF}
 else
     DEFZONE=`grep ^DefaultZone $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in DEFZONE
+    DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     set_zone $DEFZONE
     . ${ROONCONF}
 fi
 
 [ "$1" ] && ZONE="$*"
+
+# Get the default zone if one is not provided
+[ "${ZONE}" ] || {
+    if [ "${ROON_ZONE}" ]
+    then
+        ZONE="${ROON_ZONE}"
+    else
+        ZONE="${DEFZONE}"
+    fi
+}
 
 python $LIST -z $ZONE

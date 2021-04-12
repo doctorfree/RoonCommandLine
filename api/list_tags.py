@@ -12,14 +12,14 @@ server = config['DEFAULT']['RoonCoreIP']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-t", "--tag", help="tag selection")
+parser.add_argument("-t", "--tag", help="tag search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.tag:
-    tag = args.tag
+    searchterm = args.tag
 else:
-    tag = config['DEFAULT']['DefaultTag']
+    searchterm = config['DEFAULT']['DefaultTag']
 if args.zone:
     target_zone = args.zone
 else:
@@ -50,21 +50,13 @@ output_id = [
     if target_zone in output["display_name"]
 ][0]
 
-# Play tag (not yet working)
-tags = roonapi.list_media(output_id, ["Library", "Tags", tag])
-if len(tags) == 0:
-    print("\nNo tags matching", tag, "\n")
-else:
-    print("\nTags matching", tag, ":\n")
+# List matching tags
+tags = roonapi.list_media(output_id, ["Library", "Tags", searchterm])
+
+if tags:
     print(*tags, sep = "\n")
-    if len(tags) == 1:
-        tag = tags[0]
-        print("\nPlaying media by tag is not yet working. Found tag for", tag, "\n")
-        # Need to identify the media here, somehow use tag to search for media. How?
-        roonapi.play_media(output_id, ["Library", "Tags", tag])
-    else:
-        print("\nTo play a tag by name either specify the full name")
-        print("or enough of a substring to provide a single match")
+else:
+    print("No tags found matching ", searchterm)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

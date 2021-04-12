@@ -3,7 +3,7 @@
 ROON=$HOME/RoonCommandLine
 ROONCONF=$HOME/.pyroonconf
 PLAY=play_tag.py
-TAG="Prog"
+TAG=
 
 [ -d $ROON ] || exit 1
 
@@ -22,5 +22,12 @@ else
     set_zone $DEFZONE
     . ${ROONCONF}
 fi
+
+# Get the default tag if one is not provided
+[ "${TAG}" ] || {
+    TAG=`grep ^DefaultTag $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in TAG
+    TAG="$(echo -e "${TAG}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
 
 python $PLAY -t "$TAG" -z "$ROON_ZONE"

@@ -32,6 +32,8 @@ Contents
 
 [**list_playlists.py**](RoonCommandLine/api/list_playlists.py) - Python script backend for listing available Roon Playlists
 
+[**list_tags.py**](RoonCommandLine/api/list_tags.py) - Python script backend for listing available Roon Library tags
+
 [**list_zones.py**](RoonCommandLine/api/list_zones.py) - Python script backend for listing available Roon Zones
 
 [**zone_command.py**](RoonCommandLine/api/zone_command.py) - Python script backend for sending commands to selected Roon Zone (play, pause, mute, next track, etc)

@@ -2,8 +2,8 @@
 
 ROON=$HOME/RoonCommandLine
 ROONCONF=$HOME/.pyroonconf
-LIST=list_albums.py
-ALBUM=
+LIST=list_tags.py
+TAG=
 
 [ -d $ROON ] || exit 1
 
@@ -11,7 +11,7 @@ cd $ROON
 
 [ -f $LIST ] || exit 2
 
-[ "$1" ] && ALBUM="$*"
+[ "$1" ] && TAG="$*"
 
 # Get the zone if it is set
 if [ -f ${ROONCONF} ]
@@ -24,10 +24,10 @@ else
 fi
 
 # Get the default album if one is not provided
-[ "${ALBUM}" ] || {
-    ALBUM=`grep ^DefaultAlbum $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
-    # Remove leading and trailing spaces in ALBUM
-    ALBUM="$(echo -e "${ALBUM}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+[ "${TAG}" ] || {
+    TAG=`grep ^DefaultTag $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in TAG
+    TAG="$(echo -e "${TAG}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
 
-python $LIST -a "$ALBUM" -z "$ROON_ZONE"
+python $LIST -t "$TAG" -z "$ROON_ZONE"

@@ -29,6 +29,7 @@ albumlist=
 artistlist=
 genrelist=
 playlistlist=
+taglist=
 zonelist=
 playlist=
 radio=
@@ -37,12 +38,12 @@ tag=
 zone=
 
 usage() {
-  printf "\nUsage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|zones] -s search -p playlist -t tag -z zone\n\t-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-r -u"
+  printf "\nUsage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-r -u"
   printf "\n\tWhere:\n\t\t-A album selects an album to play"
   printf "\n\t\t-a artist selects an artist to play"
   printf "\n\t\t-g genre selects a genre to play"
   printf "\n\t\t-p playlist selects a playlist to play"
-  printf "\n\t\t-l [albums|artists|genres|playlists|zones] indicates list albums, artists, genres, playlists, or Roon zones"
+  printf "\n\t\t-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones"
   printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
   printf "\n\t\t-r indicates play Radio Paradise"
   printf "\n\t\t-t tag selects an tag to play (not yet working)"
@@ -111,6 +112,9 @@ while getopts A:a:g:p:t:z:c:l:s:ru flag; do
             elif [ "$listname" == "playlists" ] || [ "$listname" == "playlist" ]
             then
                 playlistlist=1
+            elif [ "$listname" == "tags" ] || [ "$listname" == "tag" ]
+            then
+                taglist=1
             elif [ "$listname" == "zones" ] || [ "$listname" == "zone" ]
             then
                 zonelist=1
@@ -141,6 +145,7 @@ done
 [ "$artistlist" ] && ssh $user@$server "bash -l -c \"list_artists $search\""
 [ "$genrelist" ] && ssh $user@$server "bash -l -c \"list_genres $search\""
 [ "$playlistlist" ] && ssh $user@$server "bash -l -c \"list_playlists $search\""
+[ "$taglist" ] && ssh $user@$server "bash -l -c \"list_tags $search\""
 [ "$zonelist" ] && ssh $user@$server "bash -l -c \"list_zones $search\""
 [ "$album" ] && ssh $user@$server "bash -l -c \"play_album $album\""
 [ "$artist" ] && ssh $user@$server "bash -l -c \"play_artist $artist\""

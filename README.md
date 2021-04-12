@@ -275,6 +275,8 @@ Contents
 
 [**list_playlists**](RoonCommandLine/list_playlists) - Search and list the available Roon Playlists
 
+[**list_tags**](RoonCommandLine/list_tags) - Search and list the available Roon Library tags
+
 [**list_zones**](RoonCommandLine/list_zones) - List the available Roon Zones
 
 [**set_zone**](RoonCommandLine/set_zone) - Set the Roon Zone in which subsequent commands will run

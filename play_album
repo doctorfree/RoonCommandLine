@@ -3,7 +3,7 @@
 ROON=$HOME/RoonCommandLine
 ROONCONF=$HOME/.pyroonconf
 PLAY=play_album.py
-ALBUM="Catch the Wind"
+ALBUM=
 
 [ -d $ROON ] || exit 1
 
@@ -22,4 +22,12 @@ else
     set_zone $DEFZONE
     . ${ROONCONF}
 fi
+
+# Get the default album if one is not provided
+[ "${ALBUM}" ] || {
+    ALBUM=`grep ^DefaultAlbum $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in ALBUM
+    ALBUM="$(echo -e "${ALBUM}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
+
 python $PLAY -a "$ALBUM" -z "$ROON_ZONE"
