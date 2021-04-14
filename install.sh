@@ -6,10 +6,10 @@ LBIN=$HOME/bin
 ROONAPI_PATCH=roonapi-listmedia.patch
 ROONCONF=$HOME/.pyroonconf
 
-[ -d $LBIN ] || mkdir $LBIN
-cp *_* $LBIN
-[ -d $ROON ] || mkdir $ROON
-cp api/*_* $ROON
+[ -d ${LBIN} ] || mkdir ${LBIN}
+cp *_* ${LBIN}
+[ -d ${ROON} ] || mkdir ${ROON}
+cp api/*_* ${ROON}
 
 # Try to configure the roon script with the IP and username
 plat=`uname -s`
@@ -39,10 +39,10 @@ echo ""
 
 $HOME/bin/get_core_ip 2>&1 | tee /tmp/discover$$
 CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
-cat $ROON/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
+cat ${ROON}/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
 echo "$CORE_IP" >> /tmp/core$$
-cp $ROON/roon_api.ini $ROON/roon_api.ini.orig
-cp /tmp/core$$ $ROON/roon_api.ini
+cp ${ROON}/roon_api.ini ${ROON}/roon_api.ini.orig
+cp /tmp/core$$ ${ROON}/roon_api.ini
 rm -f /tmp/core$$ /tmp/discover$$
 
 # Locate Python user base
@@ -51,8 +51,6 @@ USERSITE=`python -m site --user-site`
 if [ -d $USERSITE/roonapi ]
 then
     PYTHONUSERBASE=`echo $USERSITE | awk -F "/lib/" ' { print $1 } '`
-    base=`basename $PYTHONUSERBASE`
-    SITEDIR=`echo $USERSITE | awk -F "/${base}/" ' { print $2 } '`
 else
     # Check the global site directories
     SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
@@ -60,63 +58,75 @@ else
     do
         [ -d ${site}/roonapi ] && {
             PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
-            base=`basename $PYTHONUSERBASE`
-            SITEDIR=`echo ${site} | awk -F "/${base}/" ' { print $2 } '`
             break
         }
     done
 fi
 
-if [ "$PYTHONUSERBASE" ]
+if [ "${PYTHONUSERBASE}" ]
 then
-    if [ -f $ROONCONF ]
+    if [ -f ${ROONCONF} ]
     then
-        grep PYTHONUSERBASE $ROONCONF > /dev/null || {
-            echo "export PYTHONUSERBASE=$PYTHONUSERBASE" >> $ROONCONF
+        grep PYTHONUSERBASE ${ROONCONF} > /dev/null || {
+            echo "export PYTHONUSERBASE=${PYTHONUSERBASE}" >> ${ROONCONF}
         }
     else
-        echo "export PYTHONUSERBASE=$PYTHONUSERBASE" > $ROONCONF
+        echo "export PYTHONUSERBASE=${PYTHONUSERBASE}" > ${ROONCONF}
     fi
+    . ${ROONCONF}
     # Apply the Python Roon API patch if it has not already been applied
-    grep ROONAPIPATCHED $ROONCONF > /dev/null || {
+    if [ "${ROONAPIPATCHED}" = true ]
+    then
+        echo "Python Roon API already patched. Skipping patch."
+    else
         # Locate the patch file
         patchfile=
-        if [ -f $HERE/patches/$ROONAPI_PATCH ]
+        if [ -f ${HERE}/patches/${ROONAPI_PATCH} ]
         then
-            patchfile=$HERE/patches/$ROONAPI_PATCH
+            patchfile=${HERE}/patches/${ROONAPI_PATCH}
         else
-            if [ -f $HOME/src/patches/$ROONAPI_PATCH ]
+            if [ -f $HOME/src/patches/${ROONAPI_PATCH} ]
             then
-                patchfile=$HOME/src/patches/$ROONAPI_PATCH
+                patchfile=$HOME/src/patches/${ROONAPI_PATCH}
             else
-                echo "Cannot locate patch file $ROONAPI_PATCH"
+                echo "Cannot locate patch file ${ROONAPI_PATCH}"
                 echo "Python Roon API patch not applied."
                 echo "List commands will not function properly."
             fi
         fi
-        [ "$patchfile" ] && {
-            cd $PYTHONUSERBASE
-            patch -b -p0 < $patchfile
-            echo "ROONAPIPATCHED=true" >> $ROONCONF
+        [ "${patchfile}" ] && {
+            patch_inst=`type -p patch`
+            if [ "$patch_inst" ]
+            then
+                cd ${PYTHONUSERBASE}
+                patch -b -p0 < ${patchfile}
+                echo "ROONAPIPATCHED=true" >> ${ROONCONF}
+            else
+                echo "Cannot locate the patch utility. Either patch is not installed"
+                echo "or it is not in your execution PATH."
+                echo ""
+                echo "Skipping the patch for the Python Roon API."
+                echo "Listing of Roon library media will not work without this patch."
+            fi
         }
-    }
+    fi
 else
     echo "Could not locate the roonapi Python module installation directory"
     echo "Python Roon API patch not applied."
     echo "List commands will not function properly."
 fi
 
-DEFZONE=`grep ^DefaultZone $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+DEFZONE=`grep ^DefaultZone ${ROON}/roon_api.ini | awk -F '=' ' { print $2 } '`
 # Remove leading and trailing spaces in DEFZONE
 DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 # Set ROON_ZONE in .pyroonconf if not already set
-if [ -f $ROONCONF ]
+if [ -f ${ROONCONF} ]
 then
-    grep ROON_ZONE $ROONCONF > /dev/null || {
-        echo "ROON_ZONE=\"$DEFZONE\"" >> $ROONCONF
+    grep ROON_ZONE ${ROONCONF} > /dev/null || {
+        echo "ROON_ZONE=\"$DEFZONE\"" >> ${ROONCONF}
     }
 else
-    echo "ROON_ZONE=\"$DEFZONE\"" > $ROONCONF
+    echo "ROON_ZONE=\"$DEFZONE\"" > ${ROONCONF}
 fi
 
 echo ""
@@ -124,5 +134,6 @@ echo "Verify the 'server' and 'user' settings in the roon script are correct"
 echo "and copy the 'roon' frontend shell script to a location in your execution"
 echo "PATH on all systems from which you wish to control Roon via SSH"
 echo ""
-echo "Edit the Python Roon API configuration settings at"
-echo "$ROON/roon_api.ini"
+echo "Edit the Roon Command Line configuration settings at:"
+echo "${ROON}/roon_api.ini"
+echo "and verify the settings in the configuration file ${HOME}/.pyroonconf"
