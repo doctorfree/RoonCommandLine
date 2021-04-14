@@ -290,7 +290,7 @@ Python Roon API system via SSH.
 
 Here is the current output of "roon -u" which displays a usage message.
 
-Usage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|zones]
+Usage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|tags|zones]
 	-r -u -s search -p playlist -t tag -z zone
 	-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 
@@ -299,7 +299,7 @@ Usage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|zone
 		-a artist selects an artist to play
 		-g genre selects a genre to play
 		-p playlist selects a playlist to play
-		-l [albums|artists|genres|playlists|zones] indicates list albums, artists, genres, playlists, or Roon zones
+		-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones
 		-s search specifies a term to search for in the lists retrieved with -l
 		-r indicates play Radio Paradise
 		-t tag selects an tag to play (not yet working)
