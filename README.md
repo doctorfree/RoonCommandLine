@@ -190,12 +190,9 @@ the "roon" command on your systems to execute Roon Command Line commands remotel
 without the need to enter credentials. There are many guides available on the
 Internet that provide instructions on configuring public key SSH authentication.
 For instance, see
-
-    <https://www.ssh.com/academy/ssh/command#configuring-public-key-authentication>
-
+https://www.ssh.com/academy/ssh/command#configuring-public-key-authentication
 or
-
-    <https://serverpilot.io/docs/how-to-use-ssh-public-key-authentication/>
+https://serverpilot.io/docs/how-to-use-ssh-public-key-authentication/
 
 Also, make sure the SSH service is running on the Python Roon API system.
 
