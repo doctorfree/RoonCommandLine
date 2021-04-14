@@ -190,20 +190,27 @@ the "roon" command on your systems to execute Roon Command Line commands remotel
 without the need to enter credentials. There are many guides available on the
 Internet that provide instructions on configuring public key SSH authentication.
 For instance, see
+
     https://www.ssh.com/academy/ssh/command#configuring-public-key-authentication
+
 or
+
     https://serverpilot.io/docs/how-to-use-ssh-public-key-authentication/
 
 Also, make sure the SSH service is running on the Python Roon API system.
 
 In some cases the initial installation may fail to configure the system properly.
 The Roon Command Line install creates two configuration files:
+
     $HOME/.pyroonconf
+
 and
+
     $HOME/RoonCommandLine/roon_api.ini
 	
 These two configuration files are the first place to look when you encounter an issue.
 The $HOME/.pyroonconf file contains 3 settings:
+
     - The path to the Python User Base folder where the Python Roon API site-packages
 	  directory is located
 	- A variable used to determine if the Python Roon API patch has been applied
@@ -215,7 +222,9 @@ a token used to authenticate with the Roon Core and the Roon Core IP address.
 Verify the settings in roon_api.ini are valid and correct. The most common issue
 will be an incorrect Roon Core IP address setting. You can verify this address is
 correct by comparing it to the value displayed in your Roon Remote window at
+
     Settings -> General
+
 under "ROON CORE".
 
 Much of the Roon Command Line setup is automatically configured during the execution
@@ -228,7 +237,9 @@ found it useful to SSH in to the system running the Python Roon API package and 
 commands by hand there. For example, rather than running "roon -l zones" command
 which remotely runs the list_zones command, SSH in as the configured user, cd to the
 appropriate directory, and run
+
     $ python list_zones.py -z all
+
 This eliminates SSH and remote execution as well as the intermediate shell script
 used to execute the python script. Similar python commands can be issued directly
 on the Python Roon API system in the $HOME/RoonCommandLine directory.
@@ -241,10 +252,14 @@ common commands like awk and sed. Check that these commands are properly install
 and, if not, install them.
 
 The install.sh script uses the command:
+
     $ python -m site --user-site
+
 to retrieve the location of the User site packages directory from Python.
 It then parses that with awk. If that doesn’t find it then it uses the command:
+
     $ python -c ‘import site; print(site.getsitepackages())’ | tr -d ‘[],’)
+
 to retrieve a list of folders Python uses for site packages. If either of these
 commands is failing to retrieve the Python site package folder that contains the
 Python Roon API module, or if your Linux subsystem does not have the necessary
