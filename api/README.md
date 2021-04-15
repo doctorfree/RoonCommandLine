@@ -1,10 +1,8 @@
-RoonCommandLine/api
-===================
+# RoonCommandLine/api
 
 Python scripts to access the Roon API
 
-Contents
---------
+## Contents
 
 [**roon_api.ini**](RoonCommandLine/api/roon_api.ini) - Python Roon API default settings
 

@@ -1,5 +1,17 @@
-RoonCommandLine
-===============
+# RoonCommandLine
+
+## Table of contents
+
+1. [Overview](#overview)
+2. [History](#history)
+3. [Installation](#installation)
+4. [Manual Patch Application](<#manual-patch-application>)
+5. [Removal](#removal)
+6. [Troubleshooting](#troubleshooting)
+7. [Usage](#usage)
+8. [Contents](#contents)
+
+## Overview
 
 The Roon Command Line project provides Bash and Python scripts to enable
 command line control of the Roon audio system over a local network.
@@ -26,8 +38,7 @@ supports Roon command control. Commands currently supported include:
 
 All commands and playback can target a specified Roon output zone.
 
-History
--------
+## History
 
 This project began as an attempt to control Roon with Siri voice commands.
 Several users had posted in the Roon forums various ways to use Siri to control Roon.
@@ -56,8 +67,7 @@ various aspects of Roon remotely. There is still the capability to augment this 
 line control with Siri voice commands that trigger an Apple Shortcut which executes a
 command via SSH. But what we have here in the repository are the command line tools.
 
-Installation
-------------
+## Installation
 
 There are three components to install. First, install the Python Roon API
 on a system which is on the same local network as your Roon Core.
@@ -124,8 +134,7 @@ SSH invocations. SSH authentication via public key needs to be enabled and
 appropriate keys generated and propogated. This topic is addressed in various
 guides on setting up SSH.
 
-Manual Patch Application
-------------------------
+## Manual Patch Application
 
 Some of the commands require a patch to the Python Roon API to be applied.
 This patch enables searching and retrieving lists of various objects in a
@@ -172,8 +181,7 @@ direct patch, follow these steps:
     $ cd $HOME/Python3 # Or wherever your Pip roonapi module is installed
 	$ patch -b -p0 < $HOME/src/RoonCommandLine/patches/roonapi-listmedia.patch
 
-Removal
--------
+## Removal
 
 The Roon Command Line scripts, patches, and configuration can be removed by
 executing the "uninstall.sh" script in the RoonCommandLine source directory.
@@ -181,8 +189,7 @@ executing the "uninstall.sh" script in the RoonCommandLine source directory.
     $ cd $HOME/src/RoonCommandLine
 	$ ./uninstall.sh
 
-Troubleshooting
----------------
+## Troubleshooting
 
 The most common difficulty encountered during initial setup of the Roon Command
 Line package is the configuration of public key authentication in SSH. This allows
@@ -272,8 +279,7 @@ the "user" variable is set to the username used in the SSH commands to execute
 the Python commands on the Python Roon API server. These should have been set for
 you automatically during the installation process but may have been misconfigured.
 
-Usage
------
+## Usage
 
 The "roon" shell script is installed on any system that you want to utilize
 for command line control of Roon. It must be on a system that is able to SSH
@@ -290,9 +296,10 @@ Python Roon API system via SSH.
 
 Here is the current output of "roon -u" which displays a usage message.
 
-Usage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|tags|zones]
-	-r -u -s search -p playlist -t tag -z zone
-	-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+    Usage: roon -A album -a artist -g genre
+	    -l [albums|artists|genres|playlists|tags|zones]
+	    -r -u -s search -p playlist -t tag -z zone
+	    -c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 
 	Where:
 		-A album selects an album to play
@@ -335,8 +342,7 @@ supplied. This applies to playing an album, artist, genre, playlist, or tag.
 For example, the command "roon -a Tull" would play media by artist "Jethro Tull"
 unless there were multiple artist name matches to the substring "Tull".
 
-Contents
---------
+## Contents
 
 [**roon**](RoonCommandLine/roon) - Shell script frontend to run on systems that can SSH in to the Roon API server. This script can be used to issue Roon commands via the command line and SSH.
 
