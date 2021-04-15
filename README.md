@@ -344,52 +344,52 @@ unless there were multiple artist name matches to the substring "Tull".
 
 ## Contents
 
-[**roon**](RoonCommandLine/roon) - Shell script frontend to run on systems that can SSH in to the Roon API server. This script can be used to issue Roon commands via the command line and SSH.
+[**roon**](roon) - Shell script frontend to run on systems that can SSH in to the Roon API server. This script can be used to issue Roon commands via the command line and SSH.
 
-[**clone_pyroon**](RoonCommandLine/clone_pyroon) - Shell script to retrieve the pyroon project source code from Github and apply my patches
+[**clone_pyroon**](clone_pyroon) - Shell script to retrieve the pyroon project source code from Github and apply my patches
 
-[**get_core_ip**](RoonCommandLine/get_core_ip) - Shell script to retrieve the Roon Core IP address
+[**get_core_ip**](get_core_ip) - Shell script to retrieve the Roon Core IP address
 
-[**get_zones**](RoonCommandLine/get_zones) - Shell script to retrieve the Roon output Zone names
+[**get_zones**](get_zones) - Shell script to retrieve the Roon output Zone names
 
-[**play_album**](RoonCommandLine/play_album) - Shell script frontend for playing a specified album in my Roon library
+[**play_album**](play_album) - Shell script frontend for playing a specified album in my Roon library
 
-[**play_artist**](RoonCommandLine/play_artist) - Shell script frontend for playing a specified artist in my Roon library
+[**play_artist**](play_artist) - Shell script frontend for playing a specified artist in my Roon library
 
-[**play_genre**](RoonCommandLine/play_genre) - Shell script frontend to play a specified genre
+[**play_genre**](play_genre) - Shell script frontend to play a specified genre
 
-[**play_playlist**](RoonCommandLine/play_playlist) - Shell script frontend to play a specified playlist
+[**play_playlist**](play_playlist) - Shell script frontend to play a specified playlist
 
-[**play_rp**](RoonCommandLine/play_rp) - Shell script frontend for playing Radio Paradise Main Channel in a Roon zone
+[**play_rp**](play_rp) - Shell script frontend for playing Radio Paradise Main Channel in a Roon zone
 
-[**play_tag**](RoonCommandLine/play_tag) - Shell script frontend to play a specified tag (not yet working)
+[**play_tag**](play_tag) - Shell script frontend to play a specified tag (not yet working)
 
-[**list_albums**](RoonCommandLine/list_albums) - Search and list the available Albums in your Roon Library
+[**list_albums**](list_albums) - Search and list the available Albums in your Roon Library
 
-[**list_artists**](RoonCommandLine/list_artists) - Search and list the available Artists in your Roon Library
+[**list_artists**](list_artists) - Search and list the available Artists in your Roon Library
 
-[**list_genres**](RoonCommandLine/list_genres) - Search and list the available Genres in your Roon Library
+[**list_genres**](list_genres) - Search and list the available Genres in your Roon Library
 
-[**list_playlists**](RoonCommandLine/list_playlists) - Search and list the available Roon Playlists
+[**list_playlists**](list_playlists) - Search and list the available Roon Playlists
 
-[**list_tags**](RoonCommandLine/list_tags) - Search and list the available Roon Library tags
+[**list_tags**](list_tags) - Search and list the available Roon Library tags
 
-[**list_zones**](RoonCommandLine/list_zones) - List the available Roon Zones
+[**list_zones**](list_zones) - List the available Roon Zones
 
-[**set_zone**](RoonCommandLine/set_zone) - Set the Roon Zone in which subsequent commands will run
+[**set_zone**](set_zone) - Set the Roon Zone in which subsequent commands will run
 
-[**zone_command**](RoonCommandLine/zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, mute, unmute, next track, previous track)
+[**zone_command**](zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, mute, unmute, next track, previous track)
 
-[**INSTALL**](RoonCommandLine/INSTALL) - Describes the installation process
+[**INSTALL**](INSTALL) - Describes the installation process
 
-[**LICENSE**](RoonCommandLine/LICENSE) - Apache License version 2.0
+[**LICENSE**](LICENSE) - Apache License version 2.0
 
-[**NOTICE**](RoonCommandLine/NOTICE) - Copyright notice
+[**NOTICE**](NOTICE) - Copyright notice
 
-[**install.sh**](RoonCommandLine/install.sh) - Convenience script to copy scripts into place
+[**install.sh**](install.sh) - Convenience script to copy scripts into place
 
-[**usage.txt**](RoonCommandLine/usage.txt) - Frontend "roon" script usage documentation
+[**usage.txt**](usage.txt) - Frontend "roon" script usage documentation
 
-[**api/**](RoonCommandLine/-/tree/master/api) - Python scripts to call the Roon API with appropriate arguments
+[**api/**](api/README.md) - Python scripts to call the Roon API with appropriate arguments
 
-[**patches/**](RoonCommandLine/-/tree/master/patches) - Patches to the Python Roon API to extend its capabilities
+[**patches/**](patches/README.md) - Patches to the Python Roon API to extend its capabilities
