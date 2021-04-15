@@ -390,6 +390,6 @@ unless there were multiple artist name matches to the substring "Tull".
 
 [**usage.txt**](RoonCommandLine/usage.txt) - Frontend "roon" script usage documentation
 
-[**api/**](RoonCommandLine/api/README.md) - Python scripts to call the Roon API with appropriate arguments
+[**api/**](RoonCommandLine/-/tree/master/api) - Python scripts to call the Roon API with appropriate arguments
 
-[**patches/**](RoonCommandLine/patches/README.md) - Patches to the Python Roon API to extend its capabilities
+[**patches/**](RoonCommandLine/-/tree/master/patches) - Patches to the Python Roon API to extend its capabilities
