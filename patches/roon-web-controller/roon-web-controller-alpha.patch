@@ -1,0 +1,11 @@
+--- ./backend/app.js.orig	2021-04-17 11:58:41.646056743 -0700
++++ ./backend/app.js	2021-04-17 11:58:41.696054995 -0700
+@@ -50,7 +50,7 @@
+   setting.express.port = 10000;
+   setting.express.public = "/public";
+ } else {
+-  setting.express.port = 8080;
++  setting.express.port = 8082;
+   setting.express.public = "../dist";
+ }
+ 

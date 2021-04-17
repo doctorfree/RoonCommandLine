@@ -1,0 +1,33 @@
+--- ./launch-chromium-touch.sh.00	2021-04-17 14:25:51.151507116 -0700
++++ ./launch-chromium-touch.sh	2021-04-17 12:26:36.479428076 -0700
+@@ -0,0 +1,8 @@
++#!/bin/bash
++
++DISPLAY=:0 /usr/bin/chromium-browser \
++    --noerrdialogs \
++    --kiosk \
++    --incognito \
++    --window-position=1920,0 \
++    http://localhost:8082
+--- ./roon-web-controller.service.00	2021-04-17 12:22:54.653639135 -0700
++++ ./roon-web-controller.service	2021-04-17 12:04:29.877053916 -0700
+@@ -0,0 +1,11 @@
++[Unit]
++Description=NodeJS app - Roon Web Controller
++After=network.target
++
++[Service]
++User=pi
++WorkingDirectory=/home/pi/src/roon-web-controller
++ExecStart=/usr/bin/node app.js -p 8082
++
++[Install]
++WantedBy=multi-user.target
+--- ./config/local.json.00	2021-04-17 12:23:46.732596085 -0700
++++ ./config/local.json	2021-04-17 11:59:36.314287177 -0700
+@@ -0,0 +1,5 @@
++{
++  "server": {
++    "port": "8082"
++  }
++}

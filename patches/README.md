@@ -11,3 +11,5 @@ Patches to the Python Roon API. Currently these patches add a method to search a
 [**mkpatch-pyroon**](mkpatch-pyroon) - Shell script used to create the pyroon patch above
 
 [**mkpatch-roonapi**](mkpatch-roonapi) - Shell script used to create the roonapi patch above
+
+[**roon-web-controller**](roon-web-controller) - Patches for the roon-web-controller project
