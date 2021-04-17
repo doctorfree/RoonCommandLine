@@ -23,6 +23,6 @@ of locations Python searches for site-packages can be found by executing:
 
 ## Contents
 
-[**roonapi.py**](roonapi.py) - Python Roon API patch to be applied to the installed Python module (e.g. after "pip install roonapi")
+[**roonapi.py**](roonapi.py) - Python Roon API with already applied patch to be copied to the installed roonapi Python module (e.g. after "pip install roonapi")
 
-[**roonapisocket.py**](roonapisocket.py) - Python Roon API patch to be applied to a cloned git repository
+[**roonapisocket.py**](roonapisocket.py) - Python Roon API with already applied patch to be copied to the installed roonapi Python module
