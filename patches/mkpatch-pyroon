@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SRCDIR=$HOME/src
+RCLDIR=$SRCDIR/RoonCommandLine
 PYRDIR=pyroon/roonapi
 SUFF="orig"
 
@@ -14,10 +15,10 @@ cd $SRCDIR
     }
 }
 
-[ -d ~/src/RoonCommandLine ] || mkdir ~/src/RoonCommandLine
-[ -d ~/src/RoonCommandLine/patches ] || mkdir ~/src/RoonCommandLine/patches
+[ -d ${RCLDIR} ] || mkdir ${RCLDIR}
+[ -d ${RCLDIR}/patches ] || mkdir ${RCLDIR}/patches
 
-OUT=$HOME/src/RoonCommandLine/patches/pyroon-listmedia.patch
+OUT=${RCLDIR}/patches/pyroon-listmedia.patch
 rm -f $OUT
 touch $OUT
 for i in ${PYRDIR}/*.${SUFF}
