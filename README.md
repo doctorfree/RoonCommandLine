@@ -350,8 +350,6 @@ unless there were multiple artist name matches to the substring "Tull".
 
 [**get_core_ip**](get_core_ip) - Shell script to retrieve the Roon Core IP address
 
-[**get_zones**](get_zones) - Shell script to retrieve the Roon output Zone names
-
 [**play_album**](play_album) - Shell script frontend for playing a specified album in my Roon library
 
 [**play_artist**](play_artist) - Shell script frontend for playing a specified artist in my Roon library

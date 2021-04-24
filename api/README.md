@@ -8,8 +8,6 @@ Python scripts to access the Python Roon API
 
 [**get_core_ip.py**](get_core_ip.py) - Python script backend to retrieve the Roon Core IP address
 
-[**get_zones.py**](get_zones.py) - Python script backend to retrieve the Roon output Zone names
-
 [**play_album.py**](play_album.py) - Python script backend for playing a specified album in my Roon library
 
 [**play_artist.py**](play_artist.py) - Python script backend for playing a specified artist in my Roon library
