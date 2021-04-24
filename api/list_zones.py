@@ -38,12 +38,39 @@ else:
 roonapi = RoonApi(appinfo, token, server)
 
 zones = roonapi.zones
-for output in zones.values():
-    zone_name = output["display_name"]
-    if searchterm == "all":
-        print(zone_name)
-    elif searchterm in zone_name:
-        print(zone_name)
+outputs = roonapi.outputs
+zone_number = 1
+
+for (k, v) in outputs.items():
+    zone_id = v["zone_id"]
+    output_id = k
+    zone_name = v["display_name"]
+    is_grouped = roonapi.is_grouped(output_id)
+    is_group_main = roonapi.is_group_main(output_id)
+    group_main_zone = roonapi.group_main_zone(output_id)
+    group_main_zone_name = roonapi.group_main_zone_name(output_id)
+    if group_main_zone is None:
+        group_main_zone_name_grouped = ""
+    else:
+        group_main_zone_name_grouped = zones[group_main_zone]["display_name"]
+    if (searchterm == "all" or searchterm in zone_name):
+        if is_grouped:
+            print(
+                "Zone",
+                str(zone_number) + ":",
+                '\033[1m' + zone_name + '\033[0m',
+                "\n\tGrouped in zone:",
+                '\033[1m' + group_main_zone_name_grouped + '\033[0m',
+                "\n\tGroup main zone:",
+                '\033[1m' + group_main_zone_name + '\033[0m',
+            )
+        else:
+            print(
+                "Zone",
+                str(zone_number) + ":",
+                '\033[1m' + zone_name + '\033[0m',
+            )
+        zone_number += 1
 
 # save the token for next time
 with open(tokenfile, "w") as f:
