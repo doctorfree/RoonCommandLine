@@ -1,6 +1,26 @@
 #!/bin/bash
 
 ROONCONF=$HOME/.pyroonconf
+ROON=$HOME/RoonCommandLine
+SCRIPT="zone_command.py"
+
+[ -f ${ROON}/${SCRIPT} ] || {
+    echo "Roon Command Line scripts not installed. Missing $ROON/$SCRIPT"
+    exit 1
+}
+cd ${ROON}
+
+# Verify this is a valid zone name
+[ "$1" ] || {
+    echo "No zone specified on command line. Exiting."
+    exit 1
+}
+MY_ZONE="$*"
+ZONE=`python $SCRIPT -c "verify" -z "$MY_ZONE"`
+[ "$ZONE" ] || {
+    echo "No zone matching $MY_ZONE"
+    exit 1
+}
 
 # Locate Python user base
 USERSITE=`python -m site --user-site`
@@ -25,8 +45,6 @@ else
 fi
 
 [ "$PYTHONUSERBASE" ] || PYTHONUSERBASE="$HOME/Python3"
-
-[ "$1" ] && ZONE="$*"
 
 if [ -f $ROONCONF ]
 then

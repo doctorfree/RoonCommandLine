@@ -43,12 +43,24 @@ else:
 roonapi = RoonApi(appinfo, token, server)
 
 # get target zone output_id
-zones = roonapi.zones
-output_id = [
-    output["zone_id"]
-    for output in zones.values()
-    if target_zone in output["display_name"]
-][0]
+outputs = roonapi.outputs
+
+output_id = None
+for (k, v) in outputs.items():
+    if target_zone in v["display_name"]:
+        zone_name = v["display_name"]
+        output_id = k
+
+if zone_command == "verify":
+    if output_id is None:
+        print("")
+    else:
+        print(zone_name)
+    exit()
+
+if output_id is None:
+    print("No zone found matching", target_zone)
+    exit()
 
 # Send the command to the specified zone
 if zone_command == "mute":
