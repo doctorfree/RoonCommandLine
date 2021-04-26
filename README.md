@@ -128,6 +128,11 @@ you wish to issue command line Roon controls.
 	# the Python Roon API command line tools, every system you want to
 	# enable as a command line Roon remote. Each system must be able to
 	# access the Python Roon API installed system via SSH
+	#
+	# If you wish to run the roon front end script on the same system on
+	# which the Python Roon API is installed, then execute the command
+	# "roon -L" on that system. This will enable local execution of the
+	# Roon Command Line scripts rather than remote execution via SSH.
 
 Finally, note that the roon shell script is not passing credentials in the
 SSH invocations. SSH authentication via public key needs to be enabled and
