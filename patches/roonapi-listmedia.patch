@@ -1,6 +1,6 @@
---- lib/python3.8/site-packages/roonapi/roonapi.py.orig	2021-04-04 08:26:00.718478679 -0700
-+++ lib/python3.8/site-packages/roonapi/roonapi.py	2021-04-07 17:24:57.539008631 -0700
-@@ -344,6 +344,89 @@
+--- site-packages/roonapi/roonapi.py.orig	2021-04-25 17:16:59.000000000 -0700
++++ site-packages/roonapi/roonapi.py	2021-04-25 17:17:03.000000000 -0700
+@@ -398,6 +398,89 @@
          """
          return self._request(SERVICE_BROWSE + "/load", opts)
  
@@ -90,7 +90,7 @@
      def play_media(self, zone_or_output_id, path, action=None):
          """
          Play the media specified.
-@@ -390,11 +473,12 @@
+@@ -444,11 +527,12 @@
  
                  load_opts["offset"] += PAGE_SIZE
              if searched >= total_count and found is None:
@@ -108,74 +108,7 @@
                  return None
  
              opts["item_key"] = found["item_key"]
-@@ -448,6 +532,7 @@
-         self.browse_browse(opts)
-         return True
- 
-+    # pylint: disable=too-many-return-statements
-     def play_id(self, zone_or_output_id, media_id):
-         """Play based on the media_id from the browse api."""
-         opts = {
-@@ -460,16 +545,17 @@
-         try:
-             if header_result["list"]["level"] == 0:
-                 LOGGER.info("Initial load started playback")
--                return
--        except NameError:
--            pass
-+                return True
-+        except (NameError, KeyError, TypeError):
-+            LOGGER.error("Could not play id:%s, result: %s", media_id, header_result)
-+            return False
- 
-         if header_result is None:
-             LOGGER.error(
-                 "Playback requested of unsupported id: %s",
-                 media_id,
-             )
--            return
-+            return False
- 
-         result = self.browse_load(opts)
- 
-@@ -480,7 +566,7 @@
-                 "Playback requested but item is a list, not a playable action or action_list id: %s",
-                 media_id,
-             )
--            return
-+            return False
- 
-         if hint == "action_list":
-             opts["item_key"] = first_item["item_key"]
-@@ -490,7 +576,7 @@
-                     "Playback requested of unsupported id: %s",
-                     media_id,
-                 )
--                return
-+                return False
-             result = self.browse_load(opts)
-             first_item = result["items"][0]
-             hint = first_item["hint"]
-@@ -501,7 +587,7 @@
-                 media_id,
-                 header_result,
-             )
--            return
-+            return False
- 
-         play_action = result["items"][0]
-         hint = play_action["hint"]
-@@ -513,6 +599,9 @@
-                 "Playback requested of unsupported id: %s",
-                 media_id,
-             )
-+            return False
-+
-+        return True
- 
-     # private methods
-     # pylint: disable=too-many-arguments
-@@ -574,7 +663,7 @@
+@@ -633,7 +717,7 @@
  
      def _server_discovered(self, host, port):
          """(Auto) discovered the roon server on the network."""
@@ -184,7 +117,7 @@
          ws_address = "ws://%s:%s/api" % (host, port)
          self._host = host
          self._port = port
-@@ -587,7 +676,7 @@
+@@ -646,7 +730,7 @@
  
      def _socket_connected(self):
          """Successfully connected the websocket."""
@@ -193,7 +126,7 @@
          self.ready = False
          # authenticate / register
          # warning: at first launch the user has to approve the app in the Roon settings.
-@@ -597,13 +686,13 @@
+@@ -656,13 +740,13 @@
          if self._token:
              appinfo["token"] = self._token
          if not self._token:
@@ -210,18 +143,3 @@
          LOGGER.debug(reginfo)
          self._token = reginfo["token"]
          self._core_id = reginfo["core_id"]
---- lib/python3.8/site-packages/roonapi/roonapisocket.py.orig	2021-04-04 08:26:00.718478679 -0700
-+++ lib/python3.8/site-packages/roonapi/roonapisocket.py	2021-04-04 14:27:21.379944182 -0700
-@@ -137,9 +137,9 @@
-                 request_id = int(line_with_request_id[0].split("Request-Id: ")[1])
- 
-             if "Content-Type:" in message:
--                # Looks like roon adds an extra newline after the header, so use this to find content
--                # https://github.com/RoonLabs/node-roon-api/blob/master/moomsg.js#L45
--                body = message.split("\n\n")[1]
-+                # Roon uses a blank line after the header to indicate body.
-+                # See https://github.com/RoonLabs/node-roon-api/blob/master/moomsg.js#L45
-+                body = "".join(message.split("\n\n")[1:])
-             elif "Logging:" not in message:
-                 body = header
-             if body and "{" in body:

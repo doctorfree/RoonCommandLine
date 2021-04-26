@@ -51,13 +51,16 @@ USERSITE=`python -m site --user-site`
 if [ -d $USERSITE/roonapi ]
 then
     PYTHONUSERBASE=`echo $USERSITE | awk -F "/lib/" ' { print $1 } '`
+    PYTHON_SITEDIR=`echo $USERSITE | awk -F "/site-packages" ' { print $1 } '`
 else
     # Check the global site directories
     SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
     for site in ${SITES[@]}
     do
-        [ -d ${site}/roonapi ] && {
+        site=`echo $site | sed -e "s/\'//g"`
+        [ -d "${site}/roonapi" ] && {
             PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
+            PYTHON_SITEDIR=`echo ${site} | awk -F "/site-packages" ' { print $1 } '`
             break
         }
     done
@@ -98,7 +101,7 @@ then
             patch_inst=`type -p patch`
             if [ "$patch_inst" ]
             then
-                cd ${PYTHONUSERBASE}
+                cd ${PYTHON_SITEDIR}
                 patch -b -p0 < ${patchfile}
                 echo "ROONAPIPATCHED=true" >> ${ROONCONF}
             else

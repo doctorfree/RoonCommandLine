@@ -1,27 +1,23 @@
 #!/bin/bash
 
-PYDIR=$HOME/.local
-SITEDIR=lib/python3.8/site-packages
-USERSITE=$PYDIR/$SITEDIR
+PYDIR=$HOME/.pyenv/versions/3.9.4/lib/python3.9
+USERSITE=$PYDIR/site-packages
 
 [ -d $USERSITE/roonapi ] || {
     # First check the Python User Site directory
     USERSITE=`python -m site --user-site`
     if [ -d $USERSITE/roonapi ]
     then
-        PYDIR=`echo $USERSITE | awk -F "/lib/" ' { print $1 } '`
-        base=`basename $PYDIR`
-        SITEDIR=`echo $USERSITE | awk -F "/${base}/" ' { print $2 } '`
+        PYDIR=`echo $USERSITE | awk -F "/site-packages/" ' { print $1 } '`
     else
         # Next check Python's global directories
         SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
         for site in ${SITES[@]}
         do
-            [ -d ${site}/roonapi ] && {
-                PYDIR=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
-                base=`basename $PYDIR`
-                SITEDIR=`echo ${site} | awk -F "/${base}/" ' { print $2 } '`
-                USERSITE=$PYDIR/$SITEDIR
+            site=`echo $site | sed -e "s/\'//g"`
+            [ -d "${site}/roonapi" ] && {
+                PYDIR=`echo ${site} | awk -F "/site-packages/" ' { print $1 } '`
+                USERSITE=$PYDIR/site-packages
                 break
             }
         done
@@ -36,10 +32,10 @@ cd $PYDIR
 
 [ -d ~/src/RoonCommandLine/patches ] || mkdir ~/src/RoonCommandLine/patches
 
-OUT=$HOME/src/patches/roonapi-listmedia.patch
+OUT=$HOME/src/RoonCommandLine/patches/roonapi-listmedia.patch
 rm -f $OUT
 touch $OUT
-for i in ${SITEDIR}/roonapi/*.orig
+for i in site-packages/roonapi/*.orig
 do
     j=`echo $i | sed -e "s/.orig//"`
     diff -Naur $i $j >> $OUT

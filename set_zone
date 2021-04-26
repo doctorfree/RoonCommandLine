@@ -28,17 +28,14 @@ USERSITE=`python -m site --user-site`
 if [ -d $USERSITE/roonapi ]
 then
     PYTHONUSERBASE=`echo $USERSITE | awk -F "/lib/" ' { print $1 } '`
-    base=`basename $PYTHONUSERBASE`
-    SITEDIR=`echo $USERSITE | awk -F "/${base}/" ' { print $2 } '`
 else
     # Check the global site directories
     SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
     for site in ${SITES[@]}
     do
-        [ -d ${site}/roonapi ] && {
+        site=`echo $site | sed -e "s/\'//g"`
+        [ -d "${site}/roonapi" ] && {
             PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
-            base=`basename $PYTHONUSERBASE`
-            SITEDIR=`echo ${site} | awk -F "/${base}/" ' { print $2 } '`
             break
         }
     done
