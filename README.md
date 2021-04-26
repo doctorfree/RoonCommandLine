@@ -33,7 +33,7 @@ or tags which contain the specified substring.
 
 In addition to media search and playback, the Python Roon API Command Line
 supports Roon command control. Commands currently supported include:
-    play, pause, playpause, stop, next, previous,
+    group, ungroup, play, pause, playpause, stop, next, previous,
     shuffle, unshuffle, repeat, unrepeat, mute, unmute
 
 All commands and playback can target a specified Roon output zone.
@@ -137,7 +137,11 @@ you wish to issue command line Roon controls.
 Finally, note that the roon shell script is not passing credentials in the
 SSH invocations. SSH authentication via public key needs to be enabled and
 appropriate keys generated and propogated. This topic is addressed in various
-guides on setting up SSH.
+guides on setting up SSH. Alternatively, the roon shell script can be
+installed on the same system as the Python Roon API and backend scripts.
+In this configuration, SSH is no longer required and the roon commands can
+be executed locally. In order to enable local execution rather than remote
+execution via SSH, run the command "roon -L".
 
 ## Manual Patch Application
 
@@ -178,6 +182,9 @@ To find your Python global dist-packages directory, issue the command:
     $ python -c 'import site; print(site.getsitepackages())'
 
 The roonapi module should be in your user site-packages directory.
+For systems where pyenv was used to install Python and packages, this will
+be something of the form:
+    $HOME/.pyenv/versions/3.9.4/lib/python3.9/site-packages
 
 Alternatively, you can patch the Python Roon API roonapi module directly rather
 than patching the pyroon source code and copying it in. To perform this
@@ -207,6 +214,10 @@ or
 https://serverpilot.io/docs/how-to-use-ssh-public-key-authentication/
 
 Also, make sure the SSH service is running on the Python Roon API system.
+Alternatively, install both the roon command and the Python Roon API on the
+same system and run the roon commands locally, avoiding the need for SSH.
+To enable local execution of the roon command line tools, issue the command:
+    $ roon -L
 
 In some cases the initial installation may fail to configure the system properly.
 The Roon Command Line install creates two configuration files:
@@ -301,22 +312,25 @@ Python Roon API system via SSH.
 
 Here is the current output of "roon -u" which displays a usage message.
 
-    Usage: roon -A album -a artist -g genre
+    Usage: roon -L -r -u
+        -A album -a artist -g genre -G zone_group
 	    -l [albums|artists|genres|playlists|tags|zones]
-	    -r -u -s search -p playlist -t tag -z zone
-	    -c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+	    -s search -p playlist -t tag -z zone
+	    -c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 
 	Where:
 		-A album selects an album to play
 		-a artist selects an artist to play
 		-g genre selects a genre to play
 		-p playlist selects a playlist to play
+		-G zone_group specifies a zone grouping specified in roon_api.ini
+		-L setup roon to execute local commands rather than remote via SSH
 		-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones
 		-s search specifies a term to search for in the lists retrieved with -l
 		-r indicates play Radio Paradise
 		-t tag selects an tag to play (not yet working)
 		-z zone selects the Roon Zone in which to play
-		-c [play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+		-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 			issues the command in the selected zone
 
 	Example invocations
@@ -336,6 +350,8 @@ Here is the current output of "roon -u" which displays a usage message.
 			roon -c mute -z "Living Room"
 		List all playlists containing the string 'Best':
 			roon -l playlists -s Best
+		Group the zones listed in roon_api.ini Group_foobar:
+			roon -G foobar -c group
 		NOTE: Use quotes to specify media names which contain spaces.
 		For example, to play the album 'Love Bomb':
 			roon -A "Love Bomb"
