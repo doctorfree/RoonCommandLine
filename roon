@@ -38,11 +38,12 @@ tag=
 zone=
 
 usage() {
-  printf "\nUsage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-r -u"
+  printf "\nUsage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -r -u"
   printf "\n\tWhere:\n\t\t-A album selects an album to play"
   printf "\n\t\t-a artist selects an artist to play"
   printf "\n\t\t-g genre selects a genre to play"
   printf "\n\t\t-p playlist selects a playlist to play"
+  printf "\n\t\t-L setup roon to execute local commands rather than remote via SSH"
   printf "\n\t\t-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones"
   printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
   printf "\n\t\t-r indicates play Radio Paradise"
@@ -75,7 +76,11 @@ usage() {
 
 [ "$1" ] || usage
 
-while getopts A:a:g:p:t:z:c:l:s:ru flag; do
+ROONCONF=$HOME/.pyroonconf
+LOCAL=false
+[ -f ${ROONCONF} ] && . ${ROONCONF}
+
+while getopts A:a:g:p:t:z:c:l:s:Lru flag; do
     case $flag in
         A)
             album="$OPTARG"
@@ -124,6 +129,19 @@ while getopts A:a:g:p:t:z:c:l:s:ru flag; do
             fi
 
             ;;
+        L)
+            if [ -f ${ROONCONF} ]
+            then
+                grep -v ^LOCAL= ${ROONCONF} > /tmp/roon$$
+                echo "LOCAL=true" >> /tmp/roon$$
+                cp /tmp/roon$$ ${ROONCONF}
+                rm -f /tmp/roon$$
+                . ${ROONCONF}
+            else
+                echo "${ROONCONF} does not exist"
+                echo "RoonCommandLine is not installed locally"
+            fi
+            ;;
         r)
             radio=1
             ;;
@@ -139,25 +157,121 @@ done
 [ "$search" ] || search="all"
 
 # Set Zone
-[ "$zone" ] && ssh $user@$server "bash -l -c \"set_zone $zone\""
+[ "$zone" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        set_zone $zone
+    else
+        ssh $user@$server "bash -l -c \"set_zone $zone\""
+    fi
+}
 
-[ "$albumlist" ] && ssh $user@$server "bash -l -c \"list_albums $search\""
-[ "$artistlist" ] && ssh $user@$server "bash -l -c \"list_artists $search\""
-[ "$genrelist" ] && ssh $user@$server "bash -l -c \"list_genres $search\""
-[ "$playlistlist" ] && ssh $user@$server "bash -l -c \"list_playlists $search\""
-[ "$taglist" ] && ssh $user@$server "bash -l -c \"list_tags $search\""
-[ "$zonelist" ] && ssh $user@$server "bash -l -c \"list_zones $search\""
-[ "$album" ] && ssh $user@$server "bash -l -c \"play_album $album\""
-[ "$artist" ] && ssh $user@$server "bash -l -c \"play_artist $artist\""
-[ "$genre" ] && ssh $user@$server "bash -l -c \"play_genre $genre\""
-[ "$playlist" ] && ssh $user@$server "bash -l -c \"play_playlist $playlist\""
-[ "$tag" ] && ssh $user@$server "bash -l -c \"play_tag $tag\""
-[ "$radio" ] && ssh $user@$server "bash -l -c play_rp"
+[ "$albumlist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_albums $search
+    else
+        ssh $user@$server "bash -l -c \"list_albums $search\""
+    fi
+}
+[ "$artistlist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_artists $search
+    else
+        ssh $user@$server "bash -l -c \"list_artists $search\""
+    fi
+}
+[ "$genrelist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_genres $search
+    else
+        ssh $user@$server "bash -l -c \"list_genres $search\""
+    fi
+}
+[ "$playlistlist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_playlists $search
+    else
+        ssh $user@$server "bash -l -c \"list_playlists $search\""
+    fi
+}
+[ "$taglist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_tags $search
+    else
+        ssh $user@$server "bash -l -c \"list_tags $search\""
+    fi
+}
+[ "$zonelist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_zones $search
+    else
+        ssh $user@$server "bash -l -c \"list_zones $search\""
+    fi
+}
+[ "$album" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        play_album $album
+    else
+        ssh $user@$server "bash -l -c \"play_album $album\""
+    fi
+}
+[ "$artist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        play_artist $artist
+    else
+        ssh $user@$server "bash -l -c \"play_artist $artist\""
+    fi
+}
+[ "$genre" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        play_genre $genre
+    else
+        ssh $user@$server "bash -l -c \"play_genre $genre\""
+    fi
+}
+[ "$playlist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        play_playlist $playlist
+    else
+        ssh $user@$server "bash -l -c \"play_playlist $playlist\""
+    fi
+}
+[ "$tag" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        play_tag $tag
+    else
+        ssh $user@$server "bash -l -c \"play_tag $tag\""
+    fi
+}
+[ "$radio" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        play_rp
+    else
+        ssh $user@$server "bash -l -c play_rp"
+    fi
+}
 
 [ "$comm" ] && {
     case "$comm" in
     "shuffle"|"unshuffle"|"repeat"|"unrepeat"|"mute"|"unmute"|"next"|"previous"|"play"|"pause"|"stop"|"playpause")
-        ssh $user@$server "bash -l -c \"zone_command -c ${comm}\""
+        if [ "${LOCAL}" = true ]
+        then
+            zone_command -c ${comm}
+        else
+            ssh $user@$server "bash -l -c \"zone_command -c ${comm}\""
+        fi
         ;;
     *)
         echo "Unrecognized Roon command: $comm"

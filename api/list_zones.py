@@ -47,23 +47,22 @@ for (k, v) in outputs.items():
     zone_name = v["display_name"]
     is_grouped = roonapi.is_grouped(output_id)
     is_group_main = roonapi.is_group_main(output_id)
-    group_main_zone = roonapi.group_main_zone(output_id)
-    group_main_zone_name = roonapi.group_main_zone_name(output_id)
-    if group_main_zone is None:
-        group_main_zone_name_grouped = ""
-    else:
-        group_main_zone_name_grouped = zones[group_main_zone]["display_name"]
+    grouped_zone_names = roonapi.grouped_zone_names(output_id)
+    if grouped_zone_names is None:
+        grouped_zone_names = ""
     if (searchterm == "all" or searchterm in zone_name):
         if is_grouped:
             print(
                 "Zone",
                 str(zone_number) + ":",
                 '\033[1m' + zone_name + '\033[0m',
-                "\n\tGrouped in zone:",
-                '\033[1m' + group_main_zone_name_grouped + '\033[0m',
-                "\n\tGroup main zone:",
-                '\033[1m' + group_main_zone_name + '\033[0m',
+                "\n\tGrouped zone names:",
+                '\033[1m',
+                grouped_zone_names,
+                '\033[0m',
             )
+            if is_group_main:
+                print("\tThis is the group main zone")
         else:
             print(
                 "Zone",
