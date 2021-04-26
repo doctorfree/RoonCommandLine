@@ -35,3 +35,7 @@ fi
 }
 
 python $LIST -z $ZONE
+
+echo ""
+echo "Your configured zone groupings:"
+grep ^Group_ $ROON/roon_api.ini

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+ROONCONF=$HOME/.pyroonconf
+ROON=$HOME/RoonCommandLine
+SCRIPT="zone_group.py"
+
+[ -f ${ROON}/${SCRIPT} ] || {
+    echo "Roon Command Line scripts not installed. Missing $ROON/$SCRIPT"
+    exit 1
+}
+cd ${ROON}
+
+# Verify this is a valid zone grouping command
+[ "$1" ] || {
+    echo "No zone grouping command specified on command line. Exiting."
+    exit 1
+}
+[ "$1" == "group" ] || [ "$1" == "ungroup" ] || {
+    echo "Zone grouping command must be 'group' or 'ungroup'. Exiting."
+    exit 1
+}
+ZONE_COMMAND="$1"
+
+# Verify this is a valid zone group name
+[ "$2" ] || {
+    echo "No zone grouping specified on command line. Exiting."
+    exit 1
+}
+ROON_ZONE_GROUP="Group_$2"
+found_group=
+for gn in `grep ^Group_ $ROON/roon_api.ini | awk -F '=' ' { print $1 } '`
+do
+    gn="$(echo -e "${gn}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    [ "$ROON_ZONE_GROUP" == "$gn" ] && found_group=1
+done
+[ "$found_group" ] || {
+    echo "No matching zone grouping found. Exiting."
+    exit 1
+}
+
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+    set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+
+python $SCRIPT -c "$ZONE_COMMAND" -z "$ROON_ZONE_GROUP"

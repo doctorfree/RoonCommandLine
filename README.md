@@ -381,6 +381,8 @@ unless there were multiple artist name matches to the substring "Tull".
 
 [**set_zone**](set_zone) - Set the Roon Zone in which subsequent commands will run
 
+[**set_zone_group**](set_zone_group) - Set one of the Roon Zone groupings specified in roon_api.ini
+
 [**zone_command**](zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, mute, unmute, next track, previous track)
 
 [**INSTALL**](INSTALL) - Describes the installation process

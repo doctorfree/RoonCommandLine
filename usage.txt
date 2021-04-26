@@ -1,19 +1,23 @@
 
-Usage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|tags|zones] 
-	-r -u -s search -p playlist -t tag -z zone
-	-c [play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+Usage: roon -L -r -u
+    -A album -a artist -g genre -G zone_group
+	-l [albums|artists|genres|playlists|tags|zones]
+	-s search -p playlist -t tag -z zone
+	-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 
 	Where:
 		-A album selects an album to play
 		-a artist selects an artist to play
 		-g genre selects a genre to play
 		-p playlist selects a playlist to play
+		-G zone_group specifies a zone grouping specified in roon_api.ini
+		-L setup roon to execute local commands rather than remote via SSH
 		-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones
 		-s search specifies a term to search for in the lists retrieved with -l
 		-r indicates play Radio Paradise
 		-t tag selects an tag to play (not yet working)
 		-z zone selects the Roon Zone in which to play
-		-c [play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+		-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 			issues the command in the selected zone
 
 	Example invocations
@@ -33,6 +37,8 @@ Usage: roon -A album -a artist -g genre -l [albums|artists|genres|playlists|tags
 			roon -c mute -z "Living Room"
 		List all playlists containing the string 'Best':
 			roon -l playlists -s Best
+		Group the zones listed in roon_api.ini Group_foobar:
+			roon -G foobar -c group
 		NOTE: Use quotes to specify media names which contain spaces.
 		For example, to play the album 'Love Bomb':
 			roon -A "Love Bomb"
