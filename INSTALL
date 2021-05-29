@@ -14,7 +14,12 @@ configure pip3 as the default pip:
 Once you have verified Python 3 and pip are installed appropriately, install
 the Python Roon API. To install the Python Roon API execute the command:
 
-    $ pip install roonapi
+    $ python3 -m pip install roonapi
+
+If you have previously installed the Python Roon API, you can upgrade to the
+latest version by executing the command:
+
+    $ python3 -m pip install --upgrade roonapi
 
 The "roon" shell script is a frontend for the other scripts in this project.
 It should be installed in the execution PATH on all systems from which remote

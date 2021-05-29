@@ -103,7 +103,10 @@ then
             then
                 cd ${PYTHON_SITEDIR}
                 patch -b -p0 < ${patchfile}
-                echo "ROONAPIPATCHED=true" >> ${ROONCONF}
+                grep -v ROONAPIPATCHED ${ROONCONF} > /tmp/roonconf$$
+                echo "ROONAPIPATCHED=true" >> /tmp/roonconf$$
+                cp /tmp/roonconf$$ ${ROONCONF}
+                rm -f /tmp/roonconf$$
             else
                 echo "Cannot locate the patch utility. Either patch is not installed"
                 echo "or it is not in your execution PATH."

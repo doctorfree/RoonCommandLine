@@ -1,5 +1,5 @@
---- pyroon/roonapi/roonapi.py.orig	2021-04-25 13:50:33.000000000 -0700
-+++ pyroon/roonapi/roonapi.py	2021-04-25 13:50:33.000000000 -0700
+--- pyroon/roonapi/roonapi.py.orig	2021-05-29 09:21:47.000000000 -0700
++++ pyroon/roonapi/roonapi.py	2021-05-29 09:22:31.000000000 -0700
 @@ -398,6 +398,89 @@
          """
          return self._request(SERVICE_BROWSE + "/load", opts)
@@ -108,7 +108,7 @@
                  return None
  
              opts["item_key"] = found["item_key"]
-@@ -633,7 +717,7 @@
+@@ -639,7 +723,7 @@
  
      def _server_discovered(self, host, port):
          """(Auto) discovered the roon server on the network."""
@@ -117,7 +117,7 @@
          ws_address = "ws://%s:%s/api" % (host, port)
          self._host = host
          self._port = port
-@@ -646,7 +730,7 @@
+@@ -652,7 +736,7 @@
  
      def _socket_connected(self):
          """Successfully connected the websocket."""
@@ -126,7 +126,7 @@
          self.ready = False
          # authenticate / register
          # warning: at first launch the user has to approve the app in the Roon settings.
-@@ -656,13 +740,13 @@
+@@ -662,13 +746,13 @@
          if self._token:
              appinfo["token"] = self._token
          if not self._token:
