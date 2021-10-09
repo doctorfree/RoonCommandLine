@@ -3,13 +3,13 @@
 ## Table of contents
 
 1. [Overview](#overview)
-2. [History](#history)
-3. [Installation](#installation)
-4. [Manual Patch Application](<#manual-patch-application>)
-5. [Removal](#removal)
-6. [Troubleshooting](#troubleshooting)
-7. [Usage](#usage)
-8. [Contents](#contents)
+1. [History](#history)
+1. [Installation](#installation)
+1. [Manual Patch Application](<#manual-patch-application>)
+1. [Removal](#removal)
+1. [Troubleshooting](#troubleshooting)
+1. [Usage](#usage)
+1. [Contents](#contents)
 
 ## Overview
 
@@ -24,15 +24,45 @@ commands. Roon commands are issued via public key authenticated SSH commands
 sent to a system with the Python Roon API installed. That system then parses
 the commands and communicates with the Roon Core via the Roon API.
 
-Currently the command line Roon control scripts provide support for playing
-specified albums, artists, genres, playlists, tags, radio, or other Roon
-library media. In addition, search capabilities have been added to the scripts
+Alternatively, if SSH public key authentication is not desired or available,
+install the Roon Command Line frontend Bash script on the same system with
+the Python Roon API. After initial setup, run the command "roon -L" to
+configure the roon command for local execution rather than remote execution
+via SSH. This eliminates the need to setup SSH public key authentication but
+restricts execution of the Roon Command Line frontend to that single system.
+
+Currently the command line Roon control scripts provide support for:
+- Play album by album name
+- Play artist name
+- Play genre
+- Play playlist by playlist name
+- Play tag
+- Play Roon Radio
+- Issue one of the following commands in the specified zone
+  - group
+  - ungroup
+  - play
+  - pause
+  - playpause
+  - stop
+  - next
+  - previous
+  - shuffle
+  - unshuffle
+  - repeat
+  - unrepeat
+  - mute
+  - unmute
+- List albums, artists, genres, playlists, tags, or Roon zones
+- Select Roon audio zone or zone grouping
+
+In addition, search capabilities have been added to the scripts
 with partial matching facilities. Thus a substring can be supplied to use as a
 search term with partial matching returning albums, artists, playlists, genres,
 or tags which contain the specified substring.
 
-In addition to media search and playback, the Python Roon API Command Line
-supports Roon command control. Commands currently supported include:
+The Python Roon API Command Line supports Roon command control.
+Commands currently supported include:
     group, ungroup, play, pause, playpause, stop, next, previous,
     shuffle, unshuffle, repeat, unrepeat, mute, unmute
 
@@ -45,8 +75,9 @@ Several users had posted in the Roon forums various ways to use Siri to control 
 These usually took the form of a fake device in HomeBridge that then communicates with
 HomeKit and Siri. This seemed cool but maybe overkill. I was able to get Siri voice
 control of Roon working with simple SSH shortcuts that execute Python scripts which
-utilize the Roon API to control Roon. People don’t seem to know about Apple’s SSH
-shortcuts. They can be used to execute commands on systems that allow SSH access.
+utilize the Roon API to control Roon.
+
+Apple SSH shortcuts can be used to execute commands on systems that allow SSH access.
 I used an Ubuntu 20.10 system recently installed to install the Python Roon API project
 (pip install roonapi) and quickly cobbled together a Python script based on one of the
 examples in that project. The Python script accepts an argument specifying an artist
