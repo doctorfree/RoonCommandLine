@@ -32,7 +32,7 @@ case "$1" in
         export PYTHON_EXE
         # Check the global site directories
         [ "${PYTHON_EXE}" ] && {
-          SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+          SITES=($(${PYTHON_EXE} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
           for site in ${SITES[@]}
           do
             [ -d ${site}/roonapi ] && {

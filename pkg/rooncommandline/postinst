@@ -119,7 +119,7 @@ case "$1" in
         PYTHONUSERBASE=
         # Check the global site directories
         [ "${PYTHON_EXE}" ] && {
-          SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+          SITES=($(${PYTHON_EXE} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
           for site in ${SITES[@]}
           do
             site=`echo $site | sed -e "s/\'//g"`
