@@ -97,22 +97,6 @@ case "$1" in
         cp /tmp/roon$$ ${ROON}/bin/roon
         rm -f /tmp/roon$$
 
-        echo ""
-        echo "In order to configure the Python Roon API we must set the IP address"
-        echo "of the Roon Core. Discovery will be used to determine the Roon Core IP."
-        echo "When prompted for authorization, go to a Roon Remote window and click"
-        echo "    Settings -> Extensions -> Enable"
-        echo "to authorize discovery"
-        echo ""
-
-        ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
-        CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
-        cat ${ROONETC}/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
-        echo "$CORE_IP" >> /tmp/core$$
-        cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
-        cp /tmp/core$$ ${ROONETC}/roon_api.ini
-        rm -f /tmp/core$$ /tmp/discover$$
-
         PYTHON_EXE=`type -p python`
         [ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
         export PYTHON_EXE
@@ -190,7 +174,7 @@ case "$1" in
         DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
         # Remove leading and trailing spaces in DEFZONE
         DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-        # Set ROON_ZONE in .pyroonconf if not already set
+        # Set ROON_ZONE in pyroonconf if not already set
         if [ -f ${ROONCONF} ]
         then
             grep ROON_ZONE ${ROONCONF} > /dev/null || {
@@ -199,6 +183,22 @@ case "$1" in
         else
             echo "ROON_ZONE=\"$DEFZONE\"" > ${ROONCONF}
         fi
+
+        echo ""
+        echo "In order to configure the Python Roon API we must set the IP address"
+        echo "of the Roon Core. Discovery will be used to determine the Roon Core IP."
+        echo "When prompted for authorization, go to a Roon Remote window and click"
+        echo "    Settings -> Extensions -> Enable"
+        echo "to authorize discovery"
+        echo ""
+
+        ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+        CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
+        cat ${ROONETC}/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
+        echo "$CORE_IP" >> /tmp/core$$
+        cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
+        cp /tmp/core$$ ${ROONETC}/roon_api.ini
+        rm -f /tmp/core$$ /tmp/discover$$
 
         echo ""
         echo "Verify the 'server' and 'user' settings in the roon script are correct"
