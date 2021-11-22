@@ -22,12 +22,11 @@ else
     . ${ROONCONF}
 fi
 
-PYTHON_EXE=`type -p python`
-[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $PLAY -z "$ROON_ZONE"
+else
+    python $PLAY -z "$ROON_ZONE"
+fi
 
-[ "${PYTHON_EXE}" ] || {
-    echo "Could not locate python executable. Exiting."
-    exit 1
-}
-
-${PYTHON_EXE} $PLAY -z "$ROON_ZONE"

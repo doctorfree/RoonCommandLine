@@ -21,9 +21,9 @@ set -e
 case "$1" in
     configure)
         update-alternatives --install /usr/bin/python python /usr/bin/python3 10
-        update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
-        pip install roonapi
-        export PATH=/usr/local/bin:$PATH
+        # update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+        pip3 install roonapi
+        export PATH=/usr/local/bin:/usr/bin:$PATH
         [ -d /usr/local ] || mkdir /usr/local
         [ -d /usr/local/bin ] || mkdir /usr/local/bin
         cd /usr/local/bin
@@ -100,23 +100,24 @@ case "$1" in
         cp /tmp/roon$$ ${ROON}/bin/roon
         rm -f /tmp/roon$$
 
-        PYTHON_EXE=`type -p python`
-        [ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
-        export PYTHON_EXE
+        have_python3=`type -p python3`
         PYTHONUSERBASE=
         # Check the global site directories
-        [ "${PYTHON_EXE}" ] && {
-          SITES=($(${PYTHON_EXE} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-          for site in ${SITES[@]}
-          do
+        if [ "${have_python3}" ]
+        then
+          SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+        else
+          SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+        fi
+        for site in ${SITES[@]}
+        do
             site=`echo $site | sed -e "s/\'//g"`
             [ -d "${site}/roonapi" ] && {
                 PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
-                PYTHON_SITEDIR=`echo ${site} | awk -F "/site-packages" ' { print $1 } '`
+                PYTHON_SITEDIR=`echo ${site} | awk -F "/dist-packages" ' { print $1 } '`
                 break
             }
-          done
-        }
+        done
 
         if [ "${PYTHONUSERBASE}" ]
         then

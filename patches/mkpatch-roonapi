@@ -1,34 +1,25 @@
 #!/bin/bash
 
-PYDIR=$HOME/.pyenv/versions/3.9.4/lib/python3.9
-USERSITE=$PYDIR/site-packages
-
-PYTHON_EXE=`type -p python`
-[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
-
-[ "${PYTHON_EXE}" ] || {
-    echo "Could not locate python executable. Exiting."
-    exit 1
-}
-
-export PYTHON_EXE
-
-[ -d $USERSITE/roonapi ] || {
-    # Next check Python's global directories
-    SITES=($(${PYTHON_EXE} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-    for site in ${SITES[@]}
-    do
-        site=`echo $site | sed -e "s/\'//g"`
-        [ -d "${site}/roonapi" ] && {
-            PYDIR=`echo ${site} | awk -F "/site-packages/" ' { print $1 } '`
-            USERSITE=$PYDIR/site-packages
-            break
-        }
-    done
-    [ -d $USERSITE/roonapi ] || {
-        echo "Roon API Python module not found. Exiting."
-        exit 1
+# Check Python's global directories
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+else
+    SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+fi
+for site in ${SITES[@]}
+do
+    site=`echo $site | sed -e "s/\'//g"`
+    [ -d "${site}/roonapi" ] && {
+        PYDIR=`echo ${site} | awk -F "/dist-packages/" ' { print $1 } '`
+        USERSITE=$PYDIR/dist-packages
+        break
     }
+done
+[ -d $USERSITE/roonapi ] || {
+    echo "Roon API Python module not found. Exiting."
+    exit 1
 }
 
 cd $PYDIR
@@ -38,7 +29,7 @@ cd $PYDIR
 OUT=$HOME/src/RoonCommandLine/patches/roonapi-listmedia.patch
 rm -f $OUT
 touch $OUT
-for i in site-packages/roonapi/*.orig
+for i in dist-packages/roonapi/*.orig
 do
     j=`echo $i | sed -e "s/.orig//"`
     diff -Naur $i $j >> $OUT

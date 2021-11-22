@@ -32,12 +32,11 @@ fi
     GENRE="$(echo -e "${GENRE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
 
-PYTHON_EXE=`type -p python`
-[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $PLAY -g "$GENRE" -z "$ROON_ZONE"
+else
+    python $PLAY -g "$GENRE" -z "$ROON_ZONE"
+fi
 
-[ "${PYTHON_EXE}" ] || {
-    echo "Could not locate python executable. Exiting."
-    exit 1
-}
-
-${PYTHON_EXE} $PLAY -g "$GENRE" -z "$ROON_ZONE"

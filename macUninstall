@@ -11,18 +11,15 @@ do
 done
 rm -rf ${ROON}
 
-PYTHON_EXE=`type -p python`
-[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
-
-[ "${PYTHON_EXE}" ] || {
-    echo "Could not locate python executable. Exiting."
-    exit 1
-}
-export PYTHON_EXE
-
 ROON_SITE_DIR=
 # Check the global site directories
-SITES=($(${PYTHON_EXE} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+else
+    SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+fi
 for site in ${SITES[@]}
 do
     [ -d ${site}/roonapi ] && {

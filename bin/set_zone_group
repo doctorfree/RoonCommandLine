@@ -49,12 +49,11 @@ else
     . ${ROONCONF}
 fi
 
-PYTHON_EXE=`type -p python`
-[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $SCRIPT -c "$ZONE_COMMAND" -z "$ROON_ZONE_GROUP"
+else
+    python $SCRIPT -c "$ZONE_COMMAND" -z "$ROON_ZONE_GROUP"
+fi
 
-[ "${PYTHON_EXE}" ] || {
-    echo "Could not locate python executable. Exiting."
-    exit 1
-}
-
-${PYTHON_EXE} $SCRIPT -c "$ZONE_COMMAND" -z "$ROON_ZONE_GROUP"

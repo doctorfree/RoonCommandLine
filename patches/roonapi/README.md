@@ -4,20 +4,20 @@ If the installation script did not apply the patches to the Python Roon API corr
 you can use these files as replacements for the installed Python Roon API in order
 to add the media listing features of the Roon Command Line. Locate the Python Roon API
 installation folder and copy these files to that location, replacing the existing ones.
-Common locations for the Python Roon API site-packages folder include
+Common locations for the Python Roon API dist-packages folder include
 
-    $HOME/.local/lib/python3.8/site-packages/roonapi/
+    $HOME/.local/lib/python3.8/dist-packages/roonapi/
 
 or
 
-    $HOME/Python3/lib/python3.8/site-packages/roonapi/
+    $HOME/Python3/lib/python3.8/dist-packages/roonapi/
 
-The Python User site-packages location can be found by executing the command:
+The Python User dist-packages location can be found by executing the command:
 
     $ python -m site --user-site
 
-If that path does not contain the Python Roon API site-packages module then a list
-of locations Python searches for site-packages can be found by executing:
+If that path does not contain the Python Roon API dist-packages module then a list
+of locations Python searches for dist-packages can be found by executing:
 
     $ python -c 'import site; print(site.getsitepackages())' | tr -d '[],'
 

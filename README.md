@@ -210,22 +210,22 @@ after performing the steps above, execute the following:
 	# patch -b -p0 < $HOME/src/RoonCommandLine/patches/pyroon-listmedia.patch
 
 	$ cd pyroon/roonapi
-	$ cp *.py $HOME/Python3/lib/python3.8/site-packages/roonapi
+	$ cp *.py $HOME/Python3/lib/python3.8/dist-packages/roonapi
 
-Note this last command, copying the Python scripts to the site-packages/roonapi
+Note this last command, copying the Python scripts to the dist-packages/roonapi
 directory, needs to provide the correct path to your installed Python
-site-packages/roonapi directory. The command above is correct for my system
+dist-packages/roonapi directory. The command above is correct for my system
 but your system may differ. Double check where this directory got created
 by the "pip install roonapi" command.
 
-Python has global and per-user site-packages directories. RoonCommandLine
+Python has global and per-user dist-packages directories. RoonCommandLine
 version 2.0.0 and later uses the global site Python facility.
 
 To find your Python global dist-packages directory, issue the command:
 
     $ python -c 'import site; print(site.getsitepackages())'
 
-The roonapi module should be in your global site-packages directory.
+The roonapi module should be in your global dist-packages directory.
 
 Alternatively, you can patch the Python Roon API roonapi module directly rather
 than patching the pyroon source code and copying it in. To perform this
@@ -272,7 +272,7 @@ and
 These two configuration files are the first place to look when you encounter an issue.
 The /usr/local/Roon/etc/pyroonconf file contains 3 settings:
 
-    - The path to the Python User Base folder where the Python Roon API site-packages
+    - The path to the Python User Base folder where the Python Roon API dist-packages
 	  directory is located
 	- A variable used to determine if the Python Roon API patch has been applied
 	- The currently active Roon Zone name used by the Roon Commmand Line

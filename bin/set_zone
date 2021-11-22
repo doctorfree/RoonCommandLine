@@ -18,15 +18,14 @@ cd ${ROONAPI}
 }
 MY_ZONE="$*"
 
-PYTHON_EXE=`type -p python`
-[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    ZONE=`python3 $SCRIPT -c "verify" -z "$MY_ZONE"`
+else
+    ZONE=`python $SCRIPT -c "verify" -z "$MY_ZONE"`
+fi
 
-[ "${PYTHON_EXE}" ] || {
-    echo "Could not locate python executable. Exiting."
-    exit 1
-}
-
-ZONE=`${PYTHON_EXE} $SCRIPT -c "verify" -z "$MY_ZONE"`
 [ "$ZONE" ] || {
     echo "No zone matching $MY_ZONE"
     exit 1
@@ -34,7 +33,12 @@ ZONE=`${PYTHON_EXE} $SCRIPT -c "verify" -z "$MY_ZONE"`
 
 # Check the global site directories
 PYTHONUSERBASE=
-SITES=($(${PYTHON_EXE} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+if [ "${have_python3}" ]
+then
+    SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+else
+    SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+fi
 for site in ${SITES[@]}
 do
     site=`echo $site | sed -e "s/\'//g"`

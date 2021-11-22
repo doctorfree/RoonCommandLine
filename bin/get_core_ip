@@ -12,12 +12,10 @@ cd $ROON
 # echo "When prompted for authorization, go to a Roon Remote client window,"
 # echo "click on 'Settings' then click on 'Extensions' then 'Enable' the extension"
 
-PYTHON_EXE=`type -p python`
-[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
-
-[ "${PYTHON_EXE}" ] || {
-    echo "Could not locate python executable. Exiting."
-    exit 1
-}
-
-${PYTHON_EXE} $CORE
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $CORE
+else
+    python $CORE
+fi

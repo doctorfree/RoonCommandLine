@@ -1,5 +1,5 @@
---- site-packages/roonapi/roonapi.py.orig	2021-05-29 08:58:21.000000000 -0700
-+++ site-packages/roonapi/roonapi.py	2021-05-29 09:08:26.000000000 -0700
+--- dist-packages/roonapi/roonapi.py.orig	2021-05-29 08:58:21.000000000 -0700
++++ dist-packages/roonapi/roonapi.py	2021-05-29 09:08:26.000000000 -0700
 @@ -398,6 +398,89 @@
          """
          return self._request(SERVICE_BROWSE + "/load", opts)

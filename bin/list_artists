@@ -32,12 +32,10 @@ fi
     ARTIST="$(echo -e "${ARTIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
 
-PYTHON_EXE=`type -p python`
-[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
-
-[ "${PYTHON_EXE}" ] || {
-    echo "Could not locate python executable. Exiting."
-    exit 1
-}
-
-${PYTHON_EXE} $LIST -a "$ARTIST" -z "$ROON_ZONE"
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $LIST -a "$ARTIST" -z "$ROON_ZONE"
+else
+    python $LIST -a "$ARTIST" -z "$ROON_ZONE"
+fi
