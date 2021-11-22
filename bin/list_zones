@@ -1,13 +1,15 @@
 #!/bin/bash
 
-ROON=$HOME/RoonCommandLine
-ROONCONF=$HOME/.pyroonconf
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
 LIST=list_zones.py
 ZONE=
 
-[ -d $ROON ] || exit 1
+[ -d ${ROONAPI} ] || exit 1
 
-cd $ROON
+cd ${ROONAPI}
 
 [ -f $LIST ] || exit 2
 
@@ -15,7 +17,7 @@ if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=`grep ^DefaultZone $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
     # Remove leading and trailing spaces in DEFZONE
     DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     set_zone $DEFZONE
@@ -38,4 +40,4 @@ python $LIST -z $ZONE
 
 echo ""
 echo "Your configured zone groupings:"
-grep ^Group_ $ROON/roon_api.ini
+grep ^Group_ ${ROONETC}/roon_api.ini

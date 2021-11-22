@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROON=$HOME/RoonCommandLine
+ROON=/usr/local/Roon/api
 CORE=get_core_ip.py
 
 [ -d $ROON ] || exit 1

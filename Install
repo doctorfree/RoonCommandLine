@@ -1,0 +1,156 @@
+#!/bin/bash
+#
+# Usage: ./Install [package names]
+#   If no package names are specified then all currently
+#   supported packages will be installed
+#
+# Versions of apt prior to 1.1 do not support install by Debian filename
+# You should probably be running a more recent version of apt
+# On these early versions, install with the following:
+#
+# sudo dpkg -i "${DEB}"
+# sudo apt-get install -f
+
+SRC_NAME="RoonCommandLine"
+PKG_NAMES="RoonCommandLine"
+APT_NAMES="rooncommandline"
+SRC="${HOME}/src"
+
+PKG_INSTALLED=
+PKG_AVAILABLE=
+PKG_SELECTED=
+
+[ -f "${SRC}/${SRC_NAME}/VERSION" ] || {
+  echo "Missing VERSION file: ${SRC}/${SRC_NAME}/VERSION"
+  echo "Exiting"
+  exit 1
+}
+
+. "${SRC}/${SRC_NAME}/VERSION"
+PKG_VER=${VERSION}
+
+get_available_packages() {
+  for debs in ${SRC}/${SRC_NAME}/releases/${PKG_VER}/*.deb
+  do
+    [ "${debs}" == "${SRC}/${SRC_NAME}/releases/${PKG_VER}/*.deb" ] || {
+      for pkg in ${debs}
+      do
+        pkgname=`basename ${pkg} | sed -e "s/_${PKG_VER}.deb//"` 
+        PKG_AVAILABLE="${PKG_AVAILABLE} ${pkgname}"
+      done
+    }
+  done
+  PKG_AVAILABLE=`echo $PKG_AVAILABLE | sed -e "s/^ //"`
+}
+
+install_selected() {
+  for pkg in ${PKG_AVAILABLE}
+  do
+    while true
+    do
+      read -p "Install ${pkg} ? ('Y'/'N'): " yn
+      case $yn in
+          [Yy]*)
+              PKG_SELECTED="${PKG_SELECTED} $pkg"
+              break
+              ;;
+          [Nn]*)
+              break
+              ;;
+          * )
+              echo "Please answer yes or no."
+              ;;
+      esac
+    done
+  done
+  PKG_SELECTED=`echo $PKG_SELECTED | sed -e "s/^ //"`
+}
+
+plat=`uname -s`
+if [ "$plat" == "Darwin" ]
+then
+  ./macInstall
+else
+  get_available_packages
+  [ "$PKG_AVAILABLE}" ] || {
+    echo "No packages for version ${PKG_VER} are currently available. Exiting."
+    exit 1
+  }
+
+  [ "$1" ] && {
+    # If invoked with -i argument, present a menu of options to select from
+    if [ "$1" == "-i" ]
+    then
+      shift
+      PKG_NAMES="$*"
+      [ "${PKG_INSTALLED}" ] && {
+        echo "Currently installed RoonCommandLine packages:"
+        echo ""
+        for instpkg in ${PKG_INSTALLED}
+        do
+          echo "$instpkg"
+        done
+        echo ""
+      }
+      [ "${PKG_AVAILABLE}" ] && {
+        echo "Currently available RoonCommandLine packages:"
+        echo ""
+        for avaipkg in ${PKG_AVAILABLE}
+        do
+          echo "$avaipkg"
+        done
+        echo ""
+      }
+      while true
+      do
+        PS3="${BOLD}Please enter your desire (numeric or text): ${NORMAL}"
+        options=("Install All" "Install Selected" "Quit")
+        select opt in "${options[@]}"
+        do
+          case "$opt,$REPLY" in
+              "Install All",*|*,"Install All")
+                  PKG_NAMES="${PKG_AVAILABLE}"
+                  break 2
+                  ;;
+              "Install Selected",*|*,"Install Selected")
+                  install_selected
+                  PKG_NAMES="${PKG_SELECTED}"
+                  break 2
+                  ;;
+              "Quit",*|*,"Quit"|"quit",*|*,"quit")
+                  printf "\nExiting\n"
+                  exit 0
+                  ;;
+          esac
+        done
+      done
+    else
+      PKG_NAMES="$*"
+    fi
+  }
+
+  [ "${PKG_NAMES}" ] || {
+    echo "No valid Package names specified. Exiting."
+    exit 1
+  }
+
+  for PKG_NAME in ${PKG_NAMES}
+  do
+    DEB="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}.deb"
+    [ -f "${DEB}" ] || {
+      echo "${PKG_NAME}_${PKG_VER}.deb not found."
+      for debs in ${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.deb
+      do
+        [ "${debs}" == "${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.deb" ] || {
+          echo "Found existing packages:"
+          echo "${debs}"
+        }
+      done
+      echo ""
+      continue
+    }
+
+    echo "Installing ${DEB}"
+    sudo apt install "${DEB}"
+  done
+fi

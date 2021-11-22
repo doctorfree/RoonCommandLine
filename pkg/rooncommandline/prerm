@@ -1,0 +1,81 @@
+#!/bin/bash
+# prerm script for mirrorcommandline
+#
+# see: dh_installdeb(1)
+
+set -e
+
+# summary of how this script can be called:
+#        * <prerm> `remove'
+#        * <old-prerm> `upgrade' <new-version>
+#        * <new-prerm> `failed-upgrade' <old-version>
+#        * <conflictor's-prerm> `remove' `in-favour' <package> <new-version>
+#        * <deconfigured's-prerm> `deconfigure' `in-favour'
+#          <package-being-installed> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see https://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+
+case "$1" in
+    remove|upgrade|deconfigure)
+        ROON=/usr/local/Roon
+        ROONAPI=${ROON}/api
+        ROONETC=${ROON}/etc
+        ROONCONF=${ROONETC}/pyroonconf
+        ROONINI=${ROONETC}/roon_api.ini
+
+        # Locate the global site directories
+        ROON_SITE_DIR=
+        ROON_SITE_DIR=${USERSITE}/roonapi
+        SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+        for site in ${SITES[@]}
+        do
+            [ -d ${site}/roonapi ] && {
+                ROON_SITE_DIR=${site}/roonapi
+                break
+            }
+        done
+
+        rm -f ${ROONCONF} ${ROONINI} ${ROON}/bin/*.orig
+
+        if [ "$ROON_SITE_DIR" ]
+        then
+            # Roll back the Python Roon API patch if it was applied
+            cd $ROON_SITE_DIR
+            for i in *.orig
+            do
+                [ "$i" == "*.orig" ] && continue
+                j=`echo $i | sed -e "s/.orig//"`
+                mv $i $j
+            done
+        else
+            echo "Could not locate the roonapi Python module installation directory"
+            echo "Python Roon API patch not reversed."
+        fi
+
+        [ -d /usr/local/bin ] && {
+            cd /usr/local/bin
+            for command in ${ROON}/bin/*
+            do
+                [ "${command}" == "${ROON}/bin/*" ] && continue
+                b=`basename ${command}`
+                [ -L $b ] && {
+                    readlink $b | grep ${ROON} > /dev/null && rm -f $b
+                }
+            done
+        }
+        echo ""
+        echo "Roon Command Line uninstalled"
+    ;;
+
+    failed-upgrade)
+    ;;
+
+    *)
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0

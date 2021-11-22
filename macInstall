@@ -1,15 +1,17 @@
 #!/bin/bash
 
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
 HERE=`pwd`
-ROON=$HOME/RoonCommandLine
-LBIN=$HOME/bin
+LBIN=${ROON}/bin
 ROONAPI_PATCH=roonapi-listmedia.patch
-ROONCONF=$HOME/.pyroonconf
 
 [ -d ${LBIN} ] || mkdir ${LBIN}
 cp *_* ${LBIN}
-[ -d ${ROON} ] || mkdir ${ROON}
-cp api/*_* ${ROON}
+[ -d ${ROONAPI} ] || mkdir ${ROONAPI}
+cp api/*_* ${ROONAPI}
 
 # Try to configure the roon script with the IP and username
 plat=`uname -s`
@@ -39,20 +41,20 @@ echo ""
 
 $HOME/bin/get_core_ip 2>&1 | tee /tmp/discover$$
 CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
-cat ${ROON}/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
+cat ${ROONETC}/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
 echo "$CORE_IP" >> /tmp/core$$
-cp ${ROON}/roon_api.ini ${ROON}/roon_api.ini.orig
-cp /tmp/core$$ ${ROON}/roon_api.ini
+cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
+cp /tmp/core$$ ${ROONETC}/roon_api.ini
 rm -f /tmp/core$$ /tmp/discover$$
 
 # Locate Python user base
-USERSITE=`python -m site --user-site`
+# USERSITE=`python -m site --user-site`
 # First check the Python user site dir
-if [ -d $USERSITE/roonapi ]
-then
-    PYTHONUSERBASE=`echo $USERSITE | awk -F "/lib/" ' { print $1 } '`
-    PYTHON_SITEDIR=`echo $USERSITE | awk -F "/site-packages" ' { print $1 } '`
-else
+# if [ -d $USERSITE/roonapi ]
+# then
+#     PYTHONUSERBASE=`echo $USERSITE | awk -F "/lib/" ' { print $1 } '`
+#     PYTHON_SITEDIR=`echo $USERSITE | awk -F "/site-packages" ' { print $1 } '`
+# else
     # Check the global site directories
     SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
     for site in ${SITES[@]}
@@ -64,7 +66,7 @@ else
             break
         }
     done
-fi
+# fi
 
 if [ "${PYTHONUSERBASE}" ]
 then
@@ -122,7 +124,7 @@ else
     echo "List commands will not function properly."
 fi
 
-DEFZONE=`grep ^DefaultZone ${ROON}/roon_api.ini | awk -F '=' ' { print $2 } '`
+DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
 # Remove leading and trailing spaces in DEFZONE
 DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 # Set ROON_ZONE in .pyroonconf if not already set
@@ -141,5 +143,5 @@ echo "and copy the 'roon' frontend shell script to a location in your execution"
 echo "PATH on all systems from which you wish to control Roon via SSH"
 echo ""
 echo "Edit the Roon Command Line configuration settings at:"
-echo "${ROON}/roon_api.ini"
+echo "${ROONETC}/roon_api.ini"
 echo "and verify the settings in the configuration file ${HOME}/.pyroonconf"

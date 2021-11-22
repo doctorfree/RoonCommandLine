@@ -135,8 +135,9 @@ The second component is the Python Roon API frontend shell scripts
 and the Python Roon API backend Python scripts. These both get installed on
 the system on which the Python Roon API is installed. Copy this entire repository
 to the target system. Change directory into the Roon subdirectory and execute
-the "install.sh" script. This will copy the frontend shell scripts into
-$HOME/bin and the backend Python scripts into $HOME/RoonCommandLine.
+the "macInstall" script. This will copy the frontend shell scripts into
+/usr/local/Roon/bin and the backend Python scripts into
+/usr/local/Roon/api.
 
 For example, on the system where the Python Roon API is installed:
 
@@ -148,16 +149,16 @@ For example, on the system where the Python Roon API is installed:
 	# https://gitlab.com/doctorfree/RoonCommandLine/-/releases
 
     $ cd RoonCommandLine
-    $ ./install.sh
+    $ ./macInstall
 
 	# Edit the Python Roon API command line configuration file.
 	# Several default settings are provided. You may wish to modify these.
-	$ vi $HOME/RoonCommandLine/roon_api.ini
+	$ vi /usr/local/Roon/etc/roon_api.ini
 
 	# The RoonCoreIP setting shuuld have been configured during install.
 	# Verify the RoonCoreIP setting is correct.
 	# If you do not know your Roon Core IP, run the discovery script
-	$ $HOME/bin/get_core_ip
+	$ /usr/local/Roon/bin/get_core_ip
 	# Authorize the extension when prompted
 	# In a Roon Remote client window click "Settings" -> "Extensions" -> "Enable"
 
@@ -193,7 +194,7 @@ execution via SSH, run the command "roon -L".
 Some of the commands require a patch to the Python Roon API to be applied.
 This patch enables searching and retrieving lists of various objects in a
 Roon library. If the Python Roon API module and patch could be found during
-the execution of the install.sh script then this patch was automatically
+the execution of the macInstall script then this patch was automatically
 applited and you need do nothing. However, if the patch did not apply or
 failed to apply properly and you wish to enable the "list" feature of
 these scripts then apply the Python Roon API patch manually. Performing
@@ -202,7 +203,7 @@ you at any point need to re-apply the patch manually. To apply the patch,
 after performing the steps above, execute the following:
 
     $ cd $HOME/src
-	$ $HOME/bin/clone_pyroon
+	$ /usr/local/Roon/bin/clone_pyroon
 
 	# Alternatively, download the latest pyroon release and apply the patch by hand
 	# https://github.com/pavoni/pyroon/releases
@@ -241,10 +242,10 @@ direct patch, follow these steps:
 ## Removal
 
 The Roon Command Line scripts, patches, and configuration can be removed by
-executing the "uninstall.sh" script in the RoonCommandLine source directory.
+executing the "macUninstall" script in the RoonCommandLine source directory.
 
     $ cd $HOME/src/RoonCommandLine
-	$ ./uninstall.sh
+	$ ./macUninstall
 
 ## Troubleshooting
 
@@ -267,47 +268,49 @@ To enable local execution of the roon command line tools, issue the command:
 In some cases the initial installation may fail to configure the system properly.
 The Roon Command Line install creates two configuration files:
 
-    $HOME/.pyroonconf
+    /usr/local/Roon/etc/pyroonconf
 
 and
 
-    $HOME/RoonCommandLine/roon_api.ini
+    /usr/local/Roon/etc/roon_api.ini
 	
 These two configuration files are the first place to look when you encounter an issue.
-The $HOME/.pyroonconf file contains 3 settings:
+The /usr/local/Roon/etc/pyroonconf file contains 3 settings:
 
     - The path to the Python User Base folder where the Python Roon API site-packages
 	  directory is located
 	- A variable used to determine if the Python Roon API patch has been applied
 	- The currently active Roon Zone name used by the Roon Commmand Line
 
-The $HOME/RoonCommandLine/roon_api.ini file contains default values for album name,
-artist, genre, playlist, tag, and zone as well as the name of a file that contains
-a token used to authenticate with the Roon Core and the Roon Core IP address.
-Verify the settings in roon_api.ini are valid and correct. The most common issue
-will be an incorrect Roon Core IP address setting. You can verify this address is
-correct by comparing it to the value displayed in your Roon Remote window at
+The /usr/local/Roon/etc/roon_api.ini file contains default values for
+album name, artist, genre, playlist, tag, and zone as well as the name of a file
+that contains a token used to authenticate with the Roon Core and the Roon Core IP
+address. Verify the settings in roon_api.ini are valid and correct. The most common
+issue will be an incorrect Roon Core IP address setting. You can verify this address
+is correct by comparing it to the value displayed in your Roon Remote window at
 
     Settings -> General
 
 under "ROON CORE".
 
 Much of the Roon Command Line setup is automatically configured during the execution
-of the ./install.sh script. If you have some expertise in Bash scripting you can
+of the ./macInstall script. If you have some expertise in Bash scripting you can
 examine this script to see what commands were issued.
 
 Another area that may be causing problems is the installation of the Python Roon API
 package and its ability to communicate with your Roon Core. To debug problems I have
 found it useful to SSH in to the system running the Python Roon API package and run
 commands by hand there. For example, rather than running "roon -l zones" command
-which remotely runs the list_zones command, SSH in as the configured user, cd to the
-appropriate directory, and run
+which remotely runs the list_zones command, SSH in as the configured user and run:
 
-    $ python list_zones.py -z all
+```bash
+    cd /usr/local/Roon/api
+    python list_zones.py -z all
+```
 
 This eliminates SSH and remote execution as well as the intermediate shell script
 used to execute the python script. Similar python commands can be issued directly
-on the Python Roon API system in the $HOME/RoonCommandLine directory.
+on the Python Roon API system in the /usr/local/Roon/api directory.
 
 The initial installation and configuration also includes a patch to the Python
 Roon API site packages module installed prior to the Roon Command Line installation
@@ -316,7 +319,7 @@ of the patch requires that the patch command is installed on your system as well
 common commands like awk and sed. Check that these commands are properly installed
 and, if not, install them.
 
-The install.sh script uses the command:
+The macInstall script uses the command:
 
     $ python -m site --user-site
 
@@ -410,49 +413,55 @@ unless there were multiple artist name matches to the substring "Tull".
 
 ## Contents
 
-[**roon**](roon) - Shell script frontend to run on systems that can SSH in to the Roon API server. This script can be used to issue Roon commands via the command line and SSH.
+[**roon**](bin/roon) - Shell script frontend to run on systems that can SSH in to the Roon API server. This script can be used to issue Roon commands via the command line and SSH.
 
-[**clone_pyroon**](clone_pyroon) - Shell script to retrieve the pyroon project source code from Github and apply my patches
+[**clone_pyroon**](bin/clone_pyroon) - Shell script to retrieve the pyroon project source code from Github and apply my patches
 
-[**get_core_ip**](get_core_ip) - Shell script to retrieve the Roon Core IP address
+[**get_core_ip**](bin/get_core_ip) - Shell script to retrieve the Roon Core IP address
 
-[**play_album**](play_album) - Shell script frontend for playing a specified album in my Roon library
+[**play_album**](bin/play_album) - Shell script frontend for playing a specified album in my Roon library
 
-[**play_artist**](play_artist) - Shell script frontend for playing a specified artist in my Roon library
+[**play_artist**](bin/play_artist) - Shell script frontend for playing a specified artist in my Roon library
 
-[**play_genre**](play_genre) - Shell script frontend to play a specified genre
+[**play_genre**](bin/play_genre) - Shell script frontend to play a specified genre
 
-[**play_playlist**](play_playlist) - Shell script frontend to play a specified playlist
+[**play_playlist**](bin/play_playlist) - Shell script frontend to play a specified playlist
 
-[**play_rp**](play_rp) - Shell script frontend for playing Radio Paradise Main Channel in a Roon zone
+[**play_rp**](bin/play_rp) - Shell script frontend for playing Radio Paradise Main Channel in a Roon zone
 
-[**play_tag**](play_tag) - Shell script frontend to play a specified tag (not yet working)
+[**play_tag**](bin/play_tag) - Shell script frontend to play a specified tag
 
-[**list_albums**](list_albums) - Search and list the available Albums in your Roon Library
+[**list_albums**](bin/list_albums) - Search and list the available Albums in your Roon Library
 
-[**list_artists**](list_artists) - Search and list the available Artists in your Roon Library
+[**list_artists**](bin/list_artists) - Search and list the available Artists in your Roon Library
 
-[**list_genres**](list_genres) - Search and list the available Genres in your Roon Library
+[**list_genres**](bin/list_genres) - Search and list the available Genres in your Roon Library
 
-[**list_playlists**](list_playlists) - Search and list the available Roon Playlists
+[**list_playlists**](bin/list_playlists) - Search and list the available Roon Playlists
 
-[**list_tags**](list_tags) - Search and list the available Roon Library tags
+[**list_tags**](bin/list_tags) - Search and list the available Roon Library tags
 
-[**list_zones**](list_zones) - List the available Roon Zones
+[**list_zones**](bin/list_zones) - List the available Roon Zones
 
-[**set_zone**](set_zone) - Set the Roon Zone in which subsequent commands will run
+[**set_zone**](bin/set_zone) - Set the Roon Zone in which subsequent commands will run
 
-[**set_zone_group**](set_zone_group) - Set one of the Roon Zone groupings specified in roon_api.ini
+[**set_zone_group**](bin/set_zone_group) - Set one of the Roon Zone groupings specified in roon_api.ini
 
-[**zone_command**](zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, mute, unmute, next track, previous track)
+[**zone_command**](bin/zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, mute, unmute, next track, previous track)
 
-[**INSTALL**](INSTALL) - Describes the installation process
+[**INSTALL.md**](INSTALL.md) - Describes the installation process
 
 [**LICENSE**](LICENSE) - Apache License version 2.0
 
 [**NOTICE**](NOTICE) - Copyright notice
 
-[**install.sh**](install.sh) - Convenience script to copy scripts into place
+[**Install**](Install) - Installation script for Linux systems, Debian format install
+
+[**Uninstall**](Uninstall) - Removal script for Linux systems, Debian format uninstall
+
+[**macInstall**](macInstall) - Installation script for Mac OS
+
+[**macUninstall**](macUninstall) - Removal script for Mac OS
 
 [**usage.txt**](usage.txt) - Frontend "roon" script usage documentation
 

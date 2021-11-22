@@ -4,7 +4,7 @@ import os.path
 from os import path
 
 config = configparser.ConfigParser()
-config.read('roon_api.ini')
+config.read('/usr/local/Roon/etc/roon_api.ini')
 
 # Set to IP address of your Roon Core
 server = config['DEFAULT']['RoonCoreIP']

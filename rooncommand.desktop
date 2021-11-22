@@ -1,0 +1,68 @@
+[Desktop Entry]
+Name=RoonCommand
+Type=Application
+GenericName=Roon Command
+GenericName[ca]=Emulador de terminal
+GenericName[cs]=Emulátor terminálu
+GenericName[es]=Emulador de terminal
+
+Comment=Roon Command
+Comment[ca]=Emulador de terminal
+Comment[cs]=Emulátor terminálu
+Comment[de]=Befehlszeile verwenden
+Comment[el]=Προσομοιωτής τερματικού
+Comment[es]=Emulador de terminal
+Comment[fr]=RoonCommand
+Comment[lt]=RoonCommand emuliatorius
+Comment[pl]=Emulator terminala
+Comment[pt]=Emulador de terminal
+Comment[pt_BR]=Emulador de terminal
+Comment[ru_RU]=Эмулятор терминала
+Comment[ja]=ターミナル　エミュレータ
+
+Icon=utilities-terminal
+Exec=qterminal --name Roon --title Roon --execute="/usr/local/Roon/bin/roon"
+Terminal=false
+Categories=Qt;System;TerminalEmulator;
+Actions=Dropdown;
+
+[Desktop Action Dropdown]
+Name=Drop-down RoonCommand
+Exec=qterminal --drop
+Icon=utilities-terminal
+
+Name[en_GB]=Drop-down Roon Command
+Name[bg]=Падащ терминал
+Name[ca]=Roon Command desplegable
+Name[ca@valencia]=Roon Command desplegable
+Name[cs]=Vysouvací terminál
+Name[da]=Roon Command der ruller ned
+Name[de]=Aufklapp-Roon Command
+Name[el]=Αναπτυσσόμενο τερματικό
+Name[es]=Roon Command desplegable
+Name[et]=Lahtikeriv terminal
+Name[fr]=Roon Command déroulant
+Name[hr]=Spuštajući terminal
+Name[hu]=Legördülő terminál
+Name[it]=Roon Command a discesa
+Name[ja]=ドロップダウン式ターミナル
+Name[km]=ស្ថានីយ​ទម្លាក់​ចុះ
+Name[ko]=위에서 내려오는 터미널
+Name[lt]=Išskleidžiamasis terminalas
+Name[nb]=Nedtrekksterminal
+Name[nds]=Utklapp-Konsool
+Name[nl]=Uitvouwbare terminalemulator
+Name[pa]=ਲਟਕਦਾ ਟਰਮੀਨਲ
+Name[pl]=Rozwijany emulator terminala
+Name[pt]=Roon Command suspenso
+Name[pt_BR]=Roon Command suspenso
+Name[ro]=Roon Command derulant
+Name[ru]=Выпадающий терминал
+Name[sk]=Rozbaľovací terminál
+Name[sv]=Rullgardinsterminal
+Name[th]=เทอร์มินัลแบบหย่อนลง
+Name[tr]=Yukarıdan Açılan Uçbirim
+Name[uk]=Спадний термінал
+Name[x-test]=xxDrop-down RoonCommand
+Name[zh_CN]=拉幕式终端
+Name[zh_TW]=下拉式終端機

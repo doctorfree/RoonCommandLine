@@ -1,28 +1,24 @@
 #!/bin/bash
 
-ROON=$HOME/RoonCommandLine
-LBIN=$HOME/bin
-ROONCONF=$HOME/.pyroonconf
-
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONCONF=${ROON}/etc/pyroonconf
+LBIN=${ROON}/bin
 
 for i in *_*
 do
     rm -f $LBIN/$i
 done
-rm -rf $ROON
-
-[ -f roon.orig ] && {
-    mv roon.orig roon
-}
+rm -rf ${ROON}
 
 # Locate Python user base
-USERSITE=`python -m site --user-site`
+# USERSITE=`python -m site --user-site`
 ROON_SITE_DIR=
 # First check the Python user site dir
-if [ -d $USERSITE/roonapi ]
-then
-    ROON_SITE_DIR=${USERSITE}/roonapi
-else
+# if [ -d $USERSITE/roonapi ]
+# then
+#     ROON_SITE_DIR=${USERSITE}/roonapi
+# else
     # Check the global site directories
     SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
     for site in ${SITES[@]}
@@ -32,7 +28,7 @@ else
             break
         }
     done
-fi
+# fi
 
 rm -f $ROONCONF
 

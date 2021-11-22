@@ -1,14 +1,15 @@
 #!/bin/bash
 
-ROONCONF=$HOME/.pyroonconf
-ROON=$HOME/RoonCommandLine
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONCONF=${ROON}/etc/pyroonconf
 SCRIPT="zone_command.py"
 
-[ -f ${ROON}/${SCRIPT} ] || {
-    echo "Roon Command Line scripts not installed. Missing $ROON/$SCRIPT"
+[ -f ${ROONAPI}/${SCRIPT} ] || {
+    echo "Roon Command Line scripts not installed. Missing ${ROONAPI}/$SCRIPT"
     exit 1
 }
-cd ${ROON}
+cd ${ROONAPI}
 
 # Verify this is a valid zone name
 [ "$1" ] || {

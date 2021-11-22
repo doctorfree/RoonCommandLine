@@ -1,13 +1,15 @@
 #!/bin/bash
 
-ROON=$HOME/RoonCommandLine
-ROONCONF=$HOME/.pyroonconf
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
 LIST=list_artists.py
 ARTIST=
 
-[ -d $ROON ] || exit 1
+[ -d ${ROONAPI} ] || exit 1
 
-cd $ROON
+cd ${ROONAPI}
 
 [ -f $LIST ] || exit 2
 
@@ -18,14 +20,14 @@ if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=`grep ^DefaultZone $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
     set_zone $DEFZONE
     . ${ROONCONF}
 fi
 
 # Get the default artist if one is not provided
 [ "${ARTIST}" ] || {
-    ARTIST=`grep ^DefaultArtist $ROON/roon_api.ini | awk -F '=' ' { print $2 } '`
+    ARTIST=`grep ^DefaultArtist ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
     # Remove leading and trailing spaces in ARTIST
     ARTIST="$(echo -e "${ARTIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }

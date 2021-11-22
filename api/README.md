@@ -4,8 +4,6 @@ Python scripts to access the Python Roon API
 
 ## Contents
 
-[**roon_api.ini**](roon_api.ini) - Python Roon API default settings
-
 [**get_core_ip.py**](get_core_ip.py) - Python script backend to retrieve the Roon Core IP address
 
 [**play_album.py**](play_album.py) - Python script backend for playing a specified album in my Roon library

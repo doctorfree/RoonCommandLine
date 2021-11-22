@@ -1,0 +1,33 @@
+# A pipeline is composed of independent jobs that run scripts, grouped into stages.
+# Stages run in sequential order, but jobs within stages run in parallel.
+#
+# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
+
+stages:
+  - build
+  - deploy
+
+deploy-job:
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
+
+  # This stage is only executed for new tags
+  only:
+    - tags
+
+run-build:  
+  stage: build
+  script:
+    - ./mkpkg
+
+  # This stage is only executed for new tags
+  only:
+    - tags
+
+  # The files which are to be made available in GitLab
+  artifacts:
+    paths:
+      - dist/*.deb
+      - dist/*.gz

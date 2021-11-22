@@ -1,0 +1,9 @@
+#!/bin/bash
+
+plat=`uname -s`
+if [ "$plat" == "Darwin" ]
+then
+    ./macUninstall
+else
+    sudo apt remove rooncommandline -y
+fi

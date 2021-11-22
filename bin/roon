@@ -80,7 +80,10 @@ usage() {
 
 [ "$1" ] || usage
 
-ROONCONF=$HOME/.pyroonconf
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
 LOCAL=false
 [ -f ${ROONCONF} ] && . ${ROONCONF}
 
