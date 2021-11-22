@@ -21,6 +21,7 @@ case "$1" in
     remove|upgrade|deconfigure)
         ROON=/usr/local/Roon
         ROONAPI=${ROON}/api
+        ROONBIN=${ROON}/bin
         ROONETC=${ROON}/etc
         ROONCONF=${ROONETC}/pyroonconf
         ROONINI=${ROONETC}/roon_api.ini
@@ -44,7 +45,7 @@ case "$1" in
             }
         done
 
-        rm -f ${ROONCONF} ${ROONINI} ${ROON}/bin/*.orig
+        rm -f ${ROONCONF} ${ROONINI} ${ROONBIN}/*.orig ${ROONETC}/*.orig
 
         if [ "$ROON_SITE_DIR" ]
         then
@@ -63,9 +64,9 @@ case "$1" in
 
         [ -d /usr/local/bin ] && {
             cd /usr/local/bin
-            for command in ${ROON}/bin/*
+            for command in ${ROONBIN}/*
             do
-                [ "${command}" == "${ROON}/bin/*" ] && continue
+                [ "${command}" == "${ROONBIN}/*" ] && continue
                 b=`basename ${command}`
                 [ -L $b ] && {
                     readlink $b | grep ${ROON} > /dev/null && rm -f $b
