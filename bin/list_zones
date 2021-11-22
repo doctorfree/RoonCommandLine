@@ -36,7 +36,15 @@ fi
     fi
 }
 
-python $LIST -z $ZONE
+PYTHON_EXE=`type -p python`
+[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
+
+[ "${PYTHON_EXE}" ] || {
+    echo "Could not locate python executable. Exiting."
+    exit 1
+}
+
+${PYTHON_EXE} $LIST -z $ZONE
 
 echo ""
 echo "Your configured zone groupings:"

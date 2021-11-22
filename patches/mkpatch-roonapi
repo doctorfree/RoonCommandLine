@@ -3,25 +3,28 @@
 PYDIR=$HOME/.pyenv/versions/3.9.4/lib/python3.9
 USERSITE=$PYDIR/site-packages
 
+PYTHON_EXE=`type -p python`
+[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
+
+[ "${PYTHON_EXE}" ] || {
+    echo "Could not locate python executable. Exiting."
+    exit 1
+}
+
+export PYTHON_EXE
+
 [ -d $USERSITE/roonapi ] || {
-    # First check the Python User Site directory
-    USERSITE=`python -m site --user-site`
-    if [ -d $USERSITE/roonapi ]
-    then
-        PYDIR=`echo $USERSITE | awk -F "/site-packages/" ' { print $1 } '`
-    else
-        # Next check Python's global directories
-        SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-        for site in ${SITES[@]}
-        do
-            site=`echo $site | sed -e "s/\'//g"`
-            [ -d "${site}/roonapi" ] && {
-                PYDIR=`echo ${site} | awk -F "/site-packages/" ' { print $1 } '`
-                USERSITE=$PYDIR/site-packages
-                break
-            }
-        done
-    fi
+    # Next check Python's global directories
+    SITES=($(${PYTHON_EXE} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+    for site in ${SITES[@]}
+    do
+        site=`echo $site | sed -e "s/\'//g"`
+        [ -d "${site}/roonapi" ] && {
+            PYDIR=`echo ${site} | awk -F "/site-packages/" ' { print $1 } '`
+            USERSITE=$PYDIR/site-packages
+            break
+        }
+    done
     [ -d $USERSITE/roonapi ] || {
         echo "Roon API Python module not found. Exiting."
         exit 1

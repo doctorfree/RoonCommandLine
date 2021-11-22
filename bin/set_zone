@@ -17,32 +17,32 @@ cd ${ROONAPI}
     exit 1
 }
 MY_ZONE="$*"
-ZONE=`python $SCRIPT -c "verify" -z "$MY_ZONE"`
+
+PYTHON_EXE=`type -p python`
+[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
+
+[ "${PYTHON_EXE}" ] || {
+    echo "Could not locate python executable. Exiting."
+    exit 1
+}
+
+ZONE=`${PYTHON_EXE} $SCRIPT -c "verify" -z "$MY_ZONE"`
 [ "$ZONE" ] || {
     echo "No zone matching $MY_ZONE"
     exit 1
 }
 
-# Locate Python user base
-USERSITE=`python -m site --user-site`
-# First check the Python user site dir
-if [ -d $USERSITE/roonapi ]
-then
-    PYTHONUSERBASE=`echo $USERSITE | awk -F "/lib/" ' { print $1 } '`
-else
-    # Check the global site directories
-    SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-    for site in ${SITES[@]}
-    do
-        site=`echo $site | sed -e "s/\'//g"`
-        [ -d "${site}/roonapi" ] && {
-            PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
-            break
-        }
-    done
-fi
-
-[ "$PYTHONUSERBASE" ] || PYTHONUSERBASE="$HOME/Python3"
+# Check the global site directories
+PYTHONUSERBASE=
+SITES=($(${PYTHON_EXE} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+for site in ${SITES[@]}
+do
+    site=`echo $site | sed -e "s/\'//g"`
+    [ -d "${site}/roonapi" ] && {
+        PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
+        break
+    }
+done
 
 if [ -f $ROONCONF ]
 then
@@ -50,10 +50,14 @@ then
     echo "ROON_ZONE=\"$ZONE\"" >> /tmp/roonconf$$
     cp /tmp/roonconf$$ $ROONCONF
     rm -f /tmp/roonconf$$
-    grep PYTHONUSERBASE $ROONCONF > /dev/null || {
+    [ "$PYTHONUSERBASE" ] && {
+      grep PYTHONUSERBASE $ROONCONF > /dev/null || {
         echo "export PYTHONUSERBASE=$PYTHONUSERBASE" >> $ROONCONF
+      }
     }
 else
     echo "ROON_ZONE=\"$ZONE\"" > $ROONCONF
-    echo "export PYTHONUSERBASE=$PYTHONUSERBASE" >> $ROONCONF
+    [ "$PYTHONUSERBASE" ] && {
+      echo "export PYTHONUSERBASE=$PYTHONUSERBASE" >> $ROONCONF
+    }
 fi

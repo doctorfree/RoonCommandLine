@@ -53,7 +53,7 @@ case "$1" in
             [ -d ${user} ] && {
                 USER=`basename ${user}`
                 users="${users} ${USER}"
-                ((numusers++))
+                numusers=`expr ${numusers} + 1`
             }
         done
         [ $numusers -gt 1 ] && {

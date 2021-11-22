@@ -47,26 +47,26 @@ cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
 cp /tmp/core$$ ${ROONETC}/roon_api.ini
 rm -f /tmp/core$$ /tmp/discover$$
 
-# Locate Python user base
-# USERSITE=`python -m site --user-site`
-# First check the Python user site dir
-# if [ -d $USERSITE/roonapi ]
-# then
-#     PYTHONUSERBASE=`echo $USERSITE | awk -F "/lib/" ' { print $1 } '`
-#     PYTHON_SITEDIR=`echo $USERSITE | awk -F "/site-packages" ' { print $1 } '`
-# else
-    # Check the global site directories
-    SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-    for site in ${SITES[@]}
-    do
-        site=`echo $site | sed -e "s/\'//g"`
-        [ -d "${site}/roonapi" ] && {
-            PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
-            PYTHON_SITEDIR=`echo ${site} | awk -F "/site-packages" ' { print $1 } '`
-            break
-        }
-    done
-# fi
+PYTHON_EXE=`type -p python`
+[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
+
+[ "${PYTHON_EXE}" ] || {
+    echo "Could not locate python executable. Exiting."
+    exit 1
+}
+export PYTHON_EXE
+
+# Check the global site directories
+SITES=($(${PYTHON_EXE} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+for site in ${SITES[@]}
+do
+    site=`echo $site | sed -e "s/\'//g"`
+    [ -d "${site}/roonapi" ] && {
+        PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
+        PYTHON_SITEDIR=`echo ${site} | awk -F "/site-packages" ' { print $1 } '`
+        break
+    }
+done
 
 if [ "${PYTHONUSERBASE}" ]
 then

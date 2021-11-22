@@ -32,4 +32,12 @@ fi
     TAG="$(echo -e "${TAG}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
 
-python $PLAY -t "$TAG" -z "$ROON_ZONE"
+PYTHON_EXE=`type -p python`
+[ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
+
+[ "${PYTHON_EXE}" ] || {
+    echo "Could not locate python executable. Exiting."
+    exit 1
+}
+
+${PYTHON_EXE} $PLAY -t "$TAG" -z "$ROON_ZONE"
