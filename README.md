@@ -218,25 +218,20 @@ site-packages/roonapi directory. The command above is correct for my system
 but your system may differ. Double check where this directory got created
 by the "pip install roonapi" command.
 
-Python has global and per-user site-packages directories. To find your Python
-user site-packages directory, issue the command:
-
-    $ python -m site --user-site
+Python has global and per-user site-packages directories. RoonCommandLine
+version 2.0.0 and later uses the global site Python facility.
 
 To find your Python global dist-packages directory, issue the command:
 
     $ python -c 'import site; print(site.getsitepackages())'
 
-The roonapi module should be in your user site-packages directory.
-For systems where pyenv was used to install Python and packages, this will
-be something of the form:
-    $HOME/.pyenv/versions/3.9.4/lib/python3.9/site-packages
+The roonapi module should be in your global site-packages directory.
 
 Alternatively, you can patch the Python Roon API roonapi module directly rather
 than patching the pyroon source code and copying it in. To perform this
 direct patch, follow these steps:
 
-    $ cd $HOME/Python3 # Or wherever your Pip roonapi module is installed
+    $ cd <Python global site> # Or wherever your Pip roonapi module is installed
 	$ patch -b -p0 < $HOME/src/RoonCommandLine/patches/roonapi-listmedia.patch
 
 ## Removal
@@ -245,7 +240,7 @@ The Roon Command Line scripts, patches, and configuration can be removed by
 executing the "macUninstall" script in the RoonCommandLine source directory.
 
     $ cd $HOME/src/RoonCommandLine
-	$ ./macUninstall
+	$ ./Uninstall
 
 ## Troubleshooting
 
@@ -294,7 +289,7 @@ is correct by comparing it to the value displayed in your Roon Remote window at
 under "ROON CORE".
 
 Much of the Roon Command Line setup is automatically configured during the execution
-of the ./macInstall script. If you have some expertise in Bash scripting you can
+of the ./Install script. If you have some expertise in Bash scripting you can
 examine this script to see what commands were issued.
 
 Another area that may be causing problems is the installation of the Python Roon API
@@ -319,21 +314,15 @@ of the patch requires that the patch command is installed on your system as well
 common commands like awk and sed. Check that these commands are properly installed
 and, if not, install them.
 
-The macInstall script uses the command:
-
-    $ python -m site --user-site
-
-to retrieve the location of the User site packages directory from Python.
-It then parses that with awk. If that doesn’t find it then it uses the command:
+The installation scripts use the command:
 
     $ python -c ‘import site; print(site.getsitepackages())’ | tr -d ‘[],’)
 
-to retrieve a list of folders Python uses for site packages. If either of these
-commands is failing to retrieve the Python site package folder that contains the
+to retrieve a list of folders Python uses for site packages. If this command
+fails to retrieve the Python site package folder that contains the
 Python Roon API module, or if your Linux subsystem does not have the necessary
 commands then the patch will fail. The patch is applied in the discovered folder,
-for example $HOME/.local/lib/python3.8/site-packages/roonapi/ and creates files
-with a .orig suffix as backups.
+and creates files with a .orig suffix as backups.
 
 Verify that the "roon" frontend command shell script has been configured properly.
 Open the roon shell script in an editor and find the two lines near the top of the
