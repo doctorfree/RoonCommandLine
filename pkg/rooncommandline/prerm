@@ -27,15 +27,20 @@ case "$1" in
 
         # Locate the global site directories
         ROON_SITE_DIR=
-        ROON_SITE_DIR=${USERSITE}/roonapi
-        SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-        for site in ${SITES[@]}
-        do
+        PYTHON_EXE=`type -p python`
+        [ "${PYTHON_EXE}" ] || PYTHON_EXE=`type -p python3`
+        export PYTHON_EXE
+        # Check the global site directories
+        [ "${PYTHON_EXE}" ] && {
+          SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+          for site in ${SITES[@]}
+          do
             [ -d ${site}/roonapi ] && {
                 ROON_SITE_DIR=${site}/roonapi
                 break
             }
-        done
+          done
+        }
 
         rm -f ${ROONCONF} ${ROONINI} ${ROON}/bin/*.orig
 
