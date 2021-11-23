@@ -12,6 +12,7 @@ server = config['DEFAULT']['RoonCoreIP']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-g", "--get", help="zone selection", action="store_true")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -37,7 +38,7 @@ else:
 
 roonapi = RoonApi(appinfo, token, server)
 
-zones = roonapi.zones
+zones = ""
 outputs = roonapi.outputs
 zone_number = 1
 
@@ -51,25 +52,32 @@ for (k, v) in outputs.items():
     if grouped_zone_names is None:
         grouped_zone_names = ""
     if (searchterm == "all" or searchterm in zone_name):
-        if is_grouped:
-            print(
-                "Zone",
-                str(zone_number) + ":",
-                '\033[1m' + zone_name + '\033[0m',
-                "\n\tGrouped zone names:",
-                '\033[1m',
-                grouped_zone_names,
-                '\033[0m',
-            )
-            if is_group_main:
-                print("\tThis is the group main zone")
+        if args.get:
+            zones = zones + zone_name + ', '
         else:
-            print(
-                "Zone",
-                str(zone_number) + ":",
-                '\033[1m' + zone_name + '\033[0m',
-            )
+            if is_grouped:
+                print(
+                    "Zone",
+                    str(zone_number) + ":",
+                    '\033[1m' + zone_name + '\033[0m',
+                    "\n\tGrouped zone names:",
+                    '\033[1m',
+                    grouped_zone_names,
+                    '\033[0m',
+                )
+                if is_group_main:
+                    print("\tThis is the group main zone")
+            else:
+                print(
+                    "Zone",
+                    str(zone_number) + ":",
+                    '\033[1m' + zone_name + '\033[0m',
+                )
         zone_number += 1
+
+if args.get:
+    zones = "".join(zones.rsplit(", ", 1))
+    print(zones)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

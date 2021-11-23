@@ -1,6 +1,45 @@
 #!/bin/bash
 
-roon -l zones | grep ^Zone  | awk -F ":" ' { print $2 } ' | while read zone
-do
-    echo ${zone} | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g'
-done
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+LIST=list_zones.py
+ZONE=
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI}
+
+[ -f $LIST ] || exit 2
+
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in DEFZONE
+    DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+
+[ "$1" ] && ZONE="$*"
+
+# Get the default zone if one is not provided
+[ "${ZONE}" ] || {
+    if [ "${ROON_ZONE}" ]
+    then
+        ZONE="${ROON_ZONE}"
+    else
+        ZONE="${DEFZONE}"
+    fi
+}
+
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $LIST -g -z "$ZONE"
+else
+    python $LIST -g -z "$ZONE"
+fi
