@@ -46,7 +46,7 @@ case "$1" in
             }
         done
 
-        rm -f ${ROONCONF} ${ROONINI} ${ROONBIN}/*.orig ${ROONETC}/*.orig
+        rm -f ${ROONCONF} ${ROONINI} ${ROONBIN}/*.orig ${ROONETC}/*
 
         if [ "$ROON_SITE_DIR" ]
         then

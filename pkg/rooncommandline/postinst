@@ -198,7 +198,10 @@ case "$1" in
         cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
         cp /tmp/core$$ ${ROONETC}/roon_api.ini
         rm -f /tmp/core$$ /tmp/discover$$
-        chown ${USER} ${ROONETC}/*
+        [ "${USER}" ] && {
+            GROUP=`id -g -n ${USER}`
+            chown -R ${USER}:${GROUP} ${ROONETC}
+        }
 
         echo ""
         echo "Verify the 'server' and 'user' settings in the roon script are correct"

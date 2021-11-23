@@ -374,7 +374,7 @@ Here is the current output of "roon -u" which displays a usage message.
 		Play artist:
 			roon -a "Deep Purple"
 		Play artist in specified zone:
-			roon -a "Jethro Tull" -z "Living Room"
+			roon -a "Jethro Tull" -z "Mac Pro DAC"
 		Play genre:
 			roon -g Classical
 		Play playlist:
@@ -384,7 +384,7 @@ Here is the current output of "roon -u" which displays a usage message.
 		Stop play in specified zone:
 			roon -c stop -z Kitchen
 		Mute a specified zone:
-			roon -c mute -z "Living Room"
+			roon -c mute -z "Mac Pro DAC"
 		List all playlists containing the string 'Best':
 			roon -l playlists -s Best
 		Group the zones listed in roon_api.ini Group_foobar:
