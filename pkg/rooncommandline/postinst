@@ -191,6 +191,7 @@ case "$1" in
         echo "to authorize discovery"
         echo ""
 
+        # Get and set the Roon Core IP address
         ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
         CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
         cat ${ROONETC}/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
@@ -198,6 +199,43 @@ case "$1" in
         cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
         cp /tmp/core$$ ${ROONETC}/roon_api.ini
         rm -f /tmp/core$$ /tmp/discover$$
+
+        # Get and set the default zone and initial zone groupings
+        zones=`${ROON}/bin/get_zones`
+        savedIFS=${IFS}
+        IFS=", "
+        numzones=0
+        defaultZone=
+        groupOne=
+        groupTwo=
+        for zone in ${zones}
+        do
+            [ ${numzones} -eq 0 ] && {
+                defaultZone="${zone}"
+                groupOne="${zone}"
+            }
+            [ ${numzones} -eq 1 ] && {
+                groupOne="${groupOne}, ${zone}"
+                groupTwo="${zone}"
+            }
+            [ ${numzones} -eq 2 ] && {
+                groupTwo="${groupTwo}, ${zone}"
+            }
+            numzones=`expr ${numzones} + 1`
+        done
+        [ ${numzones} -gt 2 ] || {
+            groupOne=
+            groupTwo=
+        }
+        # defaultZone=`echo "${zones}" | awk -F ',' ' { print $1 } '`
+        cat ${ROONETC}/roon_api.ini | \
+            sed -e "s/__ALL_ZONES__/${zones}/" \
+                -e "s/__GROUP_ONE__/${groupOne}/" \
+                -e "s/__GROUP_TWO__/${groupTwo}/" \
+                -e "s/__DEF_ZONE__/${defaultZone}/" > /tmp/zones$$
+        cp /tmp/zones$$ ${ROONETC}/roon_api.ini
+        rm -f /tmp/zones$$
+
         [ "${USER}" ] && {
             GROUP=`id -g -n ${USER}`
             chown -R ${USER}:${GROUP} ${ROONETC}
