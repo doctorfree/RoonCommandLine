@@ -136,19 +136,15 @@ case "$1" in
                 echo "Python Roon API already patched. Skipping patch."
             else
                 # Locate the patch file
+                ROONAPI_PATCH=roonapi-listmedia.patch
                 patchfile=
-                if [ -f ${HERE}/patches/${ROONAPI_PATCH} ]
+                if [ -f ${ROON}/patches/${ROONAPI_PATCH} ]
                 then
-                    patchfile=${HERE}/patches/${ROONAPI_PATCH}
+                    patchfile=${ROON}/patches/${ROONAPI_PATCH}
                 else
-                    if [ -f ${ROON}/patches/${ROONAPI_PATCH} ]
-                    then
-                        patchfile=${ROON}/patches/${ROONAPI_PATCH}
-                    else
-                        echo "Cannot locate patch file ${ROONAPI_PATCH}"
-                        echo "Python Roon API patch not applied."
-                        echo "List commands will not function properly."
-                    fi
+                    echo "Cannot locate patch file ${ROONAPI_PATCH}"
+                    echo "Python Roon API patch not applied."
+                    echo "List commands will not function properly."
                 fi
                 [ "${patchfile}" ] && {
                     patch_inst=`type -p patch`
