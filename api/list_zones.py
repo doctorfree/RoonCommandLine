@@ -12,7 +12,6 @@ server = config['DEFAULT']['RoonCoreIP']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-g", "--get", action='store_true', help="get zones")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -52,27 +51,24 @@ for (k, v) in outputs.items():
     if grouped_zone_names is None:
         grouped_zone_names = ""
     if (searchterm == "all" or searchterm in zone_name):
-        if args.get:
-            print(zone_name)
+        if is_grouped:
+            print(
+                "Zone",
+                str(zone_number) + ":",
+                '\033[1m' + zone_name + '\033[0m',
+                "\n\tGrouped zone names:",
+                '\033[1m',
+                grouped_zone_names,
+                '\033[0m',
+            )
+            if is_group_main:
+                print("\tThis is the group main zone")
         else:
-            if is_grouped:
-                print(
-                    "Zone",
-                    str(zone_number) + ":",
-                    '\033[1m' + zone_name + '\033[0m',
-                    "\n\tGrouped zone names:",
-                    '\033[1m',
-                    grouped_zone_names,
-                    '\033[0m',
-                )
-                if is_group_main:
-                    print("\tThis is the group main zone")
-            else:
-                print(
-                    "Zone",
-                    str(zone_number) + ":",
-                    '\033[1m' + zone_name + '\033[0m',
-                )
+            print(
+                "Zone",
+                str(zone_number) + ":",
+                '\033[1m' + zone_name + '\033[0m',
+            )
         zone_number += 1
 
 # save the token for next time
