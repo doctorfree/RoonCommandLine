@@ -205,12 +205,19 @@ case "$1" in
         cp /tmp/core$$ ${ROONETC}/roon_api.ini
         rm -f /tmp/core$$ /tmp/discover$$
 
+        [ "${USER}" ] && {
+            chown ${USER}:${GROUP} ${ROONETC}/*
+        }
+
         # Get and set the default zone and initial zone groupings
         zones=`${ROON}/bin/get_zones`
         defaultZone=`echo "${zones}" | awk -F ',' ' { print $1 } '`
         groupOne=`echo "${zones}" | awk -F ',' ' { print $1 "," $2 } '`
         groupTwo=`echo "${zones}" | awk -F ',' ' { print $2 "," $NF } '`
         groupRee=`echo "${zones}" | awk -F ',' ' { print $2 "," $3 "," $4 } '`
+        groupFor=`echo "${zones}" | \
+            awk -F ',' ' { print $(NF-3) "," $(NF-2) "," $(NF-1) "," $(NF) } '`
+        awk '{print $(NF-1),"\t",$NF}' file
         numZones=`echo "${zones}" | awk -F ',' ' { print NF } '`
         [ ${numZones} -gt 2 ] || {
             groupOne=
@@ -219,11 +226,15 @@ case "$1" in
         [ ${numZones} -gt 3 ] || {
             groupRee=
         }
+        [ ${numZones} -gt 4 ] || {
+            groupFor=
+        }
         cat ${ROONETC}/roon_api.ini | \
             sed -e "s/__ALL_ZONES__/${zones}/" \
                 -e "s/__GROUP_ONE__/${groupOne}/" \
                 -e "s/__GROUP_TWO__/${groupTwo}/" \
                 -e "s/__GROUP_REE__/${groupRee}/" \
+                -e "s/__GROUP_FOR__/${groupFor}/" \
                 -e "s/__DEF_ZONE__/${defaultZone}/" > /tmp/zones$$
         cp /tmp/zones$$ ${ROONETC}/roon_api.ini
         rm -f /tmp/zones$$

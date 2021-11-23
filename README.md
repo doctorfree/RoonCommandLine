@@ -179,6 +179,9 @@ RoonCommandLine commands all accept a `-z zone` argument that can be
 used to specify the zone to be used as well as a `-G <group>` that can
 be used to specify the zone grouping to use.
 
+Note also that should you change the name of a Roon audio device in the future
+then that name change will also need to be reflected in the `roon_api.ini` groupings.
+
 #### SSH public key authentication
 
 If you wish to enable remote exection of the RoonCommandLine tools then
