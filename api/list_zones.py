@@ -12,7 +12,7 @@ server = config['DEFAULT']['RoonCoreIP']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-g", "--get", help="get zones")
+parser.add_argument("-g", "--get", action='store_true', help="get zones")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
