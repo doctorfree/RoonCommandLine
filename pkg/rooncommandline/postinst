@@ -210,24 +210,25 @@ case "$1" in
         }
 
         # Get and set the default zone and initial zone groupings
+        defaultZone=
+        groupOne=
+        groupTwo=
+        groupRee=
+        groupFor=
         zones=`${ROON}/bin/get_zones`
-        defaultZone=`echo "${zones}" | awk -F ',' ' { print $1 } '`
-        groupOne=`echo "${zones}" | awk -F ',' ' { print $1 "," $2 } '`
-        groupTwo=`echo "${zones}" | awk -F ',' ' { print $2 "," $NF } '`
-        groupRee=`echo "${zones}" | awk -F ',' ' { print $2 "," $3 "," $4 } '`
-        groupFor=`echo "${zones}" | \
-            awk -F ',' ' { print $(NF-3) "," $(NF-2) "," $(NF-1) "," $(NF) } '`
-        awk '{print $(NF-1),"\t",$NF}' file
         numZones=`echo "${zones}" | awk -F ',' ' { print NF } '`
-        [ ${numZones} -gt 2 ] || {
-            groupOne=
-            groupTwo=
+        [ ${numZones} -gt 0 ] && {
+            defaultZone=`echo "${zones}" | awk -F ',' ' { print $1 } '`
         }
-        [ ${numZones} -gt 3 ] || {
-            groupRee=
+        [ ${numZones} -gt 2 ] && {
+            groupOne=`echo "${zones}" | awk -F ',' ' { print $1 "," $2 } '`
+            groupTwo=`echo "${zones}" | awk -F ',' ' { print $2 "," $NF } '`
         }
-        [ ${numZones} -gt 4 ] || {
-            groupFor=
+        [ ${numZones} -gt 3 ] && {
+            groupRee=`echo "${zones}" | awk -F ',' ' { print $2 "," $3 "," $4 } '`
+        }
+        [ ${numZones} -gt 4 ] && {
+            groupFor=`echo "${zones}" | awk -F ',' ' { print $(NF-3) "," $(NF-2) "," $(NF-1) "," $(NF) } '`
         }
         cat ${ROONETC}/roon_api.ini | \
             sed -e "s/__ALL_ZONES__/${zones}/" \
