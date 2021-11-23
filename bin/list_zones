@@ -39,9 +39,9 @@ fi
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    python3 $LIST -z $ZONE
+    python3 $LIST -z "$ZONE"
 else
-    python $LIST -z $ZONE
+    python $LIST -z "$ZONE"
 fi
 
 echo ""

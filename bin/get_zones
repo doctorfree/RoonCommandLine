@@ -1,6 +1,6 @@
 #!/bin/bash
 
-roon -l zones | grep ^Zone  | awk ' { print $3 } ' | while read zone
+roon -l zones | grep ^Zone  | awk -F ":" ' { print $2 } ' | while read zone
 do
-    echo ${zone} | tr -dC '[:print:]\t\n'
+    echo ${zone} | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g'
 done
