@@ -2,11 +2,12 @@ import configparser
 import os.path
 from os import path
 import time
+from roonapi import RoonApi, RoonDiscovery
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
 
-from roonapi import RoonApi, RoonDiscovery
+tokenfile = config['DEFAULT']['TokenFileName']
 
 appinfo = {
     "extension_id": "python_roon_test",
