@@ -19,10 +19,23 @@
 1. [Overview](#overview)
 1. [History](#history)
 1. [Installation](#installation)
+    1. [Debian Package installation](#debian-package-installation)
+    1. [Mac OS X installation](#mac-os-x-installation)
+    1. [Post installation configuration](#post-installation-configuration)
+        1. [Zone groupings and defaults](#zone-groupings-and-defaults)
+        1. [SSH public key authentication](#ssh-public-key-authentication)
+    1. [Manual installation](#manual-installation)
 1. [Removal](#removal)
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
 1. [Contents](#contents)
+## Overview
+## History
+## Installation
+## Removal
+## Troubleshooting
+## Usage
+## Contents
 
 ## Overview
 
@@ -113,6 +126,81 @@ command via SSH. But what we have here in the repository are the command line to
 
 ## Installation
 
+RoonCommandLine v2.0.0 and later can be installed on Linux systems using
+the Debian packaging format. Support is also included for installing on
+Mac OS X. Other systems will require a manual installation described below.
+
+### Debian Package installation
+
+To tell if a Linux system is Debian based it is usually sufficient to
+check for the existence of the file `/etc/debian_version`
+
+To install on a Debian based Linux system, download the latest Debian format
+package from the
+[RoonCommandLine Releases](https://gitlab.com/doctorfree/RoonCommandLine/-/releases).
+
+Install the RoonCommandLine package by executing the command
+
+```bash
+sudo apt install ./RoonCommandLine_<version>.deb
+```
+
+### Mac OS X installation
+
+To install on a Mac, clone the RoonCommandLine repository and execute
+the `Install` script:
+
+<code>git clone `https://gitlab.com/doctorfree/RoonCommandLine.git`</code>
+
+```bash
+    cd RoonCommandLine
+    ./Install
+```
+
+### Post installation configuration
+
+Default settings are applied during the installation process. The primary area
+of post-installation configuration is setting the ZONEGROUPS and DEFAULT values
+in the file `/usr/local/Roon/etc/roon_api.ini`
+
+#### Zone groupings and defaults
+
+In Roon, you can view your existing zones by visiting `Settings->Audio`. The names
+of the enabled audio devices are your zones. You can change the name of a zone by
+clicking the "pencil" icon next to the name in the Roon audio settings screen.
+
+Modify `roon_api.ini` with your desired zone groupings and default values.
+In particular, set the `DefaultZone` value in the DEFAULT section to a zone
+that will be available, enabled, and one you wish to use as your primary
+default fallback zone.
+
+Note, the DefaultZone setting is used when no zone is specified,
+RoonCommandLine commands all accept a `-z zone` argument that can be
+used to specify the zone to be used as well as a `-G <group>` that can
+be used to specify the zone grouping to use.
+
+#### SSH public key authentication
+
+If you wish to enable remote exection of the RoonCommandLine tools then
+it is necessary to setup SSH public key authentication. See the
+[Troubleshooting section](#troubleshooting) below for tips on configuring
+SSH public key authentication. The RoonCommandLine utilities can be
+executed locally on the same system they are installed on by enabling
+local access with the `roon -L` command. This avoids the need to enable
+SSH public key authentication but restricts your use of the RoonCommandLine
+tools to the system on which they are installed.
+
+**Note:** The roon shell script is not passing credentials in the
+SSH invocations. SSH authentication via public key needs to be enabled and
+appropriate keys generated and propogated. This topic is addressed in various
+guides on setting up SSH. Alternatively, the roon shell script can be
+installed on the same system as the Python Roon API and backend scripts.
+In this configuration, SSH is no longer required and the roon commands can
+be executed locally. In order to enable local execution rather than remote
+execution via SSH, run the command `roon -L`
+
+### Manual installation
+
 There are three components to install. First, install the Python Roon API
 on a system which is on the same local network as your Roon Core.
 
@@ -123,7 +211,7 @@ configure pip3 as the default pip:
 
 ```bash
     $ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
-	$ sudo apt install python3-pip
+    $ sudo apt install python3-pip
     $ sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 ```
 
@@ -145,63 +233,64 @@ the "Install" script. This will copy the frontend shell scripts into
 For example, on the system where the Python Roon API is installed:
 
 ```bash
-	$ mkdir -p $HOME/src
-	$ cd $HOME/src
+    $ mkdir -p $HOME/src
+    $ cd $HOME/src
     $ git clone git@gitlab.com:doctorfree/RoonCommandLine.git
 
-	# Alternatively, download the latest release:
-	# https://gitlab.com/doctorfree/RoonCommandLine/-/releases
+    # Alternatively, download the latest release:
+    # https://gitlab.com/doctorfree/RoonCommandLine/-/releases
 
     $ cd RoonCommandLine
     $ ./Install
 
-	# Edit the Python Roon API command line configuration file.
-	# Several default settings are provided. You may wish to modify these.
-	$ vi /usr/local/Roon/etc/roon_api.ini
+    # Edit the Python Roon API command line configuration file.
+    # Several default settings are provided. You may wish to modify these.
+    $ vi /usr/local/Roon/etc/roon_api.ini
 
-	# The RoonCoreIP setting should have been configured during install.
-	# Verify the RoonCoreIP setting is correct.
-	# If you do not know your Roon Core IP, run the discovery script
-	$ /usr/local/Roon/bin/get_core_ip
-	# Authorize the extension when prompted
-	# In a Roon Remote client window click "Settings" -> "Extensions" -> "Enable"
+    # The RoonCoreIP setting should have been configured during install.
+    # Verify the RoonCoreIP setting is correct.
+    # If you do not know your Roon Core IP, run the discovery script
+    $ /usr/local/Roon/bin/get_core_ip
+    # Authorize the extension when prompted
+    # In a Roon Remote client window click "Settings" -> "Extensions" -> "Enable"
 ```
 
 The third component is the "roon" shell script. This should be copied to
 a location in your shell execution PATH on all of the systems from which
 you wish to issue command line Roon controls.
 
-	# The username and ip address of the Python Roon API server were
-	# configured during installation. Verify these settings in the
-	# roon script are correct.
-	#
+    # The username and ip address of the Python Roon API server were
+    # configured during installation. Verify these settings in the
+    # roon script are correct.
+    #
     # Copy the "roon" script to all systems on which you wish to use
-	# the Python Roon API command line tools, every system you want to
-	# enable as a command line Roon remote. Each system must be able to
-	# access the Python Roon API installed system via SSH
-	#
-	# If you wish to run the roon front end script on the same system on
-	# which the Python Roon API is installed, then execute the command
-	# "roon -L" on that system. This will enable local execution of the
-	# Roon Command Line scripts rather than remote execution via SSH.
-
-Finally, note that the roon shell script is not passing credentials in the
-SSH invocations. SSH authentication via public key needs to be enabled and
-appropriate keys generated and propogated. This topic is addressed in various
-guides on setting up SSH. Alternatively, the roon shell script can be
-installed on the same system as the Python Roon API and backend scripts.
-In this configuration, SSH is no longer required and the roon commands can
-be executed locally. In order to enable local execution rather than remote
-execution via SSH, run the command "roon -L".
+    # the Python Roon API command line tools, every system you want to
+    # enable as a command line Roon remote. Each system must be able to
+    # access the Python Roon API installed system via SSH
+    #
+    # If you wish to run the roon front end script on the same system on
+    # which the Python Roon API is installed, then execute the command
+    # "roon -L" on that system. This will enable local execution of the
+    # Roon Command Line scripts rather than remote execution via SSH.
 
 ## Removal
 
-The Roon Command Line scripts, patches, and configuration can be removed by
-executing the "Uninstall" script in the RoonCommandLine source directory.
+On Debian based Linux systems where the RoonCommandLine package was installed
+using the RoonCommandLine Debian format package, remove the RoonCommandLine
+package by executing the command:
 
 ```bash
-    $ cd $HOME/src/RoonCommandLine
-	$ ./Uninstall
+    sudo apt remove rooncommandline
+```
+
+On Mac OS X systems, the RoonCommandLine scripts, patches,
+and configuration can be removed by executing the "Uninstall" script in the
+RoonCommandLine source directory:
+
+```bash
+    git clone git@gitlab.com:doctorfree/RoonCommandLine.git
+    cd RoonCommandLine
+    ./Uninstall
 ```
 
 ## Troubleshooting
@@ -231,14 +320,14 @@ The Roon Command Line install creates two configuration files:
 and
 
     `/usr/local/Roon/etc/roon_api.ini`
-	
+    
 These two configuration files are the first place to look when you encounter an issue.
 The /usr/local/Roon/etc/pyroonconf file contains 3 settings:
 
     - The path to the Python User Base folder where the Python Roon API dist-packages
-	  directory is located
-	- A variable used to determine if the Python Roon API patch has been applied
-	- The currently active Roon Zone name used by the Roon Commmand Line
+      directory is located
+    - A variable used to determine if the Python Roon API patch has been applied
+    - The currently active Roon Zone name used by the Roon Commmand Line
 
 The /usr/local/Roon/etc/roon_api.ini file contains default values for
 album name, artist, genre, playlist, tag, and zone as well as the name of a file
@@ -316,47 +405,47 @@ Here is the current output of "roon -u" which displays a usage message.
 
     Usage: roon -L -r -u
         -A album -a artist -g genre -G zone_group
-	    -l [albums|artists|genres|playlists|tags|zones]
-	    -s search -p playlist -t tag -z zone
-	    -c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+        -l [albums|artists|genres|playlists|tags|zones]
+        -s search -p playlist -t tag -z zone
+        -c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 
-	Where:
-		-A album selects an album to play
-		-a artist selects an artist to play
-		-g genre selects a genre to play
-		-p playlist selects a playlist to play
-		-G zone_group specifies a zone grouping specified in roon_api.ini
-		-L setup roon to execute local commands rather than remote via SSH
-		-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones
-		-s search specifies a term to search for in the lists retrieved with -l
-		-r indicates play Radio Paradise
-		-t tag selects an tag to play (not yet working)
-		-z zone selects the Roon Zone in which to play
-		-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
-			issues the command in the selected zone
+    Where:
+        -A album selects an album to play
+        -a artist selects an artist to play
+        -g genre selects a genre to play
+        -p playlist selects a playlist to play
+        -G zone_group specifies a zone grouping specified in roon_api.ini
+        -L setup roon to execute local commands rather than remote via SSH
+        -l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones
+        -s search specifies a term to search for in the lists retrieved with -l
+        -r indicates play Radio Paradise
+        -t tag selects an tag to play (not yet working)
+        -z zone selects the Roon Zone in which to play
+        -c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+            issues the command in the selected zone
 
-	Example invocations
-		Play artist:
-			roon -a "Deep Purple"
-		Play artist in specified zone:
-			roon -a "Jethro Tull" -z "Mac Pro DAC"
-		Play genre:
-			roon -g Classical
-		Play playlist:
-			roon -p "Bowie Favs"
-		Play next track:
-			roon -c next
-		Stop play in specified zone:
-			roon -c stop -z Kitchen
-		Mute a specified zone:
-			roon -c mute -z "Mac Pro DAC"
-		List all playlists containing the string 'Best':
-			roon -l playlists -s Best
-		Group the zones listed in roon_api.ini Group_foobar:
-			roon -G foobar -c group
-		NOTE: Use quotes to specify media names which contain spaces.
-		For example, to play the album 'Love Bomb':
-			roon -A "Love Bomb"
+    Example invocations
+        Play artist:
+            roon -a "Deep Purple"
+        Play artist in specified zone:
+            roon -a "Jethro Tull" -z "Mac Pro DAC"
+        Play genre:
+            roon -g Classical
+        Play playlist:
+            roon -p "Bowie Favs"
+        Play next track:
+            roon -c next
+        Stop play in specified zone:
+            roon -c stop -z Kitchen
+        Mute a specified zone:
+            roon -c mute -z "Mac Pro DAC"
+        List all playlists containing the string 'Best':
+            roon -l playlists -s Best
+        Group the zones listed in roon_api.ini Group_foobar:
+            roon -G foobar -c group
+        NOTE: Use quotes to specify media names which contain spaces.
+        For example, to play the album 'Love Bomb':
+            roon -A "Love Bomb"
 
 When playing media from the command line it is possible to specify a substring
 with which a partial match can be made. In order to play media, either the full
