@@ -183,6 +183,11 @@ case "$1" in
             echo "ROON_ZONE=\"$DEFZONE\"" > ${ROONCONF}
         fi
 
+        [ "${USER}" ] && {
+            GROUP=`id -g -n ${USER}`
+            chown -R ${USER}:${GROUP} ${ROONETC}
+        }
+
         echo ""
         echo "In order to configure the Python Roon API we must set the IP address"
         echo "of the Roon Core. Discovery will be used to determine the Roon Core IP."
@@ -200,25 +205,25 @@ case "$1" in
         cp /tmp/core$$ ${ROONETC}/roon_api.ini
         rm -f /tmp/core$$ /tmp/discover$$
 
-        [ "${USER}" ] && {
-            GROUP=`id -g -n ${USER}`
-            chown -R ${USER}:${GROUP} ${ROONETC}
-        }
-
         # Get and set the default zone and initial zone groupings
         zones=`${ROON}/bin/get_zones`
         defaultZone=`echo "${zones}" | awk -F ',' ' { print $1 } '`
-        groupOne=`echo "${zones}" | awk -F ',' ' { print $1 ", " print $2} '`
-        groupTwo=`echo "${zones}" | awk -F ',' ' { print $2 ", " print $3} '`
+        groupOne=`echo "${zones}" | awk -F ',' ' { print $1 "," $2 } '`
+        groupTwo=`echo "${zones}" | awk -F ',' ' { print $2 "," $NF } '`
+        groupRee=`echo "${zones}" | awk -F ',' ' { print $2 "," $3 "," $4 } '`
         numZones=`echo "${zones}" | awk -F ',' ' { print NF } '`
         [ ${numZones} -gt 2 ] || {
             groupOne=
             groupTwo=
         }
+        [ ${numZones} -gt 3 ] || {
+            groupRee=
+        }
         cat ${ROONETC}/roon_api.ini | \
             sed -e "s/__ALL_ZONES__/${zones}/" \
                 -e "s/__GROUP_ONE__/${groupOne}/" \
                 -e "s/__GROUP_TWO__/${groupTwo}/" \
+                -e "s/__GROUP_REE__/${groupRee}/" \
                 -e "s/__DEF_ZONE__/${defaultZone}/" > /tmp/zones$$
         cp /tmp/zones$$ ${ROONETC}/roon_api.ini
         rm -f /tmp/zones$$
