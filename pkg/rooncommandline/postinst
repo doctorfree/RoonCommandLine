@@ -68,7 +68,6 @@ case "$1" in
               case "$opt,$REPLY" in
                 "None",*|*,"None")
                     usessh=
-                    USER=
                     break
                     ;;
                 *)
@@ -112,12 +111,9 @@ case "$1" in
         for site in ${SITES[@]}
         do
             site=`echo $site | sed -e "s/'//g"`
-            # echo "Checking ${site} for roonapi"
             [ -d "${site}/roonapi" ] && {
                 PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
                 PYTHON_SITEDIR=`echo ${site} | awk -F "/dist-packages" ' { print $1 } '`
-                # echo "PYTHONUSERBASE=${PYTHONUSERBASE}"
-                # echo "PYTHON_SITEDIR=${PYTHON_SITEDIR}"
                 break
             }
         done
@@ -202,6 +198,7 @@ case "$1" in
         cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
         cp /tmp/core$$ ${ROONETC}/roon_api.ini
         rm -f /tmp/core$$ /tmp/discover$$
+        chown ${USER} ${ROONETC}/*
 
         echo ""
         echo "Verify the 'server' and 'user' settings in the roon script are correct"

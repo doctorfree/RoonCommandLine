@@ -30,7 +30,7 @@ dpkg=`type -p dpkg-deb`
 . "${SRC}/${SRC_NAME}/VERSION"
 PKG_VER=${VERSION}
 
-# umask 0022
+umask 0022
 
 # Subdirectory in which to create the distribution files
 OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
@@ -98,6 +98,7 @@ ${SUDO} gzip -9 ${OUT_DIR}/${TOP}/share/doc/${PKG}/changelog
 ${SUDO} chmod 755 ${OUT_DIR}/${ROON}/bin/*
 ${SUDO} chmod 644 ${OUT_DIR}/${ROON}/etc/*
 ${SUDO} chmod 644 ${OUT_DIR}/${ROON}/api/*
+${SUDO} chown -R root:root ${OUT_DIR}/${ROON}
 
 cd dist
 echo "Building ${PKG_NAME}_${PKG_VER} package"
