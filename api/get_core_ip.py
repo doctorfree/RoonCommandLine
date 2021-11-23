@@ -1,4 +1,10 @@
+import configparser
+import os.path
+from os import path
 import time
+
+config = configparser.ConfigParser()
+config.read('/usr/local/Roon/etc/roon_api.ini')
 
 from roonapi import RoonApi, RoonDiscovery
 
@@ -23,3 +29,7 @@ while len(auth_api) == 0:
 api = auth_api[0]
 
 print("RoonCoreIP =", api.host)
+
+# save the token for next time
+with open(tokenfile, "w") as f:
+    f.write(api.token)

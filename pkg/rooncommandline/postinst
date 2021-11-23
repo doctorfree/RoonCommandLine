@@ -205,10 +205,6 @@ case "$1" in
         cp /tmp/core$$ ${ROONETC}/roon_api.ini
         rm -f /tmp/core$$ /tmp/discover$$
 
-        [ "${USER}" ] && {
-            chown ${USER}:${GROUP} ${ROONETC}/*
-        }
-
         # Get and set the default zone and initial zone groupings
         defaultZone=
         groupOne=
