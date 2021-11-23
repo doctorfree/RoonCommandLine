@@ -19,7 +19,6 @@
 1. [Overview](#overview)
 1. [History](#history)
 1. [Installation](#installation)
-1. [Manual Patch Application](<#manual-patch-application>)
 1. [Removal](#removal)
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
@@ -122,25 +121,30 @@ on an Ubuntu 20.04 system I have installed, it was necessary to first configure
 Python 3 as the default Python executable, install pip3, and then
 configure pip3 as the default pip:
 
+```bash
     $ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 	$ sudo apt install python3-pip
     $ sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+```
 
 Once you have verified Python 3 and pip are installed appropriately, install
 the Python Roon API:
 
+```bash
     $ pip install roonapi
+```
 
 The second component is the Python Roon API frontend shell scripts
 and the Python Roon API backend Python scripts. These both get installed on
 the system on which the Python Roon API is installed. Copy this entire repository
 to the target system. Change directory into the Roon subdirectory and execute
-the "macInstall" script. This will copy the frontend shell scripts into
+the "Install" script. This will copy the frontend shell scripts into
 /usr/local/Roon/bin and the backend Python scripts into
 /usr/local/Roon/api.
 
 For example, on the system where the Python Roon API is installed:
 
+```bash
 	$ mkdir -p $HOME/src
 	$ cd $HOME/src
     $ git clone git@gitlab.com:doctorfree/RoonCommandLine.git
@@ -149,18 +153,19 @@ For example, on the system where the Python Roon API is installed:
 	# https://gitlab.com/doctorfree/RoonCommandLine/-/releases
 
     $ cd RoonCommandLine
-    $ ./macInstall
+    $ ./Install
 
 	# Edit the Python Roon API command line configuration file.
 	# Several default settings are provided. You may wish to modify these.
 	$ vi /usr/local/Roon/etc/roon_api.ini
 
-	# The RoonCoreIP setting shuuld have been configured during install.
+	# The RoonCoreIP setting should have been configured during install.
 	# Verify the RoonCoreIP setting is correct.
 	# If you do not know your Roon Core IP, run the discovery script
 	$ /usr/local/Roon/bin/get_core_ip
 	# Authorize the extension when prompted
 	# In a Roon Remote client window click "Settings" -> "Extensions" -> "Enable"
+```
 
 The third component is the "roon" shell script. This should be copied to
 a location in your shell execution PATH on all of the systems from which
@@ -189,58 +194,15 @@ In this configuration, SSH is no longer required and the roon commands can
 be executed locally. In order to enable local execution rather than remote
 execution via SSH, run the command "roon -L".
 
-## Manual Patch Application
-
-Some of the commands require a patch to the Python Roon API to be applied.
-This patch enables searching and retrieving lists of various objects in a
-Roon library. If the Python Roon API module and patch could be found during
-the execution of the macInstall script then this patch was automatically
-applited and you need do nothing. However, if the patch did not apply or
-failed to apply properly and you wish to enable the "list" feature of
-these scripts then apply the Python Roon API patch manually. Performing
-this step should not be necessary but instructions are provided should
-you at any point need to re-apply the patch manually. To apply the patch,
-after performing the steps above, execute the following:
-
-    $ cd $HOME/src
-	$ /usr/local/Roon/bin/clone_pyroon
-
-	# Alternatively, download the latest pyroon release and apply the patch by hand
-	# https://github.com/pavoni/pyroon/releases
-	# patch -b -p0 < $HOME/src/RoonCommandLine/patches/pyroon-listmedia.patch
-
-	$ cd pyroon/roonapi
-	$ cp *.py $HOME/Python3/lib/python3.8/dist-packages/roonapi
-
-Note this last command, copying the Python scripts to the dist-packages/roonapi
-directory, needs to provide the correct path to your installed Python
-dist-packages/roonapi directory. The command above is correct for my system
-but your system may differ. Double check where this directory got created
-by the "pip install roonapi" command.
-
-Python has global and per-user dist-packages directories. RoonCommandLine
-version 2.0.0 and later uses the global site Python facility.
-
-To find your Python global dist-packages directory, issue the command:
-
-    $ python -c 'import site; print(site.getsitepackages())'
-
-The roonapi module should be in your global dist-packages directory.
-
-Alternatively, you can patch the Python Roon API roonapi module directly rather
-than patching the pyroon source code and copying it in. To perform this
-direct patch, follow these steps:
-
-    $ cd <Python global site> # Or wherever your Pip roonapi module is installed
-	$ patch -b -p0 < $HOME/src/RoonCommandLine/patches/roonapi-listmedia.patch
-
 ## Removal
 
 The Roon Command Line scripts, patches, and configuration can be removed by
-executing the "macUninstall" script in the RoonCommandLine source directory.
+executing the "Uninstall" script in the RoonCommandLine source directory.
 
+```bash
     $ cd $HOME/src/RoonCommandLine
 	$ ./Uninstall
+```
 
 ## Troubleshooting
 
@@ -258,16 +220,17 @@ Also, make sure the SSH service is running on the Python Roon API system.
 Alternatively, install both the roon command and the Python Roon API on the
 same system and run the roon commands locally, avoiding the need for SSH.
 To enable local execution of the roon command line tools, issue the command:
-    $ roon -L
+
+    `roon -L`
 
 In some cases the initial installation may fail to configure the system properly.
 The Roon Command Line install creates two configuration files:
 
-    /usr/local/Roon/etc/pyroonconf
+    `/usr/local/Roon/etc/pyroonconf`
 
 and
 
-    /usr/local/Roon/etc/roon_api.ini
+    `/usr/local/Roon/etc/roon_api.ini`
 	
 These two configuration files are the first place to look when you encounter an issue.
 The /usr/local/Roon/etc/pyroonconf file contains 3 settings:
@@ -284,7 +247,7 @@ address. Verify the settings in roon_api.ini are valid and correct. The most com
 issue will be an incorrect Roon Core IP address setting. You can verify this address
 is correct by comparing it to the value displayed in your Roon Remote window at
 
-    Settings -> General
+    `Settings -> General`
 
 under "ROON CORE".
 
@@ -316,7 +279,9 @@ and, if not, install them.
 
 The installation scripts use the command:
 
+```bash
     $ python -c ‘import site; print(site.getsitepackages())’ | tr -d ‘[],’)
+```
 
 to retrieve a list of folders Python uses for site packages. If this command
 fails to retrieve the Python site package folder that contains the
