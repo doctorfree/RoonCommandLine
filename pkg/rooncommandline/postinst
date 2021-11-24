@@ -245,6 +245,7 @@ case "$1" in
         echo "Edit the Roon Command Line configuration settings at:"
         echo "${ROONETC}/roon_api.ini"
         echo "and verify the settings in the configuration file ${ROONCONF}"
+        echo ""
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

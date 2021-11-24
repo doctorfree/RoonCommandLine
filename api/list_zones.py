@@ -47,6 +47,8 @@ for (k, v) in outputs.items():
     zone_id = v["zone_id"]
     output_id = k
     zone_name = v["display_name"]
+    if args.info:
+        zone_with = v["can_group_with_output_ids"]
     is_grouped = roonapi.is_grouped(output_id)
     is_group_main = roonapi.is_group_main(output_id)
     grouped_zone_names = roonapi.grouped_zone_names(output_id)
@@ -67,8 +69,7 @@ for (k, v) in outputs.items():
                     '\033[0m',
                 )
                 if args.info:
-                    zone = roonapi.zones[zone_id]
-                    print("zone_id:%s zone_info: %s" % (zone_id, zone))
+                    print("Can group with: %s" % zone_with)
                 if is_group_main:
                     print("\tThis is the group main zone")
             else:
