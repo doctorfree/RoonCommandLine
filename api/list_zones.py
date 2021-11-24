@@ -65,7 +65,13 @@ for (k, v) in outputs.items():
         grouped_zone_names = ""
     if (searchterm == "all" or searchterm in zone_name):
         if args.get:
-            zonelist = zonelist + zone_name + ', '
+            if args.info:
+                if (searchterm == "all"):
+                    print(zone_name + ': ' + ','.join(zone_with_names))
+                else:
+                    print(','.join(zone_with_names))
+            else:
+                zonelist = zonelist + zone_name + ', '
         else:
             if is_grouped:
                 print(
@@ -95,8 +101,9 @@ for (k, v) in outputs.items():
         zone_number += 1
 
 if args.get:
-    zonelist = "".join(zonelist.rsplit(", ", 1))
-    print(zonelist)
+    if not(args.info):
+        zonelist = "".join(zonelist.rsplit(", ", 1))
+        print(zonelist)
 
 # save the token for next time
 with open(tokenfile, "w") as f:
