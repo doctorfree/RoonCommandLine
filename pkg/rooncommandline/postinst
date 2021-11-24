@@ -21,8 +21,7 @@ set -e
 case "$1" in
     configure)
         update-alternatives --install /usr/bin/python python /usr/bin/python3 10
-        # update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
-        pip3 install roonapi
+        python3 -m pip install roonapi
         export PATH=/usr/local/bin:/usr/bin:$PATH
         [ -d /usr/local ] || mkdir /usr/local
         [ -d /usr/local/bin ] || mkdir /usr/local/bin
