@@ -38,17 +38,26 @@ else:
     token = "None"
 
 roonapi = RoonApi(appinfo, token, server)
+zones = roonapi.zones
+outputs = roonapi.outputs
 
 zonelist = ""
-outputs = roonapi.outputs
 zone_number = 1
 
 for (k, v) in outputs.items():
     zone_id = v["zone_id"]
     output_id = k
     zone_name = v["display_name"]
+    zone_with_names = []
     if args.info:
-        zone_with = v["can_group_with_output_ids"]
+        zone_with_ids = v["can_group_with_output_ids"]
+        for zone_with_id in zone_with_ids:
+            if (v["output_id"] == zone_with_id):
+                continue
+            for (oid, vid) in outputs.items():
+                if (oid == zone_with_id):
+                    zone_with_names.append(vid["display_name"])
+                    break
     is_grouped = roonapi.is_grouped(output_id)
     is_group_main = roonapi.is_group_main(output_id)
     grouped_zone_names = roonapi.grouped_zone_names(output_id)
@@ -68,16 +77,21 @@ for (k, v) in outputs.items():
                     grouped_zone_names,
                     '\033[0m',
                 )
-                if args.info:
-                    print("Can group with: %s" % zone_with)
-                if is_group_main:
-                    print("\tThis is the group main zone")
             else:
                 print(
                     "Zone",
                     str(zone_number) + ":",
                     '\033[1m' + zone_name + '\033[0m',
                 )
+            if args.info:
+                print(
+                    "\tCan group with:",
+                    '\033[1m',
+                    zone_with_names,
+                    '\033[0m'
+                )
+            if is_group_main:
+                print("\tThis is the group main zone")
         zone_number += 1
 
 if args.get:
