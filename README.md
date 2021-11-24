@@ -147,8 +147,15 @@ sudo apt install ./RoonCommandLine_<version>.deb
 
 ### Mac OS X installation
 
-To install on a Mac, clone the RoonCommandLine repository and execute
-the `Install` script:
+RoonCommandLine requires Python 3. See the excellent
+[Hitchhiker's Guide to Python](https://docs.python-guide.org/starting/install3/osx/)
+for step by step instructions to install Python 3 on Mac OS X. If you already
+have `Homebrew` installed on your Mac then you can install Python 3 with:
+
+`brew install python`
+
+Once the Python 3 dependency is met, install RoonCommandLine by
+cloning the RoonCommandLine repository and executing the `Install` script:
 
 <code>git clone `https://gitlab.com/doctorfree/RoonCommandLine.git`</code>
 

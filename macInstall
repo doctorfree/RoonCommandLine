@@ -1,54 +1,219 @@
 #!/bin/bash
 
-ROON=/usr/local/Roon
+PKG="RoonCommandLine"
+TOP="/usr"
+DESTDIR="${TOP}/local"
+ROON="${DESTDIR}/Roon"
+SRC=${HOME}/src
+SRC_NAME="RoonCommandLine"
 ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 HERE=`pwd`
-LBIN=${ROON}/bin
 ROONAPI_PATCH=roonapi-listmedia.patch
+SUDO=sudo
 
-[ -d ${LBIN} ] || mkdir ${LBIN}
-cp *_* ${LBIN}
-[ -d ${ROONAPI} ] || mkdir ${ROONAPI}
-cp api/*_* ${ROONAPI}
+need_pip=
+need_python=
+pip3_inst=`type -p pip3`
+if [ "${pip3_inst}" ]
+then
+    PIP="pip3"
+else
+    pip_inst=`type -p pip`
+    if [ "${pip_inst}" ]
+    then
+        PIP="pip3"
+    else
+        need_pip=1
+    fi
+fi
+python3_inst=`type -p python3`
+if [ "${python3_inst}" ]
+then
+    PYTHON="python3"
+else
+    python_inst=`type -p python`
+    if [ "${python3_inst}" ]
+    then
+        PYTHON="python"
+    else
+        need_python=1
+    fi
+fi
+[ "${need_pip}" ] || [ "${need_python}" ] && {
+    echo "RoonCommandLine requires Python 3 and Pip"
+    echo "Install Python 3 and restart this installation"
+    echo "See https://docs.python-guide.org/starting/install3/osx/"
+    echo "for step by step instructions to install Homebrew and Python 3"
+    echo "If you already have Homebrew, install Python 3 with:"
+    echo "brew install python"
+    exit 1
+}
+
+[ -f "${SRC}/${SRC_NAME}/VERSION" ] || {
+    echo "$SRC/$SRC_NAME/VERSION does not exist. Exiting."
+    exit 1
+}
+
+. "${SRC}/${SRC_NAME}/VERSION"
+PKG_VER=${VERSION}
+
+while true
+do
+  read -p "Install ${SRC_NAME} version ${PKG_VER} ? ('Y'/'N'): " yn
+  case $yn in
+      [Yy]*)
+          break
+          ;;
+      [Nn]*)
+          exit 0
+          ;;
+      * )
+          echo "Please answer yes or no."
+          ;;
+  esac
+done
+
+export PATH=/usr/local/bin:/usr/bin:$PATH
+[ -d /usr/local ] || ${SUDO} mkdir /usr/local
+[ -d /usr/local/bin ] || ${SUDO} mkdir /usr/local/bin
+[ -d ${ROON} ] || ${SUDO} mkdir ${ROON}
+[ -d ${DESTDIR}/share ] || ${SUDO} mkdir ${DESTDIR}/share
+[ -d ${DESTDIR}/share/applications ] || ${SUDO} mkdir ${DESTDIR}/share/applications
+[ -d ${DESTDIR}/share/doc ] || ${SUDO} mkdir ${DESTDIR}/share/doc
+[ -d ${DESTDIR}/share/doc/${PKG} ] || ${SUDO} mkdir ${DESTDIR}/share/doc/${PKG}
+
+for dir in bin etc api patches
+do
+    [ -d ${ROON}/${dir} ] && ${SUDO} rm -rf ${ROON}/${dir}
+done
+
+${SUDO} cp -a api ${ROON}/api
+${SUDO} cp -a bin ${ROON}/bin
+${SUDO} cp -a etc ${ROON}/etc
+${SUDO} cp -a patches ${ROON}/patches
+
+${SUDO} cp *.desktop "${DESTDIR}/share/applications"
+${SUDO} cp AUTHORS ${DESTDIR}/share/doc/${PKG}/AUTHORS
+${SUDO} cp LICENSE ${DESTDIR}/share/doc/${PKG}/copyright
+${SUDO} cp CHANGELOG.md ${DESTDIR}/share/doc/${PKG}/changelog
+${SUDO} cp README.md ${DESTDIR}/share/doc/${PKG}/README
+${SUDO} gzip -9 ${DESTDIR}/share/doc/${PKG}/changelog
+
+[ -f .gitignore ] && {
+    while read ignore
+    do
+        ${SUDO} rm -f ${ROON}/${ignore}
+    done < .gitignore
+}
+
+${SUDO} chmod 644 ${ROON}/etc/* \
+                  ${ROON}/api/* \
+                  ${ROON}/patches/*.md ${ROON}/patches/*.patch \
+                  ${ROON}/patches/roonapi/* \
+                  ${ROON}/patches/roon-web-controller/*
+${SUDO} chmod 755 ${ROON}/bin/* \
+                  ${ROON}/bin \
+                  ${ROON}/etc \
+                  ${ROON}/api \
+                  ${ROON}/patches \
+                  ${ROON}/patches/mk* \
+                  ${ROON}/patches/roonapi \
+                  ${ROON}/patches/roon-web-controller
+${SUDO} chown -R root:wheel ${ROON}
+
+# Install the Python Roon API
+${PIP} install roonapi
 
 # Try to configure the roon script with the IP and username
-plat=`uname -s`
-if [ "$plat" == "Darwin" ]
-then
-    IP=`ifconfig en0 |awk '/inet / {print $2; }'`
-else
-    IP=`hostname -I | awk ' { print $1 } '`
-fi
+IP=`ifconfig en0 |awk '/inet / {print $2; }'`
 USER=`id -u -n`
 
+cd /usr/local/bin
+for command in ${ROON}/bin/*
+do
+    b=`basename ${command}`
+    if [ -f ${b} ]
+    then
+        diff ${command} ${b} > /dev/null && {
+            ${SUDO} rm -f ${b}
+            ${SUDO} ln -s ${command} .
+        }
+    else
+        ${SUDO} ln -s ${command} .
+    fi
+done
+
+usessh=1
+users=
+numusers=0
+for user in /Users/*
+do
+    [ "${user}" == "/Users/*" ] && continue
+    [ -d ${user} ] && {
+        users="${users} ${user}"
+        numusers=`expr ${numusers} + 1`
+    }
+done
+
+[ ${numusers} -gt 1 ] && {
+  while true
+  do
+    read -p "Using ${USER} as the SSH user. Select a different user ? ('Y'/'N'): " yn
+    case $yn in
+      [Yy]*)
+          PS3="${BOLD}Please enter SSH user (numeric or text): ${NORMAL}"
+          options=(${users} "None")
+          select opt in "${options[@]}"
+          do
+              case "$opt,$REPLY" in
+                "None",*|*,"None")
+                    usessh=
+                    break
+                    ;;
+                *)
+                    [ -d /Users/${opt} ] && {
+                        USER="${opt}"
+                        break
+                    }
+                    printf "\nInvalid entry. Please try again"
+                    printf "\nEnter either a number or text of one of the menu entries\n"
+                    ;;
+              esac
+          done
+          break
+          ;;
+      [Nn]*)
+          break
+          ;;
+      * )
+          echo "Please answer yes or no."
+          ;;
+    esac
+  done
+}
+
 echo "Setting the Python Roon API server IP address to $IP"
-echo "Setting the Python Roon API username for SSH access to $USER"
 
-cat roon | sed -e "s/XX.X.X.XXX/$IP/" -e "s/SSH_USERNAME/$USER/" > /tmp/roon$$
-cp roon roon.orig
-cp /tmp/roon$$ roon
-rm -f /tmp/roon$$
+if [ "${usessh}" ]
+then
+    echo "Setting the Python Roon API username for SSH access to $USER"
+else
+    echo "SSH access disabled. Enabling local access in ${ROONCONF}"
+    grep -v ^LOCAL= ${ROONCONF} > /tmp/roon$$
+    echo "LOCAL=true" >> /tmp/roon$$
+    ${SUDO} cp /tmp/roon$$ ${ROONCONF}
+    ${SUDO} rm -f /tmp/roon$$
+fi
+cat ${ROON}/bin/roon | sed -e "s/XX.X.X.XXX/$IP/" -e "s/SSH_USERNAME/$USER/" > /tmp/roon$$
+${SUDO} cp ${ROON}/bin/roon ${ROON}/bin/roon.orig
+${SUDO} cp /tmp/roon$$ ${ROON}/bin/roon
+${SUDO} rm -f /tmp/roon$$
 
-echo ""
-echo "In order to configure the Python Roon API we must set the IP address"
-echo "of the Roon Core. Discovery will be used to determine the Roon Core IP."
-echo "When prompted for authorization, go to a Roon Remote window and click"
-echo "    Settings -> Extensions -> Enable"
-echo "to authorize discovery"
-echo ""
-
-$HOME/bin/get_core_ip 2>&1 | tee /tmp/discover$$
-CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
-cat ${ROONETC}/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
-echo "$CORE_IP" >> /tmp/core$$
-cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
-cp /tmp/core$$ ${ROONETC}/roon_api.ini
-rm -f /tmp/core$$ /tmp/discover$$
-
-# Check the global site directories
 have_python3=`type -p python3`
+PYTHONUSERBASE=
+# Check the global site directories
 if [ "${have_python3}" ]
 then
     SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
@@ -57,10 +222,13 @@ else
 fi
 for site in ${SITES[@]}
 do
-    site=`echo $site | sed -e "s/\'//g"`
+    site=`echo $site | sed -e "s/'//g"`
+    site_sep=
+    echo ${site} | grep site-packages > /dev/null && site_sep="site-packages"
+    [ "${site_sep}" ] || site_sep="dist-packages"
     [ -d "${site}/roonapi" ] && {
         PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
-        PYTHON_SITEDIR=`echo ${site} | awk -F "/dist-packages" ' { print $1 } '`
+        PYTHON_SITEDIR=`echo ${site} | awk -F "/${site_sep}" ' { print $1 } '`
         break
     }
 done
@@ -82,30 +250,26 @@ then
         echo "Python Roon API already patched. Skipping patch."
     else
         # Locate the patch file
+        ROONAPI_PATCH=roonapi-listmedia.patch
         patchfile=
-        if [ -f ${HERE}/patches/${ROONAPI_PATCH} ]
+        if [ -f ${ROON}/patches/${ROONAPI_PATCH} ]
         then
-            patchfile=${HERE}/patches/${ROONAPI_PATCH}
+            patchfile=${ROON}/patches/${ROONAPI_PATCH}
         else
-            if [ -f $HOME/src/patches/${ROONAPI_PATCH} ]
-            then
-                patchfile=$HOME/src/patches/${ROONAPI_PATCH}
-            else
-                echo "Cannot locate patch file ${ROONAPI_PATCH}"
-                echo "Python Roon API patch not applied."
-                echo "List commands will not function properly."
-            fi
+            echo "Cannot locate patch file ${ROONAPI_PATCH}"
+            echo "Python Roon API patch not applied."
+            echo "List commands will not function properly."
         fi
         [ "${patchfile}" ] && {
             patch_inst=`type -p patch`
             if [ "$patch_inst" ]
             then
                 cd ${PYTHON_SITEDIR}
-                patch -b -p0 < ${patchfile}
+                ${SUDO} patch -b -p0 < ${patchfile}
                 grep -v ROONAPIPATCHED ${ROONCONF} > /tmp/roonconf$$
                 echo "ROONAPIPATCHED=true" >> /tmp/roonconf$$
-                cp /tmp/roonconf$$ ${ROONCONF}
-                rm -f /tmp/roonconf$$
+                ${SUDO} cp /tmp/roonconf$$ ${ROONCONF}
+                ${SUDO} rm -f /tmp/roonconf$$
             else
                 echo "Cannot locate the patch utility. Either patch is not installed"
                 echo "or it is not in your execution PATH."
@@ -124,15 +288,68 @@ fi
 DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
 # Remove leading and trailing spaces in DEFZONE
 DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-# Set ROON_ZONE in .pyroonconf if not already set
+# Set ROON_ZONE in pyroonconf if not already set
 if [ -f ${ROONCONF} ]
 then
     grep ROON_ZONE ${ROONCONF} > /dev/null || {
-        echo "ROON_ZONE=\"$DEFZONE\"" >> ${ROONCONF}
+        ${SUDO} echo "ROON_ZONE=\"$DEFZONE\"" >> ${ROONCONF}
     }
 else
-    echo "ROON_ZONE=\"$DEFZONE\"" > ${ROONCONF}
+    ${SUDO} echo "ROON_ZONE=\"$DEFZONE\"" > ${ROONCONF}
 fi
+
+[ "${USER}" ] && {
+    GROUP=`id -g -n ${USER}`
+    chown -R ${USER}:${GROUP} ${ROONETC}
+}
+
+echo ""
+echo "In order to configure the Python Roon API we must set the IP address"
+echo "of the Roon Core. Discovery will be used to determine the Roon Core IP."
+echo "When prompted for authorization, go to a Roon Remote window and click"
+echo "    Settings -> Extensions -> Enable"
+echo "to authorize discovery"
+echo ""
+
+# Get and set the Roon Core IP address
+${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
+cat ${ROONETC}/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
+echo "$CORE_IP" >> /tmp/core$$
+${SUDO} cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
+${SUDO} cp /tmp/core$$ ${ROONETC}/roon_api.ini
+${SUDO} rm -f /tmp/core$$ /tmp/discover$$
+
+# Get and set the default zone and initial zone groupings
+defaultZone=
+groupOne=
+groupTwo=
+groupRee=
+groupFor=
+zones=`${ROON}/bin/get_zones`
+numZones=`echo "${zones}" | awk -F ',' ' { print NF } '`
+[ ${numZones} -gt 0 ] && {
+    defaultZone=`echo "${zones}" | awk -F ',' ' { print $1 } '`
+}
+[ ${numZones} -gt 2 ] && {
+    groupOne=`echo "${zones}" | awk -F ',' ' { print $1 "," $2 } '`
+    groupTwo=`echo "${zones}" | awk -F ',' ' { print $2 "," $NF } '`
+}
+[ ${numZones} -gt 3 ] && {
+    groupRee=`echo "${zones}" | awk -F ',' ' { print $2 "," $3 "," $4 } '`
+}
+[ ${numZones} -gt 4 ] && {
+    groupFor=`echo "${zones}" | awk -F ',' ' { print $(NF-3) "," $(NF-2) "," $(NF-1) "," $(NF) } '`
+}
+cat ${ROONETC}/roon_api.ini | \
+        sed -e "s/__ALL_ZONES__/${zones}/" \
+            -e "s/__GROUP_ONE__/${groupOne}/" \
+            -e "s/__GROUP_TWO__/${groupTwo}/" \
+            -e "s/__GROUP_REE__/${groupRee}/" \
+            -e "s/__GROUP_FOR__/${groupFor}/" \
+            -e "s/__DEF_ZONE__/${defaultZone}/" > /tmp/zones$$
+${SUDO} cp /tmp/zones$$ ${ROONETC}/roon_api.ini
+${SUDO} rm -f /tmp/zones$$
 
 echo ""
 echo "Verify the 'server' and 'user' settings in the roon script are correct"
@@ -141,4 +358,4 @@ echo "PATH on all systems from which you wish to control Roon via SSH"
 echo ""
 echo "Edit the Roon Command Line configuration settings at:"
 echo "${ROONETC}/roon_api.ini"
-echo "and verify the settings in the configuration file ${HOME}/.pyroonconf"
+echo "and verify the settings in the configuration file ${ROONCONF}"
