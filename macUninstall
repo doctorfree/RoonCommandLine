@@ -1,15 +1,14 @@
 #!/bin/bash
 
-ROON=/usr/local/Roon
+LOCAL="/usr/local"
+APPL=${LOCAL}/share/applications
+DOC=${LOCAL}/share/doc
+ROON=${LOCAL}/Roon
 ROONAPI=${ROON}/api
-ROONCONF=${ROON}/etc/pyroonconf
-LBIN=${ROON}/bin
 
-for i in *_*
-do
-    rm -f $LBIN/$i
-done
-rm -rf ${ROON}
+sudo rm -rf ${ROON}
+sudo rm -rf ${DOC}/RoonCommandLine
+sudo rm -f ${APPL}/rooncommand.desktop
 
 ROON_SITE_DIR=
 # Check the global site directories
@@ -28,8 +27,6 @@ do
     }
 done
 
-rm -f $ROONCONF
-
 if [ "$ROON_SITE_DIR" ]
 then
     # Roll back the Python Roon API patch if it was applied
@@ -45,5 +42,12 @@ else
     echo "Python Roon API patch not reversed."
 fi
 
+if [ "${have_python3}" ]
+then
+    python3 -m pip uninstall roonapi -y
+else
+    python -m pip uninstall roonapi -y
+fi
+
 echo ""
-echo "Roon Command Line uninstalled"
+echo "RoonCommandLine uninstalled"

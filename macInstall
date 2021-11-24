@@ -124,7 +124,13 @@ ${SUDO} chmod 755 ${ROON}/bin/* \
 ${SUDO} chown -R root:wheel ${ROON}
 
 # Install the Python Roon API
-${PIP} install roonapi
+# ${PIP} install roonapi
+if [ "${have_python3}" ]
+then
+    python3 -m pip install roonapi -y
+else
+    python -m pip install roonapi -y
+fi
 
 # Try to configure the roon script with the IP and username
 IP=`ifconfig en0 |awk '/inet / {print $2; }'`
