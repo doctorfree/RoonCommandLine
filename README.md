@@ -164,6 +164,11 @@ cloning the RoonCommandLine repository and executing the `Install` script:
     ./Install
 ```
 
+**Note:** A cleaner installation can be accomplished by executing the `Install`
+script as a user with `sudo` privileges and as the user which will be used
+to SSH in to the system. If you are not going to enable SSH support, at least
+make sure the user has sudo privileges.
+
 ### Post installation configuration
 
 Default settings are applied during the installation process. The primary area
