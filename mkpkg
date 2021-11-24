@@ -46,7 +46,7 @@ mkdir dist
 
 [ -d ${OUT_DIR} ] && rm -rf ${OUT_DIR}
 mkdir ${OUT_DIR}
-cp -a pkg/rooncommandline ${OUT_DIR}/DEBIAN
+cp -a pkg/${PKG} ${OUT_DIR}/DEBIAN
 chmod 755 ${OUT_DIR} ${OUT_DIR}/DEBIAN ${OUT_DIR}/DEBIAN/*
 
 echo "Package: ${PKG}
@@ -120,10 +120,46 @@ tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-dist.tar.gz
     echo "Creating zip archive of ${PKG_NAME} ${PKG_VER} distribution"
     zip -q -r ../${PKG_NAME}_${PKG_VER}-dist.zip usr
 }
-cd ..
 
+cd ..
 [ "${GCI}" ] || {
     [ -d ../releases ] || mkdir ../releases
     [ -d ../releases/${PKG_VER} ] || mkdir ../releases/${PKG_VER}
     ${SUDO} cp *.deb *.gz *.zip ../releases/${PKG_VER}
 }
+
+# Experimental RPM distribution build
+cd "${SRC}/${SRC_NAME}"
+[ -d pkg/rpm ] && cp -a pkg/rpm ${OUT_DIR}/rpm
+[ -d ${OUT_DIR}/rpm ] || mkdir ${OUT_DIR}/rpm
+echo "Name:       ${PKG}
+Version:    ${PKG_VER}
+Release:    1%{?dist}
+Summary:    RoonCommandLine suite of tools
+License:    MIT
+BuildArch:  noarch
+
+%description
+Manage your Roon Audio System from the command line
+
+%prep
+
+%build
+
+%install
+mkdir -p %{buildroot}/%{_bindir}
+install -m 0755 %{name} %{buildroot}/%{_bindir}/%{name}
+
+%files
+%{_bindir}/%{name}
+
+%changelog" > ${OUT_DIR}/rpm/${PKG}.spec
+
+# Not working yet
+# rpmbuild -ba --build-in-place --define "_topdir ${OUT_DIR}/rpm" \
+#   ${OUT_DIR}/rpm/${PKG}.spec
+
+# cd dist
+# mv rpm/SRPMS/*.rpm .
+# mv rpm/RPMS/*/*.rpm .
+# rm -rf rpm
