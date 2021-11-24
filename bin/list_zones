@@ -26,15 +26,8 @@ fi
 
 [ "$1" ] && ZONE="$*"
 
-# Get the default zone if one is not provided
-[ "${ZONE}" ] || {
-    if [ "${ROON_ZONE}" ]
-    then
-        ZONE="${ROON_ZONE}"
-    else
-        ZONE="${DEFZONE}"
-    fi
-}
+# List all zones if no zones are specified
+[ "${ZONE}" ] || ZONE="all"
 
 have_python3=`type -p python3`
 if [ "${have_python3}" ]

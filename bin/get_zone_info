@@ -32,7 +32,7 @@ fi
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    python3 $LIST -g -z ${ZONE}
+    python3 $LIST -i -z ${ZONE}
 else
-    python $LIST -g -z ${ZONE}
+    python $LIST -i -z ${ZONE}
 fi

@@ -12,8 +12,9 @@ server = config['DEFAULT']['RoonCoreIP']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-g", "--get", help="zone selection", action="store_true")
-parser.add_argument("-z", "--zone", help="zone selection")
+parser.add_argument("-g", "--get", help="Get a comma separated list of zones", action="store_true")
+parser.add_argument("-i", "--info", help="Get zone info", action="store_true")
+parser.add_argument("-z", "--zone", help="Zone selection")
 args = parser.parse_args()
 
 if args.zone:
@@ -38,7 +39,7 @@ else:
 
 roonapi = RoonApi(appinfo, token, server)
 
-zones = ""
+zonelist = ""
 outputs = roonapi.outputs
 zone_number = 1
 
@@ -53,7 +54,7 @@ for (k, v) in outputs.items():
         grouped_zone_names = ""
     if (searchterm == "all" or searchterm in zone_name):
         if args.get:
-            zones = zones + zone_name + ', '
+            zonelist = zonelist + zone_name + ', '
         else:
             if is_grouped:
                 print(
@@ -65,6 +66,9 @@ for (k, v) in outputs.items():
                     grouped_zone_names,
                     '\033[0m',
                 )
+                if args.info:
+                    zone = roonapi.zones[zone_id]
+                    print("zone_id:%s zone_info: %s" % (zone_id, zone))
                 if is_group_main:
                     print("\tThis is the group main zone")
             else:
@@ -76,8 +80,8 @@ for (k, v) in outputs.items():
         zone_number += 1
 
 if args.get:
-    zones = "".join(zones.rsplit(", ", 1))
-    print(zones)
+    zonelist = "".join(zonelist.rsplit(", ", 1))
+    print(zonelist)
 
 # save the token for next time
 with open(tokenfile, "w") as f:
