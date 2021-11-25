@@ -103,6 +103,8 @@ ${SUDO} chmod 644 ${OUT_DIR}/${ROON}/etc/* \
 ${SUDO} chmod 755 ${OUT_DIR}/${ROON}/bin/* \
                   ${OUT_DIR}/${ROON}/bin \
                   ${OUT_DIR}/${ROON}/etc \
+                  ${OUT_DIR}/${ROON}/etc/postinstall \
+                  ${OUT_DIR}/${ROON}/etc/preremove \
                   ${OUT_DIR}/${ROON}/api \
                   ${OUT_DIR}/${ROON}/patches \
                   ${OUT_DIR}/${ROON}/patches/mk* \
@@ -132,34 +134,17 @@ cd ..
 cd "${SRC}/${SRC_NAME}"
 [ -d pkg/rpm ] && cp -a pkg/rpm ${OUT_DIR}/rpm
 [ -d ${OUT_DIR}/rpm ] || mkdir ${OUT_DIR}/rpm
-echo "Name:       ${PKG}
-Version:    ${PKG_VER}
-Release:    1%{?dist}
-Summary:    RoonCommandLine suite of tools
-License:    MIT
-BuildArch:  noarch
-
-%description
-Manage your Roon Audio System from the command line
-
-%prep
-
-%build
-
-%install
-mkdir -p %{buildroot}/%{_bindir}
-install -m 0755 %{name} %{buildroot}/%{_bindir}/%{name}
-
-%files
-%{_bindir}/%{name}
-
-%changelog" > ${OUT_DIR}/rpm/${PKG}.spec
 
 # Not working yet
-# rpmbuild -ba --build-in-place --define "_topdir ${OUT_DIR}/rpm" \
-#   ${OUT_DIR}/rpm/${PKG}.spec
+rpmbuild -ba --build-in-place \
+   --define "_topdir ${OUT_DIR}" \
+   --define "_sourcedir ${OUT_DIR}" \
+   --buildroot ${SRC}/${SRC_NAME}/${OUT_DIR}/BUILDROOT \
+   ${OUT_DIR}/rpm/${PKG_NAME}.spec
 
-# cd dist
-# mv rpm/SRPMS/*.rpm .
-# mv rpm/RPMS/*/*.rpm .
-# rm -rf rpm
+cd "${SRC}/${SRC_NAME}"
+[ "${GCI}" ] || {
+    [ -d releases ] || mkdir releases
+    [ -d releases/${PKG_VER} ] || mkdir releases/${PKG_VER}
+    ${SUDO} cp ${OUT_DIR}/RPMS/*/*.rpm releases/${PKG_VER}
+}

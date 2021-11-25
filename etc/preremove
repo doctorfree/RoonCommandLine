@@ -1,0 +1,68 @@
+#!/bin/bash
+#
+# Preremoval script for rooncommandline
+#
+# Author: Ronald Joe Record <ronaldrecord@gmail.com>
+#
+
+set -e
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONBIN=${ROON}/bin
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+ROONINI=${ROONETC}/roon_api.ini
+
+# Locate the global site directories
+ROON_SITE_DIR=
+PYTHONUSERBASE=
+have_python3=`type -p python3`
+# Check the global site directories
+if [ "${have_python3}" ]
+then
+  SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+else
+  SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+fi
+for site in ${SITES[@]}
+do
+    site=`echo $site | sed -e "s/'//g"`
+    [ -d ${site}/roonapi ] && {
+        ROON_SITE_DIR=${site}/roonapi
+        break
+    }
+done
+
+rm -f ${ROONCONF} ${ROONINI} ${ROONBIN}/*.orig ${ROONETC}/*
+
+if [ "$ROON_SITE_DIR" ]
+then
+    # Roll back the Python Roon API patch if it was applied
+    cd $ROON_SITE_DIR
+    for i in *.orig
+    do
+        [ "$i" == "*.orig" ] && continue
+        j=`echo $i | sed -e "s/.orig//"`
+        mv $i $j
+    done
+else
+    echo "Could not locate the roonapi Python module installation directory"
+    echo "Python Roon API patch not reversed."
+fi
+
+[ -d /usr/local/bin ] && {
+    cd /usr/local/bin
+    for command in ${ROONBIN}/*
+    do
+        [ "${command}" == "${ROONBIN}/*" ] && continue
+        b=`basename ${command}`
+        [ -L $b ] && {
+            readlink $b | grep ${ROON} > /dev/null && rm -f $b
+        }
+    done
+}
+echo ""
+echo "Roon Command Line uninstalled"
+
+exit 0
