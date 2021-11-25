@@ -42,8 +42,13 @@
 The Roon Command Line project provides Bash and Python scripts to enable
 command line control of the Roon audio system over a local network.
 
-It requires a Roon Core system as well as the Python Roon API from
-https://github.com/pavoni/pyroon
+It requires a [Roon Core System](https://roonlabs.com/) as well as the
+[Python Roon API](https://github.com/pavoni/pyroon). The Python Roon API
+will be installed as part of the RoonCommandLine installation process if
+it is not already present.
+
+**Note:** No modifications are made to the Roon Core. The RoonCommandLine
+package resides entirely on other systems within your local area network.
 
 A frontend Bash script can be installed wherever you want to issue Roon
 commands. Roon commands are issued via public key authenticated SSH commands
@@ -87,11 +92,6 @@ with partial matching facilities. Thus a substring can be supplied to use as a
 search term with partial matching returning albums, artists, playlists, genres,
 or tags which contain the specified substring.
 
-The Python Roon API Command Line supports Roon command control.
-Commands currently supported include:
-    group, ungroup, play, pause, playpause, stop, next, previous,
-    shuffle, unshuffle, repeat, unrepeat, mute, unmute
-
 All commands and playback can target a specified Roon output zone.
 
 ## History
@@ -123,6 +123,11 @@ Currently this project has morphed primarily into a set of command line tools to
 various aspects of Roon remotely. There is still the capability to augment this command
 line control with Siri voice commands that trigger an Apple Shortcut which executes a
 command via SSH. But what we have here in the repository are the command line tools.
+
+RoonCommandLine v2.0.0 introduced Debian package format installation accompanied with
+extensive automated configuration. In most environments, deployment of this package
+will require little to no manual configuration other than enabling SSH public key
+authentication if desired.
 
 ## Installation
 
@@ -173,7 +178,9 @@ make sure the user has sudo privileges.
 
 Default settings are applied during the installation process. The primary area
 of post-installation configuration is setting the ZONEGROUPS and DEFAULT values
-in the file `/usr/local/Roon/etc/roon_api.ini`
+in the file `/usr/local/Roon/etc/roon_api.ini`. The RoonCommandLine installation
+attempts to automate this configuration and should have provided a good starting
+point with default settings in `roon_api.ini` but you may wish to adjust these.
 
 #### Zone groupings and defaults
 
@@ -184,7 +191,8 @@ clicking the "pencil" icon next to the name in the Roon audio settings screen.
 Modify `roon_api.ini` with your desired zone groupings and default values.
 In particular, set the `DefaultZone` value in the DEFAULT section to a zone
 that will be available, enabled, and one you wish to use as your primary
-default fallback zone.
+default fallback zone. The installation picked a DefaultZone for you and
+you may be satisfied with that automatic setting.
 
 Note, the DefaultZone setting is used when no zone is specified,
 RoonCommandLine commands all accept a `-z zone` argument that can be
@@ -213,6 +221,13 @@ installed on the same system as the Python Roon API and backend scripts.
 In this configuration, SSH is no longer required and the roon commands can
 be executed locally. In order to enable local execution rather than remote
 execution via SSH, run the command `roon -L`
+
+**Another Note:** References in this document to SSH are not referring to
+access to the Roon Core. Rather, the SSH facility can be used to remotely
+access the system on which the RoonCommandLine tools are installed. All
+communication and access to the Roon Core is accomplished via the Roon API.
+No changes are ever made to the Roon Core nor is any access to the Roon
+Core allowed other than via the API.
 
 ### Manual installation
 
