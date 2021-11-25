@@ -211,7 +211,7 @@ case "$1" in
             withDefOne=`echo "${withDefaultZone}" | awk -F ',' ' { print $1 } '`
             groupOne="${defaultZone}, ${withDefOne}"
             [ ${numWith} -gt 1 ] && {
-              withDefTwo=`echo "${withDefaultZone}" | awk -F ',' ' { print $1 "," $2 } '`
+              withDefTwo=`echo "${withDefaultZone}" | awk -F ',' ' { print $1 ", " $2 } '`
               groupTwo="${defaultZone}, ${withDefTwo}"
             }
           }
@@ -223,7 +223,7 @@ case "$1" in
           numWith=`echo "${withSecondZone}" | awk -F ',' ' { print NF } '`
           if [ ${numWith} -gt 1 ]
           then
-            withDefOne=`echo "${withSecondZone}" | awk -F ',' ' { print $1 "," $2 } '`
+            withDefOne=`echo "${withSecondZone}" | awk -F ',' ' { print $1 ", " $2 } '`
             groupRee="${secondZone}, ${withDefOne}"
           else
             [ ${numWith} -gt 0 ] && {
@@ -240,12 +240,12 @@ case "$1" in
           numWith=`echo "${withLastZone}" | awk -F ',' ' { print NF } '`
           if [ ${numWith} -gt 2 ]
           then
-            withDefOne=`echo "${withLastZone}" | awk -F ',' ' { print $(NF-2) "," $(NF-1) "," $(NF) } '`
+            withDefOne=`echo "${withLastZone}" | awk -F ',' ' { print $(NF-2) ", " $(NF-1) ", " $(NF) } '`
             groupFor="${lastZone}, ${withDefOne}"
           else
             if [ ${numWith} -gt 1 ]
             then
-              withDefOne=`echo "${withLastZone}" | awk -F ',' ' { print $(NF-1) "," $(NF) } '`
+              withDefOne=`echo "${withLastZone}" | awk -F ',' ' { print $(NF-1) ", " $(NF) } '`
               groupFor="${lastZone}, ${withDefOne}"
             else
               [ ${numWith} -gt 0 ] && {
