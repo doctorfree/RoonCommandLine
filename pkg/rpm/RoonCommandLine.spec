@@ -1,6 +1,6 @@
 Name: RoonCommandLine
-Version:    2.0.0
-Release:    1
+Version:    %{_version}
+Release:    %{_release}
 Summary:    RoonCommandLine suite of tools
 License:    MIT
 BuildArch:  noarch
