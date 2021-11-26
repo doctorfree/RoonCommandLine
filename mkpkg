@@ -136,6 +136,12 @@ cd "${SRC}/${SRC_NAME}"
 [ -d pkg/rpm ] && cp -a pkg/rpm ${OUT_DIR}/rpm
 [ -d ${OUT_DIR}/rpm ] || mkdir ${OUT_DIR}/rpm
 
+have_rpm=`type -p rpmbuild`
+[ "${have_rpm}" ] || {
+  ${SUDO} apt-get update
+  ${SUDO} apt-get install rpm -y
+}
+
 rpmbuild -ba --build-in-place \
    --define "_topdir ${OUT_DIR}" \
    --define "_sourcedir ${OUT_DIR}" \
@@ -144,7 +150,8 @@ rpmbuild -ba --build-in-place \
    --buildroot ${SRC}/${SRC_NAME}/${OUT_DIR}/BUILDROOT \
    ${OUT_DIR}/rpm/${PKG_NAME}.spec
 
-cd "${SRC}/${SRC_NAME}"
+${SUDO} cp dist/${PKG_NAME}_${PKG_VER}/RPMS/*/*.rpm dist
+
 [ "${GCI}" ] || {
     [ -d releases ] || mkdir releases
     [ -d releases/${PKG_VER} ] || mkdir releases/${PKG_VER}
