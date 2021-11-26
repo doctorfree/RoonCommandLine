@@ -158,7 +158,8 @@ for user in /Users/*
 do
     [ "${user}" == "/Users/*" ] && continue
     [ -d ${user} ] && {
-        users="${users} ${user}"
+        base_user=`basename ${user}`
+        users="${users} ${base_user}"
         numusers=`expr ${numusers} + 1`
     }
 done
