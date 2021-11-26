@@ -47,7 +47,7 @@ mkdir dist
 
 [ -d ${OUT_DIR} ] && rm -rf ${OUT_DIR}
 mkdir ${OUT_DIR}
-cp -a pkg/${PKG} ${OUT_DIR}/DEBIAN
+cp -a pkg/debian ${OUT_DIR}/DEBIAN
 chmod 755 ${OUT_DIR} ${OUT_DIR}/DEBIAN ${OUT_DIR}/DEBIAN/*
 
 echo "Package: ${PKG_NAME}

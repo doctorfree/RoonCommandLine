@@ -20,6 +20,7 @@
 1. [History](#history)
 1. [Installation](#installation)
     1. [Debian Package installation](#debian-package-installation)
+    1. [RPM Package installation](#rpm-package-installation)
     1. [Mac OS X installation](#mac-os-x-installation)
     1. [Post installation configuration](#post-installation-configuration)
         1. [Zone groupings and defaults](#zone-groupings-and-defaults)
@@ -29,23 +30,17 @@
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
 1. [Contents](#contents)
-## Overview
-## History
-## Installation
-## Removal
-## Troubleshooting
-## Usage
-## Contents
 
 ## Overview
 
 The Roon Command Line project provides Bash and Python scripts to enable
 command line control of the Roon audio system over a local network.
 
-It requires a [Roon Core System](https://roonlabs.com/) as well as the
-[Python Roon API](https://github.com/pavoni/pyroon). The Python Roon API
-will be installed as part of the RoonCommandLine installation process if
-it is not already present.
+It requires a [Roon Core System](https://roonlabs.com/),
+[Python 3](https://www.python.org/), and the
+[Python Roon API](https://github.com/pavoni/pyroon).
+The Python Roon API will be installed as part of the RoonCommandLine
+installation process if it is not already present.
 
 **Note:** No modifications are made to the Roon Core. The RoonCommandLine
 package resides entirely on other systems within your local area network.
@@ -94,7 +89,7 @@ or tags which contain the specified substring.
 
 All commands and playback can target a specified Roon output zone.
 
-## History
+### History
 
 This project began as an attempt to control Roon with Siri voice commands.
 Several users had posted in the Roon forums various ways to use Siri to control Roon.
@@ -124,21 +119,28 @@ various aspects of Roon remotely. There is still the capability to augment this 
 line control with Siri voice commands that trigger an Apple Shortcut which executes a
 command via SSH. But what we have here in the repository are the command line tools.
 
-RoonCommandLine v2.0.0 introduced Debian package format installation accompanied with
-extensive automated configuration. In most environments, deployment of this package
-will require little to no manual configuration other than enabling SSH public key
-authentication if desired.
+RoonCommandLine v2.0.0 introduced Debian and RPM format package installation
+accompanied with extensive automated configuration. In most environments, deployment
+of this package will require little to no manual configuration other than enabling
+SSH public key authentication if desired.
 
 ## Installation
 
 RoonCommandLine v2.0.0 and later can be installed on Linux systems using
-the Debian packaging format. Support is also included for installing on
-Mac OS X. Other systems will require a manual installation described below.
+either the Debian packaging format or the Red Hat Package Manager (RPM).
+Support is also included for installing on Mac OS X. Other systems will
+require a manual installation described below. The Mac OS X installation
+procedure may also work under Microsoft's Windows Subsystem for Linux but
+it is as yet untested.
 
 ### Debian Package installation
 
+Many Linux distributions, most notably Ubuntu and its derivatives, use the
+Debian packaging system.
+
 To tell if a Linux system is Debian based it is usually sufficient to
-check for the existence of the file `/etc/debian_version`
+check for the existence of the file `/etc/debian_version` and/or examine the
+contents of the file `/etc/os-release`.
 
 To install on a Debian based Linux system, download the latest Debian format
 package from the
@@ -147,7 +149,31 @@ package from the
 Install the RoonCommandLine package by executing the command
 
 ```bash
-sudo apt install ./RoonCommandLine_<version>.deb
+sudo apt install ./RoonCommandLine_<version>-<release>.deb
+```
+or
+```bash
+sudo dpkg -i ./RoonCommandLine_<version>-<release>.deb
+```
+
+### RPM Package installation
+
+Red Hat Linux, SUSE Linux, and their derivatives use the RPM packaging
+format. RPM based Linux distributions include Fedora, AlmaLinux, CentOS,
+openSUSE, OpenMandriva, Mandrake Linux, Red Hat Linux, and Oracle Linux.
+
+To install on an RPM based Linux system, download the latest RPM format
+package from the
+[RoonCommandLine Releases](https://gitlab.com/doctorfree/RoonCommandLine/-/releases).
+
+Install the RoonCommandLine package by executing the command
+
+```bash
+sudo yum localinstall ./RoonCommandLine_<version>-<release>.rpm
+```
+or
+```bash
+sudo rpm -i ./RoonCommandLine_<version>-<release>.rpm
 ```
 
 ### Mac OS X installation
@@ -162,9 +188,8 @@ have `Homebrew` installed on your Mac then you can install Python 3 with:
 Once the Python 3 dependency is met, install RoonCommandLine by
 cloning the RoonCommandLine repository and executing the `Install` script:
 
-<code>git clone `https://gitlab.com/doctorfree/RoonCommandLine.git`</code>
-
 ```bash
+    git clone `https://gitlab.com/doctorfree/RoonCommandLine.git`
     cd RoonCommandLine
     ./Install
 ```
@@ -311,6 +336,22 @@ package by executing the command:
 
 ```bash
     sudo apt remove rooncommandline
+```
+or
+```bash
+    sudo dpkg -r rooncommandline
+```
+
+On RPM based Linux systems where the RoonCommandLine package was installed
+using the RoonCommandLine RPM format package, remove the RoonCommandLine
+package by executing the command:
+
+```bash
+    sudo yum remove RoonCommandLine
+```
+or
+```bash
+    sudo rpm -e RoonCommandLine
 ```
 
 On Mac OS X systems, the RoonCommandLine scripts, patches,
