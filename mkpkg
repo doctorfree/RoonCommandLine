@@ -29,6 +29,7 @@ dpkg=`type -p dpkg-deb`
 
 . "${SRC}/${SRC_NAME}/VERSION"
 PKG_VER=${VERSION}
+PKG_REL=${RELEASE}
 
 umask 0022
 
@@ -49,8 +50,8 @@ mkdir ${OUT_DIR}
 cp -a pkg/${PKG} ${OUT_DIR}/DEBIAN
 chmod 755 ${OUT_DIR} ${OUT_DIR}/DEBIAN ${OUT_DIR}/DEBIAN/*
 
-echo "Package: ${PKG}
-Version: ${PKG_VER}
+echo "Package: ${PKG_NAME}
+Version: ${PKG_VER}-${PKG_REL}
 Section: misc
 Priority: optional
 Architecture: all
@@ -114,13 +115,13 @@ ${SUDO} chown -R root:root ${OUT_DIR}/${ROON}
 
 cd dist
 echo "Building ${PKG_NAME}_${PKG_VER} package"
-${SUDO} dpkg-deb --build ${PKG_NAME}_${PKG_VER}
+${SUDO} dpkg --build ${PKG_NAME}_${PKG_VER} ${PKG_NAME}_${PKG_VER}-${PKG_REL}.deb
 cd ${PKG_NAME}_${PKG_VER}
 echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
-tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-dist.tar.gz
+tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}-dist.tar.gz
 [ "${GCI}" ] || {
     echo "Creating zip archive of ${PKG_NAME} ${PKG_VER} distribution"
-    zip -q -r ../${PKG_NAME}_${PKG_VER}-dist.zip usr
+    zip -q -r ../${PKG_NAME}_${PKG_VER}-${PKG_REL}-dist.zip usr
 }
 
 cd ..
@@ -135,10 +136,11 @@ cd "${SRC}/${SRC_NAME}"
 [ -d pkg/rpm ] && cp -a pkg/rpm ${OUT_DIR}/rpm
 [ -d ${OUT_DIR}/rpm ] || mkdir ${OUT_DIR}/rpm
 
-# Not working yet
 rpmbuild -ba --build-in-place \
    --define "_topdir ${OUT_DIR}" \
    --define "_sourcedir ${OUT_DIR}" \
+   --define "_version ${PKG_VER}" \
+   --define "_release ${PKG_REL}" \
    --buildroot ${SRC}/${SRC_NAME}/${OUT_DIR}/BUILDROOT \
    ${OUT_DIR}/rpm/${PKG_NAME}.spec
 
