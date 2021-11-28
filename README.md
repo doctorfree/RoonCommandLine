@@ -18,6 +18,7 @@
 
 1. [Overview](#overview)
 1. [History](#history)
+1. [Requirements](#requirements)
 1. [Installation](#installation)
     1. [Debian Package installation](#debian-package-installation)
     1. [RPM Package installation](#rpm-package-installation)
@@ -35,12 +36,6 @@
 
 The Roon Command Line project provides Bash and Python scripts to enable
 command line control of the Roon audio system over a local network.
-
-It requires a [Roon Core System](https://roonlabs.com/),
-[Python 3](https://www.python.org/), and the
-[Python Roon API](https://github.com/pavoni/pyroon).
-The Python Roon API will be installed as part of the RoonCommandLine
-installation process if it is not already present.
 
 **Note:** No modifications are made to the Roon Core. The RoonCommandLine
 package resides entirely on other systems within your local area network.
@@ -100,8 +95,8 @@ utilize the Roon API to control Roon.
 
 Apple SSH shortcuts can be used to execute commands on systems that allow SSH access.
 I used an Ubuntu 20.10 system recently installed to install the Python Roon API project
-(pip install roonapi) and quickly cobbled together a Python script based on one of the
-examples in that project. The Python script accepts an argument specifying an artist
+(pip install roonapi) and quickly cobbled together a Python script based on one of
+the examples in that project. The Python script accepts an argument specifying an artist
 name in my Roon library. It then uses the Roon API to play music from my library by
 that artist in the specified zone.
 
@@ -123,6 +118,20 @@ RoonCommandLine v2.0.0 introduced Debian and RPM format package installation
 accompanied with extensive automated configuration. In most environments, deployment
 of this package will require little to no manual configuration other than enabling
 SSH public key authentication if desired.
+
+## Requirements
+
+RoonCommandLine can be installed on either Linux or Mac OS X systems.
+It requires a [Roon Core System](https://roonlabs.com/) reachable on the
+local network, [Python 3](https://www.python.org/), and the
+[Python Roon API](https://github.com/pavoni/pyroon). The Python Roon API
+will be installed as part of the RoonCommandLine installation process.
+
+Ensure that a Roon Core System is running on the local area network and
+Python 3 is installed on the Linux or Mac on which you wish to install
+the RoonCommandLine package. Most modern Linux systems will have Python 3
+already installed. A good guide for installing Python 3 on Mac OS X can
+be found at https://docs.python-guide.org/starting/install3/osx/
 
 ## Installation
 
