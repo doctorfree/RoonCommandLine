@@ -15,9 +15,9 @@ ROON_SITE_DIR=
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+    SITES=($(sudo python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
 else
-    SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
+    SITES=($(sudo python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
 fi
 for site in ${SITES[@]}
 do
@@ -35,19 +35,20 @@ then
     do
         [ "$i" == "*.orig" ] && continue
         j=`echo $i | sed -e "s/.orig//"`
-        mv $i $j
+        sudo mv $i $j
     done
 else
     echo "Could not locate the roonapi Python module installation directory"
     echo "Python Roon API patch not reversed."
 fi
 
-if [ "${have_python3}" ]
-then
-    python3 -m pip uninstall roonapi -y
-else
-    python -m pip uninstall roonapi -y
-fi
+# Don't uninstall roonapi Python module, they might be using it for something else
+# if [ "${have_python3}" ]
+# then
+#     sudo python3 -m pip uninstall roonapi -y
+# else
+#     sudo python -m pip uninstall roonapi -y
+# fi
 
 echo ""
 echo "RoonCommandLine uninstalled"

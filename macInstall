@@ -127,9 +127,9 @@ ${SUDO} chown -R root:wheel ${ROON}
 # ${PIP} install roonapi
 if [ "${have_python3}" ]
 then
-    python3 -m pip install roonapi
+    sudo python3 -m pip install roonapi
 else
-    python -m pip install roonapi
+    sudo python -m pip install roonapi
 fi
 
 # Try to configure the roon script with the IP and username
