@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+Sun Nov 28 13:43:11 2021 -0800 3fdf95b :
+   Use sudo to install roonapi in Mac installs
+Sat Nov 27 17:49:31 2021 -0800 90f2de0 :
+   Add Requirements section
+Fri Nov 26 15:21:56 2021 -0800 7255c0b :
+   Remove leading path component up to username when selecting SSH user
+Fri Nov 26 15:16:35 2021 -0800 dba2305 :
+   Don't use -y option with python pip module install
+Fri Nov 26 15:05:18 2021 -0800 b515e5e :
+   Updated CHANGELOG in preparation for release, refer to README in INSTALL document
 Fri Nov 26 14:44:39 2021 -0800 a213ec8 :
    Copy rpm into dist and add it to CI artifacts
 Fri Nov 26 06:15:12 2021 -0800 013bf8d :
