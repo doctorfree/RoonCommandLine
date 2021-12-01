@@ -295,19 +295,6 @@ else
     echo "List commands will not function properly."
 fi
 
-DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-# Remove leading and trailing spaces in DEFZONE
-DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-# Set ROON_ZONE in pyroonconf if not already set
-if [ -f ${ROONCONF} ]
-then
-    grep ROON_ZONE ${ROONCONF} > /dev/null || {
-        echo "ROON_ZONE=\"$DEFZONE\"" | ${SUDO} tee -a ${ROONCONF} > /dev/null
-    }
-else
-    echo "ROON_ZONE=\"$DEFZONE\"" | ${SUDO} tee ${ROONCONF} > /dev/null
-fi
-
 [ "${USER}" ] && {
     GROUP=`id -g -n ${USER}`
     ${SUDO} chown -R ${USER}:${GROUP} ${ROONETC}
@@ -360,6 +347,19 @@ cat ${ROONETC}/roon_api.ini | \
             -e "s/__DEF_ZONE__/${defaultZone}/" > /tmp/zones$$
 ${SUDO} cp /tmp/zones$$ ${ROONETC}/roon_api.ini
 ${SUDO} rm -f /tmp/zones$$
+
+DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+# Remove leading and trailing spaces in DEFZONE
+DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+# Set ROON_ZONE in pyroonconf if not already set
+if [ -f ${ROONCONF} ]
+then
+    grep ROON_ZONE ${ROONCONF} > /dev/null || {
+        echo "ROON_ZONE=\"$DEFZONE\"" | ${SUDO} tee -a ${ROONCONF} > /dev/null
+    }
+else
+    echo "ROON_ZONE=\"$DEFZONE\"" | ${SUDO} tee ${ROONCONF} > /dev/null
+fi
 
 echo ""
 echo "Verify the 'server' and 'user' settings in the roon script are correct"
