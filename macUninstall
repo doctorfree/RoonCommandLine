@@ -21,6 +21,7 @@ else
 fi
 for site in ${SITES[@]}
 do
+    site=`echo $site | sed -e "s/'//g"`
     [ -d ${site}/roonapi ] && {
         ROON_SITE_DIR=${site}/roonapi
         break
