@@ -27,7 +27,10 @@
         1. [Zone groupings and defaults](#zone-groupings-and-defaults)
         1. [SSH public key authentication](#ssh-public-key-authentication)
     1. [Manual installation](#manual-installation)
+1. [Remote deployment](#remote-deployment)
+    1. [RoonCommandLine Light deployment](#rooncommandline-light-deployment)
 1. [Removal](#removal)
+1. [Screenshots](#screenshots)
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
 1. [Contents](#contents)
@@ -39,18 +42,6 @@ command line control of the Roon audio system over a local network.
 
 **Note:** No modifications are made to the Roon Core. The RoonCommandLine
 package resides entirely on other systems within your local area network.
-
-A frontend Bash script can be installed wherever you want to issue Roon
-commands. Roon commands are issued via public key authenticated SSH commands
-sent to a system with the Python Roon API installed. That system then parses
-the commands and communicates with the Roon Core via the Roon API.
-
-Alternatively, if SSH public key authentication is not desired or available,
-install the Roon Command Line frontend Bash script on the same system with
-the Python Roon API. After initial setup, run the command "roon -L" to
-configure the roon command for local execution rather than remote execution
-via SSH. This eliminates the need to setup SSH public key authentication but
-restricts execution of the Roon Command Line frontend to that single system.
 
 Currently the command line Roon control scripts provide support for:
 - Play album by album name
@@ -75,12 +66,13 @@ Currently the command line Roon control scripts provide support for:
   - mute
   - unmute
 - List albums, artists, genres, playlists, tags, or Roon zones
+- Set the default Roon output zone
 - Select Roon audio zone or zone grouping
 
 In addition, search capabilities have been added to the scripts
 with partial matching facilities. Thus a substring can be supplied to use as a
 search term with partial matching returning albums, artists, playlists, genres,
-or tags which contain the specified substring.
+or tags which contain the specified substring (case sensitive).
 
 All commands and playback can target a specified Roon output zone.
 
@@ -123,7 +115,8 @@ SSH public key authentication if desired.
 
 RoonCommandLine can be installed on either Linux or Mac OS X systems.
 It requires a [Roon Core System](https://roonlabs.com/) reachable on the
-local network, [Python 3](https://www.python.org/), and the
+local network, [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)),
+[Python 3](https://www.python.org/), and the
 [Python Roon API](https://github.com/pavoni/pyroon). The Python Roon API
 will be installed as part of the RoonCommandLine installation process.
 
@@ -337,6 +330,51 @@ you wish to issue command line Roon controls.
     # "roon -L" on that system. This will enable local execution of the
     # Roon Command Line scripts rather than remote execution via SSH.
 
+## Remote deployment
+
+Recommended deployment of the RoonCommandLine package is to install the
+entire package on every system from which you wish to execute Roon control
+commands. This deployment ensures you have all commands available without
+the need to configure SSH public key authentication. If you install the
+entire package on every system you wish to use for Roon command line control
+then you can disregard the following instructions on "RoonCommandLine Light"
+deployment.
+
+### RoonCommandLine Light deployment
+
+Not all systems satisfy the RoonCommandLine requirement of Python 3 and Pip.
+On those systems that do not satisfy the Python/Pip requirement it is possible
+to install just the `roon` command and RoonCommandLine configuration files.
+
+After copying /usr/local/bin/roon and the /usr/local/Roon/etc/ directory
+to the target system on which you wish to run Roon commands, perform the
+following setup:
+
+```bash
+sudo mkdir -p /usr/local/bin
+sudo cp roon /usr/local/bin/roon
+sudo chmod 755 /usr/local/bin/roon
+# Edit the `server` and `user` settings near the top of the script
+sudo vi /usr/local/bin/roon
+sudo mkdir /usr/local/Roon
+sudo mkdir /usr/local/Roon/etc
+sudo cp etc/pyroonconf /usr/local/Roon/etc/pyroonconf
+sudo cp etc/roon_api.ini /usr/local/Roon/etc/roon_api.ini
+# Make the RoonCommandLine configuration directory writeable by your user
+USER=`id -u -n`
+GROUP=`id -g -n`
+sudo chown -R ${USER}:${GROUP} /usr/local/Roon/etc
+sudo chmod 755 /usr/local/Roon/etc
+sudo chmod 644 /usr/local/Roon/etc/*
+```
+
+**Note** A "RoonCommandLine Light" deployment of this nature not only requires
+significant manual setup but will also require the configuration of SSH public
+key authentication between the target system and a system on which the
+RoonCommandLine package was installed. For this reason, it is recommended that
+deployments install the entire package on every system, eliminating the need
+for extensive manual configuration and SSH public key authentication.
+
 ## Removal
 
 On Debian based Linux systems where the RoonCommandLine package was installed
@@ -372,6 +410,14 @@ RoonCommandLine source directory:
     cd RoonCommandLine
     ./Uninstall
 ```
+
+## Screenshots
+
+<p float="left">
+Interactive menus when invoked with no arguments<br/>
+  <img src="screenshots/Roon_UI.jpg">
+  <img src="screenshots/Roon_Set_Zone.jpg">
+</p>
 
 ## Troubleshooting
 
@@ -468,18 +514,18 @@ you automatically during the installation process but may have been misconfigure
 
 ## Usage
 
-The "roon" shell script is installed on any system that you want to utilize
-for command line control of Roon. It must be on a system that is able to SSH
-to the system on which the Python Roon API scripts are installed.
-
-Note, the first time you execute the roon shell script you may have to enable
+**Note:** The first time you execute the `roon` command you may have to enable
 the Python Roon API extension by clicking "Settings" -> "Extensions" -> "Enable"
-in a Roon Remote client window.
+in a Roon Remote client window. On most systems this will not be necessary as
+this was performed during initial installation.
 
 The Python Roon API scripts must be installed on a system that is on the same
-local network as the Roon Core. The "roon" shell script is the primary user
+local network as the Roon Core. The `roon` shell script is the primary user
 interface. It accepts a wide variety of arguments and sends a command to the
-Python Roon API system via SSH.
+Python Roon API system which then communicates with the Roon Core.
+
+If no arguments are provided to the `roon` command then an interactive dialog
+is presented from which the user can select commands and queries. 
 
 Here is the current output of "roon -u" which displays a usage message.
 
@@ -532,11 +578,15 @@ with which a partial match can be made. In order to play media, either the full
 name of the desired media or enough of a substring to uniquely match must be
 supplied. This applies to playing an album, artist, genre, playlist, or tag.
 For example, the command "roon -a Tull" would play media by artist "Jethro Tull"
-unless there were multiple artist name matches to the substring "Tull".
+unless there were multiple artist name matches to the substring "Tull". All partial
+matching is case sensitive - "roon -a tull" would not match "Jethro Tull".
 
 ## Contents
 
-[**roon**](bin/roon) - Shell script frontend to run on systems that can SSH in to the Roon API server. This script can be used to issue Roon commands via the command line and SSH.
+[**roon**](bin/roon) - Shell script frontend that provides the primary user
+interface to communicate commands via the Python Roon API. Recommended usage
+is to issue Roon commands and queries via the `roon` frontend rather than
+executing the following commands directly.
 
 [**clone_pyroon**](bin/clone_pyroon) - Shell script to retrieve the pyroon project source code from Github and apply my patches
 
@@ -571,8 +621,6 @@ unless there were multiple artist name matches to the substring "Tull".
 [**set_zone_group**](bin/set_zone_group) - Set one of the Roon Zone groupings specified in roon_api.ini
 
 [**zone_command**](bin/zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, mute, unmute, next track, previous track)
-
-[**INSTALL.md**](INSTALL.md) - Describes the installation process
 
 [**LICENSE**](LICENSE) - Apache License version 2.0
 
