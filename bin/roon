@@ -419,7 +419,7 @@ select_media() {
   while true
   do
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get/Set Zone" "Play" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Genres" "List Playlists" "List Tags" "List Zones" "Play Album" "Play Artist" "Play Genre" "Play Playlist" "Play Radio" "Play Tag" "Quit")
+    options=("Get/Set Zone" "Play" "Play Radio" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Genres" "List Playlists" "List Tags" "List Zones" "Play Album" "Play Artist" "Play Genre" "Play Playlist" "Play Tag" "Quit")
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
@@ -453,6 +453,12 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c play\""
                 fi
+                printf " Done\n\n"
+                break
+                ;;
+            "Play Radio",*|*,"Play Radio")
+                printf "\nExecuting Roon command to play radio ..."
+                play_rp
                 printf " Done\n\n"
                 break
                 ;;
@@ -623,12 +629,6 @@ select_media() {
                 ;;
             "Play Playlist",*|*,"Play Playlist")
                 select_media playlist
-                break
-                ;;
-            "Play Radio",*|*,"Play Radio")
-                printf "\nExecuting Roon command to play radio ..."
-                play_rp
-                printf " Done\n\n"
                 break
                 ;;
             "Play Tag",*|*,"Play Tag")
