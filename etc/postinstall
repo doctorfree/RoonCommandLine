@@ -35,7 +35,6 @@ IP=`hostname -I | awk ' { print $1 } '`
 USER="root"
 numusers=0
 users=
-usessh=1
 for user in /home/*
 do
     [ "${user}" == "/home/*" ] && continue
@@ -53,7 +52,6 @@ done
     do
       case "$opt,$REPLY" in
         "None",*|*,"None")
-            usessh=
             break
             ;;
         *)
@@ -70,16 +68,12 @@ done
 
 echo "Setting the Python Roon API server IP address to $IP"
 
-if [ "${usessh}" ]
-then
-    echo "Setting the Python Roon API username for SSH access to $USER"
-else
-    echo "SSH access disabled. Enabling local access in ${ROONCONF}"
-    grep -v ^LOCAL= ${ROONCONF} > /tmp/roon$$
-    echo "LOCAL=true" >> /tmp/roon$$
-    cp /tmp/roon$$ ${ROONCONF}
-    rm -f /tmp/roon$$
-fi
+echo "Enabling local access in ${ROONCONF}"
+grep -v ^LOCAL= ${ROONCONF} > /tmp/roon$$
+echo "LOCAL=true" >> /tmp/roon$$
+cp /tmp/roon$$ ${ROONCONF}
+rm -f /tmp/roon$$
+
 cat ${ROON}/bin/roon | sed -e "s/XX.X.X.XXX/$IP/" -e "s/SSH_USERNAME/$USER/" > /tmp/roon$$
 cp ${ROON}/bin/roon ${ROON}/bin/roon.orig
 cp /tmp/roon$$ ${ROON}/bin/roon
