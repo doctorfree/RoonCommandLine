@@ -78,6 +78,9 @@ term "all" indicates match all albums, artists, playlists, genres, or tags.
 
 All commands and playback can target a specified Roon output zone.
 
+Additional detail and info can be found in the
+[RoonCommandLine Wiki](https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/home).
+
 ## Requirements
 
 RoonCommandLine can be installed on either Linux or Mac OS X systems.
