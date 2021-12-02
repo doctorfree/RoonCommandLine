@@ -388,7 +388,7 @@ select_media() {
   else
     media_options=( $(ssh $user@$server "bash -l -c \"${listcom} all\"") )
   fi
-  printf " Done\n"
+  printf " Done\n\n"
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   media_options+=("Main Menu")
   while true
@@ -419,11 +419,11 @@ select_media() {
   while true
   do
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get Zone" "Set Zone" "Play" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Genres" "List Playlists" "List Tags" "List Zones" "Play Album" "Play Artist" "Play Genre" "Play Playlist" "Play Tag" "Quit")
+    options=("Get/Set Zone" "Play" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Genres" "List Playlists" "List Tags" "List Zones" "Play Album" "Play Artist" "Play Genre" "Play Playlist" "Play Radio" "Play Tag" "Quit")
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
-            "Get Zone",*|*,"Get Zone")
+            "Get/Set Zone",*|*,"Get/Set Zone")
                 [ -f ${ROONCONF} ] && . ${ROONCONF}
                 if [ "${LOCAL}" = true ]
                 then
@@ -442,9 +442,6 @@ select_media() {
                         echo "No default Roon Zone is set in ${ROONCONF}"
                     fi
                 fi
-                break
-                ;;
-            "Set Zone",*|*,"Set Zone")
                 select_zone
                 break
                 ;;
@@ -456,7 +453,7 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c play\""
                 fi
-                printf " Done\n"
+                printf " Done\n\n"
                 break
                 ;;
             "Pause",*|*,"Pause")
@@ -467,7 +464,7 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c pause\""
                 fi
-                printf " Done\n"
+                printf " Done\n\n"
                 break
                 ;;
             "Next Track",*|*,"Next Track")
@@ -478,7 +475,7 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c next\""
                 fi
-                printf " Done\n"
+                printf " Done\n\n"
                 break
                 ;;
             "Previous Track",*|*,"Previous Track")
@@ -489,7 +486,7 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c previous\""
                 fi
-                printf " Done\n"
+                printf " Done\n\n"
                 break
                 ;;
             "Mute",*|*,"Mute")
@@ -500,7 +497,7 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c mute\""
                 fi
-                printf " Done\n"
+                printf " Done\n\n"
                 break
                 ;;
             "Unmute",*|*,"Unmute")
@@ -511,7 +508,7 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c unmute\""
                 fi
-                printf " Done\n"
+                printf " Done\n\n"
                 break
                 ;;
             "Repeat ON",*|*,"Repeat ON")
@@ -522,7 +519,7 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c repeat\""
                 fi
-                printf " Done\n"
+                printf " Done\n\n"
                 break
                 ;;
             "Repeat OFF",*|*,"Repeat OFF")
@@ -533,7 +530,7 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c unrepeat\""
                 fi
-                printf " Done\n"
+                printf " Done\n\n"
                 break
                 ;;
             "Shuffle ON",*|*,"Shuffle ON")
@@ -544,7 +541,7 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c shuffle\""
                 fi
-                printf " Done\n"
+                printf " Done\n\n"
                 break
                 ;;
             "Shuffle OFF",*|*,"Shuffle OFF")
@@ -555,7 +552,7 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c unshuffle\""
                 fi
-                printf " Done\n"
+                printf " Done\n\n"
                 break
                 ;;
             "List Albums",*|*,"List Albums")
@@ -626,6 +623,12 @@ select_media() {
                 ;;
             "Play Playlist",*|*,"Play Playlist")
                 select_media playlist
+                break
+                ;;
+            "Play Radio",*|*,"Play Radio")
+                printf "\nExecuting Roon command to play radio ..."
+                play_rp
+                printf " Done\n\n"
                 break
                 ;;
             "Play Tag",*|*,"Play Tag")
