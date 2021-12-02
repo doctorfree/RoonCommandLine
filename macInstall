@@ -201,8 +201,13 @@ done
 echo "Setting the Python Roon API server IP address to $IP"
 
 echo "Enabling local access in ${ROONCONF}"
-grep -v ^LOCAL= ${ROONCONF} > /tmp/roon$$
-echo "LOCAL=true" >> /tmp/roon$$
+if [ -f ${ROONCONF} ]
+then
+    grep -v ^LOCAL= ${ROONCONF} > /tmp/roon$$
+    echo "LOCAL=true" >> /tmp/roon$$
+else
+    echo "LOCAL=true" > /tmp/roon$$
+fi
 ${SUDO} cp /tmp/roon$$ ${ROONCONF}
 ${SUDO} rm -f /tmp/roon$$
 
