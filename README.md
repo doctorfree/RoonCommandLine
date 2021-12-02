@@ -17,7 +17,6 @@
 ## Table of contents
 
 1. [Overview](#overview)
-1. [History](#history)
 1. [Requirements](#requirements)
 1. [Installation](#installation)
     1. [Debian Package installation](#debian-package-installation)
@@ -33,6 +32,8 @@
 1. [Screenshots](#screenshots)
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
+1. [History and Motivation](#history-and-motivation)
+    1. [Why would I need or want command line control of Roon](#why-would-i-need-or-want-command-line-control-of-roon)
 1. [Contents](#contents)
 
 ## Overview
@@ -75,41 +76,6 @@ search term with partial matching returning albums, artists, playlists, genres,
 or tags which contain the specified substring (case sensitive).
 
 All commands and playback can target a specified Roon output zone.
-
-### History
-
-This project began as an attempt to control Roon with Siri voice commands.
-Several users had posted in the Roon forums various ways to use Siri to control Roon.
-These usually took the form of a fake device in HomeBridge that then communicates with
-HomeKit and Siri. This seemed cool but maybe overkill. I was able to get Siri voice
-control of Roon working with simple SSH shortcuts that execute Python scripts which
-utilize the Roon API to control Roon.
-
-Apple SSH shortcuts can be used to execute commands on systems that allow SSH access.
-I used an Ubuntu 20.10 system recently installed to install the Python Roon API project
-(pip install roonapi) and quickly cobbled together a Python script based on one of
-the examples in that project. The Python script accepts an argument specifying an artist
-name in my Roon library. It then uses the Roon API to play music from my library by
-that artist in the specified zone.
-
-On my iPhone I then created shortcuts which use the “Run script over SSH”
-option for Apple Scripting shortcuts. The shortcuts execute a Bash command which is a
-shell script that executes the Python script with appropriate arguments. It all seems
-to work. I did run into a few gotchas. It seems with current Python/Pip installs you
-need to specify an environment variable telling Python where the Pip modules are located.
-So I needed a login shell to pick that up but I could not figure out how to tell the
-Apple shortcut to give me an SSH login shell. The Python env variable is set in the
-shell script the SSH session executes.
-
-Currently this project has morphed primarily into a set of command line tools to control
-various aspects of Roon remotely. There is still the capability to augment this command
-line control with Siri voice commands that trigger an Apple Shortcut which executes a
-command via SSH. But what we have here in the repository are the command line tools.
-
-RoonCommandLine v2.0.0 introduced Debian and RPM format package installation
-accompanied with extensive automated configuration. In most environments, deployment
-of this package will require little to no manual configuration other than enabling
-SSH public key authentication if desired.
 
 ## Requirements
 
@@ -154,7 +120,7 @@ Install the RoonCommandLine package by executing the command
 sudo apt install ./RoonCommandLine_<version>-<release>.deb
 ```
 or
-```bash
+```console
 sudo dpkg -i ./RoonCommandLine_<version>-<release>.deb
 ```
 
@@ -174,7 +140,7 @@ Install the RoonCommandLine package by executing the command
 sudo yum localinstall ./RoonCommandLine_<version>-<release>.rpm
 ```
 or
-```bash
+```console
 sudo rpm -i ./RoonCommandLine_<version>-<release>.rpm
 ```
 
@@ -312,9 +278,11 @@ For example, on the system where the Python Roon API is installed:
     # In a Roon Remote client window click "Settings" -> "Extensions" -> "Enable"
 ```
 
-The third component is the "roon" shell script. This should be copied to
-a location in your shell execution PATH on all of the systems from which
-you wish to issue command line Roon controls.
+The third component is the "roon" shell script and its configuration files.
+These should be copied to a location in your shell execution PATH on all of
+the systems from which you wish to issue command line Roon controls but chose
+not to install the RoonCommandLine package there (see the section below on
+[Remote deployment](#remote-deployment)).
 
     # The username and ip address of the Python Roon API server were
     # configured during installation. Verify these settings in the
@@ -580,6 +548,90 @@ supplied. This applies to playing an album, artist, genre, playlist, or tag.
 For example, the command "roon -a Tull" would play media by artist "Jethro Tull"
 unless there were multiple artist name matches to the substring "Tull". All partial
 matching is case sensitive - "roon -a tull" would not match "Jethro Tull".
+
+## History and Motivation
+
+### Why would I need or want command line control of Roon
+
+One might reasonably ask "Why would I need or want command line control
+of my Roon audio system"? Truth be told, most Roon users do not need or
+want command line control of Roon or any other software. They are happy
+with the graphical user interfaces they use and never ever see a command
+line prompt. So the answer to that question is almost always "You don't".
+
+However, some users (mostly old propeller head codgers) are comfortable
+at the command line and prefer to use it over the tedious mouse clicks
+required to get anything done in a graphical user interface. Different
+lanes for different brains.
+
+I would say the most significant use case for command line control of anything
+is automation. For example, if I want to schedule playback of specified music
+in specific zones triggered by some event, then command line control can be
+used to implement this. That can be done via Cron jobs, play something in some
+zone at scheduled times. Or playback of specified songs in selected zones could
+be triggered by some event like when a particular face is recognized by my smart
+mirror or when my smart lights are turned to a particular profile. I use command
+line control of Roon coupled with Apple Siri voice commands that trigger an SSH
+shortcut to run the command. There are many use cases for automation using command
+line utilities.
+
+The other main use case for command line control is simple convenience.
+If you spend a lot of time in a Shell environment then it is just easier
+to type a command that plays what you would like to hear where you want
+to hear it than it is to switch windows, bring up a GUI, click a few times
+to find what you want, and click to play it, then go back to your terminal
+window and Shell env. Most people do not live in a Shell environment like
+I do so this use case is not that significant.
+
+Finally, the command line interface and the associated Roon API can provide
+capabilities not available in the Roon GUI. Searching, listing, and filtering
+can be augmented by the plethora of tools available in a typical Shell
+environment. You can pipe the output of a Roon command to grep, sed, awk,
+and other standard utilities to produce results unavailable in the GUI.
+That is, command line control along with the API and Shell utilities/builtins
+can extend the capabilities of the Roon audio system. The RoonCommandLine
+package also enables some features not easily available in the Roon GUI.
+One of these, preconfigured Zone Grouping, allows the RoonCommandLine user
+to easily and quickly switch between any of the preconfigured zone groupings
+in `/usr/local/Roon/etc/roon_api.ini`. Yes, you can change the zone grouping
+in Roon but it takes quite a few actions on the user's part to accomplish this.
+In my household I find it frequently desirable to be able to switch zone
+groupings easily and quickly and I can do so by configuring these presets to
+my typical use cases.
+
+### History
+
+This project began as an attempt to control Roon with Siri voice commands.
+Several users had posted in the Roon forums various ways to use Siri to control Roon.
+These usually took the form of a fake device in HomeBridge that then communicates with
+HomeKit and Siri. This seemed cool but maybe overkill. I was able to get Siri voice
+control of Roon working with simple SSH shortcuts that execute Python scripts which
+utilize the Roon API to control Roon.
+
+Apple SSH shortcuts can be used to execute commands on systems that allow SSH access.
+I used an Ubuntu 20.10 system recently installed to install the Python Roon API project
+(pip install roonapi) and quickly cobbled together a Python script based on one of
+the examples in that project. The Python script accepts an argument specifying an artist
+name in my Roon library. It then uses the Roon API to play music from my library by
+that artist in the specified zone.
+
+On my iPhone I then created shortcuts which use the “Run script over SSH”
+option for Apple Scripting shortcuts. The shortcuts execute a Bash command which is a
+shell script that executes the Python script with appropriate arguments. It all seems
+to work. I did run into a few gotchas. It seems with current Python/Pip installs you
+need to specify an environment variable telling Python where the Pip modules are located.
+So I needed a login shell to pick that up but I could not figure out how to tell the
+Apple shortcut to give me an SSH login shell. The Python env variable is set in the
+shell script the SSH session executes.
+
+Currently this project has morphed primarily into a set of command line tools to control
+various aspects of Roon remotely. There is still the capability to augment this command
+line control with Siri voice commands that trigger an Apple Shortcut which executes a
+command via SSH. But what we have here in the repository are the command line tools.
+
+RoonCommandLine v2.0.0 introduced Debian and RPM format package installation
+accompanied with extensive automated configuration. In most environments, deployment
+of this package will require little to no manual configuration.
 
 ## Contents
 
