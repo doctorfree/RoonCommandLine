@@ -73,7 +73,8 @@ Currently the command line Roon control scripts provide support for:
 In addition, search capabilities have been added to the scripts
 with partial matching facilities. Thus a substring can be supplied to use as a
 search term with partial matching returning albums, artists, playlists, genres,
-or tags which contain the specified substring (case sensitive).
+or tags which contain the specified substring (case sensitive). The special search
+term "all" indicates match all albums, artists, playlists, genres, or tags.
 
 All commands and playback can target a specified Roon output zone.
 
@@ -512,6 +513,7 @@ Here is the current output of "roon -u" which displays a usage message.
         -L setup roon to execute local commands rather than remote via SSH
         -l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones
         -s search specifies a term to search for in the lists retrieved with -l
+            use the special search term "all" to indicate match all entries
         -r indicates play Radio Paradise
         -t tag selects an tag to play (not yet working)
         -z zone selects the Roon Zone in which to play
