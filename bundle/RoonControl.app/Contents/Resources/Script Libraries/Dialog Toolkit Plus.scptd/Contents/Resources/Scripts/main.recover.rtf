@@ -1,0 +1,3979 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf500
+{\fonttbl\f0\fnil\fcharset0 Verdana-Italic;\f1\fnil\fcharset0 Verdana;\f2\fnil\fcharset0 Verdana-Bold;
+}
+{\colortbl;\red255\green255\blue255;\red77\green78\blue78;\red108\green5\blue211;\red0\green0\blue255;
+\red64\green128\blue0;\red251\green0\blue7;}
+{\*\expandedcolortbl;;\csgenericrgb\c30000\c30500\c30500;\csgenericrgb\c42300\c1800\c82800;\csgenericrgb\c0\c0\c99819;
+\csgenericrgb\c25000\c50000\c0;\cssrgb\c100000\c0\c0;}
+\deftab480
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i\fs24 \cf2 -- Created 2014-11-22 21:32:47 +1100 by Shane Stanley
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- Version 1.1.0. Based on 'Dialog Toolkit.scptd'.
+\f1\i0 \cf0 \
+
+\f0\i \cf2 -- Copyright \'a92014-19. May be freely distributed and copied. If you modify it, please rename the modified version to avoid clashes.
+\f1\i0 \cf0 \
+
+\f0\i \cf2 -- You use it entirely at your own risk.
+\f1\i0 \cf0 \
+\
+
+\f0\i \cf2 -- Place this file  in ~/Library/Script Libraries 
+\f1\i0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 use
+\f1\b0 \cf0  \cf3 AppleScript\cf0  \cf4 version\cf0  \cf0 "2.4"\cf0 \
+
+\f2\b \cf0 use
+\f1\b0 \cf0  
+\f0\i \cf4 scripting additions
+\f1\i0 \cf0 \
+
+\f2\b \cf0 use
+\f1\b0 \cf0  
+\f0\i \cf4 framework
+\f1\i0 \cf0  \cf0 "Foundation"\cf0 \
+
+\f2\b \cf0 use
+\f1\b0 \cf0  
+\f0\i \cf4 framework
+\f1\i0 \cf0  \cf0 "AppKit"\cf0 \
+
+\f2\b \cf0 use
+\f1\b0 \cf0  
+\f0\i \cf4 framework
+\f1\i0 \cf0  \cf0 "Carbon"\cf0  
+\f0\i \cf2 -- AEInteractWithUser() is in Carbon 
+\f1\i0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- classes, constants, and enums used
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSOffState\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSStringDrawingUsesLineFragmentOrigin\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSNoImage\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSSmallControlSize\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSModalPanelWindowLevel\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 8\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSSwitchButton\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 3\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSModalResponseCancel\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSBoxSeparator\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 2\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSRadioButton\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 4\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSRoundedBezelStyle\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSMomentaryPushInButton\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 7\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSOnState\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSRadioModeMatrix\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSBackingStoreBuffered\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 2\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSPathStyleStandard\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSCommandKeyMask\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1048576\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSModalResponseAbort\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 -1001\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSLeftTextAlignment\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSNoTitle\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSRegularControlSize\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSCenterTextAlignment\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 2\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSPathStylePopUp\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 2\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSRightTextAlignment\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSLineBorder\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSMiniControlSize\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 2\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSTitledWindowMask\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSImage\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSImage\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSImageView\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSImageView\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSMatrix\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSMatrix\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSPathControl\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSPathControl\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSPopUpButton\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSPopUpButton\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSFont\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSFont\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSModalPanelRunLoopMode\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSModalPanelRunLoopMode\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSView\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSView\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSApp\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSApp\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSBox\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSBox\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSWindow\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSWindow\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSButtonCell\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSButtonCell\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSObject\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSObject\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSTextField\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSTextField\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSString\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSString\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 |NSURL|\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 |NSURL|\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSScreen\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSScreen\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSAlert\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSAlert\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSButton\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSButton\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSFontAttributeName\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSFontAttributeName\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSThread\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSThread\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSDictionary\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSDictionary\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSAttributedString\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSAttributedString\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 NSSecureTextField\cf0  : 
+\f2\b \cf0 a reference
+\f1\b0 \cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf5 NSSecureTextField\cf0 \
+\
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 buttonSideInset\cf0  : \cf0 16\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 buttonYValue\cf0  : \cf0 13\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 accViewSideInset\cf0  : \cf0 22\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 accViewYValue\cf0  : \cf0 50\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 accViewTopGap\cf0  : \cf0 20\cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 minimumButtonWidth\cf0  : \cf0 81\cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- used to return values from main-thread handlers
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 returnCode\cf0  : 
+\f0\i \cf4 missing value
+\f1\i0 \cf0 \
+
+\f2\b \cf0 property
+\f1\b0 \cf0  \cf5 handlerResult\cf0  : 
+\f0\i \cf4 missing value
+\f1\i0 \cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 display enhanced window
+\f1\b0 \cf0  \cf5 windowTitle\cf0  \cf4 acc view width\cf0  \cf5 theWidth\cf0  \cf4 acc view height\cf0  \cf5 theHeight\cf0  \cf4 acc view controls\cf0  \cf5 controlsList\cf0  \cf4 giving up after\cf0  \cf5 giveUp\cf0  : \cf0 0\cf0  \cf4 active field\cf0  \cf5 defaultField\cf0  : 
+\f0\i \cf4 missing value
+\f1\i0 \cf0  \cf4 initial position\cf0  \cf5 initPosition\cf0  : \{\} \cf4 align cancel button\cf0  \cf5 cancelLeftFlag\cf0  : \cf3 true\cf0  \cf4 buttons\cf0  \cf5 allButtons\cf0 \
+	
+\f0\i \cf2 -- check we can interact
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theError\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf6 AEInteractWithUser\cf0 (\cf0 -1\cf0 , 
+\f0\i \cf4 missing value
+\f1\i0 \cf0 , 
+\f0\i \cf4 missing value
+\f1\i0 \cf0 ) 
+\f0\i \cf2 -- -1 is kAEDefaultTimeout
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 theError\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f2\b \cf0 not
+\f1\b0 \cf0  \cf0 0\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 error
+\f1\b0 \cf0  \cf0 "User interaction disallowed"\cf0  \cf4 number\cf0  \cf5 theError\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 prepareEnhancedWindowMainThread\cf0 :\{\cf5 windowTitle\cf0 , \cf5 theWidth\cf0 , \cf5 theHeight\cf0 , \cf5 controlsList\cf0 , \cf5 giveUp\cf0 , \cf5 defaultField\cf0 , \cf5 initPosition\cf0 , \cf5 cancelLeftFlag\cf0 , \cf5 allButtons\cf0 \}\
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theWindow\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 showTheWindowAndWaitMainThread\cf0 :\{\cf5 theWindow\cf0 , \cf5 defaultField\cf0 , \cf5 giveUp\cf0 , \cf5 initPosition\cf0 , \cf5 windowTitle\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "prepareEnhancedWindowMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 windowTitle\cf0 , \cf5 theWidth\cf0 , \cf5 theHeight\cf0 , \cf5 controlsList\cf0 , \cf5 giveUp\cf0 , \cf5 defaultField\cf0 , \cf5 initPosition\cf0 , \cf5 cancelLeftFlag\cf0 , \cf5 allButtons\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theWindow\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "showTheWindowAndWaitMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 theWindow\cf0 , \cf5 defaultField\cf0 , \cf5 giveUp\cf0 , \cf5 initPosition\cf0 , \cf5 windowTitle\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 missing value
+\f1\i0 \cf0 \
+	
+\f0\i \cf2 -- get values after window is closed
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonNumber\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 returnCode\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 buttonNumber\cf0  = \cf5 NSModalResponseCancel\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f2\b \cf0 error
+\f1\b0 \cf0  \cf4 number\cf0  \cf0 -128\cf0  
+\f0\i \cf2 -- designated Cancel button pressed
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 buttonNumber\cf0  = \cf5 NSModalResponseAbort\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f0\i \cf2 -- timed out
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonName\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 "Gave Up"\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonName\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  (
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 buttonNumber\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 allButtons\cf0 )'s \cf6 title\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 -- get values from controls
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\}\
+	
+\f2\b \cf0 repeat
+\f1\b0 \cf0  
+\f2\b \cf0 with
+\f1\b0 \cf0  \cf5 aControl\cf0  
+\f2\b \cf0 in
+\f1\b0 \cf0  \cf5 controlsList\cf0 \
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSTextField\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 stringValue\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+			(\cf5 aControl's\cf0  \cf6 setDelegate\cf0 :(
+\f0\i \cf4 missing value
+\f1\i0 \cf0 ))\
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSPopUpButton\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 titleOfSelectedItem\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSButton\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 state\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSPathControl\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 |URL|\cf0 ()'s \cf6 |path|\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSMatrix\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 selectedCell\cf0 ()'s \cf6 title\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSImageView\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 image\cf0 ()'s \cf6 |name|\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f0\i \cf2 -- NSBox 
+\f1\i0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 missing value
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 returnCode\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 missing value
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \{\cf5 buttonName\cf0 , \cf5 controlResults\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 display enhanced window
+\f1\b0 \cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create buttons
+\f1\b0 \cf0  \cf5 buttonList\cf0  \cf4 button keys\cf0  \cf5 buttonKeysList\cf0  : \{\} \cf4 equal widths\cf0  \cf5 equalWidths\cf0  : (\cf3 false\cf0 ) \cf4 default button\cf0  \cf5 okIndex\cf0  : \cf0 0\cf0  \cf4 cancel button\cf0  \cf5 cancelIndex\cf0  : \cf0 0\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 createButtonsViewMainThread\cf0 :\{\cf5 buttonList\cf0 , \cf5 buttonKeysList\cf0 , \cf5 equalWidths\cf0 , \cf5 cancelIndex\cf0 , \cf5 okIndex\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "createButtonsViewMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 buttonList\cf0 , \cf5 buttonKeysList\cf0 , \cf5 equalWidths\cf0 , \cf5 cancelIndex\cf0 , \cf5 okIndex\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create buttons
+\f1\b0 \cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 display enhanced alert
+\f1\b0 \cf0  \cf5 mainText\cf0  \cf4 message\cf0  \cf5 theExplanation\cf0  \cf4 as\cf0  \cf5 styleType\cf0  : \cf3 informational alert\cf0  \cf4 buttons\cf0  \cf5 buttonsList\cf0  \cf4 suppression\cf0  \cf5 showSuppression\cf0  : \cf3 false\cf0  \cf4 giving up after\cf0  \cf5 giveUp\cf0  : \cf0 0\cf0  \cf4 acc view width\cf0  \cf5 theWidth\cf0  \cf4 acc view height\cf0  \cf5 theHeight\cf0  \cf4 acc view controls\cf0  \cf5 controlsList\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 styleType\cf0  = \cf3 critical alert\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 styleNum\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 2\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 styleType\cf0  = \cf3 warning alert\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 styleNum\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 styleNum\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theError\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 current application's\cf0  \cf6 AEInteractWithUser\cf0 (\cf0 -1\cf0 , 
+\f0\i \cf4 missing value
+\f1\i0 \cf0 , 
+\f0\i \cf4 missing value
+\f1\i0 \cf0 ) 
+\f0\i \cf2 -- -1 is kAEDefaultTimeout
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 theError\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f2\b \cf0 not
+\f1\b0 \cf0  \cf0 0\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 error
+\f1\b0 \cf0  \cf0 "User interaction disallowed"\cf0  \cf4 number\cf0  \cf5 theError\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 displayEnhancedAlertMainThread\cf0 :\{\cf5 mainText\cf0 , \cf5 theExplanation\cf0 , \cf5 styleNum\cf0 , \cf5 buttonsList\cf0 , \cf5 showSuppression\cf0 , \cf5 giveUp\cf0 , \cf5 theWidth\cf0 , \cf5 theHeight\cf0 , \cf5 controlsList\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "displayEnhancedAlertMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 mainText\cf0 , \cf5 theExplanation\cf0 , \cf5 styleNum\cf0 , \cf5 buttonsList\cf0 , \cf5 showSuppression\cf0 , \cf5 giveUp\cf0 , \cf5 theWidth\cf0 , \cf5 theHeight\cf0 , \cf5 controlsList\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 --	if a giveUp time was specified and the alert didn't timeout, cancel the pending abort request
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 giveUp\cf0  > \cf0 0\cf0  
+\f2\b \cf0 and
+\f1\b0 \cf0  \cf5 returnCode\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f2\b \cf0 not
+\f1\b0 \cf0  \cf5 NSModalResponseAbort\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  \cf5 NSObject's\cf0  \cf6 cancelPreviousPerformRequestsWithTarget\cf0 :(\cf5 NSApp\cf0 ) \cf6 selector\cf0 :\cf0 "abortModal"\cf0  \cf6 object\cf0 :(
+\f0\i \cf4 missing value
+\f1\i0 \cf0 )\
+	
+\f0\i \cf2 -- get values after alert is closed
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theAlert\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 missing value
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 suppressedState\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theAlert's\cf0  \cf6 suppressionButton\cf0 ()'s \cf6 state\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonNumber\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 returnCode\cf0  
+\f2\b \cf0 mod
+\f1\b0 \cf0  \cf0 1000\cf0  + \cf0 1\cf0  
+\f0\i \cf2 -- where 1 = right-most button
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 buttonNumber\cf0  = \cf0 0\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonName\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 "Gave Up"\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonName\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 buttonNumber\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  (\cf3 reverse\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 buttonsList\cf0 )\
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 -- get values from controls
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\}\
+	
+\f2\b \cf0 repeat
+\f1\b0 \cf0  
+\f2\b \cf0 with
+\f1\b0 \cf0  \cf5 aControl\cf0  
+\f2\b \cf0 in
+\f1\b0 \cf0  \cf5 controlsList\cf0 \
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSTextField\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 stringValue\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSPopUpButton\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 titleOfSelectedItem\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSButton\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 state\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSPathControl\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 |URL|\cf0 ()'s \cf6 |path|\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSMatrix\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 selectedCell\cf0 ()'s \cf6 title\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  (\cf5 aControl's\cf0  \cf6 isKindOfClass\cf0 :(\cf5 NSImageView\cf0 )) 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aControl's\cf0  \cf6 image\cf0 ()'s \cf6 |name|\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 text
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f0\i \cf2 -- NSBox 
+\f1\i0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 controlResults\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 missing value
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 returnCode\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 missing value
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \{\cf5 buttonName\cf0 , \cf5 suppressedState\cf0 , \cf5 controlResults\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 display enhanced alert
+\f1\b0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- alignment is left aligned, right aligned or center aligned; multiLine is a boolean, true for multi-line labels
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 labelString\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 max width\cf0  \cf5 maxWidth\cf0  \cf4 aligns\cf0  \cf5 alignment\cf0  : \cf3 left aligned\cf0  \cf4 multiline\cf0  \cf5 wrapsBool\cf0  : \cf3 true\cf0  \cf4 control size\cf0  \cf5 controlSize\cf0  : \cf3 regular size\cf0  \cf4 bold type\cf0  \cf5 boldType\cf0  : \cf3 false\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 createLabelMainThread\cf0 :\{\cf5 labelString\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 maxWidth\cf0 , \cf5 alignment\cf0 , \cf5 wrapsBool\cf0 , \cf5 controlSize\cf0 , \cf5 boldType\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "createLabelMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 labelString\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 maxWidth\cf0 , \cf5 alignment\cf0 , \cf5 wrapsBool\cf0 , \cf5 controlSize\cf0 , \cf5 boldType\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 max width for labels
+\f1\b0 \cf0  \cf5 listOfLabels\cf0  \cf4 control size\cf0  \cf5 controlSize\cf0  : \cf3 regular size\cf0  \cf4 bold type\cf0  \cf5 boldType\cf0  : \cf3 false\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFont\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 fontOfControlSize\cf0 :\cf5 controlSize\cf0  \cf6 boldType\cf0 :\cf5 boldType\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theAtts\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSDictionary's\cf0  \cf6 dictionaryWithObject\cf0 :\cf5 theFont\cf0  \cf6 forKey\cf0 :(\cf5 NSFontAttributeName\cf0 )\
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 maxWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+	
+\f2\b \cf0 repeat
+\f1\b0 \cf0  
+\f2\b \cf0 with
+\f1\b0 \cf0  \cf5 labelString\cf0  
+\f2\b \cf0 in
+\f1\b0 \cf0  \cf5 listOfLabels\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theString\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  (\cf5 NSString's\cf0  \cf6 stringWithString\cf0 :\cf5 labelString\cf0 )\
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 newWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 width\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  (\cf5 theString's\cf0  \cf6 sizeWithAttributes\cf0 :\cf5 theAtts\cf0 )\
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 newWidth\cf0  > \cf5 maxWidth\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 maxWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 newWidth\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 maxWidth\cf0  + \cf0 4.5\cf0  
+\f0\i \cf2 -- allow for frame rectangle and fudge
+\f1\i0 \cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 max width for labels
+\f1\b0 \cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 max depth for label
+\f1\b0 \cf0  \cf5 labelText\cf0  \cf4 max width\cf0  \cf5 maxWidth\cf0  \cf4 control size\cf0  \cf5 controlSize\cf0  : \cf3 regular size\cf0  \cf4 bold type\cf0  \cf5 boldType\cf0  : \cf3 false\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFont\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 fontOfControlSize\cf0 :\cf5 controlSize\cf0  \cf6 boldType\cf0 :\cf5 boldType\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theAtts\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSDictionary's\cf0  \cf6 dictionaryWithObject\cf0 :\cf5 theFont\cf0  \cf6 forKey\cf0 :(\cf5 NSFontAttributeName\cf0 )\
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 labelText\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSString's\cf0  \cf6 stringWithString\cf0 :\cf5 labelText\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 labelText's\cf0  \cf6 boundingRectWithSize\cf0 :\{\cf5 maxWidth\cf0 , \cf0 2000\cf0 \} \cf6 options\cf0 :\cf5 NSStringDrawingUsesLineFragmentOrigin\cf0  \cf6 attributes\cf0 :\cf5 theAtts\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 class
+\f1\i0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 record
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theHeight\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 height\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 |size|\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theHeight\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 theHeight\cf0  + \cf0 1\cf0  
+\f0\i \cf2 -- allow  fudge
+\f1\i0 \cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 max depth for label
+\f1\b0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- extraHeight of 0 means it takes a single line, otherwise add as many points as you want
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create field
+\f1\b0 \cf0  \cf5 enteredText\cf0  \cf4 placeholder text\cf0  \cf5 placeholder\cf0  : \cf0 ""\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 field width\cf0  \cf5 theWidth\cf0  \cf4 extra height\cf0  \cf5 extraHeight\cf0  : \cf0 0\cf0  \cf4 accepts linebreak and tab\cf0  \cf5 acceptsTabs\cf0  : \cf3 false\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 createFieldMainThread\cf0 :\{\cf5 enteredText\cf0 , \cf5 placeholder\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 extraHeight\cf0 , \cf5 acceptsTabs\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "createFieldMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 enteredText\cf0 , \cf5 placeholder\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 extraHeight\cf0 , \cf5 acceptsTabs\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create field
+\f1\b0 \cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create secure field
+\f1\b0 \cf0  \cf5 enteredText\cf0  \cf4 placeholder text\cf0  \cf5 placeholder\cf0  : \cf0 ""\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 field width\cf0  \cf5 theWidth\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 createSecureFieldMainThread\cf0 :\{\cf5 enteredText\cf0 , \cf5 placeholder\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "createSecureFieldMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 enteredText\cf0 , \cf5 placeholder\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create secure field
+\f1\b0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- makes label and field together
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create top labeled field
+\f1\b0 \cf0  \cf5 enteredText\cf0  \cf4 placeholder text\cf0  \cf5 placeholder\cf0  : \cf0 ""\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 field width\cf0  \cf5 theWidth\cf0  \cf4 extra height\cf0  \cf5 extraHeight\cf0  : \cf0 0\cf0  \cf4 label text\cf0  \cf5 theLabel\cf0  \cf4 accepts linebreak and tab\cf0  \cf5 acceptsTabs\cf0  : \cf3 false\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theField\cf0 , \cf5 theTop\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create field
+\f1\b0 \cf0  \cf5 enteredText\cf0  \cf4 placeholder text\cf0  \cf5 placeholder\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 field width\cf0  \cf5 theWidth\cf0  \cf4 extra height\cf0  \cf5 extraHeight\cf0  \cf4 accepts linebreak and tab\cf0  \cf5 acceptsTabs\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 newWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 theLabel\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  (\cf5 theTop\cf0  + \cf0 8\cf0 ) \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 aligns\cf0  \cf3 left aligned\cf0  
+\f2\b \cf0 without
+\f1\b0 \cf0  \cf4 multiline\cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \{\cf5 theField\cf0 , \cf5 theLabel\cf0 , \cf5 theTop\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create top labeled field
+\f1\b0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- makes label and field; if fieldLeft is less than leftInset, the label will start at leftInset, with the field following;
+\f1\i0 \cf0 \
+
+\f0\i \cf2 -- if fieldLeft is more than leftInset, the field will start at fieldLeft, and the label will will appear to its left
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create side labeled field
+\f1\b0 \cf0  \cf5 enteredText\cf0  \cf4 placeholder text\cf0  \cf5 placeholder\cf0  : \cf0 ""\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 total width\cf0  \cf5 theWidth\cf0  \cf4 label text\cf0  \cf5 theLabel\cf0  \cf4 field left\cf0  \cf5 fieldLeft\cf0  \cf4 accepts linebreak and tab\cf0  \cf5 acceptsTabs\cf0  : \cf3 false\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 fieldLeft\cf0  \uc0\u8804  \cf5 theLeft\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 newWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 theLabel\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  (\cf5 theBottom\cf0  + \cf0 4\cf0 ) \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 aligns\cf0  \cf3 left aligned\cf0  
+\f2\b \cf0 without
+\f1\b0 \cf0  \cf4 multiline\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 fieldLeft\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  (\cf5 theLeft\cf0  + \cf5 newWidth\cf0  + \cf0 8\cf0 )\
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theField\cf0 , \cf5 theTop\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create field
+\f1\b0 \cf0  \cf5 enteredText\cf0  \cf4 placeholder text\cf0  \cf5 placeholder\cf0  \cf4 left inset\cf0  \cf5 fieldLeft\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 field width\cf0  (\cf5 theWidth\cf0  - \cf5 newWidth\cf0  - \cf0 8\cf0 ) \cf4 extra height\cf0  \cf0 0\cf0  \cf4 accepts linebreak and tab\cf0  \cf5 acceptsTabs\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 newWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 theLabel\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  (\cf5 theBottom\cf0  + \cf0 4\cf0 ) \cf4 max width\cf0  (\cf5 fieldLeft\cf0  - \cf5 theLeft\cf0  - \cf0 8\cf0 ) \cf4 aligns\cf0  \cf3 right aligned\cf0  
+\f2\b \cf0 without
+\f1\b0 \cf0  \cf4 multiline\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theField\cf0 , \cf5 theTop\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create field
+\f1\b0 \cf0  \cf5 enteredText\cf0  \cf4 placeholder text\cf0  \cf5 placeholder\cf0  \cf4 left inset\cf0  \cf5 fieldLeft\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 field width\cf0  (\cf5 theWidth\cf0  - \cf5 fieldLeft\cf0 ) \cf4 extra height\cf0  \cf0 0\cf0  \cf4 accepts linebreak and tab\cf0  \cf5 acceptsTabs\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 -- return theField, theLabel, the top of the field, and left of the field
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \{\cf5 theField\cf0 , \cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 fieldLeft\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create side labeled field
+\f1\b0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- entryList is a list of names for the menu items
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create popup
+\f1\b0 \cf0  \cf5 entryList\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 popup width\cf0  \cf5 theWidth\cf0  \cf4 initial choice\cf0  \cf5 defaultValue\cf0  : \cf0 1\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 class
+\f1\i0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 defaultValue\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 integer
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 defaultValue\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 defaultValue\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 entryList\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 createPopupMainThread\cf0 :\{\cf5 entryList\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 defaultValue\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "createPopupMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 entryList\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 defaultValue\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create popup
+\f1\b0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- makes label and popup; if popupLeft is less than leftInset, the label will start at leftInset, with the popup following;
+\f1\i0 \cf0 \
+
+\f0\i \cf2 -- if popupLeft is more than leftInset, the popup will start at popupLeft, and the label will will appear to its left
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create labeled popup
+\f1\b0 \cf0  \cf5 entryList\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 popup width\cf0  \cf5 popupWidth\cf0  \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 label text\cf0  \cf5 theLabel\cf0  \cf4 popup left\cf0  \cf5 popupLeft\cf0  \cf4 initial choice\cf0  \cf5 defaultValue\cf0  : \cf0 1\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 popupLeft\cf0  \uc0\u8804  \cf5 theLeft\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 newWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 theLabel\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  (\cf5 theBottom\cf0  + \cf0 6\cf0 ) \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 aligns\cf0  \cf3 left aligned\cf0  
+\f2\b \cf0 without
+\f1\b0 \cf0  \cf4 multiline\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 popupLeft\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  (\cf5 newWidth\cf0  + \cf0 6\cf0 )\
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 thePopup\cf0 , \cf5 theTop\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create popup
+\f1\b0 \cf0  \cf5 entryList\cf0  \cf4 left inset\cf0  \cf5 popupLeft\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 popup width\cf0  \cf5 popupWidth\cf0  \cf4 initial choice\cf0  \cf5 defaultValue\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 newWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 theLabel\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  (\cf5 theBottom\cf0  + \cf0 6\cf0 ) \cf4 max width\cf0  (\cf5 popupLeft\cf0  - \cf5 theLeft\cf0  - \cf0 6\cf0 ) \cf4 aligns\cf0  \cf3 right aligned\cf0  
+\f2\b \cf0 without
+\f1\b0 \cf0  \cf4 multiline\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 thePopup\cf0 , \cf5 theTop\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create popup
+\f1\b0 \cf0  \cf5 entryList\cf0  \cf4 left inset\cf0  \cf5 popupLeft\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 popup width\cf0  \cf5 popupWidth\cf0  \cf4 initial choice\cf0  \cf5 defaultValue\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \{\cf5 thePopup\cf0 , \cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 popupLeft\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create labeled popup
+\f1\b0 \cf0 \
+\
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- initialState is boolean for initial state
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create checkbox
+\f1\b0 \cf0  \cf5 checkTitle\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 initial state\cf0  \cf5 initialState\cf0  : \cf3 false\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 createCheckboxMainThread\cf0 :\{\cf5 checkTitle\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 initialState\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "createCheckboxMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 checkTitle\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 initialState\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create checkbox
+\f1\b0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- makes label and checkbox; if checkboxLeft is less than leftInset, the label will start at leftInset, with the checkbox following;
+\f1\i0 \cf0 \
+
+\f0\i \cf2 -- if checkboxLeft is more than leftInset, the checkbox will start at checkboxLeft, and the label will will appear to its left
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create labeled checkbox
+\f1\b0 \cf0  \cf5 checkTitle\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 label text\cf0  \cf5 theLabel\cf0  \cf4 checkbox left\cf0  \cf5 checkboxLeft\cf0  \cf4 initial state\cf0  \cf5 checkState\cf0  : \cf3 false\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 checkboxLeft\cf0  \uc0\u8804  \cf5 theLeft\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 newWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 theLabel\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  (\cf5 theBottom\cf0  + \cf0 2\cf0 ) \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 aligns\cf0  \cf3 left aligned\cf0  
+\f2\b \cf0 without
+\f1\b0 \cf0  \cf4 multiline\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 checkboxLeft\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  (\cf5 newWidth\cf0  + \cf0 6\cf0 )\
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theCheckbox\cf0 , \cf5 theTop\cf0 , \cf5 theWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create checkbox
+\f1\b0 \cf0  \cf5 checkTitle\cf0  \cf4 left inset\cf0  \cf5 checkboxLeft\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 max width\cf0  (\cf5 theWidth\cf0  - \cf5 newWidth\cf0  - \cf0 6\cf0 ) \cf4 initial state\cf0  \cf5 checkState\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 newWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 theLabel\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  (\cf5 theBottom\cf0  + \cf0 2\cf0 ) \cf4 max width\cf0  (\cf5 checkboxLeft\cf0  - \cf5 theLeft\cf0  - \cf0 6\cf0 ) \cf4 aligns\cf0  \cf3 right aligned\cf0  
+\f2\b \cf0 without
+\f1\b0 \cf0  \cf4 multiline\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theCheckbox\cf0 , \cf5 theTop\cf0 , \cf5 theWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create checkbox
+\f1\b0 \cf0  \cf5 checkTitle\cf0  \cf4 left inset\cf0  \cf5 checkboxLeft\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 max width\cf0  (\cf5 theWidth\cf0  - \cf5 checkboxLeft\cf0 ) \cf4 initial state\cf0  \cf5 checkState\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \{\cf5 theCheckbox\cf0 , \cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 checkboxLeft\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create labeled checkbox
+\f1\b0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- popsUp is true for a popup path control, false for a standard path control
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create path control
+\f1\b0 \cf0  \cf5 thePath\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 control width\cf0  \cf5 theWidth\cf0  \cf4 pops up\cf0  \cf5 popsUpBool\cf0  : \cf3 true\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 createPathControlMainThread\cf0 :\{\cf5 thePath\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 popsUpBool\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "createPathControlMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 thePath\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 popsUpBool\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create path control
+\f1\b0 \cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create labeled path control
+\f1\b0 \cf0  \cf5 thePath\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 control width\cf0  \cf5 theWidth\cf0  \cf4 pops up\cf0  \cf5 popsUpBool\cf0  : \cf3 true\cf0  \cf4 label text\cf0  \cf5 theLabel\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 thePathControl\cf0 , \cf5 theTop\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create path control
+\f1\b0 \cf0  \cf5 thePath\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 control width\cf0  \cf5 theWidth\cf0  \cf4 pops up\cf0  \cf5 popsUpBool\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 newWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 theLabel\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  (\cf5 theTop\cf0  + \cf0 4\cf0 ) \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 aligns\cf0  \cf3 left aligned\cf0  
+\f2\b \cf0 without
+\f1\b0 \cf0  \cf4 multiline\cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \{\cf5 thePathControl\cf0 , \cf5 theLabel\cf0 , \cf5 theTop\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create labeled path control
+\f1\b0 \cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create matrix
+\f1\b0 \cf0  \cf5 listOfNames\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 arranged vertically\cf0  \cf5 isVertical\cf0  : \cf3 true\cf0  \cf4 initial choice\cf0  \cf5 defaultValue\cf0  : \cf0 1\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 createMatrixMainThread\cf0 :\{\cf5 listOfNames\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 isVertical\cf0 , \cf5 defaultValue\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "createMatrixMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 listOfNames\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 isVertical\cf0 , \cf5 defaultValue\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create matrix
+\f1\b0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- makes label and matrix; if matrixLeft is less than leftInset, the label will start at leftInset, with the matrix following;
+\f1\i0 \cf0 \
+
+\f0\i \cf2 -- if matrixLeft is more than leftInset, the matrix will start at matrixLeft, and the label will will appear to its left
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create labeled matrix
+\f1\b0 \cf0  \cf5 listOfNames\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 arranged vertically\cf0  \cf5 isVertical\cf0  : \cf3 true\cf0  \cf4 matrix left\cf0  \cf5 matrixLeft\cf0  \cf4 label text\cf0  \cf5 theLabel\cf0  \cf4 initial choice\cf0  \cf5 defaultValue\cf0  : \cf0 1\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 matrixLeft\cf0  \uc0\u8804  \cf5 theLeft\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 newWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 theLabel\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  (\cf5 theBottom\cf0  + \cf0 2\cf0 ) \cf4 max width\cf0  \cf5 theWidth\cf0  \cf4 aligns\cf0  \cf3 left aligned\cf0  
+\f2\b \cf0 without
+\f1\b0 \cf0  \cf4 multiline\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 matrixLeft\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  (\cf5 newWidth\cf0  + \cf0 6\cf0  + \cf5 theLeft\cf0 )\
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theMatrix\cf0 , \cf5 theTop\cf0 , \cf5 theWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create matrix
+\f1\b0 \cf0  \cf5 listOfNames\cf0  \cf4 left inset\cf0  \cf5 matrixLeft\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 max width\cf0  (\cf5 theWidth\cf0  - \cf5 newWidth\cf0  - \cf0 6\cf0 ) \cf4 arranged vertically\cf0  \cf5 isVertical\cf0  \cf4 initial choice\cf0  \cf5 defaultValue\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 newWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create label
+\f1\b0 \cf0  \cf5 theLabel\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  \cf4 bottom\cf0  (\cf5 theBottom\cf0  + \cf0 2\cf0 ) \cf4 max width\cf0  (\cf5 matrixLeft\cf0  - \cf5 theLeft\cf0  - \cf0 6\cf0 ) \cf4 aligns\cf0  \cf3 right aligned\cf0  
+\f2\b \cf0 without
+\f1\b0 \cf0  \cf4 multiline\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theMatrix\cf0 , \cf5 theTop\cf0 , \cf5 theWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 create matrix
+\f1\b0 \cf0  \cf5 listOfNames\cf0  \cf4 left inset\cf0  (\cf5 matrixLeft\cf0 ) \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 max width\cf0  (\cf5 theWidth\cf0  - \cf5 matrixLeft\cf0 ) \cf4 arranged vertically\cf0  \cf5 isVertical\cf0  \cf4 initial choice\cf0  \cf5 defaultValue\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	\cf5 theLabel's\cf0  \cf6 setFrame\cf0 :(\cf3 current application's\cf0  \cf6 NSOffsetRect\cf0 (\cf5 theLabel's\cf0  \cf6 frame\cf0 (), \cf0 0\cf0 , \cf5 theTop\cf0  - \cf5 theBottom\cf0  - \cf0 19\cf0 ))\
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \{\cf5 theMatrix\cf0 , \cf5 theLabel\cf0 , \cf5 theTop\cf0 , \cf5 matrixLeft\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create labeled matrix
+\f1\b0 \cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- makes horizontal rule
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create rule
+\f1\b0 \cf0  \cf5 theBottom\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 rule width\cf0  \cf5 theWidth\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 createRuleMainThread\cf0 :\{\cf5 theBottom\cf0 , \cf5 theLeft\cf0 , \cf5 theWidth\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "createRuleMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 theBottom\cf0 , \cf5 theLeft\cf0 , \cf5 theWidth\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create rule
+\f1\b0 \cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  
+\f2\b \cf4 create image view
+\f1\b0 \cf0  \cf5 posixPath\cf0  \cf4 left inset\cf0  \cf5 theLeft\cf0  : \cf0 0\cf0  \cf4 bottom\cf0  \cf5 theBottom\cf0  \cf4 view width\cf0  \cf5 viewWidth\cf0  \cf4 view height\cf0  \cf5 viewHeight\cf0  \cf4 scale image\cf0  \cf5 imageScale\cf0  : \cf3 scale down proportionally\cf0  \cf4 align image\cf0  \cf5 imageAlignment\cf0  : \cf3 center aligned\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 createImageViewMainThread\cf0 :\{\cf5 posixPath\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 viewWidth\cf0 , \cf5 viewHeight\cf0 , \cf5 imageScale\cf0 , \cf5 imageAlignment\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 performSelectorOnMainThread\cf0 :\cf0 "createImageViewMainThread:"\cf0  \cf6 withObject\cf0 :\{\cf5 posixPath\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 viewWidth\cf0 , \cf5 viewHeight\cf0 , \cf5 imageScale\cf0 , \cf5 imageAlignment\cf0 \} \cf6 waitUntilDone\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 handlerResult\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf4 create image view
+\f1\b0 \cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 fontOfControlSize\cf0 :\cf5 controlSize\cf0  \cf6 boldType\cf0 :\cf5 boldType\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 controlSize\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  \cf3 regular size\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFontSize\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSFont's\cf0  \cf6 systemFontSizeForControlSize\cf0 :\cf5 NSRegularControlSize\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 controlSize\cf0  = \cf3 mini size\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFontSize\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSFont's\cf0  \cf6 systemFontSizeForControlSize\cf0 :\cf5 NSMiniControlSize\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 controlSize\cf0  = \cf3 small size\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFontSize\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSFont's\cf0  \cf6 systemFontSizeForControlSize\cf0 :\cf5 NSSmallControlSize\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 controlSize\cf0  = \cf3 large size\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFontSize\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 16\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 boldType\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 NSFont's\cf0  \cf6 boldSystemFontOfSize\cf0 :\cf5 theFontSize\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf5 NSFont's\cf0  \cf6 systemFontOfSize\cf0 :\cf5 theFontSize\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 fontOfControlSize\cf6 :\cf6 boldType\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 displayEnhancedAlertMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 mainText\cf0 , \cf5 theExplanation\cf0 , \cf5 styleNum\cf0 , \cf5 buttonsList\cf0 , \cf5 showSuppression\cf0 , \cf5 giveUp\cf0 , \cf5 theWidth\cf0 , \cf5 theHeight\cf0 , \cf5 controlsList\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theAccessoryView\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSView's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf0 0\cf0 , \cf0 0\cf0 \}, \{\cf5 theWidth\cf0 , \cf5 theHeight\cf0 \}\}\
+	\cf5 theAccessoryView's\cf0  \cf6 setSubviews\cf0 :\cf5 controlsList\cf0 \
+	
+\f0\i \cf2 -- reverse buttons because they get added in reverse order cf AS
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonsList\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf3 reverse\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 buttonsList\cf0 \
+	
+\f0\i \cf2 -- create an alert
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theAlert\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSAlert's\cf0  \cf6 alloc\cf0 ()'s \cf6 init\cf0 ()\
+	
+\f0\i \cf2 -- set up alert
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 tell
+\f1\b0 \cf0  \cf5 theAlert\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setAlertStyle\cf0 :\cf5 styleNum\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setMessageText\cf0 :\cf5 mainText\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setInformativeText\cf0 :\cf5 theExplanation\cf0 \
+		
+\f2\b \cf0 repeat
+\f1\b0 \cf0  
+\f2\b \cf0 with
+\f1\b0 \cf0  \cf5 anEntry\cf0  
+\f2\b \cf0 in
+\f1\b0 \cf0  \cf5 buttonsList\cf0 \
+			(
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 addButtonWithTitle\cf0 :\cf5 anEntry\cf0 )\
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setShowsSuppressionButton\cf0 :\cf5 showSuppression\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setAccessoryView\cf0 :\cf5 theAccessoryView\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  (\cf6 |window|\cf0 ()'s \cf6 setAutorecalculatesKeyViewLoop\cf0 :\cf3 true\cf0 )\
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 tell
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 -- if giveUp value > 0, tell the app to abort any modal event loop after that time, and thus close the panel
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 giveUp\cf0  > \cf0 0\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  \cf5 NSApp's\cf0  \cf6 performSelector\cf0 :\cf0 "abortModal"\cf0  \cf6 withObject\cf0 :(
+\f0\i \cf4 missing value
+\f1\i0 \cf0 ) \cf6 afterDelay\cf0 :\cf5 giveUp\cf0  \cf6 inModes\cf0 :\{\cf5 NSModalPanelRunLoopMode\cf0 \}\
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 returnCode\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theAlert's\cf0  \cf6 runModal\cf0 ()\
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theAlert\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 displayEnhancedAlertMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 prepareEnhancedWindowMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 windowTitle\cf0 , \cf5 theWidth\cf0 , \cf5 theHeight\cf0 , \cf5 controlsList\cf0 , \cf5 giveUp\cf0 , \cf5 defaultField\cf0 , \cf5 initPosition\cf0 , \cf5 cancelLeftFlag\cf0 , \cf5 allButtons\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 windowWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theWidth\cf0  + \cf5 accViewSideInset\cf0  * \cf0 2\cf0 \
+	
+\f0\i \cf2 -- position buttons
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonLeft\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 windowWidth\cf0  - \cf5 buttonSideInset\cf0 \
+	
+\f2\b \cf0 repeat
+\f1\b0 \cf0  
+\f2\b \cf0 with
+\f1\b0 \cf0  \cf5 aButton\cf0  
+\f2\b \cf0 in
+\f1\b0 \cf0  (\cf3 reverse\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 allButtons\cf0 )\
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 aButton's\cf0  \cf6 frame\cf0 ()\
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 class
+\f1\i0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 record
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 width\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 |size|\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonLeft\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 buttonLeft\cf0  - \cf5 buttonWidth\cf0 \
+		(\cf5 aButton's\cf0  \cf6 setFrameOrigin\cf0 :\{\cf5 buttonLeft\cf0 , \cf5 buttonYValue\cf0 \})\
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 -- reposition first button if necessary
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 cancelLeftFlag\cf0  
+\f2\b \cf0 and
+\f1\b0 \cf0  (
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 allButtons\cf0 )'s \cf6 tag\cf0 () 
+\f2\b \cf0 is
+\f1\b0 \cf0  \cf5 NSModalResponseCancel\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  (
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 allButtons\cf0 )'s \cf6 setFrameOrigin\cf0 :\{\cf5 buttonSideInset\cf0 , \cf5 buttonYValue\cf0 \}\
+	
+\f0\i \cf2 -- set up window and add buttons
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theWindow\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSWindow's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithContentRect\cf0 :\{\{\cf0 0\cf0 , \cf0 0\cf0 \}, \{\cf5 windowWidth\cf0 , \cf5 theHeight\cf0  + \cf5 accViewYValue\cf0  + \cf5 accViewTopGap\cf0 \}\} \cf6 styleMask\cf0 :\cf5 NSTitledWindowMask\cf0  \cf6 backing\cf0 :\cf5 NSBackingStoreBuffered\cf0  \cf6 defer\cf0 :\cf3 true\cf0 \
+	\cf5 theWindow's\cf0  \cf6 setLevel\cf0 :\cf5 NSModalPanelWindowLevel\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 thisContentView\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theWindow's\cf0  \cf6 contentView\cf0 ()\
+	\cf5 thisContentView's\cf0  \cf6 setSubviews\cf0 :\cf5 allButtons\cf0 \
+	
+\f0\i \cf2 -- set up accessory view, add controls, and add to window
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theAccessoryView\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSView's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 accViewSideInset\cf0 , \cf5 accViewYValue\cf0 \}, \{\cf5 theWidth\cf0 , \cf5 theHeight\cf0 \}\}\
+	\cf5 theAccessoryView's\cf0  \cf6 setSubviews\cf0 :\cf5 controlsList\cf0 \
+	\cf5 thisContentView's\cf0  \cf6 addSubview\cf0 :\cf5 theAccessoryView\cf0 \
+	\cf5 theWindow's\cf0  \cf6 setAutorecalculatesKeyViewLoop\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theWindow\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 prepareEnhancedWindowMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 showTheWindowAndWaitMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theWindow\cf0 , \cf5 defaultField\cf0 , \cf5 giveUp\cf0 , \cf5 initPosition\cf0 , \cf5 windowTitle\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f0\i \cf2 -- set first responder if necessary, then show window
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 defaultField\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f2\b \cf0 not
+\f1\b0 \cf0  
+\f0\i \cf4 missing value
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  \cf5 theWindow's\cf0  \cf6 makeFirstResponder\cf0 :\cf5 defaultField\cf0 \
+	
+\f0\i \cf2 -- position window if necessary
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 initPosition\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 initPosition\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 initPosition\cf0  = \{\} 
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		\cf5 theWindow's\cf0  \cf6 |center|\cf0 ()\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 screenFrame\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSScreen's\cf0  \cf6 mainScreen\cf0 ()'s \cf6 frame\cf0 ()\
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 class
+\f1\i0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 screenFrame\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 record
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 width\cf0 :\cf5 screenWidth\cf0 , \cf5 height\cf0 :\cf5 screenHeight\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 |size|\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 screenFrame\cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 screenWidth\cf0 , \cf5 screenHeight\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 screenFrame\cf0 \
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theY\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 screenHeight\cf0  - (
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 initPosition\cf0 )\
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 windowFrame\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theWindow's\cf0  \cf6 frame\cf0 ()\
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 class
+\f1\i0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 windowFrame\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 record
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 origin\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 windowFrame\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 initPosition\cf0 , \cf5 theY\cf0  - (\cf5 height\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 |size|\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 windowFrame\cf0 )\}\
+		
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 windowFrame\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 initPosition\cf0 , \cf5 theY\cf0  - (
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 windowFrame\cf0 )\}\
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+		\cf5 theWindow's\cf0  \cf6 setFrame\cf0 :\cf5 windowFrame\cf0  \cf6 display\cf0 :\cf3 true\cf0 \
+		\cf5 theWindow's\cf0  \cf6 orderFront\cf0 :
+\f2\b \cf0 me
+\f1\b0 \cf0  
+\f0\i \cf2 -- must be visible or it will be centered
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	\cf5 theWindow's\cf0  \cf6 setTitle\cf0 :\cf5 windowTitle\cf0 \
+	
+\f0\i \cf2 -- set give up timer if required, then show window modal
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 giveUp\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 integer
+\f1\i0 \cf0  > \cf0 0\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		\cf5 NSApp's\cf0  \cf6 performSelector\cf0 :\cf0 "abortModal"\cf0  \cf6 withObject\cf0 :(
+\f0\i \cf4 missing value
+\f1\i0 \cf0 ) \cf6 afterDelay\cf0 :\cf5 giveUp\cf0  \cf6 inModes\cf0 :\{\cf5 NSModalPanelRunLoopMode\cf0 \}\
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 returnCode\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSApp's\cf0  \cf6 runModalForWindow\cf0 :\cf5 theWindow\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 giveUp\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 integer
+\f1\i0 \cf0  > \cf0 0\cf0  
+\f2\b \cf0 and
+\f1\b0 \cf0  \cf5 returnCode\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f2\b \cf0 not
+\f1\b0 \cf0  \cf5 NSModalResponseAbort\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		\cf5 NSObject's\cf0  \cf6 cancelPreviousPerformRequestsWithTarget\cf0 :(\cf5 NSApp\cf0 ) \cf6 selector\cf0 :\cf0 "abortModal"\cf0  \cf6 object\cf0 :(
+\f0\i \cf4 missing value
+\f1\i0 \cf0 )\
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 -- close window
+\f1\i0 \cf0 \
+	\cf5 theWindow's\cf0  \cf6 orderOut\cf0 :
+\f2\b \cf0 me
+\f1\b0 \cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 showTheWindowAndWaitMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 createLabelMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 labelString\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 maxWidth\cf0 , \cf5 alignment\cf0 , \cf5 wrapsBool\cf0 , \cf5 controlSize\cf0 , \cf5 boldType\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f0\i \cf2 -- create label, set size and make font
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theLabel\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  (\cf5 NSTextField's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}, \{\cf5 maxWidth\cf0 , \cf0 17\cf0 \}\})\
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFont\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 fontOfControlSize\cf0 :\cf5 controlSize\cf0  \cf6 boldType\cf0 :\cf5 boldType\cf0 \
+	
+\f0\i \cf2 -- format label
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 alignment\cf0  = \cf3 right aligned\cf0  
+\f2\b \cf0 or
+\f1\b0 \cf0  \cf5 alignment\cf0  
+\f2\b \cf0 begins with
+\f1\b0 \cf0  \cf0 "r"\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		\cf5 theLabel's\cf0  \cf6 setAlignment\cf0 :\cf5 NSRightTextAlignment\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 alignment\cf0  = \cf3 center aligned\cf0  
+\f2\b \cf0 or
+\f1\b0 \cf0  \cf5 alignment\cf0  
+\f2\b \cf0 begins with
+\f1\b0 \cf0  \cf0 "c"\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		\cf5 theLabel's\cf0  \cf6 setAlignment\cf0 :\cf5 NSCenterTextAlignment\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		\cf5 theLabel's\cf0  \cf6 setAlignment\cf0 :\cf5 NSLeftTextAlignment\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 tell
+\f1\b0 \cf0  \cf5 theLabel\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setFont\cf0 :\cf5 theFont\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setPreferredMaxLayoutWidth\cf0 :\cf5 maxWidth\cf0 \
+		(
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setStringValue\cf0 :\cf5 labelString\cf0 )\
+		(
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setEditable\cf0 :\cf3 false\cf0 )\
+		(
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setSelectable\cf0 :\cf3 true\cf0 )\
+		(
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setBordered\cf0 :\cf3 false\cf0 )\
+		(
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setDrawsBackground\cf0 :\cf3 false\cf0 )\
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  (\cf6 cell\cf0 ()'s \cf6 setWraps\cf0 :\cf5 wrapsBool\cf0 )\
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 tell
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 -- size label
+\f1\i0 \cf0 \
+	\cf5 theLabel's\cf0  \cf6 setFrameSize\cf0 :(\cf5 theLabel's\cf0  \cf6 fittingSize\cf0 ())\
+	
+\f0\i \cf2 -- set alignment
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theLabel's\cf0  \cf6 frame\cf0 ()\
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 class
+\f1\i0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 record
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 width\cf0 :\cf5 newWidth\cf0 , \cf5 height\cf0 :\cf5 theHeight\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theFrame's\cf0  \cf5 |size|\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 newWidth\cf0 , \cf5 theHeight\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 alignment\cf0  = \cf3 right aligned\cf0  
+\f2\b \cf0 or
+\f1\b0 \cf0  \cf5 alignment\cf0  
+\f2\b \cf0 begins with
+\f1\b0 \cf0  \cf0 "r"\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theOrigin\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 theLeft\cf0  + \cf5 maxWidth\cf0  - \cf5 newWidth\cf0 , \cf5 theBottom\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 alignment\cf0  = \cf3 center aligned\cf0  
+\f2\b \cf0 or
+\f1\b0 \cf0  \cf5 alignment\cf0  
+\f2\b \cf0 begins with
+\f1\b0 \cf0  \cf0 "c"\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theOrigin\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{(\cf5 theLeft\cf0  + (\cf5 maxWidth\cf0  - \cf5 newWidth\cf0 ) / \cf0 2\cf0 ), \cf5 theBottom\cf0 \}\
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theOrigin\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}\
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	\cf5 theLabel's\cf0  \cf6 setFrameOrigin\cf0 :\cf5 theOrigin\cf0 \
+	
+\f0\i \cf2 -- return theLabel, the top of the label, and its width
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 theLabel\cf0 , \cf5 theBottom\cf0  + \cf5 theHeight\cf0 , \cf5 newWidth\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 createLabelMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 createFieldMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 enteredText\cf0 , \cf5 placeholder\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 extraHeight\cf0 , \cf5 acceptsTabs\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theTop\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theBottom\cf0  + \cf0 22\cf0  + \cf5 extraHeight\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theField\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  (\cf5 NSTextField's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}, \{\cf5 theWidth\cf0 , \cf5 theTop\cf0  - \cf5 theBottom\cf0 \}\})\
+	
+\f2\b \cf0 tell
+\f1\b0 \cf0  \cf5 theField\cf0 \
+		(
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setEditable\cf0 :\cf3 true\cf0 )\
+		(
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setBezeled\cf0 :\cf3 true\cf0 )\
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  (\cf6 cell\cf0 ()'s \cf6 setPlaceholderString\cf0 :\cf5 placeholder\cf0 )\
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 extraHeight\cf0  > \cf0 0\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f2\b \cf0 its
+\f1\b0 \cf0  (\cf6 cell\cf0 ()'s \cf6 setWraps\cf0 :\cf3 true\cf0 )\
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setStringValue\cf0 :\cf5 enteredText\cf0 \
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 acceptsTabs\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setDelegate\cf0 :
+\f2\b \cf0 me
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 tell
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 -- return theField, the top of the field
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 theField\cf0 , \cf5 theTop\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 createFieldMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 createSecureFieldMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 enteredText\cf0 , \cf5 placeholder\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theTop\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theBottom\cf0  + \cf0 22\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theField\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  (\cf5 NSSecureTextField's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}, \{\cf5 theWidth\cf0 , \cf5 theTop\cf0  - \cf5 theBottom\cf0 \}\})\
+	
+\f2\b \cf0 tell
+\f1\b0 \cf0  \cf5 theField\cf0 \
+		(
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setEditable\cf0 :\cf3 true\cf0 )\
+		(
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setBezeled\cf0 :\cf3 true\cf0 )\
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  (\cf6 cell\cf0 ()'s \cf6 setWraps\cf0 :\cf3 false\cf0 )\
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setPlaceholderString\cf0 :\cf5 placeholder\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setStringValue\cf0 :\cf5 enteredText\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 tell
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 -- return theField, the top of the field
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 theField\cf0 , \cf5 theTop\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 createSecureFieldMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 createPopupMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 entryList\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 defaultValue\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 thePopup\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSPopUpButton's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}, \{\cf5 theWidth\cf0 , \cf0 26\cf0 \}\} \cf6 pullsDown\cf0 :\cf3 false\cf0 \
+	\cf5 thePopup's\cf0  \cf6 addItemsWithTitles\cf0 :\cf5 entryList\cf0 \
+	\cf5 thePopup's\cf0  \cf6 selectItemWithTitle\cf0 :\cf5 defaultValue\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 thePopup\cf0 , \cf5 theBottom\cf0  + \cf0 26\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 createPopupMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 createCheckboxMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 checkTitle\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 initialState\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theCheckbox\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSButton's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}, \{\cf5 theWidth\cf0 , \cf0 18\cf0 \}\}\
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFont\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 fontOfControlSize\cf0 :\cf3 regular size\cf0  \cf6 boldType\cf0 :\cf3 false\cf0 \
+	
+\f2\b \cf0 tell
+\f1\b0 \cf0  \cf5 theCheckbox\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setButtonType\cf0 :\cf5 NSSwitchButton\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setTitle\cf0 :\cf5 checkTitle\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setState\cf0 :\cf5 initialState\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setFont\cf0 :\cf5 theFont\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 tell
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 isMain\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0 \
+	\cf5 theCheckbox's\cf0  \cf6 setFrameSize\cf0 :(\cf5 theCheckbox's\cf0  \cf6 fittingSize\cf0 ())\
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theCheckbox's\cf0  \cf6 frame\cf0 ()\
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 class
+\f1\i0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 record
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 width\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 |size|\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f0\i \cf2 -- return theCheckbox, the top of theCheckbox, and its width
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 theCheckbox\cf0 , \cf5 theBottom\cf0  + \cf0 18\cf0 , \cf5 theWidth\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 createCheckboxMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 createPathControlMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 thePath\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 popsUpBool\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 anNSURL\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 |NSURL|'s\cf0  \cf6 fileURLWithPath\cf0 :\cf5 thePath\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 popsUpBool\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 thePathControl\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSPathControl's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}, \{\cf5 theWidth\cf0 , \cf0 26\cf0 \}\}\
+		\cf5 thePathControl's\cf0  \cf6 setPathStyle\cf0 :\cf5 NSPathStylePopUp\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theTop\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theBottom\cf0  + \cf0 26\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 thePathControl\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSPathControl's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}, \{\cf5 theWidth\cf0 , \cf0 22\cf0 \}\}\
+		\cf5 thePathControl's\cf0  \cf6 setPathStyle\cf0 :\cf5 NSPathStyleStandard\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theTop\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theBottom\cf0  + \cf0 22\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	\cf5 thePathControl's\cf0  \cf6 setURL\cf0 :\cf5 anNSURL\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 thePathControl\cf0 , \cf5 theTop\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 createPathControlMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 createMatrixMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 listOfNames\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 theWidth\cf0 , \cf5 isVertical\cf0 , \cf5 defaultValue\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 class
+\f1\i0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 defaultValue\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 integer
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 defaultValue\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 defaultValue\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 listOfNames\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theCount\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 count
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 listOfNames\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 isVertical\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 rowCount\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theCount\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 colCount\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 colCount\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theCount\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 rowCount\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theDepth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 rowCount\cf0  * \cf0 18\cf0  + (\cf5 rowCount\cf0  - \cf0 1\cf0 ) * \cf0 2\cf0  
+\f0\i \cf2 -- 18 pts per button + 2 pts between
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theMatrix\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSMatrix's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}, \{\cf5 theWidth\cf0 , \cf5 theDepth\cf0 \}\} \cf6 mode\cf0 :\cf5 NSRadioModeMatrix\cf0  \cf6 cellClass\cf0 :(\cf5 NSButtonCell\cf0 ) \cf6 numberOfRows\cf0 :\cf5 rowCount\cf0  \cf6 numberOfColumns\cf0 :\cf5 colCount\cf0 \
+	\cf5 theMatrix's\cf0  \cf6 deselectAllCells\cf0 ()\
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFont\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf6 fontOfControlSize\cf0 :\cf3 regular size\cf0  \cf6 boldType\cf0 :\cf3 false\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theCells\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theMatrix's\cf0  \cf6 cells\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 repeat
+\f1\b0 \cf0  
+\f2\b \cf0 with
+\f1\b0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 from
+\f1\b0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 count
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theCells\cf0 \
+		((
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theCells\cf0 )'s \cf6 setButtonType\cf0 :\cf5 NSRadioButton\cf0 )\
+		((
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theCells\cf0 )'s \cf6 setTitle\cf0 :(
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 listOfNames\cf0 ))\
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 listOfNames\cf0  = \cf5 defaultValue\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 isVertical\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+				(\cf5 theMatrix's\cf0  \cf6 selectCellAtRow\cf0 :(\cf5 i\cf0  - \cf0 1\cf0 ) \cf6 column\cf0 :\cf0 0\cf0 )\
+			
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+				(\cf5 theMatrix's\cf0  \cf6 selectCellAtRow\cf0 :\cf0 0\cf0  \cf6 column\cf0 :(\cf5 i\cf0  - \cf0 1\cf0 ))\
+			
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+		((
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theCells\cf0 )'s \cf6 setFont\cf0 :\cf5 theFont\cf0 )\
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+	\cf5 theMatrix's\cf0  \cf6 setIntercellSpacing\cf0 :\{\cf0 8\cf0 , \cf0 2\cf0 \}\
+	\cf5 theMatrix's\cf0  \cf6 setAutorecalculatesCellSize\cf0 :\cf3 true\cf0 \
+	\cf5 theMatrix's\cf0  \cf6 setAutosizesCells\cf0 :\cf3 true\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 isMain\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSThread's\cf0  \cf6 isMainThread\cf0 () 
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 boolean
+\f1\i0 \cf0 \
+	\cf5 theMatrix's\cf0  \cf6 sizeToCells\cf0 ()\
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theMatrix's\cf0  \cf6 frame\cf0 ()\
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 class
+\f1\i0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 record
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 newWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 width\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 |size|\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 newWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	\cf5 theMatrix's\cf0  \cf6 setFrameSize\cf0 :\{\cf5 newWidth\cf0 , \cf5 theDepth\cf0 \}\
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 theMatrix\cf0 , \cf5 theBottom\cf0  + \cf5 theDepth\cf0 , \cf5 newWidth\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 createMatrixMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 createRuleMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 theBottom\cf0 , \cf5 theLeft\cf0 , \cf5 theWidth\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theRule\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSBox's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}, \{\cf5 theWidth\cf0 , \cf0 1\cf0 \}\}\
+	
+\f2\b \cf0 tell
+\f1\b0 \cf0  \cf5 theRule\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setBoxType\cf0 :\cf5 NSBoxSeparator\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setTitlePosition\cf0 :\cf5 NSNoTitle\cf0 \
+		
+\f2\b \cf0 its
+\f1\b0 \cf0  \cf6 setBorderType\cf0 :\cf5 NSLineBorder\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 tell
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 theRule\cf0 , \cf5 theBottom\cf0  + \cf0 1\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 createRuleMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 createImageViewMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 posixPath\cf0 , \cf5 theLeft\cf0 , \cf5 theBottom\cf0 , \cf5 viewWidth\cf0 , \cf5 viewHeight\cf0 , \cf5 imageScale\cf0 , \cf5 imageAlignment\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theImage\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSImage's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithContentsOfFile\cf0 :\cf5 posixPath\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 theImage\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 missing value
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f2\b \cf0 error
+\f1\b0 \cf0  \cf0 "No valid image found at "\cf0  & \cf5 posixPath\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 imageView\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 NSImageView's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf5 theLeft\cf0 , \cf5 theBottom\cf0 \}, \{\cf5 viewWidth\cf0 , \cf5 viewHeight\cf0 \}\}\
+	\cf5 imageView's\cf0  \cf6 setImage\cf0 :\cf5 theImage\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theAlignments\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf3 center aligned\cf0 , \cf3 top aligned\cf0 , \cf3 top left aligned\cf0 , \cf3 top right aligned\cf0 , \cf3 left aligned\cf0 , \cf3 bottom left aligned\cf0 , \cf3 bottom right aligned\cf0 , \cf3 right aligned\cf0 , \cf3 bottom aligned\cf0 \}\
+	
+\f2\b \cf0 repeat
+\f1\b0 \cf0  
+\f2\b \cf0 with
+\f1\b0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 from
+\f1\b0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 count
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theAlignments\cf0 \
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theAlignments\cf0  = \cf5 imageAlignment\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			(\cf5 imageView's\cf0  \cf6 setImageAlignment\cf0 :(\cf5 i\cf0  - \cf0 1\cf0 ))\
+			
+\f2\b \cf0 exit
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theScales\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf3 scale down proportionally\cf0 , \cf3 scale to fit\cf0 , \cf3 scale none\cf0 , \cf3 scale proportionally\cf0 \}\
+	
+\f2\b \cf0 repeat
+\f1\b0 \cf0  
+\f2\b \cf0 with
+\f1\b0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 from
+\f1\b0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 count
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theScales\cf0 \
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theScales\cf0  = \cf5 imageScale\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			(\cf5 imageView's\cf0  \cf6 setImageScaling\cf0 :(\cf5 i\cf0  - \cf0 1\cf0 ))\
+			
+\f2\b \cf0 exit
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 imageView\cf0 , \cf5 theBottom\cf0  + \cf5 viewHeight\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 createImageViewMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 createButtonsViewMainThread\cf0 :\cf5 theArg\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \{\cf5 buttonList\cf0 , \cf5 buttonKeysList\cf0 , \cf5 equalWidths\cf0 , \cf5 cancelIndex\cf0 , \cf5 okIndex\cf0 \} 
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 theArg\cf0  
+\f2\b \cf0 as
+\f1\b0 \cf0  
+\f0\i \cf4 list
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 copy
+\f1\b0 \cf0  \cf5 minimumButtonWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 minButtonWidth\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonCount\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 count
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 buttonList\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonKeysCount\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f2\b \cf4 count
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 buttonKeysList\cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 allButtons\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\} 
+\f0\i \cf2 -- to hold list
+\f1\i0 \cf0 \
+	
+\f0\i \cf2 --create buttons
+\f1\i0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 minAccViewWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 0\cf0 \
+	
+\f2\b \cf0 repeat
+\f1\b0 \cf0  
+\f2\b \cf0 with
+\f1\b0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 from
+\f1\b0 \cf0  \cf5 buttonCount\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 by
+\f1\b0 \cf0  \cf0 -1\cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 thisButton\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  (\cf5 NSButton's\cf0  \cf6 alloc\cf0 ()'s \cf6 initWithFrame\cf0 :\{\{\cf0 0\cf0 , \cf5 buttonYValue\cf0 \}, \{\cf5 minButtonWidth\cf0 , \cf0 32\cf0 \}\})\
+		(\cf5 thisButton's\cf0  \cf6 setButtonType\cf0 :\cf5 NSMomentaryPushInButton\cf0 )\
+		(\cf5 thisButton's\cf0  \cf6 setBezelStyle\cf0 :\cf5 NSRoundedBezelStyle\cf0 )\
+		(\cf5 thisButton's\cf0  \cf6 setImagePosition\cf0 :\cf5 NSNoImage\cf0 )\
+		(\cf5 thisButton's\cf0  \cf6 setTag\cf0 :\cf5 i\cf0 )\
+		(\cf5 thisButton's\cf0  \cf6 setTitle\cf0 :(
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 buttonList\cf0 ))\
+		(\cf5 thisButton's\cf0  \cf6 setTarget\cf0 :
+\f2\b \cf0 me
+\f1\b0 \cf0 )\
+		(\cf5 thisButton's\cf0  \cf6 setAction\cf0 :\cf0 "closeTheWindow:"\cf0 )\
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 asButtonNumber\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 buttonCount\cf0  - \cf5 i\cf0  + \cf0 1\cf0 \
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 i\cf0  = \cf5 cancelIndex\cf0  
+\f2\b \cf0 or
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 buttonList\cf0  = \cf5 cancelIndex\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f0\i \cf2 -- make esc the shortcut
+\f1\i0 \cf0 \
+			(\cf5 thisButton's\cf0  \cf6 setKeyEquivalent\cf0 :(
+\f0\i \cf4 character
+\f1\i0 \cf0  \cf3 id\cf0  \cf0 27\cf0 ))\
+			(\cf5 thisButton's\cf0  \cf6 setTag\cf0 :\cf5 NSModalResponseCancel\cf0 )\
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 i\cf0  = \cf5 okIndex\cf0  
+\f2\b \cf0 or
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 buttonList\cf0  = \cf5 okIndex\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f0\i \cf2 -- make return/enter the shortcut
+\f1\i0 \cf0 \
+			(\cf5 thisButton's\cf0  \cf6 setKeyEquivalent\cf0 :\cf3 return\cf0 )\
+		
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 i\cf0  \uc0\u8804  \cf5 buttonKeysCount\cf0  
+\f2\b \cf0 and
+\f1\b0 \cf0  \cf3 length\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 buttonKeysList\cf0  > \cf0 0\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f0\i \cf2 -- add shortcut
+\f1\i0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theKey\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 character
+\f1\i0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf5 i\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 buttonKeysList\cf0 \
+			(\cf5 thisButton's\cf0  \cf6 setKeyEquivalent\cf0 :\cf5 theKey\cf0 )\
+			(\cf5 thisButton's\cf0  \cf6 setKeyEquivalentModifierMask\cf0 :\cf5 NSCommandKeyMask\cf0 )\
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+		
+\f0\i \cf2 -- resize to fit
+\f1\i0 \cf0 \
+		(\cf5 thisButton's\cf0  \cf6 setFrameSize\cf0 :(\cf5 thisButton's\cf0  \cf6 fittingSize\cf0 ()))\
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 beginning
+\f1\b0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 allButtons\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 thisButton\cf0 \
+		
+\f0\i \cf2 -- keep track of width of widest button
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 thisButton's\cf0  \cf6 frame\cf0 ()\
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f0\i \cf4 class
+\f1\i0 \cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0  
+\f2\b \cf0 is
+\f1\b0 \cf0  
+\f0\i \cf4 record
+\f1\i0 \cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 thisWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 width\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 |size|\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonHeight\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 height\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 |size|\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+		
+\f2\b \cf0 else
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 thisWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 1\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 buttonHeight\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  
+\f0\i \cf4 item
+\f1\i0 \cf0  \cf0 2\cf0  
+\f2\b \cf0 of
+\f1\b0 \cf0  \cf5 theFrame\cf0 \
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  
+\f2\b \cf0 not
+\f1\b0 \cf0  \cf5 equalWidths\cf0  
+\f2\b \cf0 and
+\f1\b0 \cf0  \cf5 thisWidth\cf0  < \cf5 minimumButtonWidth\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+			
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 thisWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 minimumButtonWidth\cf0 \
+			(\cf5 thisButton's\cf0  \cf6 setFrameSize\cf0 :\{\cf5 thisWidth\cf0 , \cf5 buttonHeight\cf0 \})\
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 minAccViewWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 minAccViewWidth\cf0  + \cf5 thisWidth\cf0 \
+		
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 thisWidth\cf0  > \cf5 minButtonWidth\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0  
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 minButtonWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 thisWidth\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 equalWidths\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		
+\f0\i \cf2 -- resize them all to the size of the biggest
+\f1\i0 \cf0 \
+		
+\f2\b \cf0 repeat
+\f1\b0 \cf0  
+\f2\b \cf0 with
+\f1\b0 \cf0  \cf5 aButton\cf0  
+\f2\b \cf0 in
+\f1\b0 \cf0  \cf5 allButtons\cf0 \
+			(\cf5 aButton's\cf0  \cf6 setFrameSize\cf0 :\{\cf5 minButtonWidth\cf0 , \cf5 buttonHeight\cf0 \})\
+		
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 repeat
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 set
+\f1\b0 \cf0  \cf5 minAccViewWidth\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \cf5 buttonCount\cf0  * \cf5 minButtonWidth\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 set
+\f1\b0 \cf0  
+\f2\b \cf0 my
+\f1\b0 \cf0  \cf5 handlerResult\cf0  
+\f2\b \cf0 to
+\f1\b0 \cf0  \{\cf5 allButtons\cf0 , \cf5 minAccViewWidth\cf0 \}\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 createButtonsViewMainThread\cf6 :\cf0 \
+\
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 closeTheWindow\cf0 :\cf5 theButton\cf0 \
+	(\cf5 NSApp\cf0 )'s \cf6 stopModalWithCode\cf0 :(\cf5 theButton's\cf0  \cf6 tag\cf0 ())\
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 closeTheWindow\cf6 :\cf0 \
+\
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f0\i \cf2 -- text field delegate methods so designated fields accept tab, enter and return keys
+\f1\i0 \cf0 \
+\pard\pardeftab480\slleading40\pardirnatural\partightenfactor0
+
+\f2\b \cf0 on
+\f1\b0 \cf0  \cf6 control\cf0 :\cf5 theControl\cf0  \cf6 textView\cf0 :\cf5 theTextView\cf0  \cf6 doCommandBySelector\cf0 :\cf5 theSel\cf0 \
+	
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 theSel\cf0  = \cf0 "insertNewline:"\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		\cf5 theTextView's\cf0  \cf6 insertNewlineIgnoringFieldEditor\cf0 :
+\f2\b \cf0 me
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf3 true\cf0 \
+	
+\f2\b \cf0 else
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0  \cf5 theSel\cf0  = \cf0 "insertTab:"\cf0  
+\f2\b \cf0 then
+\f1\b0 \cf0 \
+		\cf5 theTextView's\cf0  \cf6 insertTabIgnoringFieldEditor\cf0 :
+\f2\b \cf0 me
+\f1\b0 \cf0 \
+		
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf3 true\cf0 \
+	
+\f2\b \cf0 end
+\f1\b0 \cf0  
+\f2\b \cf0 if
+\f1\b0 \cf0 \
+	
+\f2\b \cf0 return
+\f1\b0 \cf0  \cf3 false\cf0 \
+
+\f2\b \cf0 end
+\f1\b0 \cf0  \cf6 control\cf6 :\cf6 textView\cf6 :\cf6 doCommandBySelector\cf6 :\cf0 \
+}
