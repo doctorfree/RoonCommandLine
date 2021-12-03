@@ -387,8 +387,8 @@ RoonCommandLine source directory:
 
 <p float="left">
 Interactive menus when invoked with no arguments<br/>
-  <img src="screenshots/Roon_UI.jpg">
-  <img src="screenshots/Roon_Set_Zone.jpg">
+  <img src="screenshots/Roon_UI.png">
+  <img src="screenshots/Roon_Set_Zone.png">
 </p>
 
 ## Troubleshooting
