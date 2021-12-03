@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# @brief   convert apple/shell script to bundle
+# @version 0.1
+# @auther  gongqijian
+# @date    2013/05/09
+
+set -e
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $(basename $0) script-file [appname]"
+    echo "Exampel:"
+    echo "    $(basename $0) example.applescript example"
+    echo "    $(basename $0) example.scpt example"
+    echo "    $(basename $0) example.sh example"
+    exit 1
+fi
+
+dir=$(cd $(dirname "$1"); pwd)
+scpt=$(basename "$1")
+app=$2
+
+function mk-apple-script-bundle() {
+    [ ! -n "$app" ] && app=${scpt%*.scpt}
+    osacompile -o "$dir/$app.app" "$dir/$scpt"
+    defaults write "$dir/$app.app"/Contents/Info LSUIElement -string 1
+}
+
+function mk-shell-script-bundle() {
+    [ ! -n "$app" ] && app=${scpt%*.sh}
+    contents_dir=$app.app/Contents/MacOS
+    mkdir -p $contents_dir
+    cp $scpt $contents_dir
+    chmod 755 $contents_dir/$scpt
+
+    cat >$app.app/Contents/Info.plist<<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>$scpt</string>
+    <key>LSUIElement</key>
+    <string>1</string>
+</dict>
+</plist>
+EOF
+}
+
+suffix=${scpt##*.}
+
+case $suffix in
+    applescript | scpt)
+        mk-apple-script-bundle
+        ;;
+    sh)
+        mk-shell-script-bundle
+        ;;
+    *)
+        echo "unknow suffix '$suffix'"
+        exit 2
+esac
+
+echo "done!"
+exit 0

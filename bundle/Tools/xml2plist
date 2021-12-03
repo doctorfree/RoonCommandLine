@@ -1,0 +1,11 @@
+#!/bin/bash
+
+plist_name="$1"
+
+[ -f ${plist_name}.plist ] || {
+    echo "Cannot locate ${plist_name}.plist - exiting."
+    exit 1
+}
+
+echo "Converting ${plist_name}.plist from XML to binary format"
+plutil -convert binary1 ${plist_name}.plist
