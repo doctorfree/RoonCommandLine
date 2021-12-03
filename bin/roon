@@ -34,19 +34,21 @@ taglist=
 playlist=
 radio=
 search=
+setdefs=
 tag=
 zone=
 zonegroup=
 zonelist=
 
 usage() {
-  printf "\nUsage: roon -A album -a artist -g genre -G zone_group -l [albums|artists|genres|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -r radio -u"
+  printf "\nUsage: roon -A album -a artist -g genre -G zone_group -l [albums|artists|genres|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -S -r radio -u"
   printf "\n\tWhere:\n\t\t-A album selects an album to play"
   printf "\n\t\t-a artist selects an artist to play"
   printf "\n\t\t-g genre selects a genre to play"
   printf "\n\t\t-p playlist selects a playlist to play"
   printf "\n\t\t-G zone_group specifies a zone grouping specified in roon_api.ini"
   printf "\n\t\t-L setup roon to execute local commands rather than remote via SSH"
+  printf "\n\t\t-S Set Roon defaults in roon_api.ini"
   printf "\n\t\t-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones"
   printf "\n\t\t-r radio selects a live radio stream to play"
   printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
@@ -93,239 +95,6 @@ ROONCONF=${ROONETC}/pyroonconf
 LOCAL=false
 [ -f ${ROONCONF} ] && . ${ROONCONF}
 
-while getopts A:a:g:G:p:t:z:c:l:s:Lr:u flag; do
-    case $flag in
-        A)
-            album="$OPTARG"
-            ;;
-        a)
-            artist="$OPTARG"
-            ;;
-        g)
-            genre="$OPTARG"
-            ;;
-        p)
-            playlist="$OPTARG"
-            ;;
-        t)
-            tag="$OPTARG"
-            ;;
-        z)
-            zone="$OPTARG"
-            ;;
-        c)
-            comm="$OPTARG"
-            ;;
-        l)
-            listname="$OPTARG"
-            if [ "$listname" == "albums" ] || [ "$listname" == "album" ]
-            then
-                albumlist=1
-            elif [ "$listname" == "artists" ] || [ "$listname" == "artist" ]
-            then
-                artistlist=1
-            elif [ "$listname" == "genres" ] || [ "$listname" == "genre" ]
-            then
-                genrelist=1
-            elif [ "$listname" == "playlists" ] || [ "$listname" == "playlist" ]
-            then
-                playlistlist=1
-            elif [ "$listname" == "stations" ] || [ "$listname" == "radio" ]
-            then
-                radiolist=1
-            elif [ "$listname" == "tags" ] || [ "$listname" == "tag" ]
-            then
-                taglist=1
-            elif [ "$listname" == "zones" ] || [ "$listname" == "zone" ]
-            then
-                zonelist=1
-            else
-                echo "Unknown list type: $listname"
-                usage
-            fi
-
-            ;;
-        G)
-            zonegroup="$OPTARG"
-            ;;
-        L)
-            if [ -f ${ROONCONF} ]
-            then
-                grep -v ^LOCAL= ${ROONCONF} > /tmp/roon$$
-                echo "LOCAL=true" >> /tmp/roon$$
-                cp /tmp/roon$$ ${ROONCONF}
-                rm -f /tmp/roon$$
-                . ${ROONCONF}
-            else
-                echo "${ROONCONF} does not exist"
-                echo "RoonCommandLine is not installed locally"
-            fi
-            ;;
-        r)
-            radio="$OPTARG"
-            ;;
-        s)
-            search="$OPTARG"
-            ;;
-        u)
-            usage
-            ;;
-    esac
-done
-
-[ "$search" ] || search="all"
-
-# Set Zone
-[ "$zone" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        set_zone $zone
-    else
-        ssh $user@$server "bash -l -c \"set_zone $zone\""
-    fi
-}
-
-# Zone Grouping
-[ "$zonegroup" ] && {
-    [ "$comm" == "group" ] || [ "$comm" == "ungroup" ] || comm=group
-    if [ "${LOCAL}" = true ]
-    then
-        set_zone_group $comm $zonegroup
-    else
-        ssh $user@$server "bash -l -c \"set_zone_group $comm $zonegroup\""
-    fi
-}
-
-[ "$albumlist" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        list_albums $search
-    else
-        ssh $user@$server "bash -l -c \"list_albums $search\""
-    fi
-}
-[ "$artistlist" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        list_artists $search
-    else
-        ssh $user@$server "bash -l -c \"list_artists $search\""
-    fi
-}
-[ "$genrelist" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        list_genres $search
-    else
-        ssh $user@$server "bash -l -c \"list_genres $search\""
-    fi
-}
-[ "$playlistlist" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        list_playlists $search
-    else
-        ssh $user@$server "bash -l -c \"list_playlists $search\""
-    fi
-}
-[ "$radiolist" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        list_radio $search
-    else
-        ssh $user@$server "bash -l -c \"list_radio $search\""
-    fi
-}
-[ "$taglist" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        list_tags $search
-    else
-        ssh $user@$server "bash -l -c \"list_tags $search\""
-    fi
-}
-[ "$zonelist" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        list_zones $search
-    else
-        ssh $user@$server "bash -l -c \"list_zones $search\""
-    fi
-}
-[ "$album" ] && {
-    [ "${album}" == "default" ] && album=
-    if [ "${LOCAL}" = true ]
-    then
-        play_album $album
-    else
-        ssh $user@$server "bash -l -c \"play_album $album\""
-    fi
-}
-[ "$artist" ] && {
-    [ "${artist}" == "default" ] && artist=
-    if [ "${LOCAL}" = true ]
-    then
-        play_artist $artist
-    else
-        ssh $user@$server "bash -l -c \"play_artist $artist\""
-    fi
-}
-[ "$genre" ] && {
-    [ "${genre}" == "default" ] && genre=
-    if [ "${LOCAL}" = true ]
-    then
-        play_genre $genre
-    else
-        ssh $user@$server "bash -l -c \"play_genre $genre\""
-    fi
-}
-[ "$playlist" ] && {
-    [ "${playlist}" == "default" ] && playlist=
-    if [ "${LOCAL}" = true ]
-    then
-        play_playlist $playlist
-    else
-        ssh $user@$server "bash -l -c \"play_playlist $playlist\""
-    fi
-}
-[ "$tag" ] && {
-    [ "${tag}" == "default" ] && tag=
-    if [ "${LOCAL}" = true ]
-    then
-        play_tag $tag
-    else
-        ssh $user@$server "bash -l -c \"play_tag $tag\""
-    fi
-}
-[ "$radio" ] && {
-    [ "${radio}" == "default" ] && radio=
-    if [ "${LOCAL}" = true ]
-    then
-        play_radio ${radio}
-    else
-        ssh $user@$server "bash -l -c \"play_radio ${radio}\""
-    fi
-}
-
-[ "$comm" ] && {
-    case "$comm" in
-    "shuffle"|"unshuffle"|"repeat"|"unrepeat"|"mute"|"unmute"|"next"|"previous"|"play"|"pause"|"stop"|"playpause")
-        if [ "${LOCAL}" = true ]
-        then
-            zone_command -c ${comm}
-        else
-            ssh $user@$server "bash -l -c \"zone_command -c ${comm}\""
-        fi
-        ;;
-    "group"|"ungroup")
-        ;;
-    *)
-        echo "Unrecognized Roon command: $comm"
-        usage
-        ;;
-    esac
-}
-
 select_zone() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
@@ -345,6 +114,7 @@ select_zone() {
     do
         case "$opt,$REPLY" in
             "Main Menu",*|*,"Main Menu")
+                main_menu
                 break 2
                 ;;
             "Quit",*|*,"Quit"|"quit",*|*,"quit")
@@ -368,38 +138,6 @@ select_zone() {
                   printf "\n\tfor one of the listed options below.\n\n"
                   break
                 fi
-                ;;
-        esac
-    done
-  done
-}
-
-list_defaults() {
-  defaults_options=("Set Default Album" "Set Default Artist" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Main Menu" "Quit")
-  while true
-  do
-    for media in Album Artist Genre Playlist Radio Tag
-    do
-      DEFAULT=`grep ^Default${media} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-      # Remove leading and trailing spaces
-      DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-      printf "\nDefault ${media}: ${DEFAULT}"
-    done
-    printf "\n\n"
-    PS3="${BOLD}Please enter the default you wish to set (numeric or text): ${NORMAL}"
-    select opt in "${defaults_options[@]}"
-    do
-        case "$opt,$REPLY" in
-            "Main Menu",*|*,"Main Menu")
-                break 2
-                ;;
-            "Quit",*|*,"Quit"|"quit",*|*,"quit")
-                printf "\nExiting\n"
-                exit 0
-                ;;
-            *,*)
-                select_default  "${opt}"
-                break
                 ;;
         esac
     done
@@ -468,10 +206,11 @@ select_default() {
     do
         case "$opt,$REPLY" in
             "Set Defaults Menu",*|*,"Set Defaults Menu")
-                break
+                break 2
                 ;;
             "Main Menu",*|*,"Main Menu")
-                break 2
+                main_menu
+                break 3
                 ;;
             "Quit",*|*,"Quit"|"quit",*|*,"quit")
                 printf "\nExiting\n"
@@ -553,6 +292,7 @@ select_media() {
     do
         case "$opt,$REPLY" in
             "Main Menu",*|*,"Main Menu")
+                main_menu
                 break 2
                 ;;
             "Quit",*|*,"Quit"|"quit",*|*,"quit")
@@ -574,11 +314,44 @@ select_media() {
   done
 }
 
-[ "${show_roon_menu}" ] && {
+list_defaults() {
+  defaults_options=("Set Default Album" "Set Default Artist" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Main Menu" "Quit")
+  while true
+  do
+    for media in Album Artist Genre Playlist Radio Tag
+    do
+      DEFAULT=`grep ^Default${media} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+      # Remove leading and trailing spaces
+      DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+      printf "\nDefault ${media}: ${DEFAULT}"
+    done
+    printf "\n\n"
+    PS3="${BOLD}Please enter the default you wish to set (numeric or text): ${NORMAL}"
+    select opt in "${defaults_options[@]}"
+    do
+        case "$opt,$REPLY" in
+            "Main Menu",*|*,"Main Menu")
+                main_menu
+                break 2
+                ;;
+            "Quit",*|*,"Quit"|"quit",*|*,"quit")
+                printf "\nExiting\n"
+                exit 0
+                ;;
+            *,*)
+                select_default  "${opt}"
+                break
+                ;;
+        esac
+    done
+  done
+}
+
+main_menu() {
   while true
   do
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Genre" "Play Default Live Radio" "Play Default Playlist" "Play Default Tag" "Quit")
+    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Quit")
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
@@ -866,6 +639,251 @@ select_media() {
         esac
     done
   done
+}
+
+while getopts A:a:g:G:p:t:z:c:l:s:LSr:u flag; do
+    case $flag in
+        A)
+            album="$OPTARG"
+            ;;
+        a)
+            artist="$OPTARG"
+            ;;
+        g)
+            genre="$OPTARG"
+            ;;
+        p)
+            playlist="$OPTARG"
+            ;;
+        t)
+            tag="$OPTARG"
+            ;;
+        z)
+            zone="$OPTARG"
+            ;;
+        c)
+            comm="$OPTARG"
+            ;;
+        l)
+            listname="$OPTARG"
+            if [ "$listname" == "albums" ] || [ "$listname" == "album" ]
+            then
+                albumlist=1
+            elif [ "$listname" == "artists" ] || [ "$listname" == "artist" ]
+            then
+                artistlist=1
+            elif [ "$listname" == "genres" ] || [ "$listname" == "genre" ]
+            then
+                genrelist=1
+            elif [ "$listname" == "playlists" ] || [ "$listname" == "playlist" ]
+            then
+                playlistlist=1
+            elif [ "$listname" == "stations" ] || [ "$listname" == "radio" ]
+            then
+                radiolist=1
+            elif [ "$listname" == "tags" ] || [ "$listname" == "tag" ]
+            then
+                taglist=1
+            elif [ "$listname" == "zones" ] || [ "$listname" == "zone" ]
+            then
+                zonelist=1
+            else
+                echo "Unknown list type: $listname"
+                usage
+            fi
+
+            ;;
+        G)
+            zonegroup="$OPTARG"
+            ;;
+        L)
+            if [ -f ${ROONCONF} ]
+            then
+                grep -v ^LOCAL= ${ROONCONF} > /tmp/roon$$
+                echo "LOCAL=true" >> /tmp/roon$$
+                cp /tmp/roon$$ ${ROONCONF}
+                rm -f /tmp/roon$$
+                . ${ROONCONF}
+            else
+                echo "${ROONCONF} does not exist"
+                echo "RoonCommandLine is not installed locally"
+            fi
+            ;;
+        r)
+            radio="$OPTARG"
+            ;;
+        s)
+            search="$OPTARG"
+            ;;
+        S)
+            setdefs=1
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+
+[ "$search" ] || search="all"
+
+# Set Defaults
+[ "$setdefs" ] && {
+    list_defaults
+}
+
+# Set Zone
+[ "$zone" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        set_zone $zone
+    else
+        ssh $user@$server "bash -l -c \"set_zone $zone\""
+    fi
+}
+
+# Zone Grouping
+[ "$zonegroup" ] && {
+    [ "$comm" == "group" ] || [ "$comm" == "ungroup" ] || comm=group
+    if [ "${LOCAL}" = true ]
+    then
+        set_zone_group $comm $zonegroup
+    else
+        ssh $user@$server "bash -l -c \"set_zone_group $comm $zonegroup\""
+    fi
+}
+
+[ "$albumlist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_albums $search
+    else
+        ssh $user@$server "bash -l -c \"list_albums $search\""
+    fi
+}
+[ "$artistlist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_artists $search
+    else
+        ssh $user@$server "bash -l -c \"list_artists $search\""
+    fi
+}
+[ "$genrelist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_genres $search
+    else
+        ssh $user@$server "bash -l -c \"list_genres $search\""
+    fi
+}
+[ "$playlistlist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_playlists $search
+    else
+        ssh $user@$server "bash -l -c \"list_playlists $search\""
+    fi
+}
+[ "$radiolist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_radio $search
+    else
+        ssh $user@$server "bash -l -c \"list_radio $search\""
+    fi
+}
+[ "$taglist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_tags $search
+    else
+        ssh $user@$server "bash -l -c \"list_tags $search\""
+    fi
+}
+[ "$zonelist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_zones $search
+    else
+        ssh $user@$server "bash -l -c \"list_zones $search\""
+    fi
+}
+[ "$album" ] && {
+    [ "${album}" == "default" ] && album=
+    if [ "${LOCAL}" = true ]
+    then
+        play_album $album
+    else
+        ssh $user@$server "bash -l -c \"play_album $album\""
+    fi
+}
+[ "$artist" ] && {
+    [ "${artist}" == "default" ] && artist=
+    if [ "${LOCAL}" = true ]
+    then
+        play_artist $artist
+    else
+        ssh $user@$server "bash -l -c \"play_artist $artist\""
+    fi
+}
+[ "$genre" ] && {
+    [ "${genre}" == "default" ] && genre=
+    if [ "${LOCAL}" = true ]
+    then
+        play_genre $genre
+    else
+        ssh $user@$server "bash -l -c \"play_genre $genre\""
+    fi
+}
+[ "$playlist" ] && {
+    [ "${playlist}" == "default" ] && playlist=
+    if [ "${LOCAL}" = true ]
+    then
+        play_playlist $playlist
+    else
+        ssh $user@$server "bash -l -c \"play_playlist $playlist\""
+    fi
+}
+[ "$tag" ] && {
+    [ "${tag}" == "default" ] && tag=
+    if [ "${LOCAL}" = true ]
+    then
+        play_tag $tag
+    else
+        ssh $user@$server "bash -l -c \"play_tag $tag\""
+    fi
+}
+[ "$radio" ] && {
+    [ "${radio}" == "default" ] && radio=
+    if [ "${LOCAL}" = true ]
+    then
+        play_radio ${radio}
+    else
+        ssh $user@$server "bash -l -c \"play_radio ${radio}\""
+    fi
+}
+
+[ "$comm" ] && {
+    case "$comm" in
+    "shuffle"|"unshuffle"|"repeat"|"unrepeat"|"mute"|"unmute"|"next"|"previous"|"play"|"pause"|"stop"|"playpause")
+        if [ "${LOCAL}" = true ]
+        then
+            zone_command -c ${comm}
+        else
+            ssh $user@$server "bash -l -c \"zone_command -c ${comm}\""
+        fi
+        ;;
+    "group"|"ungroup")
+        ;;
+    *)
+        echo "Unrecognized Roon command: $comm"
+        usage
+        ;;
+    esac
+}
+
+[ "${show_roon_menu}" ] && {
+  main_menu
 }
 
 exit 0
