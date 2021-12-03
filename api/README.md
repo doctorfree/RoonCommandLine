@@ -14,7 +14,7 @@ Python scripts to access the Python Roon API
 
 [**play_playlist.py**](play_playlist.py) - Python script backend for playing a specified playlist in my Roon library
 
-[**play_rp.py**](play_rp.py) - Python script backend for playing Radio Paradise Main Channel in a Roon zone
+[**play_radio.py**](play_radio.py) - Python script backend for playing Live Radio in a Roon zone
 
 [**play_tag.py**](play_tag.py) - Python script backend for playing a specified tag in my Roon library (not yet working)
 
@@ -25,6 +25,8 @@ Python scripts to access the Python Roon API
 [**list_genres.py**](list_genres.py) - Python script backend for listing available Genres in your Roon Library
 
 [**list_playlists.py**](list_playlists.py) - Python script backend for listing available Roon Playlists
+
+[**list_radio.py**](list_radio.py) - Python script backend for listing available Roon Live Radio Stations
 
 [**list_tags.py**](list_tags.py) - Python script backend for listing available Roon Library tags
 

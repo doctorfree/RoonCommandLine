@@ -517,7 +517,7 @@ Here is the current output of "roon -u" which displays a usage message.
         -l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones
         -s search specifies a term to search for in the lists retrieved with -l
             use the special search term "all" to indicate match all entries
-        -r indicates play Radio Paradise
+        -r radio selects a live radio station to play
         -t tag selects an tag to play (not yet working)
         -z zone selects the Roon Zone in which to play
         -c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
@@ -657,7 +657,7 @@ executing the following commands directly.
 
 [**play_playlist**](bin/play_playlist) - Shell script frontend to play a specified playlist
 
-[**play_rp**](bin/play_rp) - Shell script frontend for playing Radio Paradise Main Channel in a Roon zone
+[**play_radio**](bin/play_radio) - Shell script frontend for playing Live Radio in a Roon zone
 
 [**play_tag**](bin/play_tag) - Shell script frontend to play a specified tag
 
@@ -668,6 +668,8 @@ executing the following commands directly.
 [**list_genres**](bin/list_genres) - Search and list the available Genres in your Roon Library
 
 [**list_playlists**](bin/list_playlists) - Search and list the available Roon Playlists
+
+[**list_radio**](bin/list_radio) - Search and list the available Roon Live Radio Stations
 
 [**list_tags**](bin/list_tags) - Search and list the available Roon Library tags
 

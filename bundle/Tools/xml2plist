@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# https://fileinfo.com/extension/plist
+#
 
 plist_name="$1"
 

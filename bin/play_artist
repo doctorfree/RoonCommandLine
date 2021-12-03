@@ -35,8 +35,8 @@ fi
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    python3 $PLAY -a "$ARTIST" -z "$ROON_ZONE"
+    python3 $PLAY -a "${ARTIST}" -z "$ROON_ZONE"
 else
-    python $PLAY -a "$ARTIST" -z "$ROON_ZONE"
+    python $PLAY -a "${ARTIST}" -z "$ROON_ZONE"
 fi
 

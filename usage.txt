@@ -1,8 +1,7 @@
-
-Usage: roon -L -r -u
+Usage: roon -L -u
     -A album -a artist -g genre -G zone_group
-	-l [albums|artists|genres|playlists|tags|zones]
-	-s search -p playlist -t tag -z zone
+	-l [albums|artists|genres|playlists|radio|tags|zones]
+	-s search -p playlist -r radio -t tag -z zone
 	-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 
 	Where:
@@ -13,12 +12,14 @@ Usage: roon -L -r -u
 		-G zone_group specifies a zone grouping specified in roon_api.ini
 		-L setup roon to execute local commands rather than remote via SSH
 		-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones
+		-r radio selects a live radio stream to play
 		-s search specifies a term to search for in the lists retrieved with -l
-		-r indicates play Radio Paradise
 		-t tag selects an tag to play (not yet working)
 		-z zone selects the Roon Zone in which to play
 		-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 			issues the command in the selected zone
+	Special search term all matches all entries
+	Special name default plays the default setting in roon_api.ini
 
 	Example invocations
 		Play artist:
@@ -27,6 +28,8 @@ Usage: roon -L -r -u
 			roon -a "Jethro Tull" -z "Mac Pro DAC"
 		Play genre:
 			roon -g Classical
+		Play default live radio:
+			roon -r default
 		Play playlist:
 			roon -p "Bowie Favs"
 		Play next track:

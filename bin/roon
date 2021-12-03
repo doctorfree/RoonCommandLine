@@ -29,6 +29,7 @@ albumlist=
 artistlist=
 genrelist=
 playlistlist=
+radiolist=
 taglist=
 playlist=
 radio=
@@ -39,7 +40,7 @@ zonegroup=
 zonelist=
 
 usage() {
-  printf "\nUsage: roon -A album -a artist -g genre -G zone_group -l [albums|artists|genres|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -r -u"
+  printf "\nUsage: roon -A album -a artist -g genre -G zone_group -l [albums|artists|genres|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -r radio -u"
   printf "\n\tWhere:\n\t\t-A album selects an album to play"
   printf "\n\t\t-a artist selects an artist to play"
   printf "\n\t\t-g genre selects a genre to play"
@@ -47,12 +48,14 @@ usage() {
   printf "\n\t\t-G zone_group specifies a zone grouping specified in roon_api.ini"
   printf "\n\t\t-L setup roon to execute local commands rather than remote via SSH"
   printf "\n\t\t-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones"
+  printf "\n\t\t-r radio selects a live radio stream to play"
   printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
-  printf "\n\t\t-r indicates play Radio Paradise"
   printf "\n\t\t-t tag selects an tag to play (not yet working)"
   printf "\n\t\t-z zone selects the Roon Zone in which to play"
   printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
   printf "\n\t\t\tissues the command in the selected zone"
+  printf "\n\tSpecial search term "all" matches all entries"
+  printf "\n\tSpecial name "default" plays the default setting in roon_api.ini" 
   printf "\n\n\tExample invocations"
   printf "\n\t\tPlay artist:"
   printf "\n\t\t\troon -a \"Deep Purple\""
@@ -60,6 +63,8 @@ usage() {
   printf "\n\t\t\troon -a \"Jethro Tull\" -z \"Mac Pro DAC\""
   printf "\n\t\tPlay genre:"
   printf "\n\t\t\troon -g Classical"
+  printf "\n\t\tPlay default live radio:"
+  printf "\n\t\t\troon -r default"
   printf "\n\t\tPlay playlist:"
   printf "\n\t\t\troon -p \"Bowie Favs\""
   printf "\n\t\tPlay next track:"
@@ -88,7 +93,7 @@ ROONCONF=${ROONETC}/pyroonconf
 LOCAL=false
 [ -f ${ROONCONF} ] && . ${ROONCONF}
 
-while getopts A:a:g:G:p:t:z:c:l:s:Lru flag; do
+while getopts A:a:g:G:p:t:z:c:l:s:Lr:u flag; do
     case $flag in
         A)
             album="$OPTARG"
@@ -125,6 +130,9 @@ while getopts A:a:g:G:p:t:z:c:l:s:Lru flag; do
             elif [ "$listname" == "playlists" ] || [ "$listname" == "playlist" ]
             then
                 playlistlist=1
+            elif [ "$listname" == "stations" ] || [ "$listname" == "radio" ]
+            then
+                radiolist=1
             elif [ "$listname" == "tags" ] || [ "$listname" == "tag" ]
             then
                 taglist=1
@@ -154,7 +162,7 @@ while getopts A:a:g:G:p:t:z:c:l:s:Lru flag; do
             fi
             ;;
         r)
-            radio=1
+            radio="$OPTARG"
             ;;
         s)
             search="$OPTARG"
@@ -220,6 +228,14 @@ done
         ssh $user@$server "bash -l -c \"list_playlists $search\""
     fi
 }
+[ "$radiolist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_radio $search
+    else
+        ssh $user@$server "bash -l -c \"list_radio $search\""
+    fi
+}
 [ "$taglist" ] && {
     if [ "${LOCAL}" = true ]
     then
@@ -237,6 +253,7 @@ done
     fi
 }
 [ "$album" ] && {
+    [ "${album}" == "default" ] && album=
     if [ "${LOCAL}" = true ]
     then
         play_album $album
@@ -245,6 +262,7 @@ done
     fi
 }
 [ "$artist" ] && {
+    [ "${artist}" == "default" ] && artist=
     if [ "${LOCAL}" = true ]
     then
         play_artist $artist
@@ -253,6 +271,7 @@ done
     fi
 }
 [ "$genre" ] && {
+    [ "${genre}" == "default" ] && genre=
     if [ "${LOCAL}" = true ]
     then
         play_genre $genre
@@ -261,6 +280,7 @@ done
     fi
 }
 [ "$playlist" ] && {
+    [ "${playlist}" == "default" ] && playlist=
     if [ "${LOCAL}" = true ]
     then
         play_playlist $playlist
@@ -269,6 +289,7 @@ done
     fi
 }
 [ "$tag" ] && {
+    [ "${tag}" == "default" ] && tag=
     if [ "${LOCAL}" = true ]
     then
         play_tag $tag
@@ -277,11 +298,12 @@ done
     fi
 }
 [ "$radio" ] && {
+    [ "${radio}" == "default" ] && radio=
     if [ "${LOCAL}" = true ]
     then
-        play_rp
+        play_radio ${radio}
     else
-        ssh $user@$server "bash -l -c play_rp"
+        ssh $user@$server "bash -l -c \"play_radio ${radio}\""
     fi
 }
 
@@ -352,28 +374,156 @@ select_zone() {
   done
 }
 
+list_defaults() {
+  defaults_options=("Set Default Album" "Set Default Artist" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Main Menu" "Quit")
+  while true
+  do
+    for media in Album Artist Genre Playlist Radio Tag
+    do
+      DEFAULT=`grep ^Default${media} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+      # Remove leading and trailing spaces
+      DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+      printf "\nDefault ${media}: ${DEFAULT}"
+    done
+    printf "\n\n"
+    PS3="${BOLD}Please enter the default you wish to set (numeric or text): ${NORMAL}"
+    select opt in "${defaults_options[@]}"
+    do
+        case "$opt,$REPLY" in
+            "Main Menu",*|*,"Main Menu")
+                break 2
+                ;;
+            "Quit",*|*,"Quit"|"quit",*|*,"quit")
+                printf "\nExiting\n"
+                exit 0
+                ;;
+            *,*)
+                select_default  "${opt}"
+                break
+                ;;
+        esac
+    done
+  done
+}
+
+select_default() {
+  media="$1"
+  pycom="python ${ROONAPI}/set_default.py"
+  case "${media}" in
+    "Set Default Album")
+      setdefcom="${pycom} -A"
+      listcom="list_albums"
+      medtype="Album"
+      ;;
+    "Set Default Artist")
+      setdefcom="${pycom} -a"
+      listcom="list_artists"
+      medtype="Artist"
+      ;;
+    "Set Default Genre")
+      setdefcom="${pycom} -g"
+      listcom="list_genres"
+      medtype="Genre"
+      ;;
+    "Set Default Playlist")
+      setdefcom="${pycom} -p"
+      listcom="list_playlists"
+      medtype="Playlist"
+      ;;
+    "Set Default Radio")
+      setdefcom="${pycom} -r"
+      listcom="list_radio"
+      medtype="Radio"
+      ;;
+    "Set Default Tag")
+      setdefcom="${pycom} -t"
+      listcom="list_tags"
+      medtype="Tag"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+  printf "\nRetrieving ${medtype}s in your Roon library ..."
+  ${IFS+"false"} && unset oldifs || oldifs="$IFS"
+  IFS=$'\n'
+  if [ "${LOCAL}" = true ]
+  then
+    media_options=( $(${listcom} all) )
+  else
+    media_options=( $(ssh $user@$server "bash -l -c \"${listcom} all\"") )
+  fi
+  DEFAULT=`grep ^Default${medtype} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+  # Remove leading and trailing spaces
+  DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  printf " Done\n\n"
+  printf "Default${medtype} = ${DEFAULT}\n\n"
+
+  ${oldifs+"false"} && unset IFS || IFS="$oldifs"
+  media_options+=("Set Defaults Menu" "Main Menu" "Quit")
+  while true
+  do
+    PS3="${BOLD}Please enter the ${medtype} you wish to set as default (numeric or text): ${NORMAL}"
+    select opt in "${media_options[@]}"
+    do
+        case "$opt,$REPLY" in
+            "Set Defaults Menu",*|*,"Set Defaults Menu")
+                break
+                ;;
+            "Main Menu",*|*,"Main Menu")
+                break 2
+                ;;
+            "Quit",*|*,"Quit"|"quit",*|*,"quit")
+                printf "\nExiting\n"
+                exit 0
+                ;;
+            *,*)
+                echo "${BOLD}Setting Roon ${medtype} default to: ${opt}${NORMAL}"
+                if [ "${LOCAL}" = true ]
+                then
+                    ${setdefcom} "${opt}"
+                else
+                    ssh $user@$server "bash -l -c \"${setdefcom} ${opt}\""
+                fi
+                break 2
+                ;;
+        esac
+    done
+  done
+}
+
 select_media() {
   media="$1"
   case "${media}" in
     album)
       playcom="play_album"
       listcom="list_albums"
+      medtype="Album"
       ;;
     artist)
       playcom="play_artist"
       listcom="list_artists"
+      medtype="Artist"
       ;;
     genre)
       playcom="play_genre"
       listcom="list_genres"
+      medtype="Genre"
       ;;
     playlist)
       playcom="play_playlist"
       listcom="list_playlists"
+      medtype="Playlist"
+      ;;
+    station)
+      playcom="play_radio"
+      listcom="list_radio"
+      medtype="Radio"
       ;;
     tag)
       playcom="play_tag"
       listcom="list_tags"
+      medtype="Tag"
       ;;
     *)
       return 1
@@ -388,9 +538,14 @@ select_media() {
   else
     media_options=( $(ssh $user@$server "bash -l -c \"${listcom} all\"") )
   fi
+  DEFAULT=`grep ^Default${medtype} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+  # Remove leading and trailing spaces
+  DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
   printf " Done\n\n"
+  printf "Default ${media}: ${DEFAULT}\n\n"
+
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
-  media_options+=("Main Menu")
+  media_options+=("Main Menu" "Quit")
   while true
   do
     PS3="${BOLD}Please enter the ${media} you wish to play (numeric or text): ${NORMAL}"
@@ -399,6 +554,10 @@ select_media() {
         case "$opt,$REPLY" in
             "Main Menu",*|*,"Main Menu")
                 break 2
+                ;;
+            "Quit",*|*,"Quit"|"quit",*|*,"quit")
+                printf "\nExiting\n"
+                exit 0
                 ;;
             *,*)
                 echo "${BOLD}Executing Roon command to play ${media}: ${opt}${NORMAL}"
@@ -419,10 +578,14 @@ select_media() {
   while true
   do
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get/Set Zone" "Play" "Play Radio" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Genres" "List Playlists" "List Tags" "List Zones" "Play Album" "Play Artist" "Play Genre" "Play Playlist" "Play Tag" "Quit")
+    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Genre" "Play Default Live Radio" "Play Default Playlist" "Play Default Tag" "Quit")
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
+            "Get/Set Defaults",*|*,"Get/Set Defaults")
+                list_defaults
+                break
+                ;;
             "Get/Set Zone",*|*,"Get/Set Zone")
                 [ -f ${ROONCONF} ] && . ${ROONCONF}
                 if [ "${LOCAL}" = true ]
@@ -453,12 +616,6 @@ select_media() {
                 else
                     ssh $user@$server "bash -l -c \"zone_command -c play\""
                 fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Play Radio",*|*,"Play Radio")
-                printf "\nExecuting Roon command to play radio ..."
-                play_rp
                 printf " Done\n\n"
                 break
                 ;;
@@ -597,6 +754,15 @@ select_media() {
                 fi
                 break
                 ;;
+            "List Live Radio",*|*,"List Live Radio")
+                if [ "${LOCAL}" = true ]
+                then
+                    list_radio all
+                else
+                    ssh $user@$server "bash -l -c \"list_radio all\""
+                fi
+                break
+                ;;
             "List Tags",*|*,"List Tags")
                 if [ "${LOCAL}" = true ]
                 then
@@ -615,24 +781,82 @@ select_media() {
                 fi
                 break
                 ;;
-            "Play Album",*|*,"Play Album")
+            "Select Album",*|*,"Select Album")
                 select_media album
                 break
                 ;;
-            "Play Artist",*|*,"Play Artist")
+            "Select Artist",*|*,"Select Artist")
                 select_media artist
                 break
                 ;;
-            "Play Genre",*|*,"Play Genre")
+            "Select Genre",*|*,"Select Genre")
                 select_media genre
                 break
                 ;;
-            "Play Playlist",*|*,"Play Playlist")
+            "Select Playlist",*|*,"Select Playlist")
                 select_media playlist
                 break
                 ;;
-            "Play Tag",*|*,"Play Tag")
+            "Select Live Radio",*|*,"Select Live Radio")
+                select_media station
+                break
+                ;;
+            "Select Tag",*|*,"Select Tag")
                 select_media tag
+                break
+                ;;
+            "Play Default Album",*|*,"Play Default Album")
+                if [ "${LOCAL}" = true ]
+                then
+                    play_album
+                else
+                    ssh $user@$server "bash -l -c play_album"
+                fi
+                break
+                ;;
+            "Play Default Artist",*|*,"Play Default Artist")
+                if [ "${LOCAL}" = true ]
+                then
+                    play_artist
+                else
+                    ssh $user@$server "bash -l -c play_artist"
+                fi
+                break
+                ;;
+            "Play Default Genre",*|*,"Play Default Genre")
+                if [ "${LOCAL}" = true ]
+                then
+                    play_genre
+                else
+                    ssh $user@$server "bash -l -c play_genre"
+                fi
+                break
+                ;;
+            "Play Default Playlist",*|*,"Play Default Playlist")
+                if [ "${LOCAL}" = true ]
+                then
+                    play_playlist
+                else
+                    ssh $user@$server "bash -l -c play_playlist"
+                fi
+                break
+                ;;
+            "Play Default Radio",*|*,"Play Default Radio")
+                if [ "${LOCAL}" = true ]
+                then
+                    play_radio
+                else
+                    ssh $user@$server "bash -l -c play_radio"
+                fi
+                break
+                ;;
+            "Play Default Tag",*|*,"Play Default Tag")
+                if [ "${LOCAL}" = true ]
+                then
+                    play_tag
+                else
+                    ssh $user@$server "bash -l -c play_tag"
+                fi
                 break
                 ;;
             "Quit",*|*,"Quit"|"quit",*|*,"quit")

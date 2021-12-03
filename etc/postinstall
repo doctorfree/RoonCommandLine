@@ -170,9 +170,9 @@ echo ""
 
 # Get and set the Roon Core IP address
 ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
-CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP`
-cat ${ROONETC}/roon_api.ini | grep -v RoonCoreIP > /tmp/core$$
-echo "$CORE_IP" >> /tmp/core$$
+CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } '`
+CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+cat ${ROONETC}/roon_api.ini | sed -e "s/XX.X.X.XX/${CORE_IP}/" > /tmp/core$$
 cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
 cp /tmp/core$$ ${ROONETC}/roon_api.ini
 rm -f /tmp/core$$ /tmp/discover$$
