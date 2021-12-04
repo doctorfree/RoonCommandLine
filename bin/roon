@@ -56,7 +56,7 @@ usage() {
   printf "\n\t\t-z zone selects the Roon Zone in which to play"
   printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
   printf "\n\t\t\tissues the command in the selected zone"
-  printf "\n\tSpecial search term "all" matches all entries"
+  printf "\n\tSpecial search term "__all__" matches all entries"
   printf "\n\tSpecial name "default" plays the default setting in roon_api.ini" 
   printf "\n\n\tExample invocations"
   printf "\n\t\tPlay artist:"
@@ -187,9 +187,9 @@ select_default() {
   IFS=$'\n'
   if [ "${LOCAL}" = true ]
   then
-    media_options=( $(${listcom} all) )
+    media_options=( $(${listcom} __all__) )
   else
-    media_options=( $(ssh $user@$server "bash -l -c \"${listcom} all\"") )
+    media_options=( $(ssh $user@$server "bash -l -c \"${listcom} __all__\"") )
   fi
   DEFAULT=`grep ^Default${medtype} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
   # Remove leading and trailing spaces
@@ -273,9 +273,9 @@ select_media() {
   IFS=$'\n'
   if [ "${LOCAL}" = true ]
   then
-    media_options=( $(${listcom} all) )
+    media_options=( $(${listcom} __all__) )
   else
-    media_options=( $(ssh $user@$server "bash -l -c \"${listcom} all\"") )
+    media_options=( $(ssh $user@$server "bash -l -c \"${listcom} __all__\"") )
   fi
   DEFAULT=`grep ^Default${medtype} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
   # Remove leading and trailing spaces
@@ -494,54 +494,54 @@ main_menu() {
             "List Albums",*|*,"List Albums")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_albums all
+                    list_albums __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_albums all\""
+                    ssh $user@$server "bash -l -c \"list_albums __all__\""
                 fi
                 break
                 ;;
             "List Artists",*|*,"List Artists")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_artists all
+                    list_artists __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_artists all\""
+                    ssh $user@$server "bash -l -c \"list_artists __all__\""
                 fi
                 break
                 ;;
             "List Genres",*|*,"List Genres")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_genres all
+                    list_genres __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_genres all\""
+                    ssh $user@$server "bash -l -c \"list_genres __all__\""
                 fi
                 break
                 ;;
             "List Playlists",*|*,"List Playlists")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_playlists all
+                    list_playlists __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_playlists all\""
+                    ssh $user@$server "bash -l -c \"list_playlists __all__\""
                 fi
                 break
                 ;;
             "List Live Radio",*|*,"List Live Radio")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_radio all
+                    list_radio __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_radio all\""
+                    ssh $user@$server "bash -l -c \"list_radio __all__\""
                 fi
                 break
                 ;;
             "List Tags",*|*,"List Tags")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_tags all
+                    list_tags __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_tags all\""
+                    ssh $user@$server "bash -l -c \"list_tags __all__\""
                 fi
                 break
                 ;;
@@ -724,7 +724,7 @@ while getopts A:a:g:G:p:t:z:c:l:s:LSr:u flag; do
     esac
 done
 
-[ "$search" ] || search="all"
+[ "$search" ] || search="__all__"
 
 # Set Defaults
 [ "$setdefs" ] && {

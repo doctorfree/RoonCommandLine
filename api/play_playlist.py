@@ -55,7 +55,7 @@ if output_id is None:
     exit()
 
 # Play playlist
-found = roonapi.play_media(output_id, ["Playlists", playlist])
+found = roonapi.play_media(output_id, ["Playlists", playlist], None, False)
 
 if found:
     print("Found media for playlist search term:", playlist)
@@ -68,7 +68,7 @@ else:
         print(*playlists, sep = "\n")
         if len(playlists) == 1:
             playlist = playlists[0]
-            roonapi.play_media(output_id, ["Playlists", playlist])
+            roonapi.play_media(output_id, ["Playlists", playlist], None, False)
         else:
             print("\nTo play a playlist by name either specify the full name")
             print("or enough of a substring to provide a single match")

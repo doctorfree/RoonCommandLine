@@ -74,7 +74,7 @@ In addition, search capabilities have been added to the scripts
 with partial matching facilities. Thus a substring can be supplied to use as a
 search term with partial matching returning albums, artists, playlists, genres,
 or tags which contain the specified substring (case sensitive). The special search
-term "all" indicates match all albums, artists, playlists, genres, or tags.
+term "\_\_all\_\_" indicates match all albums, artists, playlists, genres, or tags.
 
 All commands and playback can target a specified Roon output zone.
 

@@ -63,10 +63,10 @@ for (k, v) in outputs.items():
     grouped_zone_names = roonapi.grouped_zone_names(output_id)
     if grouped_zone_names is None:
         grouped_zone_names = ""
-    if (searchterm == "all" or searchterm in zone_name):
+    if (searchterm == "__all__" or searchterm in zone_name):
         if args.get:
             if args.info:
-                if (searchterm == "all"):
+                if (searchterm == "__all__"):
                     print(zone_name + ': ' + ','.join(zone_with_names))
                 else:
                     print(','.join(zone_with_names))

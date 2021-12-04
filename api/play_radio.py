@@ -55,7 +55,7 @@ if output_id is None:
     exit()
 
 # Play live radio
-found = roonapi.play_media(output_id, ["My Live Radio", radio])
+found = roonapi.play_media(output_id, ["My Live Radio", radio], None, False)
 
 if found:
     print("Found media for radio search term:", radio)
@@ -68,7 +68,7 @@ else:
         print(*stations, sep = "\n")
         if len(stations) == 1:
             radio = stations[0]
-            roonapi.play_media(output_id, ["My Live Radio", radio])
+            roonapi.play_media(output_id, ["My Live Radio", radio], None, False)
         else:
             print("\nTo play a radio station by name either specify the full name")
             print("or enough of a substring to provide a single match")

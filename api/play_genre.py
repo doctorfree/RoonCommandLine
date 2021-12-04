@@ -55,7 +55,7 @@ if output_id is None:
     exit()
 
 # Play genre
-found = roonapi.play_media(output_id, ["Genres", genre])
+found = roonapi.play_media(output_id, ["Genres", genre], None, False)
 
 if found:
     print("Found media for genre search term:", genre)
@@ -68,7 +68,7 @@ else:
         print(*genres, sep = "\n")
         if len(genres) == 1:
             genre = genres[0]
-            roonapi.play_media(output_id, ["Genres", genre])
+            roonapi.play_media(output_id, ["Genres", genre], None, False)
         else:
             print("\nTo play a genre by name either specify the full name")
             print("or enough of a substring to provide a single match")

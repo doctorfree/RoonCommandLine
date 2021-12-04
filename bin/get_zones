@@ -27,7 +27,7 @@ fi
 [ "$1" ] && ZONE="$*"
 
 # Get all zones if no zone is specified
-[ "${ZONE}" ] || ZONE="all"
+[ "${ZONE}" ] || ZONE="__all__"
 
 have_python3=`type -p python3`
 if [ "${have_python3}" ]

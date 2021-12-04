@@ -18,7 +18,7 @@ Usage: roon -L -u
 		-z zone selects the Roon Zone in which to play
 		-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 			issues the command in the selected zone
-	Special search term all matches all entries
+	Special search term __all__ matches all entries
 	Special name default plays the default setting in roon_api.ini
 
 	Example invocations
