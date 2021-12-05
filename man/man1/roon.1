@@ -85,40 +85,48 @@ your local area network.
 Additional detail and info can be found in the RoonCommandLine
 Wiki (https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/home).
 .SH COMMAND LINE OPTIONS
-.PP
-\f[B]-u\f[R] : Display usage message
-.PP
-\f[B]-A\f[R] album : Selects an album to play
-.PP
-\f[B]-a\f[R] artist : Selects an artist to play
-.PP
-\f[B]-g\f[R] genre : Selects a genre to play
-.PP
-\f[B]-p\f[R] playlist : Selects a playlist to play
-.PP
-\f[B]-G\f[R] zone_group : Specifies a zone grouping specified in
-roon_api.ini
-.PP
-\f[B]-L\f[R] : Setup roon to execute local commands rather than remote
-via SSH
-.PP
-\f[B]-S\f[R] : Set Roon defaults in roon_api.ini
-.PP
-\f[B]-l\f[R] [albums|artists|genres|playlists|tags|zones] : Indicates
-list albums, artists, genres, playlists, tags, or Roon zones
-.PP
-\f[B]-r\f[R] radio : Selects a live radio stream to play
-.PP
-\f[B]-s\f[R] search : Specifies a term to search for in the lists
-retrieved with -l
-.PP
-\f[B]-t\f[R] tag : Selects an tag to play (not yet working)
-.PP
-\f[B]-z\f[R] zone : Selects the Roon Zone in which to play
-.PP
-\f[B]-c\f[R]
-[group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
-: Issues the command in the selected zone
+.TP
+\f[B]-u\f[R]
+Display usage message
+.TP
+\f[B]-A\f[R] album
+Selects an album to play
+.TP
+\f[B]-a\f[R] artist
+Selects an artist to play
+.TP
+\f[B]-g\f[R] genre
+Selects a genre to play
+.TP
+\f[B]-p\f[R] playlist
+Selects a playlist to play
+.TP
+\f[B]-G\f[R] zone_group
+Specifies a zone grouping specified in roon_api.ini
+.TP
+\f[B]-L\f[R]
+Setup roon to execute local commands rather than remote via SSH
+.TP
+\f[B]-S\f[R]
+Set Roon defaults in roon_api.ini
+.TP
+\f[B]-l\f[R] [albums|artists|genres|playlists|tags|zones]
+Indicates list albums, artists, genres, playlists, tags, or Roon zones
+.TP
+\f[B]-r\f[R] radio
+Selects a live radio stream to play
+.TP
+\f[B]-s\f[R] search
+Specifies a term to search for in the lists retrieved with -l
+.TP
+\f[B]-t\f[R] tag
+Selects an tag to play (not yet working)
+.TP
+\f[B]-z\f[R] zone
+Selects the Roon Zone in which to play
+.TP
+\f[B]-c\f[R] [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+Issues the command in the selected zone
 .PP
 Special search term \f[B]__all__\f[R] matches all entries Special name
 \f[B]default\f[R] plays the default setting in roon_api.ini
@@ -169,29 +177,36 @@ This avoids the need to enable SSH public key authentication but
 restricts your use of the RoonCommandLine tools to the system on which
 they are installed.
 .SH EXAMPLES
-.PP
-\f[B]roon -a \[dq]Deep Purple\[dq]\f[R] : Play artist
-.PP
-\f[B]roon -a \[dq]Jethro Tull\[dq] -z \[dq]Mac Pro DAC\[dq]\f[R] : Play
-artist in specified zone
-.PP
-\f[B]roon -g Classical\f[R] : Play genre
-.PP
-\f[B]roon -r default\f[R] : Play default live radio
-.PP
-\f[B]roon -p \[dq]Bowie Favs\[dq]\f[R] : Play playlist
-.PP
-\f[B]roon -c next\f[R] : Play next track
-.PP
-\f[B]roon -c stop -z Kitchen\f[R] : Stop play in specified zone
-.PP
-\f[B]roon -c mute -z \[dq]Mac Pro DAC\[dq]\f[R] : Mute a specified zone
-.PP
-\f[B]roon -l playlists -s Best\f[R] : List all playlists containing the
-string \[aq]Best\[aq]
-.PP
-\f[B]roon -G foobar -c group\f[R] : Group the zones listed in
-roon_api.ini Group_foobar
+.TP
+\f[B]roon -a \[dq]Deep Purple\[dq]\f[R]
+Play artist
+.TP
+\f[B]roon -a \[dq]Jethro Tull\[dq] -z \[dq]Mac Pro DAC\[dq]\f[R]
+Play artist in specified zone
+.TP
+\f[B]roon -g Classical\f[R]
+Play genre
+.TP
+\f[B]roon -r default\f[R]
+Play default live radio
+.TP
+\f[B]roon -p \[dq]Bowie Favs\[dq]\f[R]
+Play playlist
+.TP
+\f[B]roon -c next\f[R]
+Play next track
+.TP
+\f[B]roon -c stop -z Kitchen\f[R]
+Stop play in specified zone
+.TP
+\f[B]roon -c mute -z \[dq]Mac Pro DAC\[dq]\f[R]
+Mute a specified zone
+.TP
+\f[B]roon -l playlists -s Best\f[R]
+List all playlists containing the string \[aq]Best\[aq]
+.TP
+\f[B]roon -G foobar -c group\f[R]
+Group the zones listed in roon_api.ini Group_foobar
 .PP
 \f[B]NOTE:\f[R] Use quotes to specify media names which contain spaces.
 For example, to play the album \[aq]Love Bomb\[aq]: \f[B]roon -A
