@@ -26,7 +26,7 @@ zone_command - Execute a Roon command in a specified Roon Zone
 : Pause playback in the Roon Zone named "HomePod"
 
 # AUTHORS
-Written by Ronald Record &lt;github@ronrecord.com&gt;
+Written by Ronald Record github@ronrecord.com
 
 # LICENSING
 Zone_command is distributed under an Open Source license.
@@ -35,8 +35,8 @@ for information on terms &amp; conditions for accessing and
 otherwise using Zone_command and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
-Submit bug reports online at: &lt;https://gitlab.com/doctorfree/RoonCommandLine/issues&gt;
+Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
 
 # SEE ALSO
-Full documentation and sources at: &lt;https://gitlab.com/doctorfree/RoonCommandLine&gt;
+Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 

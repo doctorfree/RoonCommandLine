@@ -5,7 +5,7 @@
 .SH NAME
 .PP
 set_zone_group - Set one of the Roon Zone groupings specified in
-roon_api.ini
+\f[B]roon_api.ini\f[R]
 .SH SYNOPSIS
 .PP
 \f[B]set_zone_group\f[R] [\f[I]group|ungroup\f[R]] [ZONEGROUP]
@@ -13,7 +13,7 @@ roon_api.ini
 .PP
 \f[B]set_zone_group\f[R] Groups or Ungroups the specified Roon Zone
 Grouping using one of the Zone Grouping presets in
-/usr/local/Roon/etc/roon_api.ini
+\f[B]/usr/local/Roon/etc/roon_api.ini\f[R]
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]group|ungroup\f[R]
@@ -24,26 +24,27 @@ ungroup the specified \f[I]ZONEGROUP\f[R] preset
 \f[B]ZONEGROUP\f[R]
 The second argument to \f[I]set_zone_group\f[R] specifies the Zone
 Grouping preset to use.
-These are configured in the file /usr/local/Roon/etc/roon_api.ini.
-By default these Zone Grouping presets are named \[dq]Group_1\[dq],
-\[dq]Group_2\[dq], etc but can be any name of the form
-\[dq]Group_<string>.
+These are configured in the file
+\f[B]/usr/local/Roon/etc/roon_api.ini\f[R].
+By default these Zone Grouping presets are named \f[I]Group_1\f[R],
+\f[I]Group_2\f[R], etc but can be any name of the form
+\[dq]Group_<string>\[dq].
 The \f[I]ZONEGROUP\f[R] argument should match one of the <string> Zone
 Grouping preset names.
-For example, to address Zone Grouping preset \[dq]Group_3\[dq], specify
+For example, to address Zone Grouping preset \f[I]Group_3\f[R], specify
 \f[I]ZONEGROUP\f[R] as \[dq]3\[dq].
 .SH EXAMPLES
 .TP
 \f[B]set_zone_group group 4\f[R]
 Group Roon Zones according to the Zone Grouping preset named
-\[dq]Group_4 in roon_api.ini
+\f[I]Group_4\f[R] in \f[B]roon_api.ini\f[R]
 .TP
 \f[B]set_zone_group ungroup 2\f[R]
 Ungroup Roon Zones according to the Zone Grouping preset named
-\[dq]Group_2 in roon_api.ini
+\f[I]Group_2\f[R] in \f[B]roon_api.ini\f[R]
 .SH AUTHORS
 .PP
-Written by Ronald Record <<github@ronrecord.com>>
+Written by Ronald Record <github@ronrecord.com>
 .SH LICENSING
 .PP
 Set_zone_group is distributed under an Open Source license.
@@ -53,8 +54,8 @@ Set_zone_group and for a DISCLAIMER OF ALL WARRANTIES.
 .SH BUGS
 .PP
 Submit bug reports online at:
-<<https://gitlab.com/doctorfree/RoonCommandLine/issues>>
+<https://gitlab.com/doctorfree/RoonCommandLine/issues>
 .SH SEE ALSO
 .PP
 Full documentation and sources at:
-<<https://gitlab.com/doctorfree/RoonCommandLine>>
+<https://gitlab.com/doctorfree/RoonCommandLine>

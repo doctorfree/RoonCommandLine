@@ -23,7 +23,7 @@ list_albums - List Roon Library Albums
 : Will return a list of Roon library album names, one per line, that contain the string "Moon"
 
 # AUTHORS
-Written by Ronald Record &lt;github@ronrecord.com&gt;
+Written by Ronald Record github@ronrecord.com
 
 # LICENSING
 List_albums is distributed under an Open Source license.
@@ -32,8 +32,8 @@ for information on terms &amp; conditions for accessing and
 otherwise using List_albums and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
-Submit bug reports online at: &lt;https://gitlab.com/doctorfree/RoonCommandLine/issues&gt;
+Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
 
 # SEE ALSO
-Full documentation and sources at: &lt;https://gitlab.com/doctorfree/RoonCommandLine&gt;
+Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 

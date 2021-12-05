@@ -4,17 +4,23 @@
 .hy
 .SH NAME
 .PP
-roon - Command line control of the Roon audio system over a local
-network
+roon - Command line control of the Roon Audio System
 .SH SYNOPSIS
 .PP
 \f[B]roon\f[R] \f[B]-A\f[R] album \f[B]-a\f[R] artist \f[B]-g\f[R] genre
-\f[B]-G\f[R] zone_group \f[B]-l\f[R]
-[albums|artists|genres|playlists|tags|zones] \f[B]-s\f[R] search
+\f[B]-G\f[R] zone_group \f[B]-l\f[R] \f[B][\f[R]albums | artists |
+genres | playlists | tags | zones\f[B]]\f[R] \f[B]-s\f[R] search
 \f[B]-p\f[R] playlist \f[B]-t\f[R] tag \f[B]-z\f[R] zone \f[B]-c\f[R]
-[group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+\f[B][\f[R]group | ungroup | play | pause | stop | next | previous |
+shuffle | unshuffle | repeat | unrepeat | mute | unmute\f[B]]\f[R]
 \f[B]-L\f[R] \f[B]-S\f[R] \f[B]-r\f[R] radio \f[B]-u\f[R]
 .SH DESCRIPTION
+.PP
+The \f[I]roon\f[R] command acts as a front-end for executing the
+RoonCommandLine project commands to provide Command Line control of the
+Roon Audio System over a local area network.
+Roon Command Line commands utilize the Python Roon API to communicate
+with the Roon Core.
 .PP
 Command line Roon control provides support for:
 .IP \[bu] 2
@@ -28,7 +34,7 @@ Play playlist by playlist name
 .IP \[bu] 2
 Play tag
 .IP \[bu] 2
-Play Roon Radio
+Play Roon Live Radio
 .IP \[bu] 2
 Issue one of the following commands in the specified zone
 .RS 2
@@ -110,7 +116,7 @@ Setup roon to execute local commands rather than remote via SSH
 \f[B]-S\f[R]
 Set Roon defaults in roon_api.ini
 .TP
-\f[B]-l\f[R] [albums|artists|genres|playlists|tags|zones]
+\f[B]-l\f[R] \f[B][\f[R]albums | artists | genres | playlists | tags | zones\f[B]]\f[R]
 Indicates list albums, artists, genres, playlists, tags, or Roon zones
 .TP
 \f[B]-r\f[R] radio
@@ -125,7 +131,7 @@ Selects an tag to play (not yet working)
 \f[B]-z\f[R] zone
 Selects the Roon Zone in which to play
 .TP
-\f[B]-c\f[R] [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+\f[B]-c\f[R] \f[B][\f[R]group | ungroup | play | pause | playpause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute\f[B]]\f[R]
 Issues the command in the selected zone
 .PP
 Special search term \f[B]__all__\f[R] matches all entries Special name
@@ -213,7 +219,7 @@ For example, to play the album \[aq]Love Bomb\[aq]: \f[B]roon -A
 \[dq]Love Bomb\[dq]\f[R]
 .SH AUTHORS
 .PP
-Written by Ron Record <<gitlab@ronrecord.com>>
+Written by Ron Record <gitlab@ronrecord.com>
 .SH LICENSING
 .PP
 RoonCommandLine is distributed under an Open Source license.
@@ -223,11 +229,11 @@ RoonCommandLine.
 .SH BUGS
 .PP
 Submit bug reports online at:
-<<https://gitlab.com/doctorfree/RoonCommandLine/issues>>
+<https://gitlab.com/doctorfree/RoonCommandLine/issues>
 .SH SEE ALSO
 .PP
 Full documentation, installation packages, and sources at:
-<<https://gitlab.com/doctorfree/RoonCommandLine>>
+<https://gitlab.com/doctorfree/RoonCommandLine>
 .PP
 Information on the Roon Core System can be found at
 <https://roonlabs.com/>

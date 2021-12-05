@@ -23,7 +23,7 @@ set_zone - Set the default Roon playback Zone
 : Will set the default Roon zone to "HomePod" if a zone by that name exists. If no zone named "HomePod" exists then Roon zones are searched for a zone name containing the string "HomePod" and the first matching Roon zone name is set as the default Roon zone.
 
 # AUTHORS
-Written by Ronald Record &lt;github@ronrecord.com&gt;
+Written by Ronald Record github@ronrecord.com
 
 # LICENSING
 Set_zone is distributed under an Open Source license.
@@ -32,8 +32,8 @@ for information on terms &amp; conditions for accessing and
 otherwise using Set_zone and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
-Submit bug reports online at: &lt;https://gitlab.com/doctorfree/RoonCommandLine/issues&gt;
+Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
 
 # SEE ALSO
-Full documentation and sources at: &lt;https://gitlab.com/doctorfree/RoonCommandLine&gt;
+Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 

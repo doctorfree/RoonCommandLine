@@ -15,7 +15,7 @@ clone_pyroon - Clone the pyroon Python Roon API repo
 **clone_pyroon** Convenience script to clone the repository at https://github.com/pavoni/pyroon.git
 
 # AUTHORS
-Written by Ronald Record &lt;github@ronrecord.com&gt;
+Written by Ronald Record github@ronrecord.com
 
 # LICENSING
 Clone_pyroon is distributed under an Open Source license.
@@ -24,8 +24,8 @@ for information on terms &amp; conditions for accessing and
 otherwise using Clone_pyroon and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
-Submit bug reports online at: &lt;https://gitlab.com/doctorfree/RoonCommandLine/issues&gt;
+Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
 
 # SEE ALSO
-Full documentation and sources at: &lt;https://gitlab.com/doctorfree/RoonCommandLine&gt;
+Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 

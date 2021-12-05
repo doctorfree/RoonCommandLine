@@ -6,16 +6,21 @@ footer: roon 2.0.1
 date: December 04, 2021
 ---
 # NAME
-roon - Command line control of the Roon audio system over a local network
+roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
 **roon** **-A** album **-a** artist **-g** genre **-G** zone\_group
-    **-l** [albums|artists|genres|playlists|tags|zones]
+    **-l** **[**albums | artists | genres | playlists | tags | zones**]**
     **-s** search **-p** playlist **-t** tag **-z** zone
-	**-c** [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+	**-c** **[**group | ungroup | play | pause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute**]**
 	**-L** **-S** **-r** radio **-u**
 
 # DESCRIPTION
+The *roon* command acts as a front-end for executing the RoonCommandLine
+project commands to provide Command Line control of the Roon Audio System
+over a local area network. Roon Command Line commands utilize the
+Python Roon API to communicate with the Roon Core.
+
 Command line Roon control provides support for:
 
 - Play album by album name
@@ -23,7 +28,7 @@ Command line Roon control provides support for:
 - Play genre
 - Play playlist by playlist name
 - Play tag
-- Play Roon Radio
+- Play Roon Live Radio
 - Issue one of the following commands in the specified zone
   - group
   - ungroup
@@ -85,7 +90,7 @@ Additional detail and info can be found in the
 **-S**
 : Set Roon defaults in roon\_api.ini
 
-**-l** [albums|artists|genres|playlists|tags|zones]
+**-l** **[**albums | artists | genres | playlists | tags | zones**]**
 : Indicates list albums, artists, genres, playlists, tags, or Roon zones
 
 **-r** radio
@@ -100,7 +105,7 @@ Additional detail and info can be found in the
 **-z** zone
 : Selects the Roon Zone in which to play
 
-**-c** [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+**-c** **[**group | ungroup | play | pause | playpause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute**]**
 : Issues the command in the selected zone
 
 Special search term **\_\_all\_\_** matches all entries
@@ -178,7 +183,7 @@ For example, to play the album 'Love Bomb':
 **roon -A "Love Bomb"**
 
 # AUTHORS
-Written by Ron Record &lt;gitlab@ronrecord.com&gt;
+Written by Ron Record gitlab@ronrecord.com
 
 # LICENSING
 RoonCommandLine is distributed under an Open Source license.
@@ -187,10 +192,10 @@ for information on terms &amp; conditions for accessing and
 otherwise using RoonCommandLine.
 
 # BUGS
-Submit bug reports online at: &lt;https://gitlab.com/doctorfree/RoonCommandLine/issues&gt;
+Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
 
 # SEE ALSO
-Full documentation, installation packages, and sources at: &lt;https://gitlab.com/doctorfree/RoonCommandLine&gt;
+Full documentation, installation packages, and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
 Information on the Roon Core System can be found at https://roonlabs.com/
 

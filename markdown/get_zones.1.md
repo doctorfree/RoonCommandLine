@@ -23,7 +23,7 @@ get_zones - Get the Roon Zones
 : Retrieves a comma separated list of all Roon zone names containing the string "HomePod"
 
 # AUTHORS
-Written by Ronald Record &lt;github@ronrecord.com&gt;
+Written by Ronald Record github@ronrecord.com
 
 # LICENSING
 Get_zones is distributed under an Open Source license.
@@ -32,8 +32,8 @@ for information on terms &amp; conditions for accessing and
 otherwise using Get_zones and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
-Submit bug reports online at: &lt;https://gitlab.com/doctorfree/RoonCommandLine/issues&gt;
+Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
 
 # SEE ALSO
-Full documentation and sources at: &lt;https://gitlab.com/doctorfree/RoonCommandLine&gt;
+Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 

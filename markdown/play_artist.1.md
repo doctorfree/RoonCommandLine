@@ -23,7 +23,7 @@ play_artist - Play Roon Library Artist
 : Will play Roon library artist name "Young" if it exists. If not then it will play the Roon library artist whose name contains the string "Young" if only one match is found.
 
 # AUTHORS
-Written by Ronald Record &lt;github@ronrecord.com&gt;
+Written by Ronald Record github@ronrecord.com
 
 # LICENSING
 Play_artist is distributed under an Open Source license.
@@ -32,8 +32,8 @@ for information on terms &amp; conditions for accessing and
 otherwise using Play_artist and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
-Submit bug reports online at: &lt;https://gitlab.com/doctorfree/RoonCommandLine/issues&gt;
+Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
 
 # SEE ALSO
-Full documentation and sources at: &lt;https://gitlab.com/doctorfree/RoonCommandLine&gt;
+Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
