@@ -60,7 +60,7 @@ PKG_VER=${VERSION}
 vercomp () {
     if [[ $1 == $2 ]]
     then
-        return 0
+        echo "0"
     fi
     local IFS=.
     local i ver1=($1) ver2=($2)
@@ -78,14 +78,13 @@ vercomp () {
         fi
         if ((10#${ver1[i]} > 10#${ver2[i]}))
         then
-            return 1
+            echo "1"
         fi
         if ((10#${ver1[i]} < 10#${ver2[i]}))
         then
-            return 2
+            echo "2"
         fi
     done
-    return 0
 }
 
 while true
@@ -295,8 +294,8 @@ then
     # Remove leading and trailing spaces in RVER
     RVER="$(echo -e "${RVER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     # Only patch Roonapi version 0.0.38 and earlier
-    vercomp "${RVER}" "0.0.38"
-    if [ $? -eq 1 ]
+    roon_api_cmp=`vercomp "${RVER}" "0.0.38"`
+    if [ "${roon_api_cmp}" == "1" ]
     then
       # Mark it as having been patched
       grep -v ROONAPIPATCHED ${ROONCONF} > /tmp/roonconf$$
