@@ -88,6 +88,9 @@ ${SUDO} cp LICENSE ${OUT_DIR}/${TOP}/share/doc/${PKG}/copyright
 ${SUDO} cp CHANGELOG.md ${OUT_DIR}/${TOP}/share/doc/${PKG}/changelog
 ${SUDO} cp README.md ${OUT_DIR}/${TOP}/share/doc/${PKG}/README
 ${SUDO} gzip -9 ${OUT_DIR}/${TOP}/share/doc/${PKG}/changelog
+${SUDO} cp -a markdown "${OUT_DIR}/${TOP}/share/doc/${PKG}/markdown"
+${SUDO} cp -a man "${OUT_DIR}/${TOP}/share/doc/${PKG}/man"
+${SUDO} cp -a man "${OUT_DIR}/${TOP}/share/man"
 
 [ -f .gitignore ] && {
     while read ignore
@@ -100,6 +103,7 @@ ${SUDO} chmod 644 ${OUT_DIR}/${ROON}/etc/* \
                   ${OUT_DIR}/${ROON}/api/* \
                   ${OUT_DIR}/${ROON}/patches/*.md ${OUT_DIR}/${ROON}/patches/*.patch \
                   ${OUT_DIR}/${ROON}/patches/roonapi/* \
+                  ${OUT_DIR}/${TOP}/share/man/*/* \
                   ${OUT_DIR}/${ROON}/patches/roon-web-controller/*
 ${SUDO} chmod 755 ${OUT_DIR}/${ROON}/bin/* \
                   ${OUT_DIR}/${ROON}/bin \
@@ -110,8 +114,11 @@ ${SUDO} chmod 755 ${OUT_DIR}/${ROON}/bin/* \
                   ${OUT_DIR}/${ROON}/patches \
                   ${OUT_DIR}/${ROON}/patches/mk* \
                   ${OUT_DIR}/${ROON}/patches/roonapi \
+                  ${OUT_DIR}/${TOP}/share/man \
+                  ${OUT_DIR}/${TOP}/share/man/* \
                   ${OUT_DIR}/${ROON}/patches/roon-web-controller
 ${SUDO} chown -R root:root ${OUT_DIR}/${ROON}
+${SUDO} chown -R root:root ${OUT_DIR}/${TOP}
 
 cd dist
 echo "Building ${PKG_NAME}_${PKG_VER} package"
