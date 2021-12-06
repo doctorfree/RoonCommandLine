@@ -26,10 +26,10 @@ Lists Roon Library albums matching the specified album name or substring
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-List_albums is distributed under an Open Source license.
-See the file LICENSE in the List_albums source distribution
+LIST_ALBUMS is distributed under an Open Source license.
+See the file LICENSE in the LIST_ALBUMS source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using List_albums and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using LIST_ALBUMS and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

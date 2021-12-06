@@ -26,10 +26,10 @@ Plays the Roon Library album named *ALBUM*. If no library album name matches *AL
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-Play_album is distributed under an Open Source license.
-See the file LICENSE in the Play_album source distribution
+PLAY_ALBUM is distributed under an Open Source license.
+See the file LICENSE in the PLAY_ALBUM source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using Play_album and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using PLAY_ALBUM and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

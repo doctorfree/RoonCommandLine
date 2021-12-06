@@ -29,10 +29,10 @@ Executes the specified Roon command in the given Roon zone. If no *-c COMMAND* i
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-Zone_command is distributed under an Open Source license.
-See the file LICENSE in the Zone_command source distribution
+ZONE_COMMAND is distributed under an Open Source license.
+See the file LICENSE in the ZONE_COMMAND source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using Zone_command and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using ZONE_COMMAND and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

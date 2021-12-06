@@ -32,10 +32,10 @@ Groups or Ungroups the specified Roon Zone Grouping using one of the Zone Groupi
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-Set_zone_group is distributed under an Open Source license.
-See the file LICENSE in the Set_zone_group source distribution
+SET_ZONE_GROUP is distributed under an Open Source license.
+See the file LICENSE in the SET_ZONE_GROUP source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using Set_zone_group and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using SET_ZONE_GROUP and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

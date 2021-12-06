@@ -26,10 +26,10 @@ Sets the default Roon playback zone. Current playback, if active, is unaffected.
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-Set_zone is distributed under an Open Source license.
-See the file LICENSE in the Set_zone source distribution
+SET_ZONE is distributed under an Open Source license.
+See the file LICENSE in the SET_ZONE source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using Set_zone and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using SET_ZONE and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

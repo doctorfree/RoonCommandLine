@@ -26,10 +26,10 @@ Plays the Roon Library artist named *ARTIST*. If no library artist name matches 
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-Play_artist is distributed under an Open Source license.
-See the file LICENSE in the Play_artist source distribution
+PLAY_ARTIST is distributed under an Open Source license.
+See the file LICENSE in the PLAY_ARTIST source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using Play_artist and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using PLAY_ARTIST and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

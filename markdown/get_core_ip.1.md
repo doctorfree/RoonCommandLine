@@ -18,10 +18,10 @@ Automatically discover a Roon Core System on the local network and retrieve the 
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-Get_core_ip is distributed under an Open Source license.
-See the file LICENSE in the Get_core_ip source distribution
+GET_CORE_IP is distributed under an Open Source license.
+See the file LICENSE in the GET_CORE_IP source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using Get_core_ip and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using GET_CORE_IP and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

@@ -26,10 +26,10 @@ Lists all Roon zones, zone groupings, and configured zone grouping presets. If a
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-List_zones is distributed under an Open Source license.
-See the file LICENSE in the List_zones source distribution
+LIST_ZONES is distributed under an Open Source license.
+See the file LICENSE in the LIST_ZONES source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using List_zones and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using LIST_ZONES and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

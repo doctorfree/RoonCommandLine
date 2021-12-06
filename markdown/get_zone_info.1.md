@@ -29,10 +29,10 @@ Retrieves information on specified/default zone(s)
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-Get_zone_info is distributed under an Open Source license.
-See the file LICENSE in the Get_zone_info source distribution
+GET_ZONE_INFO is distributed under an Open Source license.
+See the file LICENSE in the GET_ZONE_INFO source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using Get_zone_info and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using GET_ZONE_INFO and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

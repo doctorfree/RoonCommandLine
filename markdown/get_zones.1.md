@@ -26,10 +26,10 @@ Retrieves a comma separated list of Roon zones. If no zone is specified, *get_zo
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-Get_zones is distributed under an Open Source license.
-See the file LICENSE in the Get_zones source distribution
+GET_ZONES is distributed under an Open Source license.
+See the file LICENSE in the GET_ZONES source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using Get_zones and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using GET_ZONES and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

@@ -26,10 +26,10 @@ Lists Roon Library tags matching the specified tag name or substring
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-List_tags is distributed under an Open Source license.
-See the file LICENSE in the List_tags source distribution
+LIST_TAGS is distributed under an Open Source license.
+See the file LICENSE in the LIST_TAGS source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using List_tags and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using LIST_TAGS and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

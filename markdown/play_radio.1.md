@@ -26,10 +26,10 @@ Plays the Roon Live Radio channel named *RADIO*. If no Live Radio channel name m
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-Play_radio is distributed under an Open Source license.
-See the file LICENSE in the Play_radio source distribution
+PLAY_RADIO is distributed under an Open Source license.
+See the file LICENSE in the PLAY_RADIO source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using Play_radio and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using PLAY_RADIO and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

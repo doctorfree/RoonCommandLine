@@ -26,10 +26,10 @@ Lists Roon Library genres matching the specified genre name or substring
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-List_genres is distributed under an Open Source license.
-See the file LICENSE in the List_genres source distribution
+LIST_GENRES is distributed under an Open Source license.
+See the file LICENSE in the LIST_GENRES source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using List_genres and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using LIST_GENRES and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

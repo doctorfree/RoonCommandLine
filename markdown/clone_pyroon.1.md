@@ -18,10 +18,10 @@ A convenience script to clone the repository at https://github.com/pavoni/pyroon
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-Clone_pyroon is distributed under an Open Source license.
-See the file LICENSE in the Clone_pyroon source distribution
+CLONE_PYROON is distributed under an Open Source license.
+See the file LICENSE in the CLONE_PYROON source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using Clone_pyroon and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using CLONE_PYROON and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
