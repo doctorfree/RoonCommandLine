@@ -9,10 +9,10 @@ date: December 05, 2021
 set_zone - Set the default Roon playback Zone
 
 # SYNOPSIS
-**set_zone** [*ZONE*]
+**set_zone** [ ZONE ]
 
 # DESCRIPTION
-**set_zone** Sets the default Roon playback zone. Current playback, if active, is unaffected. Subsequent Roon commands, if no zone is specified on the command line, will take effect in the specified default Roon zone. If the Roon zone specified on the command line does not match a configured Roon zone exactly then the first Roon zone name containing the *ZONE* substring will be set as the default Roon zone.
+Sets the default Roon playback zone. Current playback, if active, is unaffected. Subsequent Roon commands, if no zone is specified on the command line, will take effect in the specified default Roon zone. If the Roon zone specified on the command line does not match a configured Roon zone exactly then the first Roon zone name containing the *ZONE* substring will be set as the default Roon zone.
 
 # COMMAND LINE OPTIONS
 **ZONE**

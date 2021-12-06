@@ -9,10 +9,10 @@ date: December 05, 2021
 list_artists - List Roon Library Artists
 
 # SYNOPSIS
-**list_artists** [*ARTIST*]
+**list_artists** [ ARTIST ]
 
 # DESCRIPTION
-**list_artists** Lists Roon Library artists matching the specified artist name or substring
+Lists Roon Library artists matching the specified artist name or substring
 
 # COMMAND LINE OPTIONS
 **ARTIST**

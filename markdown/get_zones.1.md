@@ -9,10 +9,10 @@ date: December 05, 2021
 get_zones - Get the Roon Zones
 
 # SYNOPSIS
-**get_zones** [*ZONE*]...
+**get_zones** [ ZONE ]
 
 # DESCRIPTION
-**get_zones** Retrieves a comma separated list of Roon zones. If no zone is specified, it returns a comma separated list of all zones.
+Retrieves a comma separated list of Roon zones. If no zone is specified, *get_zones* returns a comma separated list of all zones.
 
 # COMMAND LINE OPTIONS
 **ZONE**

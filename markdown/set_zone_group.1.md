@@ -9,10 +9,10 @@ date: December 05, 2021
 set_zone_group - Set one of the Roon Zone groupings specified in **roon_api.ini**
 
 # SYNOPSIS
-**set_zone_group** [*group|ungroup*] [ZONEGROUP]
+**set_zone_group** [ group|ungroup ] [ ZONEGROUP ]
 
 # DESCRIPTION
-**set_zone_group** Groups or Ungroups the specified Roon Zone Grouping using one of the Zone Grouping presets in **/usr/local/Roon/etc/roon_api.ini**
+Groups or Ungroups the specified Roon Zone Grouping using one of the Zone Grouping presets in **/usr/local/Roon/etc/roon_api.ini**
 
 # COMMAND LINE OPTIONS
 **group|ungroup**

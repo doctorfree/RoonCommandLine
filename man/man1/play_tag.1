@@ -7,16 +7,16 @@
 play_tag - Play Roon Library Tag
 .SH SYNOPSIS
 .PP
-\f[B]play_tag\f[R] [\f[I]TAG\f[R]]
+\f[B]play_tag\f[R] [ TAG ]
 .SH DESCRIPTION
 .PP
-\f[B]play_tag\f[R] Plays the Roon Library tag named \f[I]TAG\f[R].
+Plays the Roon Library tag named \f[I]TAG\f[R].
 If no library tag name matches \f[I]TAG\f[R] exactly, search for Roon
 Library tag whose name contains the case-sensitive string \f[I]TAG\f[R].
-If there is a unique match on the search substring then it will play
-that tag.
+If there is a unique match on the search substring then
+\f[I]play_tag\f[R] will play that tag.
 If more than one Roon Library tag name matches the search substring then
-it will return a list of matching tag names.
+\f[I]play_tag\f[R] will return a list of matching tag names.
 To play an tag using the substring search facility, enough of a
 substring must be supplied to uniquely match a Roon Library tag name.
 .SH COMMAND LINE OPTIONS

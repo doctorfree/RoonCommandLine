@@ -9,10 +9,10 @@ date: December 05, 2021
 list_radio - List Roon Live Radio Channels
 
 # SYNOPSIS
-**list_radio** [*RADIO*]
+**list_radio** [ RADIO ]
 
 # DESCRIPTION
-**list_radio** Lists Roon Live Radio channels matching the specified radio station name or substring
+Lists Roon Live Radio channels matching the specified radio station name or substring
 
 # COMMAND LINE OPTIONS
 **RADIO**

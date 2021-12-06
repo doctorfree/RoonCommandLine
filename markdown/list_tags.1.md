@@ -9,10 +9,10 @@ date: December 05, 2021
 list_tags - List Roon Library Tags
 
 # SYNOPSIS
-**list_tags** [*TAG*]
+**list_tags** [ TAG ]
 
 # DESCRIPTION
-**list_tags** Lists Roon Library tags matching the specified tag name or substring
+Lists Roon Library tags matching the specified tag name or substring
 
 # COMMAND LINE OPTIONS
 **TAG**

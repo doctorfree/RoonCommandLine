@@ -9,10 +9,10 @@ date: December 05, 2021
 get_zone_info - Get Roon Zone Info
 
 # SYNOPSIS
-**get_zone_info** [*-l*] [ZONE]
+**get_zone_info** [ **-l** ] [ ZONE ]
 
 # DESCRIPTION
-**get_zone_info** Retrieves information on specified/default zone(s)
+Retrieves information on specified/default zone(s)
 
 # COMMAND LINE OPTIONS
 **-l**

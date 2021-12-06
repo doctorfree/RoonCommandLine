@@ -9,10 +9,10 @@ date: December 05, 2021
 play_album - Play Roon Library Album
 
 # SYNOPSIS
-**play_album** [*ALBUM*]
+**play_album** [ ALBUM ]
 
 # DESCRIPTION
-**play_album** Plays the Roon Library album named *ALBUM*. If no library album name matches *ALBUM* exactly, search for Roon Library albums whose name contains the case-sensitive string *ALBUM*. If there is a unique match on the search substring then it will play that album. If more than one Roon Library album name matches the search substring then it will return a list of matching album names. To play an album using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library album name.
+Plays the Roon Library album named *ALBUM*. If no library album name matches *ALBUM* exactly, search for Roon Library albums whose name contains the case-sensitive string *ALBUM*. If there is a unique match on the search substring then *play_album* will play that album. If more than one Roon Library album name matches the search substring then *play_album* will return a list of matching album names. To play an album using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library album name.
 
 # COMMAND LINE OPTIONS
 **ALBUM**

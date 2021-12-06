@@ -9,11 +9,8 @@ date: December 04, 2021
 roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
-**roon** **-A** album **-a** artist **-g** genre **-G** zone\_group
-    **-l** **[**albums | artists | genres | playlists | tags | zones**]**
-    **-s** search **-p** playlist **-t** tag **-z** zone
-	**-c** **[**group | ungroup | play | pause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute**]**
-	**-L** **-S** **-r** radio **-u**
+
+**roon** [ **-u** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | genres | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [ **-z** zone ] [ **-G** zone\_group ] [ **-c** group | ungroup | play | pause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute ]
 
 # DESCRIPTION
 The *roon* command acts as a front-end for executing the RoonCommandLine

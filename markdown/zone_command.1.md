@@ -9,10 +9,10 @@ date: December 05, 2021
 zone_command - Execute a Roon command in a specified Roon Zone
 
 # SYNOPSIS
-**zone_command** [*-c COMMAND*] [*-z ZONE*]
+**zone_command** [ **-c** COMMAND ] [ **-z** ZONE ]
 
 # DESCRIPTION
-**zone_command** Executes the specified Roon command in the given Roon zone. If no *-c COMMAND* is provided then the "**play**" command is used. If no *ZONE* is provided then the configured default Roon zone is used. **COMMAND** can be one of "*play*", "*pause*", "*next*", "*previous*", "*mute*", "*unmute*", "*repeat*", "*unrepeat*", "*shuffle*", or "*unshuffle*". The *ZONE* name provided on the command line must match exactly the configured Roon Zone name in which to execute the Roon command. Partial matching is not yet implemented.
+Executes the specified Roon command in the given Roon zone. If no *-c COMMAND* is provided then the "**play**" command is used. If no *ZONE* is provided then the configured default Roon zone is used. **COMMAND** can be one of "*play*", "*pause*", "*next*", "*previous*", "*mute*", "*unmute*", "*repeat*", "*unrepeat*", "*shuffle*", or "*unshuffle*". The *ZONE* name provided on the command line must match exactly the configured Roon Zone name in which to execute the Roon command. Partial matching is not yet implemented.
 
 # COMMAND LINE OPTIONS
 **-c COMMAND**

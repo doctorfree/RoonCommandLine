@@ -9,10 +9,10 @@ date: December 05, 2021
 play_genre - Play Roon Library Genre
 
 # SYNOPSIS
-**play_genre** [*GENRE*]
+**play_genre** [ GENRE ]
 
 # DESCRIPTION
-**play_genre** Plays the Roon Library genre named *GENRE*. If no library genre name matches *GENRE* exactly, search for Roon Library genre whose name contains the case-sensitive string *GENRE*. If there is a unique match on the search substring then it will play that genre. If more than one Roon Library genre name matches the search substring then it will return a list of matching genre names. To play an genre using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library genre name.
+Plays the Roon Library genre named *GENRE*. If no library genre name matches *GENRE* exactly, search for Roon Library genre whose name contains the case-sensitive string *GENRE*. If there is a unique match on the search substring then *play_genre* will play that genre. If more than one Roon Library genre name matches the search substring then *play_genre* will return a list of matching genre names. To play an genre using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library genre name.
 
 # COMMAND LINE OPTIONS
 **GENRE**

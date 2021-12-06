@@ -7,18 +7,18 @@
 play_playlist - Play Roon Library Playlist
 .SH SYNOPSIS
 .PP
-\f[B]play_playlist\f[R] [\f[I]PLAYLIST\f[R]]
+\f[B]play_playlist\f[R] [ PLAYLIST ]
 .SH DESCRIPTION
 .PP
-\f[B]play_playlist\f[R] Plays the Roon Library playlist named
-\f[I]PLAYLIST\f[R].
+Plays the Roon Library playlist named \f[I]PLAYLIST\f[R].
 If no library playlist name matches \f[I]PLAYLIST\f[R] exactly, search
 for Roon Library playlist whose name contains the case-sensitive string
 \f[I]PLAYLIST\f[R].
-If there is a unique match on the search substring then it will play
-that playlist.
+If there is a unique match on the search substring then
+\f[I]play_playlist\f[R] will play that playlist.
 If more than one Roon Library playlist name matches the search substring
-then it will return a list of matching playlist names.
+then \f[I]play_playlist\f[R] will return a list of matching playlist
+names.
 To play an playlist using the substring search facility, enough of a
 substring must be supplied to uniquely match a Roon Library playlist
 name.

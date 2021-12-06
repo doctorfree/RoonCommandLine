@@ -9,10 +9,10 @@ date: December 05, 2021
 play_artist - Play Roon Library Artist
 
 # SYNOPSIS
-**play_artist** [*ARTIST*]
+**play_artist** [ ARTIST ]
 
 # DESCRIPTION
-**play_artist** Plays the Roon Library artist named *ARTIST*. If no library artist name matches *ARTIST* exactly, search for Roon Library artist whose name contains the case-sensitive string *ARTIST*. If there is a unique match on the search substring then it will play that artist. If more than one Roon Library artist name matches the search substring then it will return a list of matching artist names. To play an artist using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library artist name.
+Plays the Roon Library artist named *ARTIST*. If no library artist name matches *ARTIST* exactly, search for Roon Library artist whose name contains the case-sensitive string *ARTIST*. If there is a unique match on the search substring then *play_artist* will play that artist. If more than one Roon Library artist name matches the search substring then *play_artist* will return a list of matching artist names. To play an artist using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library artist name.
 
 # COMMAND LINE OPTIONS
 **ARTIST**

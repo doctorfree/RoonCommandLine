@@ -9,10 +9,10 @@ date: December 05, 2021
 list_playlists - List Roon Library Playlists
 
 # SYNOPSIS
-**list_playlists** [*PLAYLIST*]
+**list_playlists** [ PLAYLIST ]
 
 # DESCRIPTION
-**list_playlists** Lists Roon Library playlists matching the specified playlist name or substring
+Lists Roon Library playlists matching the specified playlist name or substring
 
 # COMMAND LINE OPTIONS
 **PLAYLIST**

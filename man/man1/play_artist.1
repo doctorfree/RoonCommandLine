@@ -7,18 +7,17 @@
 play_artist - Play Roon Library Artist
 .SH SYNOPSIS
 .PP
-\f[B]play_artist\f[R] [\f[I]ARTIST\f[R]]
+\f[B]play_artist\f[R] [ ARTIST ]
 .SH DESCRIPTION
 .PP
-\f[B]play_artist\f[R] Plays the Roon Library artist named
-\f[I]ARTIST\f[R].
+Plays the Roon Library artist named \f[I]ARTIST\f[R].
 If no library artist name matches \f[I]ARTIST\f[R] exactly, search for
 Roon Library artist whose name contains the case-sensitive string
 \f[I]ARTIST\f[R].
-If there is a unique match on the search substring then it will play
-that artist.
+If there is a unique match on the search substring then
+\f[I]play_artist\f[R] will play that artist.
 If more than one Roon Library artist name matches the search substring
-then it will return a list of matching artist names.
+then \f[I]play_artist\f[R] will return a list of matching artist names.
 To play an artist using the substring search facility, enough of a
 substring must be supplied to uniquely match a Roon Library artist name.
 .SH COMMAND LINE OPTIONS

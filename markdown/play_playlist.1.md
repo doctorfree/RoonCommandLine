@@ -9,10 +9,10 @@ date: December 05, 2021
 play_playlist - Play Roon Library Playlist
 
 # SYNOPSIS
-**play_playlist** [*PLAYLIST*]
+**play_playlist** [ PLAYLIST ]
 
 # DESCRIPTION
-**play_playlist** Plays the Roon Library playlist named *PLAYLIST*. If no library playlist name matches *PLAYLIST* exactly, search for Roon Library playlist whose name contains the case-sensitive string *PLAYLIST*. If there is a unique match on the search substring then it will play that playlist. If more than one Roon Library playlist name matches the search substring then it will return a list of matching playlist names. To play an playlist using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library playlist name.
+Plays the Roon Library playlist named *PLAYLIST*. If no library playlist name matches *PLAYLIST* exactly, search for Roon Library playlist whose name contains the case-sensitive string *PLAYLIST*. If there is a unique match on the search substring then *play_playlist* will play that playlist. If more than one Roon Library playlist name matches the search substring then *play_playlist* will return a list of matching playlist names. To play an playlist using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library playlist name.
 
 # COMMAND LINE OPTIONS
 **PLAYLIST**

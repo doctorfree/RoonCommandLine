@@ -12,7 +12,7 @@ clone_pyroon - Clone the pyroon Python Roon API repo
 **clone_pyroon**
 
 # DESCRIPTION
-**clone_pyroon** Convenience script to clone the repository at https://github.com/pavoni/pyroon.git
+A convenience script to clone the repository at https://github.com/pavoni/pyroon.git
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

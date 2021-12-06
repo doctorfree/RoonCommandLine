@@ -9,10 +9,10 @@ date: December 05, 2021
 list_genres - List Roon Library Genres
 
 # SYNOPSIS
-**list_genres** [*GENRE*]
+**list_genres** [ GENRE ]
 
 # DESCRIPTION
-**list_genres** Lists Roon Library genres matching the specified genre name or substring
+Lists Roon Library genres matching the specified genre name or substring
 
 # COMMAND LINE OPTIONS
 **GENRE**

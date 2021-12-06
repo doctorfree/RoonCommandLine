@@ -12,7 +12,7 @@ get_core_ip - Get the Roon Core IP address
 **get_core_ip**
 
 # DESCRIPTION
-**get_core_ip** automatically discovers a Roon Core System on the local network and retrieves the Roon Core IP address
+Automatically discover a Roon Core System on the local network and retrieve the Roon Core IP address
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

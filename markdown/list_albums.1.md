@@ -9,10 +9,10 @@ date: December 05, 2021
 list_albums - List Roon Library Albums
 
 # SYNOPSIS
-**list_albums** [*ALBUM*]
+**list_albums** [ ALBUM ]
 
 # DESCRIPTION
-**list_albums** Lists Roon Library albums matching the specified album name or substring
+Lists Roon Library albums matching the specified album name or substring
 
 # COMMAND LINE OPTIONS
 **ALBUM**
