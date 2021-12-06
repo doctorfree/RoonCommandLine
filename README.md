@@ -29,6 +29,7 @@
 1. [Remote deployment](#remote-deployment)
     1. [RoonCommandLine Light deployment](#rooncommandline-light-deployment)
 1. [Removal](#removal)
+1. [Documentation](#documentation)
 1. [Screenshots](#screenshots)
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
@@ -382,6 +383,40 @@ RoonCommandLine source directory:
     cd RoonCommandLine
     ./Uninstall
 ```
+
+## Documentation
+
+All RoonCommandLine commands have manual pages. Execute `man <command-name>`
+to view the manual page for a command. The `roon` frontend is the primary
+user interface for the RoonCommandLine commands and the manual page for
+`roon` can be viewed with the command `man roon`. Most commands also have
+help/usage messages that can be viewed with the **-u** argument option,
+e.g. `roon -u`.
+
+Manual pages for each RoonCommandLine command can be viewed by issueing
+any of the following commands:
+
+- `man clone_pyroon`
+- `man get_core_ip`
+- `man get_zone_info`
+- `man get_zones`
+- `man list_albums`
+- `man list_artists`
+- `man list_genres`
+- `man list_playlists`
+- `man list_radio`
+- `man list_tags`
+- `man list_zones`
+- `man play_album`
+- `man play_artist`
+- `man play_genre`
+- `man play_playlist`
+- `man play_radio`
+- `man play_tag`
+- `man roon`
+- `man set_zone`
+- `man set_zone_group`
+- `man zone_command`
 
 ## Screenshots
 

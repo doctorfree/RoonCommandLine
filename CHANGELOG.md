@@ -2,6 +2,61 @@
 
 All notable changes to this project will be documented in this file.
 
+Sun Dec 5, 2021 :
+    Version 2.0.1 Release 1 includes interactive menus, compatibility
+    with new Python Roon API version 0.0.39, Manual Pages, completely
+    automated installation and configuration, default local execution
+    of commands averting the need for SSH public key authentication,
+    and many bug fixes and improvements.
+
+Sun Dec 5 14:39:26 2021 -0800 3397317 :
+   Only patch roonapi python pip module if version 0.0.38 or earlier
+Sun Dec 5 14:14:10 2021 -0800 9272c4f :
+   Only apply patch if Roonapi is version 0.0.38 or earlier
+Sun Dec 5 12:36:40 2021 -0800 993386b :
+   Improve auto generation of man pages with some formatting changes
+Sun Dec 5 11:16:50 2021 -0800 8693272 :
+   First pass at auto-generating man pages for all the commands using pandoc
+Sun Dec 5 07:44:54 2021 -0800 d9bf7e4 :
+   Create new directories for markdown input and man page output for automatically generated man pages using pandoc
+Fri Dec 3 17:36:44 2021 -0800 f5db60f :
+   Change special search term from 'all' to '__all__'
+Fri Dec 3 14:19:17 2021 -0800 37f65b7 :
+   Set image sizes
+Fri Dec 3 14:15:05 2021 -0800 c5e9960 :
+   Redo screenshots, convert to PNG
+Fri Dec 3 14:04:01 2021 -0800 eee77ad :
+   Integrate interactive menus with options, move functions up to define them prior to argument processing
+Fri Dec 3 12:10:16 2021 -0800 4eab67c :
+   Add get/set of defaults in INI file, expand interactive menus
+Thu Dec 2 17:50:31 2021 -0800 6f57dac :
+   Add bundle management scripts to bundle/Tools directory
+Thu Dec 2 17:47:57 2021 -0800 43d5b09 :
+   Add skeleton app bundle for Mac OS X future development
+Thu Dec 2 13:50:38 2021 -0800 d4b7e1b :
+   Move Play Radio up in list for better formatting
+Thu Dec 2 13:39:15 2021 -0800 3c5876d :
+   Merge branch 'master' of ssh://gitlab.com/doctorfree/RoonCommandLine
+Thu Dec 2 13:38:58 2021 -0800 d4c9c66 :
+   Add Play Radio to interactive dialog menu
+Thu Dec 2 13:21:59 2021 -0800 c7f49fb :
+   Fixed bug in setting LOCAL on upgrade, bumped minor version with new interactive menus
+Thu Dec 2 11:48:29 2021 -0800 e5a68aa :
+   Add link to wiki
+Thu Dec 2 09:59:09 2021 -0800 ef851e3 :
+   Add note about search term 'all'
+Thu Dec 2 08:26:05 2021 -0800 15af8cb :
+   Enable local access by default when installing the entire package
+Thu Dec 2 08:17:37 2021 -0800 515fdd4 :
+   Expanded the section on History and added subsection on Motivation
+Thu Dec 2 07:43:08 2021 -0800 2047964 :
+   Add interactive dialog menus when invoked with no arguments
+Wed Dec 1 13:06:01 2021 -0800 32cd4c3 :
+   Move setting of default zone in pyroonconf down till after it is set in roon_api.ini
+Wed Dec 1 09:20:29 2021 -0800 7bede79 :
+   Fix glitches in some Mac installs wrt Python module location and permissions
+Mon Nov 29 10:32:54 2021 -0800 2ee9bd7 :
+   Updated changelog in preparation for release
 Sun Nov 28 13:43:11 2021 -0800 3fdf95b :
    Use sudo to install roonapi in Mac installs
 Sat Nov 27 17:49:31 2021 -0800 90f2de0 :
