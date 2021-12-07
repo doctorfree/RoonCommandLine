@@ -393,7 +393,12 @@ user interface for the RoonCommandLine commands and the manual page for
 help/usage messages that can be viewed with the **-u** argument option,
 e.g. `roon -u`.
 
-Manual pages for each RoonCommandLine command can be viewed by issueing
+The manual page for the primary RoonCommandLine user interface, `roon`,
+can be viewed by issueing the command:
+
+- `man roon`
+
+Manual pages for each RoonCommandLine backend command can be viewed by issueing
 any of the following commands:
 
 - `man clone_pyroon`
@@ -413,7 +418,6 @@ any of the following commands:
 - `man play_playlist`
 - `man play_radio`
 - `man play_tag`
-- `man roon`
 - `man set_zone`
 - `man set_zone_group`
 - `man zone_command`
