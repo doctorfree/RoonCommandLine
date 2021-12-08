@@ -33,9 +33,10 @@
 1. [Screenshots](#screenshots)
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
-1. [History and Motivation](#history-and-motivation)
+1. [Motivation](#motivation)
     1. [Introduction to Using the Command Line](#introduction-to-using-the-command-line)
     1. [Why would I need or want command line control of Roon](#why-would-i-need-or-want-command-line-control-of-roon)
+    1. [History](#history)
 1. [Contents](#contents)
 
 ## Overview
@@ -594,7 +595,7 @@ For example, the command "roon -a Tull" would play media by artist "Jethro Tull"
 unless there were multiple artist name matches to the substring "Tull". All partial
 matching is case sensitive - "roon -a tull" would not match "Jethro Tull".
 
-## History and Motivation
+## Motivation
 
 ### Introduction to Using the Command Line
 The command line has a long and storied history in computing. Read some of that
