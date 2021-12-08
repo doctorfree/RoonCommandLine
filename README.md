@@ -34,6 +34,7 @@
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
 1. [History and Motivation](#history-and-motivation)
+    1. [Introduction to Using the Command Line](#introduction-to-using-the-command-line)
     1. [Why would I need or want command line control of Roon](#why-would-i-need-or-want-command-line-control-of-roon)
 1. [Contents](#contents)
 
@@ -594,6 +595,16 @@ unless there were multiple artist name matches to the substring "Tull". All part
 matching is case sensitive - "roon -a tull" would not match "Jethro Tull".
 
 ## History and Motivation
+
+### Introduction to Using the Command Line
+The command line has a long and storied history in computing. Read some of that
+history, learn how to open a command line terminal window on various systems,
+how to get started using the command line, and see some examples of why the command
+line interface is so powerful by reading the RoonCommandLine wiki article
+[Introduction to Using the Command Line](https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/Introduction-to-Using-the-Command-Line).
+
+This introduction to the command line includes an example of how to automate
+playback of Roon playlists in specified Roon zones at designated times of day.
 
 ### Why would I need or want command line control of Roon
 
