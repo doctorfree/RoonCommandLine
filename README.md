@@ -403,26 +403,26 @@ can be viewed by issueing the command:
 Manual pages for each RoonCommandLine backend command can be viewed by issueing
 any of the following commands:
 
-- `man clone_pyroon`
-- `man get_core_ip`
-- `man get_zone_info`
-- `man get_zones`
-- `man list_albums`
-- `man list_artists`
-- `man list_genres`
-- `man list_playlists`
-- `man list_radio`
-- `man list_tags`
-- `man list_zones`
-- `man play_album`
-- `man play_artist`
-- `man play_genre`
-- `man play_playlist`
-- `man play_radio`
-- `man play_tag`
-- `man set_zone`
-- `man set_zone_group`
-- `man zone_command`
+- [man clone_pyroon](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/clone_pyroon.1.md)
+- [man get_core_ip](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_core_ip.1.md)
+- [man get_zone_info](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zone_info.1.md)
+- [man get_zones](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zones.1.md)
+- [man list_albums](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_albums.1.md)
+- [man list_artists](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_artists.1.md)
+- [man list_genres](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_genres.1.md)
+- [man list_playlists](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_playlists.1.md)
+- [man list_radio](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_radio.1.md)
+- [man list_tags](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_tags.1.md)
+- [man list_zones](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_zones.1.md)
+- [man play_album](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_album.1.md)
+- [man play_artist](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist.1.md)
+- [man play_genre](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre.1.md)
+- [man play_playlist](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_playlist.1.md)
+- [man play_radio](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_radio.1.md)
+- [man play_tag](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_tag.1.md)
+- [man set_zone](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_zone.1.md)
+- [man set_zone_group](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_zone_group.1.md)
+- [man zone_command](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/zone_command.1.md)
 
 ## Screenshots
 
