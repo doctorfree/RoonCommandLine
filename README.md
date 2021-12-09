@@ -84,6 +84,15 @@ All commands and playback can target a specified Roon output zone.
 Additional detail and info can be found in the
 [RoonCommandLine Wiki](https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/home).
 
+Command line control of Roon may be of particular interest to Roon users running a
+[Roon Bridge](https://help.roonlabs.com/portal/en/kb/articles/roonbridge) or
+[Roon Server](https://help.roonlabs.com/portal/en/kb/articles/roon-server#What_is_Roon_Server)
+where there is no Roon client present on that system to control Roon. However,
+command line control of Roon can provide significant benefit to Roon users in
+any environment or deployment. See the section below,
+[Why would I need or want command line control of Roon](#why-would-i-need-or-want-command-line-control-of-roon)
+for a closer look at possible motivation for command line control of Roon.
+
 ## Requirements
 
 RoonCommandLine can be installed on either Linux or Mac OS X systems.
