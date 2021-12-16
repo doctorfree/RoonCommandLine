@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+Thu Dec 16, 2021 :
+    Version 2.0.2 Release 1 incorporates Roon Core API port discovery
+    and all Python calls using the RoonApi class now include the port
+    as well as the server IP address. This change was necessary as the
+    Roon Core API port is not fixed at 9100 but can change and did
+    change in the latest Roon update.
+
 Sun Dec 5, 2021 :
     Version 2.0.1 Release 1 includes interactive menus, compatibility
     with new Python Roon API version 0.0.39, Manual Pages, completely
@@ -9,6 +16,28 @@ Sun Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Thu Dec 16 12:19:43 2021 -0800 f31ec06 :
+   Set Roon Core port in roon_api.ini and pass the port along with the server for all RoonApi calls
+Wed Dec 8 16:17:30 2021 -0800 b877f5f :
+   minor grammar fix
+Wed Dec 8 16:16:13 2021 -0800 f9ee25e :
+   Roon Bridge and Roon Server users may want command line control
+Wed Dec 8 15:01:52 2021 -0800 afb0058 :
+   Add links to markdown for man commands
+Wed Dec 8 14:55:02 2021 -0800 0011ee3 :
+   Split History and Motivation sections
+Wed Dec 8 12:25:18 2021 -0800 cc91a47 :
+   Added section on introduction to using the command line
+Tue Dec 7 08:44:34 2021 -0800 68b3bd8 :
+   Highlight roon command manual page
+Mon Dec 6 10:54:04 2021 -0800 18994d8 :
+   Use caps for name in license
+Mon Dec 6 10:43:22 2021 -0800 4a66e82 :
+   Formatting improvements to manual pages
+Sun Dec 5 18:59:35 2021 -0800 6594a40 :
+   Add browse-artifacts.txt
+Sun Dec 5 17:40:58 2021 -0800 49a1c79 :
+   Add section on Documentation, update CHANGELOG in preparation for new release
 Sun Dec 5 14:39:26 2021 -0800 3397317 :
    Only patch roonapi python pip module if version 0.0.38 or earlier
 Sun Dec 5 14:14:10 2021 -0800 9272c4f :

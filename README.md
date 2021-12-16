@@ -258,7 +258,7 @@ Once you have verified Python 3 and pip are installed appropriately, install
 the Python Roon API:
 
 ```bash
-    $ pip install roonapi
+    $ sudo python3 -m pip install roonapi
 ```
 
 The second component is the Python Roon API frontend shell scripts
@@ -506,25 +506,6 @@ which remotely runs the list_zones command, SSH in as the configured user and ru
 This eliminates SSH and remote execution as well as the intermediate shell script
 used to execute the python script. Similar python commands can be issued directly
 on the Python Roon API system in the /usr/local/Roon/api directory.
-
-The initial installation and configuration also includes a patch to the Python
-Roon API site packages module installed prior to the Roon Command Line installation
-with "pip install roonapi". This patch may fail to apply correctly. The application
-of the patch requires that the patch command is installed on your system as well as
-common commands like awk and sed. Check that these commands are properly installed
-and, if not, install them.
-
-The installation scripts use the command:
-
-```bash
-    $ python -c ‘import site; print(site.getsitepackages())’ | tr -d ‘[],’)
-```
-
-to retrieve a list of folders Python uses for site packages. If this command
-fails to retrieve the Python site package folder that contains the
-Python Roon API module, or if your Linux subsystem does not have the necessary
-commands then the patch will fail. The patch is applied in the discovered folder,
-and creates files with a .orig suffix as backups.
 
 Verify that the "roon" frontend command shell script has been configured properly.
 Open the roon shell script in an editor and find the two lines near the top of the
