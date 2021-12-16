@@ -10,11 +10,11 @@ config.read('/usr/local/Roon/etc/roon_api.ini')
 tokenfile = config['DEFAULT']['TokenFileName']
 
 appinfo = {
-    "extension_id": "python_roon_test",
+    "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "1.0.0",
-    "publisher": "gregd",
-    "email": "mygreat@emailaddress.com",
+    "display_version": "2.0.2",
+    "publisher": "RoonCommandLine",
+    "email": "roon@ronrecord.com",
 }
 
 discover = RoonDiscovery(None)
@@ -30,6 +30,7 @@ while len(auth_api) == 0:
 api = auth_api[0]
 
 print("RoonCoreIP =", api.host)
+print("RoonCorePort =", api._port)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

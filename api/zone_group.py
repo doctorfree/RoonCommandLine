@@ -8,6 +8,8 @@ config.read('/usr/local/Roon/etc/roon_api.ini')
 
 # Set to IP address of your Roon Core
 server = config['DEFAULT']['RoonCoreIP']
+# Set to Port of your Roon Core
+port = config['DEFAULT']['RoonCorePort']
 # Name of the file that holds a Roon API token
 tokenfile = config['DEFAULT']['TokenFileName']
 
@@ -31,11 +33,11 @@ for i in range(len(group_zones)):
 
 from roonapi import RoonApi
 appinfo = {
-    "extension_id": "python_roon_test",
+    "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "1.0.0",
-    "publisher": "gregd",
-    "email": "mygreat@emailaddress.com",
+    "display_version": "2.0.2",
+    "publisher": "RoonCommandLine",
+    "email": "roon@ronrecord.com",
 }
 
 # Can be None if you don't yet have a token
@@ -44,7 +46,7 @@ if path.exists(tokenfile):
 else:
     token = "None"
 
-roonapi = RoonApi(appinfo, token, server)
+roonapi = RoonApi(appinfo, token, server, port)
 
 # get target zone output_id
 outputs = roonapi.outputs
