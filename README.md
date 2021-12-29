@@ -36,6 +36,7 @@
     1. [Introduction to Using the Command Line](#introduction-to-using-the-command-line)
 1. [Motivation](#motivation)
     1. [Why would I need or want command line control of Roon](#why-would-i-need-or-want-command-line-control-of-roon)
+    1. [Applications](#applications)
     1. [History](#history)
 1. [Contents](#contents)
 
@@ -645,6 +646,22 @@ in Roon but it takes quite a few actions on the user's part to accomplish this.
 In my household I find it frequently desirable to be able to switch zone
 groupings easily and quickly and I can do so by configuring these presets to
 my typical use cases.
+
+### Applications
+
+#### Stream Spotify from a Raspberry Pi into Roon
+
+Roon Community Moderator, René, describes how to stream Spotify from a
+Raspberry Pi into Roon as a Live Radio station in a
+[Roon Community Forum Post](https://community.roonlabs.com/t/worlds-most-expensive-spotify-playback-system/183617).
+The setup integrates the
+[HQPlayer up-sampling media player](https://help.roonlabs.com/portal/en/kb/articles/hqplayer)
+with the [Roon Entrypoints extension](https://github.com/TheAppgineer/roon-entrypoints/wiki),
+RoonCommandLine, and Apple Shortcuts turning a spare Pi into an audio web stream
+that Roon can take in as a Live Radio station. Pretty incredible and fairly easy.
+
+Note that the expensive component in this setup is HQPlayer which is only needed
+for its up-sampling and not required.
 
 ### History
 
