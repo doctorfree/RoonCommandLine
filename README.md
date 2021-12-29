@@ -33,8 +33,8 @@
 1. [Screenshots](#screenshots)
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
-1. [Motivation](#motivation)
     1. [Introduction to Using the Command Line](#introduction-to-using-the-command-line)
+1. [Motivation](#motivation)
     1. [Why would I need or want command line control of Roon](#why-would-i-need-or-want-command-line-control-of-roon)
     1. [History](#history)
 1. [Contents](#contents)
@@ -585,9 +585,8 @@ For example, the command "roon -a Tull" would play media by artist "Jethro Tull"
 unless there were multiple artist name matches to the substring "Tull". All partial
 matching is case sensitive - "roon -a tull" would not match "Jethro Tull".
 
-## Motivation
-
 ### Introduction to Using the Command Line
+
 The command line has a long and storied history in computing. Read some of that
 history, learn how to open a command line terminal window on various systems,
 how to get started using the command line, and see some examples of why the command
@@ -596,6 +595,8 @@ line interface is so powerful by reading the RoonCommandLine wiki article
 
 This introduction to the command line includes an example of how to automate
 playback of Roon playlists in specified Roon zones at designated times of day.
+
+## Motivation
 
 ### Why would I need or want command line control of Roon
 
