@@ -1,9 +1,11 @@
 Name: RoonCommandLine
 Version:    %{_version}
 Release:    %{_release}
-Summary:    RoonCommandLine suite of tools
+Summary:    Command line control of the Roon audio system
 License:    MIT
 BuildArch:  noarch
+Requires:   python3-pip
+Recommends: qterminal, git
 URL:        https://gitlab.com/doctorfree/RoonCommandLine
 Vendor:     Doctorwhen's Bodacious Laboratory
 Packager:   ronaldrecord@gmail.com
