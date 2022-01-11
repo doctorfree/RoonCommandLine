@@ -125,10 +125,10 @@ echo "Building ${PKG_NAME}_${PKG_VER} package"
 ${SUDO} dpkg --build ${PKG_NAME}_${PKG_VER} ${PKG_NAME}_${PKG_VER}-${PKG_REL}.deb
 cd ${PKG_NAME}_${PKG_VER}
 echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
-tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}-dist.tar.gz
+tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.tar.gz
 [ "${GCI}" ] || {
     echo "Creating zip archive of ${PKG_NAME} ${PKG_VER} distribution"
-    zip -q -r ../${PKG_NAME}_${PKG_VER}-${PKG_REL}-dist.zip usr
+    zip -q -r ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.zip usr
 }
 
 cd ..
@@ -157,7 +157,18 @@ rpmbuild -ba --build-in-place \
    --buildroot ${SRC}/${SRC_NAME}/${OUT_DIR}/BUILDROOT \
    ${OUT_DIR}/rpm/${PKG_NAME}.spec
 
-${SUDO} cp dist/${PKG_NAME}_${PKG_VER}/RPMS/*/*.rpm dist
+# Rename RPMs if necessary
+for rpmfile in ${OUT_DIR}/RPMS/*/*.rpm
+do
+  [ "${rpmfile}" == "${OUT_DIR}/RPMS/*/*.rpm" ] && continue
+  rpmbas=`basename ${rpmfile}`
+  rpmdir=`dirname ${rpmfile}`
+  newnam=`echo ${rpmbas} | sed -e "s/${PKG_NAME}-${PKG_VER}-${PKG_REL}/${PKG_NAME}_${PKG_VER}-${PKG_REL}/"`
+  [ "${rpmbas}" == "${newnam}" ] && continue
+  mv ${rpmdir}/${rpmbas} ${rpmdir}/${newnam}
+done
+
+${SUDO} cp ${OUT_DIR}/RPMS/*/*.rpm dist
 
 [ "${GCI}" ] || {
     [ -d releases ] || mkdir releases
