@@ -125,7 +125,7 @@ echo "Building ${PKG_NAME}_${PKG_VER} package"
 ${SUDO} dpkg --build ${PKG_NAME}_${PKG_VER} ${PKG_NAME}_${PKG_VER}-${PKG_REL}.deb
 cd ${PKG_NAME}_${PKG_VER}
 echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
-tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.tar.gz
+tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.tgz
 [ "${GCI}" ] || {
     echo "Creating zip archive of ${PKG_NAME} ${PKG_VER} distribution"
     zip -q -r ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.zip usr
@@ -135,7 +135,7 @@ cd ..
 [ "${GCI}" ] || {
     [ -d ../releases ] || mkdir ../releases
     [ -d ../releases/${PKG_VER} ] || mkdir ../releases/${PKG_VER}
-    ${SUDO} cp *.deb *.gz *.zip ../releases/${PKG_VER}
+    ${SUDO} cp *.deb *.tgz *.zip ../releases/${PKG_VER}
 }
 
 # Experimental RPM distribution build
