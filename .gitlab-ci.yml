@@ -5,31 +5,59 @@
 
 stages:
   - build
-  - deploy
+  - release
 
-deploy-job:
-  stage: deploy
-  script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
-
-  # This stage is only executed for new tags
-  only:
-    - tags
-
-run-build:  
+build:  
   stage: build
+  image: ubuntu:latest
+  before_script:
+    - echo $CI_JOB_ID
+    - echo BUILD_JOB_ID=$CI_JOB_ID >> build.env
+    - cat VERSION >> build.env
   script:
     - ./mkpkg
-
-  # This stage is only executed for new tags
   only:
     - tags
-
-  # The files which are to be made available in GitLab
   artifacts:
     paths:
       - dist/*.deb
       - dist/*.rpm
       - dist/*.tgz
       - dist/*.zip
+    reports:
+      dotenv: build.env
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - echo 'running release_job'
+    - echo 'Previous Job ID:'
+    - echo $BUILD_JOB_ID
+    - echo 'VERSION:'
+    - echo $VERSION
+    - echo 'RELEASE:'
+    - echo $RELEASE
+  needs:
+    - job: build
+      artifacts: true
+  release:
+    name: 'RoonCommandLine Version $VERSION release $RELEASE'
+    description: 'Created using the release-cli'
+    tag_name: 'v${VERSION}r${RELEASE}'
+    assets:
+      links:
+        - name: 'Debian format installation package (Ubuntu Linux, etc)'
+          url: 'https://gitlab.com/doctorfree/RoonCommandLine/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/RoonCommandLine_${VERSION}-${RELEASE}.deb'
+          link_type: 'package'
+        - name: 'RPM format installation package (CentOS/Fedora Linux etc)'
+          url: 'https://gitlab.com/doctorfree/RoonCommandLine/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/RoonCommandLine_${VERSION}-${RELEASE}.rpm'
+          link_type: 'package'
+        - name: 'Compressed tar format distribution archive'
+          url: 'https://gitlab.com/doctorfree/RoonCommandLine/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/RoonCommandLine_${VERSION}-${RELEASE}.tgz'
+          link_type: 'other'
+        - name: 'Zip format distribution archive'
+          url: 'https://gitlab.com/doctorfree/RoonCommandLine/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/RoonCommandLine_${VERSION}-${RELEASE}.zip'
+          link_type: 'other'
+  only:
+    - tags

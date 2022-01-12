@@ -1,6 +1,6 @@
 
-For job ref 1894561264 and job name 'run-build'
+For job ref 1894561264 and job name 'build'
 
 Browse artifacts
 
-https://gitlab.com/doctorfree/RoonCommandLine/-/jobs/1894561264/artifacts/browse?job=run-build
+https://gitlab.com/doctorfree/RoonCommandLine/-/jobs/1894561264/artifacts/browse?job=build
