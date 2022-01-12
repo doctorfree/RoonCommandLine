@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+Wed Jan 12, 2022 :
+    Version 2.0.2 Release 2 primarily consists of changes to packaging
+    and the implementation of release creation during the Gitlab
+    continuous integration process. Improved documentation in README.
+    Functionality remains consistent with Version 2.0.2 Release 1.
+
 Thu Dec 16, 2021 :
     Version 2.0.2 Release 1 incorporates Roon Core API port discovery
     and all Python calls using the RoonApi class now include the port
@@ -16,6 +22,28 @@ Sun Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Wed Jan 12 08:05:19 2022 -0800 6123da4 :
+   Create release in Gitlab CI
+Tue Jan 11 14:03:46 2022 -0800 bfcb2cc :
+   Distribute zip format, name compressed tar with tgz suffix
+Tue Jan 11 13:52:54 2022 -0800 018f850 :
+   Rename RPMs if necessary
+Tue Jan 11 13:33:28 2022 -0800 a9bde4e :
+   Copy dist files in install in spec file, do not do post install strip
+Thu Jan 6 11:58:27 2022 -0800 0af6bc9 :
+   Ignore Vim files
+Wed Dec 29 14:05:04 2021 -0800 bd6df21 :
+   Added an Applications section with the first application a Pi Spotify streamer for Roon
+Wed Dec 29 10:04:31 2021 -0800 39a5311 :
+   Move section on introducing the command line to Usage
+Wed Dec 29 09:49:27 2021 -0800 1f10b29 :
+   Add dependencies to RPM spec file
+Tue Dec 28 10:03:02 2021 -0800 e9b253f :
+   Rename MirrorCommandLine to MirrorCommand
+Thu Dec 16 14:25:47 2021 -0800 da61008 :
+   Updated with latest url to browse artifacts
+Thu Dec 16 13:08:49 2021 -0800 a7c4b6c :
+   Version 2.0.2 Release 1 with support for variable Roon Core port number
 Thu Dec 16 12:19:43 2021 -0800 f31ec06 :
    Set Roon Core port in roon_api.ini and pass the port along with the server for all RoonApi calls
 Wed Dec 8 16:17:30 2021 -0800 b877f5f :
