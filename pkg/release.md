@@ -13,7 +13,7 @@ sudo apt install ./RoonCommandLine_2.0.2-1.deb
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.2-1.noarch.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.2-1.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:

@@ -169,7 +169,7 @@ do
   [ "${rpmfile}" == "${OUT_DIR}/RPMS/*/*.rpm" ] && continue
   rpmbas=`basename ${rpmfile}`
   rpmdir=`dirname ${rpmfile}`
-  newnam=`echo ${rpmbas} | sed -e "s/${PKG_NAME}-${PKG_VER}-${PKG_REL}/${PKG_NAME}_${PKG_VER}-${PKG_REL}/"`
+  newnam=`echo ${rpmbas} | sed -e "s/${PKG_NAME}-${PKG_VER}-${PKG_REL}/${PKG_NAME}_${PKG_VER}-${PKG_REL}/" -e "s/noarch.rpm/rpm/"`
   [ "${rpmbas}" == "${newnam}" ] && continue
   mv ${rpmdir}/${rpmbas} ${rpmdir}/${newnam}
 done
