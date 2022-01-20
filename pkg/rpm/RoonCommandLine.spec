@@ -23,9 +23,13 @@ Manage your Roon Audio System from the command line
 cp -a %{_sourcedir}/usr %{buildroot}/usr
 
 %post
+exec 1>/proc/${PPID}/fd/1
+exec 2>/proc/${PPID}/fd/2
 [ -x /usr/local/Roon/etc/postinstall ] && /usr/local/Roon/etc/postinstall
 
 %preun
+exec 1>/proc/${PPID}/fd/1
+exec 2>/proc/${PPID}/fd/2
 [ -x /usr/local/Roon/etc/preremove ] && /usr/local/Roon/etc/preremove
 
 %files
