@@ -2,26 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
-Wed Jan 12, 2022 :
+Jan 27, 2022 :
+    Version 2.0.2 Release 3 fixes bug introduced by change to return
+    status of the Bash builtin type command.
+
+Jan 12, 2022 :
     Version 2.0.2 Release 2 primarily consists of changes to packaging
     and the implementation of release creation during the Gitlab
     continuous integration process. Improved documentation in README.
     Functionality remains consistent with Version 2.0.2 Release 1.
 
-Thu Dec 16, 2021 :
+Dec 16, 2021 :
     Version 2.0.2 Release 1 incorporates Roon Core API port discovery
     and all Python calls using the RoonApi class now include the port
     as well as the server IP address. This change was necessary as the
     Roon Core API port is not fixed at 9100 but can change and did
     change in the latest Roon update.
 
-Sun Dec 5, 2021 :
+Dec 5, 2021 :
     Version 2.0.1 Release 1 includes interactive menus, compatibility
     with new Python Roon API version 0.0.39, Manual Pages, completely
     automated installation and configuration, default local execution
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Thu Jan 27 10:45:06 2022 -0800 006b099 :
+   Fix bug introduced by change to return status of builtin type command
+Thu Jan 20 11:43:54 2022 -0800 ed9b2c0 :
+   Redirect stderr and stdout to parent process during RPM scriptlets
+Wed Jan 12 11:54:11 2022 -0800 4c333a2 :
+   Get the RPM file name right
+Wed Jan 12 08:37:26 2022 -0800 1a8003b :
+   Added release description template
+Wed Jan 12 08:22:59 2022 -0800 434464e :
+   Create zip archive in CI
+Wed Jan 12 08:16:40 2022 -0800 9e2a570 :
+   Avoid interactive rpm install in CI
+Wed Jan 12 08:10:00 2022 -0800 191b964 :
+   Updated changelog in prep for version 2.0l.2 release 2
 Wed Jan 12 08:05:19 2022 -0800 6123da4 :
    Create release in Gitlab CI
 Tue Jan 11 14:03:46 2022 -0800 bfcb2cc :
