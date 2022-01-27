@@ -114,10 +114,9 @@ cp ${ROON}/bin/roon ${ROON}/bin/roon.orig
 cp /tmp/roon$$ ${ROON}/bin/roon
 rm -f /tmp/roon$$
 
-have_python3=`type -p python3`
 PYTHONUSERBASE=
 # Check the global site directories
-if [ "${have_python3}" ]
+if type -p python3 > /dev/null
 then
   SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
 else
@@ -175,8 +174,7 @@ then
             echo "List commands will not function properly."
         fi
         [ "${patchfile}" ] && {
-            patch_inst=`type -p patch`
-            if [ "$patch_inst" ]
+            if type -p patch > /dev/null
             then
                 cd ${PYTHON_SITEDIR}
                 patch -b -p0 < ${patchfile}

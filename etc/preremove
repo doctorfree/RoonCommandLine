@@ -17,9 +17,8 @@ ROONINI=${ROONETC}/roon_api.ini
 # Locate the global site directories
 ROON_SITE_DIR=
 PYTHONUSERBASE=
-have_python3=`type -p python3`
 # Check the global site directories
-if [ "${have_python3}" ]
+if type -p python3 > /dev/null
 then
   SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
 else
