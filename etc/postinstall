@@ -118,7 +118,7 @@ then
     # Remove leading and trailing spaces in RVER
     RVER="$(echo -e "${RVER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     # Only patch Roonapi version 0.0.38 and earlier
-    LESSER=$(echo "${RVER} '0.0.38'" | tr " " "\n" | sort -V | head -n 1)
+    LESSER=$(echo "${RVER} 0.0.38" | tr " " "\n" | sort -V | head -n 1)
     if [ "${LESSER}" != "${RVER}" ]
     then
       # Mark it as having been patched
