@@ -20,7 +20,7 @@ else
     DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
     # Remove leading and trailing spaces in DEFZONE
     DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-    set_zone $DEFZONE
+    ${ROON}/bin/set_zone $DEFZONE
     . ${ROONCONF}
 fi
 

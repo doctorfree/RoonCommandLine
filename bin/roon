@@ -95,14 +95,17 @@ ROONCONF=${ROONETC}/pyroonconf
 LOCAL=false
 [ -f ${ROONCONF} ] && . ${ROONCONF}
 
+[[ ":$PATH:" == *":/usr/local/bin:"* ]] || export PATH=${PATH}:/usr/local/bin
+[[ ":$PATH:" == *":/usr/local/Roon/bin:"* ]] || export PATH=${PATH}:/usr/local/Roon/bin
+
 select_zone() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
   if [ "${LOCAL}" = true ]
   then
-    zones=`get_zones | sed -e 's/\, /\,/g'`
+    zones=`${ROON}/bin/get_zones | sed -e 's/\, /\,/g'`
   else
-    zones=`ssh $user@$server "bash -l -c \"get_zones | sed -e 's/\, /\,/g'\""`
+    zones=`ssh $user@$server "bash -l -c \"${ROON}/bin/get_zones | sed -e 's/\, /\,/g'\""`
   fi
   zone_options=( $( echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }' ) )
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
@@ -127,9 +130,9 @@ select_zone() {
                   echo "${BOLD}Executing Roon command to set default zone to: ${opt}${NORMAL}"
                   if [ "${LOCAL}" = true ]
                   then
-                    set_zone "${opt}"
+                    ${ROON}/bin/set_zone "${opt}"
                   else
-                    ssh $user@$server "bash -l -c \"set_zone ${opt}\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone ${opt}\""
                   fi
                   break 2
                 else
@@ -189,7 +192,7 @@ select_default() {
   then
     media_options=( $(${listcom} __all__) )
   else
-    media_options=( $(ssh $user@$server "bash -l -c \"${listcom} __all__\"") )
+    media_options=( $(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\"") )
   fi
   DEFAULT=`grep ^Default${medtype} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
   # Remove leading and trailing spaces
@@ -222,7 +225,7 @@ select_default() {
                 then
                     ${setdefcom} "${opt}"
                 else
-                    ssh $user@$server "bash -l -c \"${setdefcom} ${opt}\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/${setdefcom} ${opt}\""
                 fi
                 break 2
                 ;;
@@ -275,7 +278,7 @@ select_media() {
   then
     media_options=( $(${listcom} __all__) )
   else
-    media_options=( $(ssh $user@$server "bash -l -c \"${listcom} __all__\"") )
+    media_options=( $(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\"") )
   fi
   DEFAULT=`grep ^Default${medtype} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
   # Remove leading and trailing spaces
@@ -305,7 +308,7 @@ select_media() {
                 then
                     ${playcom} "${opt}"
                 else
-                    ssh $user@$server "bash -l -c \"${playcom} ${opt}\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/${playcom} ${opt}\""
                 fi
                 break 2
                 ;;
@@ -387,7 +390,7 @@ main_menu() {
                 then
                     zone_command -c play
                 else
-                    ssh $user@$server "bash -l -c \"zone_command -c play\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play\""
                 fi
                 printf " Done\n\n"
                 break
@@ -398,7 +401,7 @@ main_menu() {
                 then
                     zone_command -c pause
                 else
-                    ssh $user@$server "bash -l -c \"zone_command -c pause\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c pause\""
                 fi
                 printf " Done\n\n"
                 break
@@ -409,7 +412,7 @@ main_menu() {
                 then
                     zone_command -c next
                 else
-                    ssh $user@$server "bash -l -c \"zone_command -c next\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c next\""
                 fi
                 printf " Done\n\n"
                 break
@@ -420,7 +423,7 @@ main_menu() {
                 then
                     zone_command -c previous
                 else
-                    ssh $user@$server "bash -l -c \"zone_command -c previous\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c previous\""
                 fi
                 printf " Done\n\n"
                 break
@@ -431,7 +434,7 @@ main_menu() {
                 then
                     zone_command -c mute
                 else
-                    ssh $user@$server "bash -l -c \"zone_command -c mute\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute\""
                 fi
                 printf " Done\n\n"
                 break
@@ -442,7 +445,7 @@ main_menu() {
                 then
                     zone_command -c unmute
                 else
-                    ssh $user@$server "bash -l -c \"zone_command -c unmute\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c unmute\""
                 fi
                 printf " Done\n\n"
                 break
@@ -453,7 +456,7 @@ main_menu() {
                 then
                     zone_command -c repeat
                 else
-                    ssh $user@$server "bash -l -c \"zone_command -c repeat\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c repeat\""
                 fi
                 printf " Done\n\n"
                 break
@@ -464,7 +467,7 @@ main_menu() {
                 then
                     zone_command -c unrepeat
                 else
-                    ssh $user@$server "bash -l -c \"zone_command -c unrepeat\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c unrepeat\""
                 fi
                 printf " Done\n\n"
                 break
@@ -475,7 +478,7 @@ main_menu() {
                 then
                     zone_command -c shuffle
                 else
-                    ssh $user@$server "bash -l -c \"zone_command -c shuffle\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c shuffle\""
                 fi
                 printf " Done\n\n"
                 break
@@ -486,7 +489,7 @@ main_menu() {
                 then
                     zone_command -c unshuffle
                 else
-                    ssh $user@$server "bash -l -c \"zone_command -c unshuffle\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c unshuffle\""
                 fi
                 printf " Done\n\n"
                 break
@@ -496,7 +499,7 @@ main_menu() {
                 then
                     list_albums __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_albums __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums __all__\""
                 fi
                 break
                 ;;
@@ -505,7 +508,7 @@ main_menu() {
                 then
                     list_artists __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_artists __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists __all__\""
                 fi
                 break
                 ;;
@@ -514,7 +517,7 @@ main_menu() {
                 then
                     list_genres __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_genres __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres __all__\""
                 fi
                 break
                 ;;
@@ -523,7 +526,7 @@ main_menu() {
                 then
                     list_playlists __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_playlists __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists __all__\""
                 fi
                 break
                 ;;
@@ -532,7 +535,7 @@ main_menu() {
                 then
                     list_radio __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_radio __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_radio __all__\""
                 fi
                 break
                 ;;
@@ -541,7 +544,7 @@ main_menu() {
                 then
                     list_tags __all__
                 else
-                    ssh $user@$server "bash -l -c \"list_tags __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_tags __all__\""
                 fi
                 break
                 ;;
@@ -550,7 +553,7 @@ main_menu() {
                 then
                     list_zones
                 else
-                    ssh $user@$server "bash -l -c \"list_zones\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones\""
                 fi
                 break
                 ;;
@@ -583,7 +586,7 @@ main_menu() {
                 then
                     play_album
                 else
-                    ssh $user@$server "bash -l -c play_album"
+                    ssh $user@$server "bash -l -c ${ROON}/bin/play_album"
                 fi
                 break
                 ;;
@@ -592,7 +595,7 @@ main_menu() {
                 then
                     play_artist
                 else
-                    ssh $user@$server "bash -l -c play_artist"
+                    ssh $user@$server "bash -l -c ${ROON}/bin/play_artist"
                 fi
                 break
                 ;;
@@ -601,7 +604,7 @@ main_menu() {
                 then
                     play_genre
                 else
-                    ssh $user@$server "bash -l -c play_genre"
+                    ssh $user@$server "bash -l -c ${ROON}/bin/play_genre"
                 fi
                 break
                 ;;
@@ -610,7 +613,7 @@ main_menu() {
                 then
                     play_playlist
                 else
-                    ssh $user@$server "bash -l -c play_playlist"
+                    ssh $user@$server "bash -l -c ${ROON}/bin/play_playlist"
                 fi
                 break
                 ;;
@@ -619,7 +622,7 @@ main_menu() {
                 then
                     play_radio
                 else
-                    ssh $user@$server "bash -l -c play_radio"
+                    ssh $user@$server "bash -l -c ${ROON}/bin/play_radio"
                 fi
                 break
                 ;;
@@ -628,7 +631,7 @@ main_menu() {
                 then
                     play_tag
                 else
-                    ssh $user@$server "bash -l -c play_tag"
+                    ssh $user@$server "bash -l -c ${ROON}/bin/play_tag"
                 fi
                 break
                 ;;
@@ -735,9 +738,9 @@ done
 [ "$zone" ] && {
     if [ "${LOCAL}" = true ]
     then
-        set_zone $zone
+        ${ROON}/bin/set_zone $zone
     else
-        ssh $user@$server "bash -l -c \"set_zone $zone\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone $zone\""
     fi
 }
 
@@ -746,9 +749,9 @@ done
     [ "$comm" == "group" ] || [ "$comm" == "ungroup" ] || comm=group
     if [ "${LOCAL}" = true ]
     then
-        set_zone_group $comm $zonegroup
+        ${ROON}/bin/set_zone_group $comm $zonegroup
     else
-        ssh $user@$server "bash -l -c \"set_zone_group $comm $zonegroup\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone_group $comm $zonegroup\""
     fi
 }
 
@@ -757,7 +760,7 @@ done
     then
         list_albums $search
     else
-        ssh $user@$server "bash -l -c \"list_albums $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums $search\""
     fi
 }
 [ "$artistlist" ] && {
@@ -765,7 +768,7 @@ done
     then
         list_artists $search
     else
-        ssh $user@$server "bash -l -c \"list_artists $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists $search\""
     fi
 }
 [ "$genrelist" ] && {
@@ -773,7 +776,7 @@ done
     then
         list_genres $search
     else
-        ssh $user@$server "bash -l -c \"list_genres $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres $search\""
     fi
 }
 [ "$playlistlist" ] && {
@@ -781,7 +784,7 @@ done
     then
         list_playlists $search
     else
-        ssh $user@$server "bash -l -c \"list_playlists $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists $search\""
     fi
 }
 [ "$radiolist" ] && {
@@ -789,7 +792,7 @@ done
     then
         list_radio $search
     else
-        ssh $user@$server "bash -l -c \"list_radio $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_radio $search\""
     fi
 }
 [ "$taglist" ] && {
@@ -797,7 +800,7 @@ done
     then
         list_tags $search
     else
-        ssh $user@$server "bash -l -c \"list_tags $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_tags $search\""
     fi
 }
 [ "$zonelist" ] && {
@@ -805,7 +808,7 @@ done
     then
         list_zones $search
     else
-        ssh $user@$server "bash -l -c \"list_zones $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones $search\""
     fi
 }
 [ "$album" ] && {
@@ -814,7 +817,7 @@ done
     then
         play_album $album
     else
-        ssh $user@$server "bash -l -c \"play_album $album\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album\""
     fi
 }
 [ "$artist" ] && {
@@ -823,7 +826,7 @@ done
     then
         play_artist $artist
     else
-        ssh $user@$server "bash -l -c \"play_artist $artist\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $artist\""
     fi
 }
 [ "$genre" ] && {
@@ -832,7 +835,7 @@ done
     then
         play_genre $genre
     else
-        ssh $user@$server "bash -l -c \"play_genre $genre\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $genre\""
     fi
 }
 [ "$playlist" ] && {
@@ -841,7 +844,7 @@ done
     then
         play_playlist $playlist
     else
-        ssh $user@$server "bash -l -c \"play_playlist $playlist\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $playlist\""
     fi
 }
 [ "$tag" ] && {
@@ -850,7 +853,7 @@ done
     then
         play_tag $tag
     else
-        ssh $user@$server "bash -l -c \"play_tag $tag\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_tag $tag\""
     fi
 }
 [ "$radio" ] && {
@@ -859,7 +862,7 @@ done
     then
         play_radio ${radio}
     else
-        ssh $user@$server "bash -l -c \"play_radio ${radio}\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio ${radio}\""
     fi
 }
 
@@ -870,7 +873,7 @@ done
         then
             zone_command -c ${comm}
         else
-            ssh $user@$server "bash -l -c \"zone_command -c ${comm}\""
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c ${comm}\""
         fi
         ;;
     "group"|"ungroup")

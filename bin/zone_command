@@ -19,7 +19,7 @@ then
     . ${ROONCONF}
 else
     DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    set_zone $DEFZONE
+    ${ROON}/bin/set_zone $DEFZONE
     . ${ROONCONF}
 fi
 
