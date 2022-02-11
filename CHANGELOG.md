@@ -2,8 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-Feb 12, 2022 :
-    Version 2.0.3 Release 1 ensures RoonCommand commands are in PATH
+Feb 11, 2022 :
+    Version 2.0.3 Release 1 ensures RoonCommandLine commands are in PATH.
+    The installation script has been revised to work with the updated
+    Python roonapi module version numbering. SSH invocations should
+    work in a wider range of environments with this release.
 
 Jan 27, 2022 :
     Version 2.0.2 Release 3 fixes bug introduced by change to return

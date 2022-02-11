@@ -1,4 +1,4 @@
-RoonCommandLine version 2.0.3 release 1 ensures RoonCommandLine commands are in PATH or full path used in SSH invocations.
+RoonCommandLine version 2.0.3 release 1 ensures RoonCommandLine commands are in PATH or full path used in SSH invocations. The installation script has been revised to work with the updated Python roonapi module version numbering. SSH invocations should work in a wider range of environments with this release.
 
 RoonCommandLine version 2.0.2 releases add support for detection of the Roon Core port as well as its IP address. The port number is stored in `roon_api.ini` and used in all subsequent calls to the Python Roon API. This was necessary as Roon Labs changed the port number in the most recent update. Extensions shouldn't be assuming a hard coded port number anyway so this change prompted a good improvement although it was irritating at first. A bug introduced by the change to return status of the Bash builtin type command was addressed.
 
