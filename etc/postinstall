@@ -7,36 +7,6 @@
 
 set -e
 
-vercomp () {
-    if [[ $1 == $2 ]]
-    then
-        echo "0"
-    fi
-    local IFS=.
-    local i ver1=($1) ver2=($2)
-    # fill empty fields in ver1 with zeros
-    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
-    do
-        ver1[i]=0
-    done
-    for ((i=0; i<${#ver1[@]}; i++))
-    do
-        if [[ -z ${ver2[i]} ]]
-        then
-            # fill empty fields in ver2 with zeros
-            ver2[i]=0
-        fi
-        if ((10#${ver1[i]} > 10#${ver2[i]}))
-        then
-            echo "1"
-        fi
-        if ((10#${ver1[i]} < 10#${ver2[i]}))
-        then
-            echo "2"
-        fi
-    done
-}
-
 update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 python3 -m pip install roonapi
 export PATH=/usr/local/bin:/usr/bin:$PATH
@@ -148,8 +118,8 @@ then
     # Remove leading and trailing spaces in RVER
     RVER="$(echo -e "${RVER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     # Only patch Roonapi version 0.0.38 and earlier
-    roon_api_cmp=`vercomp "${RVER}" "0.0.38"`
-    if [ "${roon_api_cmp}" == "1" ]
+    LESSER=$(echo "${RVER} '0.0.38'" | tr " " "\n" | sort -V | head -n 1)
+    if [ "${LESSER}" != "${RVER}" ]
     then
       # Mark it as having been patched
       grep -v ROONAPIPATCHED ${ROONCONF} > /tmp/roonconf$$
