@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+Feb 12, 2022 :
+    Version 2.0.3 Release 1 ensures RoonCommand commands are in PATH
+
 Jan 27, 2022 :
     Version 2.0.2 Release 3 fixes bug introduced by change to return
     status of the Bash builtin type command.
@@ -26,6 +29,12 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Fri Feb 11 13:32:56 2022 -0800 1ff2e45 :
+   Add /usr/local/Roon/bin to PATH, invoke commands using full path in SSH invocations
+Sat Jan 29 09:02:17 2022 -0800 d7261c2 :
+   Use pkg/release.md for release description in Gitlab release creation
+Thu Jan 27 10:48:22 2022 -0800 32a4768 :
+   Update changelog and release number in preparation for new release
 Thu Jan 27 10:45:06 2022 -0800 006b099 :
    Fix bug introduced by change to return status of builtin type command
 Thu Jan 20 11:43:54 2022 -0800 ed9b2c0 :
