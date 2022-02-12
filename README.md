@@ -34,6 +34,9 @@
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
     1. [Introduction to Using the Command Line](#introduction-to-using-the-command-line)
+    1. [Voice Activated Roon Control](#voice-activated-roon-control)
+        1. [Roon Voice Commands with Siri](#roon-voice-commands-with-siri)
+        1. [Roon Voice Commands with Google Assistant](#roon-voice-commands-with-ga)
 1. [Motivation](#motivation)
     1. [Why would I need or want command line control of Roon](#why-would-i-need-or-want-command-line-control-of-roon)
     1. [Applications](#applications)
@@ -596,6 +599,29 @@ line interface is so powerful by reading the RoonCommandLine wiki article
 
 This introduction to the command line includes an example of how to automate
 playback of Roon playlists in specified Roon zones at designated times of day.
+
+### Voice Activated Roon Control
+RoonCommandLine can be used to provide a command line interface for the remote
+execution of commands via SSH or other facilities such as Google Assistant.
+In this way, voice control of Roon can be implemented on mobile devices or
+other "smart" devices. Example implementations using Apple Siri and
+Google Assistant are described in the following RoonCommandLine Wiki articles.
+
+#### Roon Voice Commands with Siri
+The RoonCommandLine Wiki article
+["Roon Voice Commands with Siri"](https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/Roon-Voice-Commands-with-Siri)
+describes in detail how to setup Roon voice commands using Apple Shortcuts
+on an iOS device. This method utilizes Siri to recognize the voice commands
+and run the Shortcut which uses SSH to execute the command.
+
+#### Roon Voice Commands with Google Assistant
+The RoonCommandLine Wiki article
+["Roon Voice Commands with Google Assistant"](https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/Roon-Voice-Commands-with-GA)
+describes in detail how to setup Roon voice commands using the
+[MMM-GoogleAssistant](http://wiki.bugsounet.fr/en/MMM-GoogleAssistant)
+and [MMM-Detector](http://wiki.bugsounet.fr/en/MMM-Detector)
+modules on a [MagicMirror](https://magicmirror.builders/).
+This method utilizes Google Assistant recipes to control Roon with voice commands.
 
 ## Motivation
 
