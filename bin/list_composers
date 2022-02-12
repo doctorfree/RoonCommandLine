@@ -1,0 +1,41 @@
+#!/bin/bash
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+LIST=list_composers.py
+COMPOSER=
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI}
+
+[ -f $LIST ] || exit 2
+
+[ "$1" ] && COMPOSER="$*"
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    ${ROON}/bin/set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+
+# Get the default composer if one is not provided
+[ "${COMPOSER}" ] || {
+    COMPOSER=`grep ^DefaultComposer ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in COMPOSER
+    COMPOSER="$(echo -e "${COMPOSER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
+
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $LIST -c "$COMPOSER" -z "$ROON_ZONE"
+else
+    python $LIST -c "$COMPOSER" -z "$ROON_ZONE"
+fi

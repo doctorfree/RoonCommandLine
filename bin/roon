@@ -24,9 +24,11 @@ user="SSH_USERNAME"
 
 album=
 artist=
+composer=
 comm=
 albumlist=
 artistlist=
+composerlist=
 genrelist=
 playlistlist=
 radiolist=
@@ -41,15 +43,16 @@ zonegroup=
 zonelist=
 
 usage() {
-  printf "\nUsage: roon -A album -a artist -g genre -G zone_group -l [albums|artists|genres|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -S -r radio -u"
+  printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -l [albums|artists|composers|genres|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -S -r radio -u"
   printf "\n\tWhere:\n\t\t-A album selects an album to play"
   printf "\n\t\t-a artist selects an artist to play"
+  printf "\n\t\t-C composer selects a composer to play"
   printf "\n\t\t-g genre selects a genre to play"
   printf "\n\t\t-p playlist selects a playlist to play"
   printf "\n\t\t-G zone_group specifies a zone grouping specified in roon_api.ini"
   printf "\n\t\t-L setup roon to execute local commands rather than remote via SSH"
   printf "\n\t\t-S Set Roon defaults in roon_api.ini"
-  printf "\n\t\t-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones"
+  printf "\n\t\t-l [albums|artists|composers|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones"
   printf "\n\t\t-r radio selects a live radio stream to play"
   printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
   printf "\n\t\t-t tag selects an tag to play (not yet working)"
@@ -161,6 +164,11 @@ select_default() {
       listcom="list_artists"
       medtype="Artist"
       ;;
+    "Set Default Composer")
+      setdefcom="${pycom} -c"
+      listcom="list_composers"
+      medtype="Composer"
+      ;;
     "Set Default Genre")
       setdefcom="${pycom} -g"
       listcom="list_genres"
@@ -247,6 +255,11 @@ select_media() {
       listcom="list_artists"
       medtype="Artist"
       ;;
+    composer)
+      playcom="play_composer"
+      listcom="list_composers"
+      medtype="Composer"
+      ;;
     genre)
       playcom="play_genre"
       listcom="list_genres"
@@ -318,10 +331,10 @@ select_media() {
 }
 
 list_defaults() {
-  defaults_options=("Set Default Album" "Set Default Artist" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Main Menu" "Quit")
+  defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Main Menu" "Quit")
   while true
   do
-    for media in Album Artist Genre Playlist Radio Tag
+    for media in Album Artist Composer Genre Playlist Radio Tag
     do
       DEFAULT=`grep ^Default${media} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
       # Remove leading and trailing spaces
@@ -354,7 +367,7 @@ main_menu() {
   while true
   do
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Quit")
+    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Quit")
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
@@ -512,6 +525,15 @@ main_menu() {
                 fi
                 break
                 ;;
+            "List Composers",*|*,"List Composers")
+                if [ "${LOCAL}" = true ]
+                then
+                    list_composers __all__
+                else
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers __all__\""
+                fi
+                break
+                ;;
             "List Genres",*|*,"List Genres")
                 if [ "${LOCAL}" = true ]
                 then
@@ -565,6 +587,10 @@ main_menu() {
                 select_media artist
                 break
                 ;;
+            "Select Composer",*|*,"Select Composer")
+                select_media composer
+                break
+                ;;
             "Select Genre",*|*,"Select Genre")
                 select_media genre
                 break
@@ -596,6 +622,15 @@ main_menu() {
                     play_artist
                 else
                     ssh $user@$server "bash -l -c ${ROON}/bin/play_artist"
+                fi
+                break
+                ;;
+            "Play Default Composer",*|*,"Play Default Composer")
+                if [ "${LOCAL}" = true ]
+                then
+                    play_composer
+                else
+                    ssh $user@$server "bash -l -c ${ROON}/bin/play_composer"
                 fi
                 break
                 ;;
@@ -644,13 +679,16 @@ main_menu() {
   done
 }
 
-while getopts A:a:g:G:p:t:z:c:l:s:LSr:u flag; do
+while getopts A:a:C:g:G:p:t:z:c:l:s:LSr:u flag; do
     case $flag in
         A)
             album="$OPTARG"
             ;;
         a)
             artist="$OPTARG"
+            ;;
+        C)
+            composer="$OPTARG"
             ;;
         g)
             genre="$OPTARG"
@@ -675,6 +713,9 @@ while getopts A:a:g:G:p:t:z:c:l:s:LSr:u flag; do
             elif [ "$listname" == "artists" ] || [ "$listname" == "artist" ]
             then
                 artistlist=1
+            elif [ "$listname" == "composers" ] || [ "$listname" == "composer" ]
+            then
+                composerlist=1
             elif [ "$listname" == "genres" ] || [ "$listname" == "genre" ]
             then
                 genrelist=1
@@ -771,6 +812,14 @@ done
         ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists $search\""
     fi
 }
+[ "$composerlist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_composers $search
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers $search\""
+    fi
+}
 [ "$genrelist" ] && {
     if [ "${LOCAL}" = true ]
     then
@@ -827,6 +876,15 @@ done
         play_artist $artist
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $artist\""
+    fi
+}
+[ "$composer" ] && {
+    [ "${composer}" == "default" ] && composer=
+    if [ "${LOCAL}" = true ]
+    then
+        play_composer $composer
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer $composer\""
     fi
 }
 [ "$genre" ] && {

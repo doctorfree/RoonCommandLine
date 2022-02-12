@@ -10,6 +10,7 @@ config.read('/usr/local/Roon/etc/roon_api.ini')
 parser = argparse.ArgumentParser()
 parser.add_argument("-A", "--album", help="set default album")
 parser.add_argument("-a", "--artist", help="set default artist")
+parser.add_argument("-c", "--composer", help="set default composer")
 parser.add_argument("-g", "--genre", help="set default genre")
 parser.add_argument("-p", "--playlist", help="set default playlist")
 parser.add_argument("-r", "--radio", help="set default radio")
@@ -20,6 +21,8 @@ if args.album:
     config['DEFAULT']['DefaultAlbum'] = args.album
 if args.artist:
     config['DEFAULT']['DefaultArtist'] = args.artist
+if args.composer:
+    config['DEFAULT']['DefaultComposer'] = args.composer
 if args.genre:
     config['DEFAULT']['DefaultGenre'] = args.genre
 if args.playlist:
