@@ -61,6 +61,7 @@ usage() {
   printf "\n\t\t-z zone selects the Roon Zone in which to play"
   printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
   printf "\n\t\t\tissues the command in the selected zone"
+  printf "\n\tCombine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre\n"
   printf "\n\tSpecial search term "__all__" matches all entries"
   printf "\n\tSpecial name "default" plays the default setting in roon_api.ini" 
   printf "\n\n\tExample invocations"
@@ -86,6 +87,10 @@ usage() {
   printf "\n\t\t\troon -l genartists -a Will -g Country"
   printf "\n\t\tList albums containing the string 'Magic' in the 'Rock' genre:"
   printf "\n\t\t\troon -l genalbums -A Magic -g Rock"
+  printf "\n\t\tPlay artist containing the string 'Willie' in the 'Country' genre:"
+  printf "\n\t\t\troon -a Willie -g Country"
+  printf "\n\t\tPlay album containing the string 'Magic' in the 'Rock' genre:"
+  printf "\n\t\t\troon -A Magic -g Rock"
   printf "\n\t\tGroup the zones listed in roon_api.ini Group_foobar:"
   printf "\n\t\t\troon -G foobar -c group"
   printf "\n\t\tNOTE: Use quotes to specify media names which contain spaces."
@@ -896,6 +901,29 @@ done
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones $search\""
     fi
+}
+# First handle album/artist and genre requested
+[ "$album" ] && [ "$genre" ] && {
+    [ "${album}" == "default" ] && album=
+    if [ "${LOCAL}" = true ]
+    then
+        play_genre_album $genre $album
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album $genre $album\""
+    fi
+    album=
+    genre=
+}
+[ "$artist" ] && [ "$genre" ] && {
+    [ "${artist}" == "default" ] && artist=
+    if [ "${LOCAL}" = true ]
+    then
+        play_genre_artist $genre $artist
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist $genre $artist\""
+    fi
+    artist=
+    genre=
 }
 [ "$album" ] && {
     [ "${album}" == "default" ] && album=

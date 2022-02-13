@@ -4,7 +4,7 @@ ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
-PLAY=play_composers.py
+PLAY=play_composer.py
 COMPOSER=
 
 [ -d ${ROONAPI} ] || exit 1
