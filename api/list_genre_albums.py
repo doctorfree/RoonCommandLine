@@ -14,15 +14,15 @@ port = config['DEFAULT']['RoonCorePort']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-a", "--artist", help="artist search term")
+parser.add_argument("-a", "--album", help="album search term")
 parser.add_argument("-g", "--genre", help="genre search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
-if args.artist:
-    artistsearch = args.artist
+if args.album:
+    albumsearch = args.album
 else:
-    artistsearch = config['DEFAULT']['DefaultArtist']
+    albumsearch = config['DEFAULT']['DefaultAlbum']
 if args.genre:
     genresearch = args.genre
 else:
@@ -66,11 +66,11 @@ genres = roonapi.list_media(output_id, ["Genres", genresearch])
 
 if genres:
     for genre in genres:
-        # List matching artists
-        artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
-        if artists:
-            print("\nArtists in", genre, "genre with", artistsearch, "in name", ":\n")
-            print(*artists, sep = "\n")
+        # List matching albums
+        albums = roonapi.list_media(output_id, ["Genres", genre, "Albums", albumsearch])
+        if albums:
+            print("\nAlbums in", genre, "genre with", albumsearch, "in name", ":\n")
+            print(*albums, sep = "\n")
 else:
     print("No genres found matching ", genresearch)
 

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+LIST=list_genre_albums.py
+GENRE=
+ALBUM=
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI}
+
+[ -f $LIST ] || exit 2
+
+# First argument is genre, second is album
+[ "$1" ] && GENRE="$1"
+[ "$2" ] && ALBUM="$2"
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    ${ROON}/bin/set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+
+# Get the default genre if one is not provided
+[ "${GENRE}" ] || {
+    GENRE=`grep ^DefaultGenre ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in GENRE
+    GENRE="$(echo -e "${GENRE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
+# Get the default album if one is not provided
+[ "${ALBUM}" ] || {
+    ALBUM=`grep ^DefaultAlbum ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in ALBUM
+    ALBUM="$(echo -e "${ALBUM}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
+
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $LIST -a "$ALBUM" -g "$GENRE" -z "$ROON_ZONE"
+else
+    python $LIST -a "$ALBUM" -g "$GENRE" -z "$ROON_ZONE"
+fi

@@ -31,6 +31,7 @@ artistlist=
 composerlist=
 genrelist=
 genartistlist=
+genalbumlist=
 playlistlist=
 radiolist=
 taglist=
@@ -44,16 +45,16 @@ zonegroup=
 zonelist=
 
 usage() {
-  printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -l [albums|artists|composers|genres|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -S -r radio -u"
+  printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -l [albums|artists|composers|genres|genalbums|genartists|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -S -r radio -u"
   printf "\n\tWhere:\n\t\t-A album selects an album to play"
-  printf "\n\t\t-a artist selects an artist to play"
+  printf "\n\t\t-a artist selects an artist to list/play"
   printf "\n\t\t-C composer selects a composer to play"
-  printf "\n\t\t-g genre selects a genre to play"
+  printf "\n\t\t-g genre selects a genre to list/play"
   printf "\n\t\t-p playlist selects a playlist to play"
   printf "\n\t\t-G zone_group specifies a zone grouping specified in roon_api.ini"
   printf "\n\t\t-L setup roon to execute local commands rather than remote via SSH"
   printf "\n\t\t-S Set Roon defaults in roon_api.ini"
-  printf "\n\t\t-l [albums|artists|composers|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones"
+  printf "\n\t\t-l [albums|artists|composers|genres|genalbums|genartists|playlists|tags|zones] indicates list albums, artists, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
   printf "\n\t\t-r radio selects a live radio stream to play"
   printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
   printf "\n\t\t-t tag selects an tag to play (not yet working)"
@@ -81,6 +82,10 @@ usage() {
   printf "\n\t\t\troon -c mute -z \"Mac Pro DAC\""
   printf "\n\t\tList all playlists containing the string 'Best':"
   printf "\n\t\t\troon -l playlists -s Best"
+  printf "\n\t\tList artists containing the string 'Will' in the 'Country' genre:"
+  printf "\n\t\t\troon -l genartists -a Will -g Country"
+  printf "\n\t\tList albums containing the string 'Magic' in the 'Rock' genre:"
+  printf "\n\t\t\troon -l genalbums -A Magic -g Rock"
   printf "\n\t\tGroup the zones listed in roon_api.ini Group_foobar:"
   printf "\n\t\t\troon -G foobar -c group"
   printf "\n\t\tNOTE: Use quotes to specify media names which contain spaces."
@@ -720,6 +725,9 @@ while getopts A:a:C:g:G:p:t:z:c:l:s:LSr:u flag; do
             elif [ "$listname" == "genres" ] || [ "$listname" == "genre" ]
             then
                 genrelist=1
+            elif [ "$listname" == "genalbums" ] || [ "$listname" == "genalbum" ]
+            then
+                genalbumlist=1
             elif [ "$listname" == "genartists" ] || [ "$listname" == "genartist" ]
             then
                 genartistlist=1
@@ -773,6 +781,11 @@ while getopts A:a:C:g:G:p:t:z:c:l:s:LSr:u flag; do
 done
 
 [ "$search" ] || search="__all__"
+[ "$genartistlist" ] && {
+    [ "$genre" ] || {
+        [ "$search" ] && genre=$search
+    }
+}
 
 # Set Defaults
 [ "$setdefs" ] && {
@@ -832,14 +845,25 @@ done
         ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres $search\""
     fi
 }
+[ "$genalbumlist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_genre_albums "$genre" "$album"
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_artists $genre $album\""
+    fi
+    album=
+    genre=
+}
 [ "$genartistlist" ] && {
     if [ "${LOCAL}" = true ]
     then
-        list_genre_artists "$search" "$artist"
+        list_genre_artists "$genre" "$artist"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_artists $search $artist\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_artists $genre $artist\""
     fi
     artist=
+    genre=
 }
 [ "$playlistlist" ] && {
     if [ "${LOCAL}" = true ]
