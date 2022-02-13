@@ -30,6 +30,7 @@ albumlist=
 artistlist=
 composerlist=
 genrelist=
+genartistlist=
 playlistlist=
 radiolist=
 taglist=
@@ -719,6 +720,9 @@ while getopts A:a:C:g:G:p:t:z:c:l:s:LSr:u flag; do
             elif [ "$listname" == "genres" ] || [ "$listname" == "genre" ]
             then
                 genrelist=1
+            elif [ "$listname" == "genartists" ] || [ "$listname" == "genartist" ]
+            then
+                genartistlist=1
             elif [ "$listname" == "playlists" ] || [ "$listname" == "playlist" ]
             then
                 playlistlist=1
@@ -827,6 +831,15 @@ done
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres $search\""
     fi
+}
+[ "$genartistlist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        list_genre_artists "$search" "$artist"
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_artists $search $artist\""
+    fi
+    artist=
 }
 [ "$playlistlist" ] && {
     if [ "${LOCAL}" = true ]
