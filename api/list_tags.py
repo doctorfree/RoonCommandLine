@@ -53,8 +53,7 @@ for (k, v) in outputs.items():
         output_id = k
 
 if output_id is None:
-    print("No zone found matching", target_zone)
-    exit()
+    sys.exit("No zone found matching", target_zone)
 
 # List matching tags
 tags = roonapi.list_media(output_id, ["Library", "Tags", searchterm])

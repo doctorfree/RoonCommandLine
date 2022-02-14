@@ -41,12 +41,13 @@ radio=
 search=
 setdefs=
 tag=
+track=
 zone=
 zonegroup=
 zonelist=
 
 usage() {
-  printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -S -r radio -u"
+  printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones] -s search -p playlist -T track -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -S -r radio -u"
   printf "\n\tWhere:\n\t\t-A album selects an album to play"
   printf "\n\t\t-a artist selects an artist to list/play"
   printf "\n\t\t-C composer selects a composer to play"
@@ -58,7 +59,8 @@ usage() {
   printf "\n\t\t-l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones] indicates list albums, artists, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
   printf "\n\t\t-r radio selects a live radio stream to play"
   printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
-  printf "\n\t\t-t tag selects an tag to play (not yet working)"
+  printf "\n\t\t-T track specifies a track to play"
+  printf "\n\t\t-t tag selects an tag to play"
   printf "\n\t\t-z zone selects the Roon Zone in which to play"
   printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
   printf "\n\t\t\tissues the command in the selected zone"
@@ -71,6 +73,8 @@ usage() {
   printf "\n\t\t\troon -a \"Deep Purple\""
   printf "\n\t\tPlay album by artist:"
   printf "\n\t\t\troon -a \"Deep Purple\" -A Burn"
+  printf "\n\t\tPlay track by artist:"
+  printf "\n\t\t\troon -a \"Aretha Franklin\" -T Think"
   printf "\n\t\tPlay artist in specified zone:"
   printf "\n\t\t\troon -a \"Jethro Tull\" -z \"Mac Pro DAC\""
   printf "\n\t\tPlay genre:"
@@ -696,7 +700,7 @@ main_menu() {
   done
 }
 
-while getopts A:a:C:g:G:p:t:z:c:l:s:LSr:u flag; do
+while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:u flag; do
     case $flag in
         A)
             album="$OPTARG"
@@ -712,6 +716,9 @@ while getopts A:a:C:g:G:p:t:z:c:l:s:LSr:u flag; do
             ;;
         p)
             playlist="$OPTARG"
+            ;;
+        T)
+            track="$OPTARG"
             ;;
         t)
             tag="$OPTARG"
@@ -936,7 +943,17 @@ done
     album=
     artist=
 }
-# Second, handle album or artist and genre requested
+# Second, handle artist and track requested
+[ "$track" ] && [ "$artist" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        play_artist_track "$artist" "$track"
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_track $artist $track\""
+    fi
+    artist=
+}
+# Third, handle album or artist and genre requested
 [ "$album" ] && [ "$genre" ] && {
     [ "${album}" == "default" ] && album=
     if [ "${LOCAL}" = true ]

@@ -14,19 +14,19 @@ port = config['DEFAULT']['RoonCorePort']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-t", "--track", help="track search term")
 parser.add_argument("-a", "--artist", help="artist search term")
-parser.add_argument("-g", "--genre", help="genre search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
+if args.track:
+    tracksearch = args.track
+else:
+    sys.exit("Track argument required")
 if args.artist:
     artistsearch = args.artist
 else:
     artistsearch = config['DEFAULT']['DefaultArtist']
-if args.genre:
-    genresearch = args.genre
-else:
-    genresearch = config['DEFAULT']['DefaultGenre']
 if args.zone:
     target_zone = args.zone
 else:
@@ -60,18 +60,26 @@ for (k, v) in outputs.items():
 if output_id is None:
     sys.exit("No zone found matching", target_zone)
 
-# List matching genres
-genres = roonapi.list_media(output_id, ["Genres", genresearch])
+# List matching artists
+artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
 
-if genres:
-    for genre in genres:
-        # List matching artists
-        artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
-        if artists:
-            print("\nArtists in", genre, "genre with", artistsearch, "in name", ":\n")
-            print(*artists, sep = "\n")
+if artists:
+  track = None
+  for artist in artists:
+    if track is None:
+      # Search through this artist's albums for specified track
+      albums = roonapi.list_media(output_id, ["Library", "Artists", artist, "__all__"])
+      if albums:
+        for album in albums:
+          if track is None:
+            # List matching tracks
+            tracks = roonapi.list_media(output_id, ["Library", "Artists", artist, album, tracksearch])
+            if len(tracks) >= 1:
+              track = tracks[0]
+              print("Playing track title", track, "on album", album, "by artist", artist)
+              roonapi.play_media(output_id, ["Library", "Artists", artist, album, track], None, False)
 else:
-    print("No genres found matching ", genresearch)
+    print("No artists found matching ", artistsearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

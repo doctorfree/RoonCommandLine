@@ -1,0 +1,43 @@
+#!/bin/bash
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+PLAY=play_artist_track.py
+ARTIST=
+TRACK=
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI}
+
+[ -f $PLAY ] || exit 2
+
+# First argument is artist, second is track
+[ "$1" ] && ARTIST="$1"
+[ "$2" ] && TRACK="$2"
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    ${ROON}/bin/set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+
+[ "${TRACK}" ] || {
+    echo "No track specified. Artist and track required."
+    echo "Usage: play_artist_track artist track"
+    exit 1
+}
+
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $PLAY -t "$TRACK" -a "$ARTIST" -z "$ROON_ZONE"
+else
+    python $PLAY -t "$TRACK" -a "$ARTIST" -z "$ROON_ZONE"
+fi

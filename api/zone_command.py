@@ -58,11 +58,10 @@ if zone_command == "verify":
         print("")
     else:
         print(zone_name)
-    exit()
+    sys.exit()
 
 if output_id is None:
-    print("No zone found matching", target_zone)
-    exit()
+    sys.exit("No zone found matching", target_zone)
 
 # Send the command to the specified zone
 if zone_command == "mute":
