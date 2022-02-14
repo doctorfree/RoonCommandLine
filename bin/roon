@@ -40,6 +40,8 @@ playlist=
 radio=
 search=
 setdefs=
+showusage=1
+showexamples=1
 tag=
 track=
 zone=
@@ -47,65 +49,77 @@ zonegroup=
 zonelist=
 
 usage() {
-  printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones] -s search -p playlist -T track -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -S -r radio -u"
-  printf "\n\tWhere:\n\t\t-A album selects an album to play"
-  printf "\n\t\t-a artist selects an artist to list/play"
-  printf "\n\t\t-C composer selects a composer to play"
-  printf "\n\t\t-g genre selects a genre to list/play"
-  printf "\n\t\t-p playlist selects a playlist to play"
-  printf "\n\t\t-G zone_group specifies a zone grouping specified in roon_api.ini"
-  printf "\n\t\t-L setup roon to execute local commands rather than remote via SSH"
-  printf "\n\t\t-S Set Roon defaults in roon_api.ini"
-  printf "\n\t\t-l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones] indicates list albums, artists, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
-  printf "\n\t\t-r radio selects a live radio stream to play"
-  printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
-  printf "\n\t\t-T track specifies a track to play"
-  printf "\n\t\t-t tag selects an tag to play"
-  printf "\n\t\t-z zone selects the Roon Zone in which to play"
-  printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
-  printf "\n\t\t\tissues the command in the selected zone"
-  printf "\n\tCombine '-a artist' and '-A album' to play an album by a specified artist"
-  printf "\n\tCombine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre\n"
-  printf "\n\tSpecial search term "__all__" matches all entries"
-  printf "\n\tSpecial name "default" plays the default setting in roon_api.ini" 
-  printf "\n\n\tExample invocations"
-  printf "\n\t\tPlay artist:"
-  printf "\n\t\t\troon -a \"Deep Purple\""
-  printf "\n\t\tPlay album by artist:"
-  printf "\n\t\t\troon -a \"Deep Purple\" -A Burn"
-  printf "\n\t\tPlay track by artist:"
-  printf "\n\t\t\troon -a \"Aretha Franklin\" -T Think"
-  printf "\n\t\tPlay artist in specified zone:"
-  printf "\n\t\t\troon -a \"Jethro Tull\" -z \"Mac Pro DAC\""
-  printf "\n\t\tPlay genre:"
-  printf "\n\t\t\troon -g Classical"
-  printf "\n\t\tPlay default live radio:"
-  printf "\n\t\t\troon -r default"
-  printf "\n\t\tPlay playlist:"
-  printf "\n\t\t\troon -p \"Bowie Favs\""
-  printf "\n\t\tPlay next track:"
-  printf "\n\t\t\troon -c next"
-  printf "\n\t\tStop play in specified zone:"
-  printf "\n\t\t\troon -c stop -z Kitchen"
-  printf "\n\t\tMute a specified zone:"
-  printf "\n\t\t\troon -c mute -z \"Mac Pro DAC\""
-  printf "\n\t\tList all playlists containing the string 'Best':"
-  printf "\n\t\t\troon -l playlists -s Best"
-  printf "\n\t\tList albums by artist:"
-  printf "\n\t\t\troon -l artalbums -a \"Deep Purple\""
-  printf "\n\t\tList artists containing the string 'Will' in the 'Country' genre:"
-  printf "\n\t\t\troon -l genartists -a Will -g Country"
-  printf "\n\t\tList albums containing the string 'Magic' in the 'Rock' genre:"
-  printf "\n\t\t\troon -l genalbums -A Magic -g Rock"
-  printf "\n\t\tPlay artist containing the string 'Willie' in the 'Country' genre:"
-  printf "\n\t\t\troon -a Willie -g Country"
-  printf "\n\t\tPlay album containing the string 'Magic' in the 'Rock' genre:"
-  printf "\n\t\t\troon -A Magic -g Rock"
-  printf "\n\t\tGroup the zones listed in roon_api.ini Group_foobar:"
-  printf "\n\t\t\troon -G foobar -c group"
-  printf "\n\t\tNOTE: Use quotes to specify media names which contain spaces."
-  printf "\n\t\tFor example, to play the album 'Love Bomb':"
-  printf "\n\t\t\troon -A \"Love Bomb\"\n\n"
+  [ "${showusage}" ] && {
+    printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group"
+    printf "\n\t-l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones]"
+    printf "\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
+    printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio [-EuU]"
+    printf "\n\tWhere:\n\t\t-A album selects an album to play"
+    printf "\n\t\t-a artist selects an artist to list/play"
+    printf "\n\t\t-C composer selects a composer to play"
+    printf "\n\t\t-g genre selects a genre to list/play"
+    printf "\n\t\t-p playlist selects a playlist to play"
+    printf "\n\t\t-G zone_group specifies a zone grouping specified in roon_api.ini"
+    printf "\n\t\t-L setup roon to execute local commands rather than remote via SSH"
+    printf "\n\t\t-S Set Roon defaults in roon_api.ini"
+    printf "\n\t\t-l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones]"
+    printf "\n\t\t\tindicates list albums, artists, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
+    printf "\n\t\t-r radio selects a live radio stream to play"
+    printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
+    printf "\n\t\t-T track specifies a track to play"
+    printf "\n\t\t-t tag selects an tag to play"
+    printf "\n\t\t-z zone selects the Roon Zone in which to play"
+    printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
+    printf "\n\t\t\tissues the command in the selected zone"
+    printf "\n\t\t-u displays a full usage message with examples"
+    printf "\n\t\t-U displays a usage message without examples"
+    printf "\n\t\t-E displays examples with no usage message"
+    printf "\n\tCombine '-a artist' and '-A album' to play an album by a specified artist"
+    printf "\n\tCombine '-a artist' and '-T track' to play a track by a specified artist"
+    printf "\n\tCombine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre\n"
+    printf "\n\tSpecial search term "__all__" matches all entries"
+    printf "\n\tSpecial name "default" plays the default setting in roon_api.ini\n"
+  }
+  [ "${showexamples}" ] && {
+    printf "\n\tExample invocations"
+    printf "\n\t\tPlay artist:"
+    printf "\n\t\t\troon -a \"Deep Purple\""
+    printf "\n\t\tPlay album by artist:"
+    printf "\n\t\t\troon -a \"Deep Purple\" -A Burn"
+    printf "\n\t\tPlay track by artist:"
+    printf "\n\t\t\troon -a \"Aretha Franklin\" -T Think"
+    printf "\n\t\tPlay artist in specified zone:"
+    printf "\n\t\t\troon -a \"Jethro Tull\" -z \"Mac Pro DAC\""
+    printf "\n\t\tPlay genre:"
+    printf "\n\t\t\troon -g Classical"
+    printf "\n\t\tPlay default live radio:"
+    printf "\n\t\t\troon -r default"
+    printf "\n\t\tPlay playlist:"
+    printf "\n\t\t\troon -p \"Bowie Favs\""
+    printf "\n\t\tPlay next track:"
+    printf "\n\t\t\troon -c next"
+    printf "\n\t\tStop play in specified zone:"
+    printf "\n\t\t\troon -c stop -z Kitchen"
+    printf "\n\t\tMute a specified zone:"
+    printf "\n\t\t\troon -c mute -z \"Mac Pro DAC\""
+    printf "\n\t\tList all playlists containing the string 'Best':"
+    printf "\n\t\t\troon -l playlists -s Best"
+    printf "\n\t\tList albums by artist:"
+    printf "\n\t\t\troon -l artalbums -a \"Deep Purple\""
+    printf "\n\t\tList artists containing the string 'Will' in the 'Country' genre:"
+    printf "\n\t\t\troon -l genartists -a Will -g Country"
+    printf "\n\t\tList albums containing the string 'Magic' in the 'Rock' genre:"
+    printf "\n\t\t\troon -l genalbums -A Magic -g Rock"
+    printf "\n\t\tPlay artist containing the string 'Willie' in the 'Country' genre:"
+    printf "\n\t\t\troon -a Willie -g Country"
+    printf "\n\t\tPlay album containing the string 'Magic' in the 'Rock' genre:"
+    printf "\n\t\t\troon -A Magic -g Rock"
+    printf "\n\t\tGroup the zones listed in roon_api.ini Group_foobar:"
+    printf "\n\t\t\troon -G foobar -c group"
+    printf "\n\t\tNOTE: Use quotes to specify media names which contain spaces."
+    printf "\n\t\tFor example, to play the album 'Love Bomb':"
+    printf "\n\t\t\troon -A \"Love Bomb\"\n"
+  }
   exit 1
 }
 
@@ -700,7 +714,7 @@ main_menu() {
   done
 }
 
-while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:u flag; do
+while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:EuU flag; do
     case $flag in
         A)
             album="$OPTARG"
@@ -794,6 +808,16 @@ while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:u flag; do
             ;;
         S)
             setdefs=1
+            ;;
+        E)
+            showusage=
+            showexamples=1
+            usage
+            ;;
+        U)
+            showusage=1
+            showexamples=
+            usage
             ;;
         u)
             usage
