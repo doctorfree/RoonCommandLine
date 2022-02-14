@@ -2,6 +2,7 @@ import argparse
 import configparser
 import os.path
 from os import path
+import sys
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
