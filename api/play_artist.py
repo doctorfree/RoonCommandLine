@@ -55,25 +55,24 @@ for (k, v) in outputs.items():
 
 if output_id is None:
     sys.exit("No zone found matching", target_zone)
-
-# Play artist from Library
-found = roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)
-
-if found:
-    print("Found media for artist search term:", artist)
 else:
-    artists = roonapi.list_media(output_id, ["Library", "Artists", artist])
-    if len(artists) == 0:
-        print("\nNo artist name partially matching", artist, "\n")
+    # Play artist from Library
+    found = roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)
+    if found:
+        print("Found media for artist search term:", artist)
     else:
-        print("\nArtist names partially matching", artist, ":\n")
-        print(*artists, sep = "\n")
-        if len(artists) == 1:
-            artist = artists[0]
-            roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)
+        artists = roonapi.list_media(output_id, ["Library", "Artists", artist])
+        if len(artists) == 0:
+            print("\nNo artist name partially matching", artist, "\n")
         else:
-            print("\nTo play an artist by name either specify the full name")
-            print("or enough of a substring to provide a single match")
+            print("\nArtist names partially matching", artist, ":\n")
+            print(*artists, sep = "\n")
+            if len(artists) == 1:
+                artist = artists[0]
+                roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)
+            else:
+                print("\nTo play an artist by name either specify the full name")
+                print("or enough of a substring to provide a single match")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

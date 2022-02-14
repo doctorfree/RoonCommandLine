@@ -64,20 +64,19 @@ for (k, v) in outputs.items():
 
 if zone_name is None:
     sys.exit("Unable to locate zone name", group_zones[0])
-
-# get the other zones in this grouping
-for (k, v) in outputs.items():
-    if v["display_name"] in group_zones[1:]:
-        zone_name = v["display_name"]
-        output_ids.append(k)
-        output_names.append(zone_name)
-
-if zone_command == "ungroup":
-    print("Ungrouping zones:", output_names)
-    roonapi.ungroup_outputs(output_ids)
 else:
-    print("Grouping zones:", output_names)
-    roonapi.group_outputs(output_ids)
+    # get the other zones in this grouping
+    for (k, v) in outputs.items():
+        if v["display_name"] in group_zones[1:]:
+            zone_name = v["display_name"]
+            output_ids.append(k)
+            output_names.append(zone_name)
+    if zone_command == "ungroup":
+        print("Ungrouping zones:", output_names)
+        roonapi.ungroup_outputs(output_ids)
+    else:
+        print("Grouping zones:", output_names)
+        roonapi.group_outputs(output_ids)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

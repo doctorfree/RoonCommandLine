@@ -55,25 +55,24 @@ for (k, v) in outputs.items():
 
 if output_id is None:
     sys.exit("No zone found matching", target_zone)
-
-# Play composer from Library
-found = roonapi.play_media(output_id, ["Library", "Composers", composer], None, False)
-
-if found:
-    print("Found media for composer search term:", composer)
 else:
-    composers = roonapi.list_media(output_id, ["Library", "Composers", composer])
-    if len(composers) == 0:
-        print("\nNo composer name partially matching", composer, "\n")
+    # Play composer from Library
+    found = roonapi.play_media(output_id, ["Library", "Composers", composer], None, False)
+    if found:
+        print("Found media for composer search term:", composer)
     else:
-        print("\nComposer names partially matching", composer, ":\n")
-        print(*composers, sep = "\n")
-        if len(composers) == 1:
-            composer = composers[0]
-            roonapi.play_media(output_id, ["Library", "Composers", composer], None, False)
+        composers = roonapi.list_media(output_id, ["Library", "Composers", composer])
+        if len(composers) == 0:
+            print("\nNo composer name partially matching", composer, "\n")
         else:
-            print("\nTo play a composer by name either specify the full name")
-            print("or enough of a substring to provide a single match")
+            print("\nComposer names partially matching", composer, ":\n")
+            print(*composers, sep = "\n")
+            if len(composers) == 1:
+                composer = composers[0]
+                roonapi.play_media(output_id, ["Library", "Composers", composer], None, False)
+            else:
+                print("\nTo play a composer by name either specify the full name")
+                print("or enough of a substring to provide a single match")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

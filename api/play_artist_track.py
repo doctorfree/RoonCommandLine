@@ -23,7 +23,7 @@ args = parser.parse_args()
 if args.track:
     tracksearch = args.track
 else:
-    sys.exit("Track argument required")
+    tracksearch = "__all__"
 if args.artist:
     artistsearch = args.artist
 else:
@@ -60,27 +60,26 @@ for (k, v) in outputs.items():
 
 if output_id is None:
     sys.exit("No zone found matching", target_zone)
-
-# List matching artists
-artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
-
-if artists:
-  track = None
-  for artist in artists:
-    if track is None:
-      # Search through this artist's albums for specified track
-      albums = roonapi.list_media(output_id, ["Library", "Artists", artist, "__all__"])
-      if albums:
-        for album in albums:
-          if track is None:
-            # List matching tracks
-            tracks = roonapi.list_media(output_id, ["Library", "Artists", artist, album, tracksearch])
-            if len(tracks) >= 1:
-              track = tracks[0]
-              print("Playing track title", track, "on album", album, "by artist", artist)
-              roonapi.play_media(output_id, ["Library", "Artists", artist, album, track], None, False)
 else:
-    print("No artists found matching ", artistsearch)
+    # List matching artists
+    artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
+    if artists:
+      track = None
+      for artist in artists:
+        if track is None:
+          # Search through this artist's albums for specified track
+          albums = roonapi.list_media(output_id, ["Library", "Artists", artist, "__all__"])
+          if albums:
+            for album in albums:
+              if track is None:
+                # List matching tracks
+                tracks = roonapi.list_media(output_id, ["Library", "Artists", artist, album, tracksearch])
+                if len(tracks) >= 1:
+                  track = tracks[0]
+                  print("Playing track title", track, "on album", album, "by artist", artist)
+                  roonapi.play_media(output_id, ["Library", "Artists", artist, album, track], None, False)
+    else:
+        print("No artists found matching ", artistsearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

@@ -60,30 +60,29 @@ for (k, v) in outputs.items():
 
 if output_id is None:
     sys.exit("No zone found matching", target_zone)
-
-# List matching genres
-genres = roonapi.list_media(output_id, ["Genres", genresearch])
-
-if genres:
-  artist = None
-  for genre in genres:
-    if artist is None:
-      # List matching artists
-      artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
-      if len(artists) == 0:
-        print("\nIn genre", genre, "no artist names partially matching", artistsearch, "\n")
-      else:
-        if len(artists) == 1:
-          artist = artists[0]
-          print("Playing artist name", artist, "in", genre, "genre")
-          roonapi.play_media(output_id, ["Genres", genre, "Artists", artist], None, False)
-        else:
-          print("\nArtist names in", genre, "genre matching", artistsearch, ":\n")
-          print(*artists, sep = "\n")
-          print("\nTo play an artist in this genre by name either specify the full name")
-          print("or enough of a substring to provide a single match\n")
 else:
-    print("No genres found matching ", genresearch)
+    # List matching genres
+    genres = roonapi.list_media(output_id, ["Genres", genresearch])
+    if genres:
+      artist = None
+      for genre in genres:
+        if artist is None:
+          # List matching artists
+          artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
+          if len(artists) == 0:
+            print("\nIn genre", genre, "no artist names partially matching", artistsearch, "\n")
+          else:
+            if len(artists) == 1:
+              artist = artists[0]
+              print("Playing artist name", artist, "in", genre, "genre")
+              roonapi.play_media(output_id, ["Genres", genre, "Artists", artist], None, False)
+            else:
+              print("\nArtist names in", genre, "genre matching", artistsearch, ":\n")
+              print(*artists, sep = "\n")
+              print("\nTo play an artist in this genre by name either specify the full name")
+              print("or enough of a substring to provide a single match\n")
+    else:
+        print("No genres found matching ", genresearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

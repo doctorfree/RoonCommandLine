@@ -60,30 +60,29 @@ for (k, v) in outputs.items():
 
 if output_id is None:
     sys.exit("No zone found matching", target_zone)
-
-# List matching genres
-genres = roonapi.list_media(output_id, ["Genres", genresearch])
-
-if genres:
-  album = None
-  for genre in genres:
-    if album is None:
-      # List matching albums
-      albums = roonapi.list_media(output_id, ["Genres", genre, "Albums", albumsearch])
-      if len(albums) == 0:
-        print("\nIn genre", genre, "no album titles partially matching", albumsearch, "\n")
-      else:
-        if len(albums) == 1:
-          album = albums[0]
-          print("Playing album title", album, "in", genre, "genre")
-          roonapi.play_media(output_id, ["Genres", genre, "Albums", album], None, False)
-        else:
-          print("\nAlbum titles in", genre, "genre matching", albumsearch, ":\n")
-          print(*albums, sep = "\n")
-          print("\nTo play an album in this genre by name either specify the full name")
-          print("or enough of a substring to provide a single match\n")
 else:
-    print("No genres found matching ", genresearch)
+    # List matching genres
+    genres = roonapi.list_media(output_id, ["Genres", genresearch])
+    if genres:
+      album = None
+      for genre in genres:
+        if album is None:
+          # List matching albums
+          albums = roonapi.list_media(output_id, ["Genres", genre, "Albums", albumsearch])
+          if len(albums) == 0:
+            print("\nIn genre", genre, "no album titles partially matching", albumsearch, "\n")
+          else:
+            if len(albums) == 1:
+              album = albums[0]
+              print("Playing album title", album, "in", genre, "genre")
+              roonapi.play_media(output_id, ["Genres", genre, "Albums", album], None, False)
+            else:
+              print("\nAlbum titles in", genre, "genre matching", albumsearch, ":\n")
+              print(*albums, sep = "\n")
+              print("\nTo play an album in this genre by name either specify the full name")
+              print("or enough of a substring to provide a single match\n")
+    else:
+        print("No genres found matching ", genresearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

@@ -60,25 +60,25 @@ if zone_command == "verify":
     else:
         print(zone_name)
     sys.exit()
-
-if output_id is None:
-    sys.exit("No zone found matching", target_zone)
-
-# Send the command to the specified zone
-if zone_command == "mute":
-    roonapi.mute(output_id, True)
-elif zone_command == "unmute":
-    roonapi.mute(output_id, False)
-elif zone_command == "shuffle":
-    roonapi.shuffle(output_id, True)
-elif zone_command == "unshuffle":
-    roonapi.shuffle(output_id, False)
-elif zone_command == "repeat":
-    roonapi.repeat(output_id, True)
-elif zone_command == "unrepeat":
-    roonapi.repeat(output_id, False)
 else:
-    roonapi.playback_control(output_id, zone_command)
+    if output_id is None:
+        sys.exit("No zone found matching", target_zone)
+    else:
+        # Send the command to the specified zone
+        if zone_command == "mute":
+            roonapi.mute(output_id, True)
+        elif zone_command == "unmute":
+            roonapi.mute(output_id, False)
+        elif zone_command == "shuffle":
+            roonapi.shuffle(output_id, True)
+        elif zone_command == "unshuffle":
+            roonapi.shuffle(output_id, False)
+        elif zone_command == "repeat":
+            roonapi.repeat(output_id, True)
+        elif zone_command == "unrepeat":
+            roonapi.repeat(output_id, False)
+        else:
+            roonapi.playback_control(output_id, zone_command)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

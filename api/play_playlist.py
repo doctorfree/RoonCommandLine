@@ -55,25 +55,24 @@ for (k, v) in outputs.items():
 
 if output_id is None:
     sys.exit("No zone found matching", target_zone)
-
-# Play playlist
-found = roonapi.play_media(output_id, ["Playlists", playlist], None, False)
-
-if found:
-    print("Found media for playlist search term:", playlist)
 else:
-    playlists = roonapi.list_media(output_id, ["Playlists", playlist])
-    if len(playlists) == 0:
-        print("\nNo playlist name partially matching", playlist, "\n")
+    # Play playlist
+    found = roonapi.play_media(output_id, ["Playlists", playlist], None, False)
+    if found:
+        print("Found media for playlist search term:", playlist)
     else:
-        print("\nPlaylist titles partially matching", playlist, ":\n")
-        print(*playlists, sep = "\n")
-        if len(playlists) == 1:
-            playlist = playlists[0]
-            roonapi.play_media(output_id, ["Playlists", playlist], None, False)
+        playlists = roonapi.list_media(output_id, ["Playlists", playlist])
+        if len(playlists) == 0:
+            print("\nNo playlist name partially matching", playlist, "\n")
         else:
-            print("\nTo play a playlist by name either specify the full name")
-            print("or enough of a substring to provide a single match")
+            print("\nPlaylist titles partially matching", playlist, ":\n")
+            print(*playlists, sep = "\n")
+            if len(playlists) == 1:
+                playlist = playlists[0]
+                roonapi.play_media(output_id, ["Playlists", playlist], None, False)
+            else:
+                print("\nTo play a playlist by name either specify the full name")
+                print("or enough of a substring to provide a single match")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

@@ -55,25 +55,24 @@ for (k, v) in outputs.items():
 
 if output_id is None:
     sys.exit("No zone found matching", target_zone)
-
-# Play genre
-found = roonapi.play_media(output_id, ["Genres", genre], None, False)
-
-if found:
-    print("Found media for genre search term:", genre)
 else:
-    genres = roonapi.list_media(output_id, ["Genres", genre])
-    if len(genres) == 0:
-        print("\nNo genre name partially matching", genre, "\n")
+    # Play genre
+    found = roonapi.play_media(output_id, ["Genres", genre], None, False)
+    if found:
+        print("Found media for genre search term:", genre)
     else:
-        print("\nGenres partially matching", genre, ":\n")
-        print(*genres, sep = "\n")
-        if len(genres) == 1:
-            genre = genres[0]
-            roonapi.play_media(output_id, ["Genres", genre], None, False)
+        genres = roonapi.list_media(output_id, ["Genres", genre])
+        if len(genres) == 0:
+            print("\nNo genre name partially matching", genre, "\n")
         else:
-            print("\nTo play a genre by name either specify the full name")
-            print("or enough of a substring to provide a single match")
+            print("\nGenres partially matching", genre, ":\n")
+            print(*genres, sep = "\n")
+            if len(genres) == 1:
+                genre = genres[0]
+                roonapi.play_media(output_id, ["Genres", genre], None, False)
+            else:
+                print("\nTo play a genre by name either specify the full name")
+                print("or enough of a substring to provide a single match")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

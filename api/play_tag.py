@@ -55,22 +55,22 @@ for (k, v) in outputs.items():
 
 if output_id is None:
     sys.exit("No zone found matching", target_zone)
-
-# Play tag (not yet working)
-tags = roonapi.list_media(output_id, ["Library", "Tags", tag])
-if len(tags) == 0:
-    print("\nNo tags matching", tag, "\n")
 else:
-    print("\nTags matching", tag, ":\n")
-    print(*tags, sep = "\n")
-    if len(tags) == 1:
-        tag = tags[0]
-        print("\nPlaying media by tag is not yet working. Found tag for", tag, "\n")
-        # Need to identify the media here, somehow use tag to search for media. How?
-        roonapi.play_media(output_id, ["Library", "Tags", tag], None, False)
+    # Play tag (not yet working)
+    tags = roonapi.list_media(output_id, ["Library", "Tags", tag])
+    if len(tags) == 0:
+        print("\nNo tags matching", tag, "\n")
     else:
-        print("\nTo play a tag by name either specify the full name")
-        print("or enough of a substring to provide a single match")
+        print("\nTags matching", tag, ":\n")
+        print(*tags, sep = "\n")
+        if len(tags) == 1:
+            tag = tags[0]
+            print("\nPlaying media by tag is not yet working. Found tag for", tag, "\n")
+            # Need to identify the media here, somehow use tag to search for media. How?
+            roonapi.play_media(output_id, ["Library", "Tags", tag], None, False)
+        else:
+            print("\nTo play a tag by name either specify the full name")
+            print("or enough of a substring to provide a single match")
 
 # save the token for next time
 with open(tokenfile, "w") as f:
