@@ -1,48 +1,64 @@
-Usage: roon -L -u
-    -A album -a artist -g genre -G zone_group
-	-l [albums|artists|genres|playlists|radio|tags|zones]
-	-s search -p playlist -r radio -t tag -z zone
+Usage: roon -L -S -u
+    -A album -a artist -C composer -g genre -G zone_group
+	-l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones]
+	-s search -p playlist -t tag -z zone -r radio
 	-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+Where:
+	-A album selects an album to play
+	-a artist selects an artist to list/play
+	-C composer selects a composer to play
+	-g genre selects a genre to list/play
+	-p playlist selects a playlist to play
+	-G zone_group specifies a zone grouping specified in roon_api.ini
+	-L setup roon to execute local commands rather than remote via SSH
+	-S Set Roon defaults in roon_api.ini
+	-l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones] indicates list albums, artists, genres, albums in genre, artists in genre, playlists, tags, or Roon zones
+	-r radio selects a live radio stream to play
+	-s search specifies a term to search for in the lists retrieved with -l
+	-t tag selects an tag to play (not yet working)
+	-z zone selects the Roon Zone in which to play
+	-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+		issues the command in the selected zone
+Combine '-a artist' and '-A album' to play an album by a specified artist
+Combine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre
 
-	Where:
-		-A album selects an album to play
-		-a artist selects an artist to play
-		-g genre selects a genre to play
-		-p playlist selects a playlist to play
-		-G zone_group specifies a zone grouping specified in roon_api.ini
-		-L setup roon to execute local commands rather than remote via SSH
-		-l [albums|artists|genres|playlists|tags|zones] indicates list albums, artists, genres, playlists, tags, or Roon zones
-		-r radio selects a live radio stream to play
-		-s search specifies a term to search for in the lists retrieved with -l
-		-t tag selects an tag to play (not yet working)
-		-z zone selects the Roon Zone in which to play
-		-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
-			issues the command in the selected zone
-	Special search term __all__ matches all entries
-	Special name default plays the default setting in roon_api.ini
+Special search term __all__ matches all entries
+Special name default plays the default setting in roon_api.ini
 
-	Example invocations
-		Play artist:
-			roon -a "Deep Purple"
-		Play artist in specified zone:
-			roon -a "Jethro Tull" -z "Mac Pro DAC"
-		Play genre:
-			roon -g Classical
-		Play default live radio:
-			roon -r default
-		Play playlist:
-			roon -p "Bowie Favs"
-		Play next track:
-			roon -c next
-		Stop play in specified zone:
-			roon -c stop -z Kitchen
-		Mute a specified zone:
-			roon -c mute -z "Mac Pro DAC"
-		List all playlists containing the string 'Best':
-			roon -l playlists -s Best
-		Group the zones listed in roon_api.ini Group_foobar:
-			roon -G foobar -c group
-		NOTE: Use quotes to specify media names which contain spaces.
-		For example, to play the album 'Love Bomb':
-			roon -A "Love Bomb"
+Example invocations
+	Play artist:
+		roon -a "Deep Purple"
+	Play album by artist:
+		roon -a "Deep Purple" -A Burn
+	Play artist in specified zone:
+		roon -a "Jethro Tull" -z "Mac Pro DAC"
+	Play genre:
+		roon -g Classical
+	Play default live radio:
+		roon -r default
+	Play playlist:
+		roon -p "Bowie Favs"
+	Play next track:
+		roon -c next
+	Stop play in specified zone:
+		roon -c stop -z Kitchen
+	Mute a specified zone:
+		roon -c mute -z "Mac Pro DAC"
+	List all playlists containing the string 'Best':
+		roon -l playlists -s Best
+	List albums by artist:
+		roon -l artalbums -a "Deep Purple"
+	List artists containing the string 'Will' in the 'Country' genre:
+		roon -l genartists -a Will -g Country
+	List albums containing the string 'Magic' in the 'Rock' genre:
+		roon -l genalbums -A Magic -g Rock
+	Play artist containing the string 'Willie' in the 'Country' genre:
+		roon -a Willie -g Country
+	Play album containing the string 'Magic' in the 'Rock' genre:
+		roon -A Magic -g Rock
+	Group the zones listed in roon_api.ini Group_foobar:
+		roon -G foobar -c group
+	NOTE: Use quotes to specify media names which contain spaces.
+	For example, to play the album 'Love Bomb':
+		roon -A "Love Bomb"
 
