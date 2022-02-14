@@ -54,7 +54,8 @@ for (k, v) in outputs.items():
         output_id = k
 
 if output_id is None:
-    sys.exit("No zone found matching", target_zone)
+    err = "No zone found matching " + target_zone
+    sys.exit(err)
 else:
     # Play artist from Library
     found = roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)

@@ -62,7 +62,8 @@ if zone_command == "verify":
     sys.exit()
 else:
     if output_id is None:
-        sys.exit("No zone found matching", target_zone)
+        err = "No zone found matching " + target_zone
+        sys.exit(err)
     else:
         # Send the command to the specified zone
         if zone_command == "mute":

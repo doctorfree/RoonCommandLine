@@ -63,7 +63,8 @@ for (k, v) in outputs.items():
         output_names.append(zone_name)
 
 if zone_name is None:
-    sys.exit("Unable to locate zone name", group_zones[0])
+    err = "Unable to locate zone name " + group_zones[0]
+    sys.exit(err)
 else:
     # get the other zones in this grouping
     for (k, v) in outputs.items():
