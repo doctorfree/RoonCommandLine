@@ -28,6 +28,7 @@ composer=
 comm=
 albumlist=
 artistlist=
+artalbumlist=
 composerlist=
 genrelist=
 genartistlist=
@@ -45,7 +46,7 @@ zonegroup=
 zonelist=
 
 usage() {
-  printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -l [albums|artists|composers|genres|genalbums|genartists|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -S -r radio -u"
+  printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones] -s search -p playlist -t tag -z zone\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]\n\t-L -S -r radio -u"
   printf "\n\tWhere:\n\t\t-A album selects an album to play"
   printf "\n\t\t-a artist selects an artist to list/play"
   printf "\n\t\t-C composer selects a composer to play"
@@ -54,19 +55,22 @@ usage() {
   printf "\n\t\t-G zone_group specifies a zone grouping specified in roon_api.ini"
   printf "\n\t\t-L setup roon to execute local commands rather than remote via SSH"
   printf "\n\t\t-S Set Roon defaults in roon_api.ini"
-  printf "\n\t\t-l [albums|artists|composers|genres|genalbums|genartists|playlists|tags|zones] indicates list albums, artists, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
+  printf "\n\t\t-l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones] indicates list albums, artists, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
   printf "\n\t\t-r radio selects a live radio stream to play"
   printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
   printf "\n\t\t-t tag selects an tag to play (not yet working)"
   printf "\n\t\t-z zone selects the Roon Zone in which to play"
   printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
   printf "\n\t\t\tissues the command in the selected zone"
+  printf "\n\tCombine '-a artist' and '-A album' to play an album by a specified artist"
   printf "\n\tCombine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre\n"
   printf "\n\tSpecial search term "__all__" matches all entries"
   printf "\n\tSpecial name "default" plays the default setting in roon_api.ini" 
   printf "\n\n\tExample invocations"
   printf "\n\t\tPlay artist:"
   printf "\n\t\t\troon -a \"Deep Purple\""
+  printf "\n\t\tPlay album by artist:"
+  printf "\n\t\t\troon -a \"Deep Purple\" -A Burn"
   printf "\n\t\tPlay artist in specified zone:"
   printf "\n\t\t\troon -a \"Jethro Tull\" -z \"Mac Pro DAC\""
   printf "\n\t\tPlay genre:"
@@ -83,6 +87,8 @@ usage() {
   printf "\n\t\t\troon -c mute -z \"Mac Pro DAC\""
   printf "\n\t\tList all playlists containing the string 'Best':"
   printf "\n\t\t\troon -l playlists -s Best"
+  printf "\n\t\tList albums by artist:"
+  printf "\n\t\t\troon -l artalbums -a \"Deep Purple\""
   printf "\n\t\tList artists containing the string 'Will' in the 'Country' genre:"
   printf "\n\t\t\troon -l genartists -a Will -g Country"
   printf "\n\t\tList albums containing the string 'Magic' in the 'Rock' genre:"
@@ -724,6 +730,9 @@ while getopts A:a:C:g:G:p:t:z:c:l:s:LSr:u flag; do
             elif [ "$listname" == "artists" ] || [ "$listname" == "artist" ]
             then
                 artistlist=1
+            elif [ "$listname" == "artalbums" ] || [ "$listname" == "artalbum" ]
+            then
+                artalbumlist=1
             elif [ "$listname" == "composers" ] || [ "$listname" == "composer" ]
             then
                 composerlist=1
@@ -786,11 +795,6 @@ while getopts A:a:C:g:G:p:t:z:c:l:s:LSr:u flag; do
 done
 
 [ "$search" ] || search="__all__"
-[ "$genartistlist" ] && {
-    [ "$genre" ] || {
-        [ "$search" ] && genre=$search
-    }
-}
 
 # Set Defaults
 [ "$setdefs" ] && {
@@ -834,6 +838,20 @@ done
         ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists $search\""
     fi
 }
+[ "$artalbumlist" ] && {
+    [ "$artist" ] || {
+        [ "$search" ] && artist=$search
+    }
+    [ "$album" ] || album="__all__"
+    if [ "${LOCAL}" = true ]
+    then
+        list_artist_albums "$artist" "$album"
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_artist_albums $artist $album\""
+    fi
+    album=
+    artist=
+}
 [ "$composerlist" ] && {
     if [ "${LOCAL}" = true ]
     then
@@ -861,6 +879,9 @@ done
     genre=
 }
 [ "$genartistlist" ] && {
+    [ "$genre" ] || {
+        [ "$search" ] && genre=$search
+    }
     if [ "${LOCAL}" = true ]
     then
         list_genre_artists "$genre" "$artist"
@@ -902,12 +923,25 @@ done
         ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones $search\""
     fi
 }
-# First handle album/artist and genre requested
+# First, handle album and artist requested
+[ "$album" ] && [ "$artist" ] && {
+    [ "${album}" == "default" ] && album=
+    [ "${artist}" == "default" ] && artist=
+    if [ "${LOCAL}" = true ]
+    then
+        play_artist_album "$artist" "$album"
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_album $artist $album\""
+    fi
+    album=
+    artist=
+}
+# Second, handle album or artist and genre requested
 [ "$album" ] && [ "$genre" ] && {
     [ "${album}" == "default" ] && album=
     if [ "${LOCAL}" = true ]
     then
-        play_genre_album $genre $album
+        play_genre_album "$genre" "$album"
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album $genre $album\""
     fi
@@ -918,7 +952,7 @@ done
     [ "${artist}" == "default" ] && artist=
     if [ "${LOCAL}" = true ]
     then
-        play_genre_artist $genre $artist
+        play_genre_artist "$genre" "$artist"
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist $genre $artist\""
     fi
@@ -929,7 +963,7 @@ done
     [ "${album}" == "default" ] && album=
     if [ "${LOCAL}" = true ]
     then
-        play_album $album
+        play_album "$album"
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album\""
     fi
@@ -938,7 +972,7 @@ done
     [ "${artist}" == "default" ] && artist=
     if [ "${LOCAL}" = true ]
     then
-        play_artist $artist
+        play_artist "$artist"
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $artist\""
     fi
@@ -947,7 +981,7 @@ done
     [ "${composer}" == "default" ] && composer=
     if [ "${LOCAL}" = true ]
     then
-        play_composer $composer
+        play_composer "$composer"
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer $composer\""
     fi
@@ -956,7 +990,7 @@ done
     [ "${genre}" == "default" ] && genre=
     if [ "${LOCAL}" = true ]
     then
-        play_genre $genre
+        play_genre "$genre"
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $genre\""
     fi
@@ -965,7 +999,7 @@ done
     [ "${playlist}" == "default" ] && playlist=
     if [ "${LOCAL}" = true ]
     then
-        play_playlist $playlist
+        play_playlist "$playlist"
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $playlist\""
     fi
@@ -974,7 +1008,7 @@ done
     [ "${tag}" == "default" ] && tag=
     if [ "${LOCAL}" = true ]
     then
-        play_tag $tag
+        play_tag "$tag"
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/play_tag $tag\""
     fi
@@ -983,7 +1017,7 @@ done
     [ "${radio}" == "default" ] && radio=
     if [ "${LOCAL}" = true ]
     then
-        play_radio ${radio}
+        play_radio "${radio}"
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio ${radio}\""
     fi
