@@ -65,20 +65,35 @@ else:
         err = "No zone found matching " + target_zone
         sys.exit(err)
     else:
-        # Send the command to the specified zone
-        if zone_command == "mute":
-            roonapi.mute(output_id, True)
-        elif zone_command == "unmute":
-            roonapi.mute(output_id, False)
-        elif zone_command == "shuffle":
-            roonapi.shuffle(output_id, True)
-        elif zone_command == "unshuffle":
-            roonapi.shuffle(output_id, False)
-        elif zone_command == "repeat":
-            roonapi.repeat(output_id, True)
-        elif zone_command == "unrepeat":
-            roonapi.repeat(output_id, False)
+        # Apply the mute/unmute command to all zones in a zone grouping
+        if zone_command == "mute" or zone_command == "unmute":
+          is_grouped = roonapi.is_grouped(output_id)
+          if is_grouped:
+            grouped_zone_names = roonapi.grouped_zone_names(output_id)
+            if grouped_zone_names is not None:
+              for zone_name in grouped_zone_names:
+                for (k, v) in outputs.items():
+                    if zone_name in v["display_name"]:
+                        output_id = k
+                        if zone_command == "mute":
+                          roonapi.mute(output_id, True)
+                        else:
+                          roonapi.mute(output_id, False)
         else:
+          # Send the command to the specified zone
+          if zone_command == "mute":
+            roonapi.mute(output_id, True)
+          elif zone_command == "unmute":
+            roonapi.mute(output_id, False)
+          elif zone_command == "shuffle":
+            roonapi.shuffle(output_id, True)
+          elif zone_command == "unshuffle":
+            roonapi.shuffle(output_id, False)
+          elif zone_command == "repeat":
+            roonapi.repeat(output_id, True)
+          elif zone_command == "unrepeat":
+            roonapi.repeat(output_id, False)
+          else:
             roonapi.playback_control(output_id, zone_command)
 
 # save the token for next time
