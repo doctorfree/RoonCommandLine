@@ -14,50 +14,48 @@
 . ftr VB CB
 . ftr VBI CBI
 .\}
-.TH "PLAY_PLAYLIST" "1" "December 05, 2021" "play_playlist 2.0.1" "User Manual"
+.TH "PLAY_GENRE_ALBUM" "1" "February 13, 2022" "play_genre_album 2.0.1" "User Manual"
 .hy
 .SH NAME
 .PP
-play_playlist - Play Roon Library Playlist
+play_genre_album - Play Roon Library Album in Genre
 .SH SYNOPSIS
 .PP
-\f[B]play_playlist\f[R] [ PLAYLIST ]
+\f[B]play_genre_album\f[R] [ GENRE ] [ ALBUM ]
 .SH DESCRIPTION
 .PP
-Plays the Roon Library playlist named \f[I]PLAYLIST\f[R].
-If no library playlist name matches \f[I]PLAYLIST\f[R] exactly, search
-for Roon Library playlist whose name contains the case-sensitive string
-\f[I]PLAYLIST\f[R].
-If there is a unique match on the search substring then
-\f[I]play_playlist\f[R] will play that playlist.
-If more than one Roon Library playlist name matches the search substring
-then \f[I]play_playlist\f[R] will return a list of matching playlist
-names.
-To play an playlist using the substring search facility, enough of a
-substring must be supplied to uniquely match a Roon Library playlist
-name.
+Plays Roon Library genre\[aq]s album matching the specified album name
+or substring.
+This command is invoked by \[dq]roon -g genre [-A album]\[dq].
 .SH COMMAND LINE OPTIONS
 .TP
-\f[B]PLAYLIST\f[R]
-Provide an playlist name, in quotes if it contains spaces, or a
+\f[B]GENRE\f[R]
+Provide a genre name, in quotes if it contains spaces, or a
 case-sensitive substring.
-A Roon library playlist name matching the provided playlist name or
-containing the substring will be played if a unique match is found.
+All Roon library genre names matching the provided genre name or
+containing the substring will be searched for albums
+.TP
+\f[B]ALBUM\f[R]
+Provide an album name, in quotes if it contains spaces, or a
+case-sensitive substring.
+All Roon library album names matching the provided album name or
+containing the substring will be returned and the first one returned
+will be played.
 .SH EXAMPLES
 .TP
-\f[B]play_playlist Mood\f[R]
-Will play Roon library playlist name \[dq]Mood\[dq] if it exists.
-If not then it will play the Roon library playlist whose name contains
-the string \[dq]Mood\[dq] if only one match is found.
+\f[B]play_genre_album Prog Edge\f[R]
+Will play the first album returned in a list of all Roon library album
+names with titles containing the string \[dq]Edge\[dq] by the genres
+whose name contains \[dq]Prog\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
 .SH LICENSING
 .PP
-PLAY_PLAYLIST is distributed under an Open Source license.
-See the file LICENSE in the PLAY_PLAYLIST source distribution for
+PLAY_GENRE_ALBUM is distributed under an Open Source license.
+See the file LICENSE in the PLAY_GENRE_ALBUM source distribution for
 information on terms & conditions for accessing and otherwise using
-PLAY_PLAYLIST and for a DISCLAIMER OF ALL WARRANTIES.
+PLAY_GENRE_ALBUM and for a DISCLAIMER OF ALL WARRANTIES.
 .SH BUGS
 .PP
 Submit bug reports online at:

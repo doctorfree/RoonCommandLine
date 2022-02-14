@@ -900,6 +900,7 @@ done
     fi
 }
 [ "$genalbumlist" ] && {
+    [ "$album" ] || album="__all__"
     if [ "${LOCAL}" = true ]
     then
         list_genre_albums "$genre" "$album"

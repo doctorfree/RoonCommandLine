@@ -73,15 +73,14 @@ else:
           if len(albums) == 0:
             print("\nFor artist", artist, "no album titles matching", albumsearch, "\n")
           else:
-            if len(albums) == 1:
-              album = albums[0]
-              print("Playing album title", album, "by artist", artist)
-              roonapi.play_media(output_id, ["Library", "Artists", artist, album], None, False)
-            else:
+            album = albums[0]
+            print("Playing album title", album, "by artist", artist)
+            roonapi.play_media(output_id, ["Library", "Artists", artist, album], None, False)
+            if len(albums) > 1:
               print("\nAlbum titles by", artist, "artist matching", albumsearch, ":\n")
               print(*albums, sep = "\n")
-              print("\nTo play an album by this artist by title either specify the full")
-              print("title or enough of a substring to provide a single match\n")
+              print("\nTo play another album by this artist by title either specify")
+              print("the full title or enough of a substring to provide a single match\n")
     else:
         print("No artists found matching ", artistsearch)
 

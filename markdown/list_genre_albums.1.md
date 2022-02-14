@@ -1,35 +1,41 @@
 ---
-title: LIST_ALBUMS
+title: LIST_GENRE_ALBUMS
 section: 1
 header: User Manual
-footer: list_albums 2.0.1
-date: December 05, 2021
+footer: list_genre_albums 2.0.1
+date: February 13, 2022
 ---
 # NAME
-list_albums - List Roon Library Albums
+list_genre_albums - List Roon Library Albums in Genre
 
 # SYNOPSIS
-**list_albums** [ ALBUM ]
+**list_genre_albums** [ GENRE ] [ ALBUM ]
 
 # DESCRIPTION
-Lists Roon Library albums matching the specified album name or substring
+Lists Roon Library albums in the given genre matching the specified album name or substring. The special string "__all__" can be used to retrieve all albums by the specified genre. This command is invoked by "roon -l genalbums -g genre [-A album]".
 
 # COMMAND LINE OPTIONS
+**GENRE**
+: Provide a genre name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library genre names matching the provided genre name or containing the substring will be searched for albums
+
 **ALBUM**
 : Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library album names matching the provided album name or containing the substring will be returned
 
 # EXAMPLES
-**list_albums Moon**
-: Will return a list of Roon library album names, one per line, that contain the string "Moon"
+**list_genre_albums Classical __all__**
+: Will return a list of all Roon library album names in the Classical genre
+
+**list_genre_albums Rock Moon**
+: Will return a list of Roon library album names in genres whose name contains "Rock", one per line, displaying only those albums that contain the string "Moon"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-LIST_ALBUMS is distributed under an Open Source license.
-See the file LICENSE in the LIST_ALBUMS source distribution
+LIST_GENRE_ALBUMS is distributed under an Open Source license.
+See the file LICENSE in the LIST_GENRE_ALBUMS source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using LIST_ALBUMS and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using LIST_GENRE_ALBUMS and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

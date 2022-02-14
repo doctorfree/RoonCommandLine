@@ -1,27 +1,35 @@
 ---
-title: CLONE_PYROON
+title: LIST_COMPOSERS
 section: 1
 header: User Manual
-footer: clone_pyroon 2.0.1
-date: December 05, 2021
+footer: list_composers 2.0.1
+date: February 13, 2022
 ---
 # NAME
-clone_pyroon - Clone the pyroon Python Roon API repo
+list_composers - List Roon Library Composers
 
 # SYNOPSIS
-**clone_pyroon**
+**list_composers** [ COMPOSER ]
 
 # DESCRIPTION
-A convenience script to clone the repository at https://github.com/pavoni/pyroon.git
+Lists Roon Library composers matching the specified composer name or substring
+
+# COMMAND LINE OPTIONS
+**COMPOSER**
+: Provide an composer name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library composer names matching the provided composer name or containing the substring will be returned
+
+# EXAMPLES
+**list_composers Bach**
+: Will return a list of Roon library composer names, one per line, that contain the string "Bach"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-CLONE_PYROON is distributed under an Open Source license.
-See the file LICENSE in the CLONE_PYROON source distribution
+LIST_COMPOSERS is distributed under an Open Source license.
+See the file LICENSE in the LIST_COMPOSERS source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using CLONE_PYROON and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using LIST_COMPOSERS and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues

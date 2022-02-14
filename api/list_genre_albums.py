@@ -70,7 +70,10 @@ if genres:
         # List matching albums
         albums = roonapi.list_media(output_id, ["Genres", genre, "Albums", albumsearch])
         if albums:
-            print("\nAlbums in", genre, "genre with", albumsearch, "in name", ":\n")
+            if albumsearch == "__all__":
+                print("\nAlbums in genre", genre, ":\n")
+            else:
+                print("\nAlbums in", genre, "genre with", albumsearch, "in name", ":\n")
             print(*albums, sep = "\n")
 else:
     print("No genres found matching ", genresearch)

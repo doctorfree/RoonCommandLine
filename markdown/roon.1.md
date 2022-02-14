@@ -10,7 +10,7 @@ roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
 
-**roon** [ **-u** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | genres | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [ **-z** zone ] [ **-G** zone\_group ] [ **-c** group | ungroup | play | pause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute ]
+**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [ **-z** zone ] [ **-G** zone\_group ] [ **-c** group | ungroup | play | pause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute ] [ **-T** track ]
 
 # DESCRIPTION
 The *roon* command acts as a front-end for executing the RoonCommandLine
@@ -22,7 +22,11 @@ Command line Roon control provides support for:
 
 - Play album by album name
 - Play artist name
+- Play album by artist
+- Play tracck by artist
 - Play genre
+- Play album in genre
+- Play artist in genre
 - Play playlist by playlist name
 - Play tag
 - Play Roon Live Radio
@@ -41,7 +45,7 @@ Command line Roon control provides support for:
   - unrepeat
   - mute
   - unmute
-- List albums, artists, genres, playlists, tags, or Roon zones
+- List albums, artists, albums by artist, albums by genre, artists by genre, genres, composers, playlists, tags, or Roon zones
 - Set the default Roon output zone
 - Select Roon audio zone or zone grouping
 
@@ -64,13 +68,22 @@ Additional detail and info can be found in the
 # COMMAND LINE OPTIONS
 
 **-u**
-: Display usage message
+: Display full usage message with examples
+
+**-E**
+: Display examples
+
+**-U**
+: Display usage message with no examples
 
 **-A** album
 : Selects an album to play
 
 **-a** artist
 : Selects an artist to play
+
+**-C** composer
+: Selects a composer to play
 
 **-g** genre
 : Selects a genre to play
@@ -87,8 +100,8 @@ Additional detail and info can be found in the
 **-S**
 : Set Roon defaults in roon\_api.ini
 
-**-l** **[**albums | artists | genres | playlists | tags | zones**]**
-: Indicates list albums, artists, genres, playlists, tags, or Roon zones
+**-l** **[**albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones**]**
+: Indicates list albums, artists, albums by artist, composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones
 
 **-r** radio
 : Selects a live radio stream to play
@@ -96,14 +109,21 @@ Additional detail and info can be found in the
 **-s** search
 : Specifies a term to search for in the lists retrieved with -l
 
+**-T** track
+: Selects an track to play
+
 **-t** tag
-: Selects an tag to play (not yet working)
+: Selects an tag to play
 
 **-z** zone
 : Selects the Roon Zone in which to play
 
 **-c** **[**group | ungroup | play | pause | playpause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute**]**
 : Issues the command in the selected zone
+
+Combine '-a artist' and '-A album' to play an album by a specified artist
+Combine '-a artist' and '-T track' to play a track by a specified artist
+Combine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre
 
 Special search term **\_\_all\_\_** matches all entries
 Special name **default** plays the default setting in roon\_api.ini
@@ -192,6 +212,8 @@ otherwise using RoonCommandLine.
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
 
 # SEE ALSO
+**clone_pyroon**(1), **get_core_ip**(1), **get_zone_info**(1), **get_zones**(1), **list_albums**(1), **list_artist_albums**(1), **list_artists**(1), **list_composers**(1), **list_genre_albums**(1), **list_genre_artists**(1), **list_genres**(1), **list_playlists**(1), **list_radio**(1), **list_tags**(1), **list_zones**(1), **play_album**(1), **play_artist**(1), **play_artist_album**(1), **play_artist_track**(1), **play_composer**(1), **play_genre**(1), **play_genre_album**(1), **play_genre_artist**(1), **play_playlist**(1), **play_radio**(1), **play_tag**(1), **roon**(1), **set_zone**(1), **set_zone_group**(1), **zone_command**(1)
+
 Full documentation, installation packages, and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
 Information on the Roon Core System can be found at https://roonlabs.com/

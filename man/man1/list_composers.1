@@ -14,50 +14,39 @@
 . ftr VB CB
 . ftr VBI CBI
 .\}
-.TH "PLAY_PLAYLIST" "1" "December 05, 2021" "play_playlist 2.0.1" "User Manual"
+.TH "LIST_COMPOSERS" "1" "February 13, 2022" "list_composers 2.0.1" "User Manual"
 .hy
 .SH NAME
 .PP
-play_playlist - Play Roon Library Playlist
+list_composers - List Roon Library Composers
 .SH SYNOPSIS
 .PP
-\f[B]play_playlist\f[R] [ PLAYLIST ]
+\f[B]list_composers\f[R] [ COMPOSER ]
 .SH DESCRIPTION
 .PP
-Plays the Roon Library playlist named \f[I]PLAYLIST\f[R].
-If no library playlist name matches \f[I]PLAYLIST\f[R] exactly, search
-for Roon Library playlist whose name contains the case-sensitive string
-\f[I]PLAYLIST\f[R].
-If there is a unique match on the search substring then
-\f[I]play_playlist\f[R] will play that playlist.
-If more than one Roon Library playlist name matches the search substring
-then \f[I]play_playlist\f[R] will return a list of matching playlist
-names.
-To play an playlist using the substring search facility, enough of a
-substring must be supplied to uniquely match a Roon Library playlist
-name.
+Lists Roon Library composers matching the specified composer name or
+substring
 .SH COMMAND LINE OPTIONS
 .TP
-\f[B]PLAYLIST\f[R]
-Provide an playlist name, in quotes if it contains spaces, or a
+\f[B]COMPOSER\f[R]
+Provide an composer name, in quotes if it contains spaces, or a
 case-sensitive substring.
-A Roon library playlist name matching the provided playlist name or
-containing the substring will be played if a unique match is found.
+All Roon library composer names matching the provided composer name or
+containing the substring will be returned
 .SH EXAMPLES
 .TP
-\f[B]play_playlist Mood\f[R]
-Will play Roon library playlist name \[dq]Mood\[dq] if it exists.
-If not then it will play the Roon library playlist whose name contains
-the string \[dq]Mood\[dq] if only one match is found.
+\f[B]list_composers Bach\f[R]
+Will return a list of Roon library composer names, one per line, that
+contain the string \[dq]Bach\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
 .SH LICENSING
 .PP
-PLAY_PLAYLIST is distributed under an Open Source license.
-See the file LICENSE in the PLAY_PLAYLIST source distribution for
+LIST_COMPOSERS is distributed under an Open Source license.
+See the file LICENSE in the LIST_COMPOSERS source distribution for
 information on terms & conditions for accessing and otherwise using
-PLAY_PLAYLIST and for a DISCLAIMER OF ALL WARRANTIES.
+LIST_COMPOSERS and for a DISCLAIMER OF ALL WARRANTIES.
 .SH BUGS
 .PP
 Submit bug reports online at:
