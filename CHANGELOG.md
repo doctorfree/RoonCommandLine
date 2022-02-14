@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+Feb 15, 2022 :
+    Version 2.0.3 Release 2 adds several new commands including support for
+    playing a specified track by artist, playing a specified album by artist,
+    playing either a specified artist or album in designated genre, playing
+    a specified composer, and additional listing options.
+
 Feb 11, 2022 :
     Version 2.0.3 Release 1 ensures RoonCommandLine commands are in PATH.
     The installation script has been revised to work with the updated
@@ -32,6 +38,44 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Mon Feb 14 13:49:58 2022 -0800 c5be2fd :
+   Updated man pages
+Mon Feb 14 11:48:31 2022 -0800 85174ca :
+   Apply mute/unmute command to all zones in a zone grouping
+Mon Feb 14 10:45:57 2022 -0800 2820a1b :
+   Try to cleanup the verbose usage message
+Mon Feb 14 09:51:28 2022 -0800 7e34f99 :
+   concatenate strings for error message
+Mon Feb 14 09:31:38 2022 -0800 0608307 :
+   Use if/else around sys.exit
+Mon Feb 14 08:20:03 2022 -0800 df1205c :
+   Import sys in Python scripts
+Mon Feb 14 08:09:16 2022 -0800 1336d3b :
+   Add command to play track by artist, change exit calls to sys.exit in Python scripts
+Mon Feb 14 07:13:29 2022 -0800 155d101 :
+   Update usage message in README
+Sun Feb 13 20:50:00 2022 -0800 ee36bd2 :
+   Add commands to list or play albums by artist
+Sun Feb 13 15:08:06 2022 -0800 d179bfd :
+   Add commands to play artist or album in genre
+Sun Feb 13 13:40:14 2022 -0800 b5c8de8 :
+   Add command to list albums by genre
+Sun Feb 13 12:37:28 2022 -0800 5dd58a1 :
+   Add command to list artists in specified genre
+Sat Feb 12 14:36:54 2022 -0800 9d3f906 :
+   Add commands to list and play Composers
+Fri Feb 11 16:01:53 2022 -0800 d9a6c07 :
+   Add subsections on voice control usage
+Fri Feb 11 14:54:11 2022 -0800 7838f10 :
+   Final changes to changelog and release notes for version 2.0.3 release 1
+Fri Feb 11 14:19:49 2022 -0800 6c3eba5 :
+   Fix typo in version check
+Fri Feb 11 14:13:35 2022 -0800 2820dda :
+   Fix postinstall version check for patch
+Fri Feb 11 13:39:47 2022 -0800 7f78f34 :
+   Update release notes
+Fri Feb 11 13:36:54 2022 -0800 034b179 :
+   Bump version and update changelog in preparation for new release
 Fri Feb 11 13:32:56 2022 -0800 1ff2e45 :
    Add /usr/local/Roon/bin to PATH, invoke commands using full path in SSH invocations
 Sat Jan 29 09:02:17 2022 -0800 d7261c2 :

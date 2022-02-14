@@ -1,6 +1,6 @@
-RoonCommandLine version 2.0.3 release 1 ensures RoonCommandLine commands are in PATH or full path used in SSH invocations. The installation script has been revised to work with the updated Python roonapi module version numbering. SSH invocations should work in a wider range of environments with this release.
+RoonCommandLine version 2.0.3 release 2 adds several new commands including support for playing a specified track by artist, playing a specified album by artist, playing either a specified artist or album in designated genre, playing a specified composer, and additional listing options.
 
-RoonCommandLine version 2.0.2 releases add support for detection of the Roon Core port as well as its IP address. The port number is stored in `roon_api.ini` and used in all subsequent calls to the Python Roon API. This was necessary as Roon Labs changed the port number in the most recent update. Extensions shouldn't be assuming a hard coded port number anyway so this change prompted a good improvement although it was irritating at first. A bug introduced by the change to return status of the Bash builtin type command was addressed.
+RoonCommandLine version 2.0.x releases add support for detection of the Roon Core port as well as its IP address. The port number is stored in `roon_api.ini` and used in all subsequent calls to the Python Roon API. This was necessary as Roon Labs changed the port number in the most recent update. Extensions shouldn't be assuming a hard coded port number anyway so this change prompted a good improvement although it was irritating at first. A bug introduced by the change to return status of the Bash builtin type command was addressed. RoonCommandLine commands' location are added to PATH or full path used in SSH invocations. The installation script has been revised to work with the updated Python roonapi module version numbering. SSH invocations should work in a wider range of environments with this release.
 
 The installation automatically detects and stores the Roon Core IP and port. There is no need for any manual configuration. 
 
@@ -10,12 +10,12 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./RoonCommandLine_2.0.3-1.deb
+sudo apt install ./RoonCommandLine_2.0.3-2.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.3-1.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.3-2.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
