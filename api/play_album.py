@@ -67,9 +67,7 @@ else:
     albums = roonapi.list_media(output_id, ["Library", "Albums", albumsearch])
     # Filter out excluded album titles
     if exalbumsearch is not None and len(albums) > 0:
-        for chkalbum in albums:
-            if exalbumsearch in chkalbum:
-                albums.remove(chkalbum)
+        albums = [chk for chk in albums if not exalbumsearch in chk]
     if len(albums) > 0:
         # Play album from Library
         album = albums[0]

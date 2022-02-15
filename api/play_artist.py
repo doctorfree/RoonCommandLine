@@ -67,9 +67,7 @@ else:
     artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
     # Filter out excluded artist names
     if exartistsearch is not None and len(artists) > 0:
-        for chkartist in artists:
-            if exartistsearch in chkartist:
-                artists.remove(chkartist)
+        artists = [chk for chk in artists if not exartistsearch in chk]
     if len(artists) > 0:
         # Play artist from Library
         artist = artists[0]

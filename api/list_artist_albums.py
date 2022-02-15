@@ -84,9 +84,7 @@ if artists:
         # List matching albums
         albums = roonapi.list_media(output_id, ["Library", "Artists", artist, albumsearch])
         if exalbumsearch is not None and len(albums) > 0:
-          for chkalbum in albums:
-            if exalbumsearch in chkalbum:
-              albums.remove(chkalbum)
+          albums = [chkalbum for chkalbum in albums if not exalbumsearch in chkalbum]
         if len(albums) > 0:
           if "Play Artist" in albums:
             albums.remove("Play Artist")

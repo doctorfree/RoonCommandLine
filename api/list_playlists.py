@@ -65,9 +65,7 @@ if output_id is None:
 # List matching playlists
 playlists = roonapi.list_media(output_id, ["Playlists", playlistsearch])
 if explaylistsearch is not None and len(playlists) > 0:
-    for chkplaylist in playlists:
-        if explaylistsearch in chkplaylist:
-            playlists.remove(chkplaylist)
+    playlists = [chk for chk in playlists if not explaylistsearch in chk]
 if len(playlists) > 0:
     if playlistsearch == "__all__":
         print("\nAll Playlists in Library:\n")

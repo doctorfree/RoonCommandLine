@@ -83,9 +83,7 @@ else:
         # List matching artists
         artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
         if exartistsearch is not None and len(artists) > 0:
-          for chkartist in artists:
-            if exrtistsearch in chkartist:
-              artists.remove(chkartist)
+          artists = [chk for chk in artists if not exartistsearch in chk]
           if len(artists) > 0:
             artist = artists[0]
             print("Playing artist name", artist, "in", genre, "genre")

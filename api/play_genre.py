@@ -67,9 +67,7 @@ else:
     genres = roonapi.list_media(output_id, ["Genres", genresearch])
     # Filter out excluded genre titles
     if exgenresearch is not None and len(genres) > 0:
-        for chkgenre in genres:
-            if exgenresearch in chkgenre:
-                genres.remove(chkgenre)
+        genres = [chk for chk in genres if not exgenresearch in chk]
     if len(genres) > 0:
         # Play genre from Library
         genre = genres[0]

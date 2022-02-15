@@ -65,9 +65,7 @@ if output_id is None:
 # List matching artists
 artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
 if exartistsearch is not None and len(artists) > 0:
-    for chkartist in artists:
-        if exartistsearch in chkartist:
-            artists.remove(chkartist)
+    artists = [chkartist for chkartist in artists if not exartistsearch in chkartist]
 if len(artists) > 0:
     if artistsearch == "__all__":
         print("\nAll Artists in Library:\n")

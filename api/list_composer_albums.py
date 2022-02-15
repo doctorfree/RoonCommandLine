@@ -16,9 +16,9 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--album", help="album search term")
-parser.add_argument("-g", "--genre", help="genre search term")
+parser.add_argument("-c", "--composer", help="composer search term")
 parser.add_argument("-X", "--exalbum", help="album exclude search term")
-parser.add_argument("-x", "--exgenre", help="genre exclude search term")
+parser.add_argument("-x", "--excomposer", help="composer exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -26,18 +26,18 @@ if args.album:
     albumsearch = args.album
 else:
     albumsearch = config['DEFAULT']['DefaultAlbum']
-if args.genre:
-    genresearch = args.genre
+if args.composer:
+    composersearch = args.composer
 else:
-    genresearch = config['DEFAULT']['DefaultGenre']
+    composersearch = config['DEFAULT']['DefaultComposer']
 if args.exalbum:
     exalbumsearch = args.exalbum
 else:
     exalbumsearch = None
-if args.exgenre:
-    exgenresearch = args.exgenre
+if args.excomposer:
+    excomposersearch = args.excomposer
 else:
-    exgenresearch = None
+    excomposersearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -71,33 +71,34 @@ for (k, v) in outputs.items():
 if output_id is None:
     err = "No zone found matching " + target_zone
     sys.exit(err)
-else:
-    # List matching genres
-    genres = roonapi.list_media(output_id, ["Genres", genresearch])
-    if genres:
-      album = None
-      for genre in genres:
-        if exgenresearch is not None:
-          if exgenresearch in genre:
+
+# List matching composers
+composers = roonapi.list_media(output_id, ["Library", "Composers", composersearch])
+
+if composers:
+    album = None
+    for composer in composers:
+        if excomposersearch is not None:
+          if excomposersearch in composer:
             continue
         # List matching albums
-        albums = roonapi.list_media(output_id, ["Genres", genre, "Albums", albumsearch])
+        albums = roonapi.list_media(output_id, ["Library", "Composers", composer, albumsearch])
         if exalbumsearch is not None and len(albums) > 0:
-            albums = [chk for chk in albums if not exalbumsearch in chk]
+          albums = [chkalbum for chkalbum in albums if not exalbumsearch in chkalbum]
+        if len(albums) > 0:
+          if "Play Composer" in albums:
+            albums.remove("Play Composer")
         if len(albums) > 0:
             album = albums[0]
-            print("Playing album title", album, "in", genre, "genre")
-            roonapi.play_media(output_id, ["Genres", genre, "Albums", album], None, False)
-            if len(albums) > 1:
-              print("\nAlbum titles in", genre, "genre matching", albumsearch, ":\n")
-              print(*albums, sep = "\n")
-              print("\nTo play another album in this genre by name either specify")
-              print("the full name or enough of a substring to provide a single match\n")
-            break
-      if album is None:
-        print("No albums found matching", albumsearch)
-    else:
-      print("No genres found matching ", genresearch)
+            if albumsearch == "__all__":
+                print("\nAlbums by composer", composer, ":\n")
+            else:
+                print("\nAlbums by composer", composer, "with", albumsearch, "in title", ":\n")
+            print(*albums, sep = "\n")
+    if album is None:
+        print("No albums found matching", albumsearch) 
+else:
+    print("No composers found matching ", composersearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

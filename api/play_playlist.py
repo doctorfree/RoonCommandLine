@@ -67,9 +67,7 @@ else:
     playlists = roonapi.list_media(output_id, ["Playlists", playlistsearch])
     # Filter out excluded playlist titles
     if explaylistsearch is not None and len(playlists) > 0:
-        for chkplaylist in playlists:
-            if explaylistsearch in chkplaylist:
-                playlists.remove(chkplaylist)
+        playlists = [chk for chk in playlists if not explaylistsearch in chk]
     if len(playlists) > 0:
         # Play playlist from Library
         playlist = playlists[0]

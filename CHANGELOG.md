@@ -6,7 +6,12 @@ Feb 15, 2022 :
     Version 2.0.3 Release 2 adds several new commands including support for
     playing a specified track by artist, playing a specified album by artist,
     playing either a specified artist or album in designated genre, playing
-    a specified composer, and additional listing options.
+    a specified composer, and additional listing options. Listing and playing
+    commands now include support for artist and album name exclusion strings
+    allowing searches for a specified artist/album/composer/genre/playlist
+    whose name includes a specified string but not another string.
+    This exclusion filtering enables narrower listing and playing
+    of library media.
 
 Feb 11, 2022 :
     Version 2.0.3 Release 1 ensures RoonCommandLine commands are in PATH.
@@ -38,6 +43,22 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Tue Feb 15 10:18:05 2022 -0800 7b58fca :
+   Add exclusion filter to playlist list and play
+Tue Feb 15 09:44:00 2022 -0800 5a498c8 :
+   Add exclusion filtering to remaining list and play scripts
+Tue Feb 15 08:55:58 2022 -0800 ce75739 :
+   Fix bug when passing exclude args with quotes
+Tue Feb 15 08:31:31 2022 -0800 782ed57 :
+   Continue adding exclusion search term capability to scripts
+Mon Feb 14 18:22:15 2022 -0800 dde1aef :
+   Add exclusion options to genre commands
+Mon Feb 14 16:37:48 2022 -0800 181e124 :
+   Added artist and album exclusion string arguments to exclude list and play results for those substrings
+Mon Feb 14 14:44:04 2022 -0800 ff5cf6f :
+   Move support files, man pages to /usr/local/share
+Mon Feb 14 14:01:40 2022 -0800 e148807 :
+   Bump release number, update changelog and release notes in prep for 2.0.3 release 2
 Mon Feb 14 13:49:58 2022 -0800 c5be2fd :
    Updated man pages
 Mon Feb 14 11:48:31 2022 -0800 85174ca :

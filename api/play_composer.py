@@ -67,9 +67,7 @@ else:
     composers = roonapi.list_media(output_id, ["Library", "Composers", composersearch])
     # Filter out excluded composer names
     if excomposersearch is not None and len(composers) > 0:
-        for chkcomposer in composers:
-            if excomposersearch in chkcomposer:
-                composers.remove(chkcomposer)
+        composers = [chk for chk in composers if not excomposersearch in chk]
     if len(composers) > 0:
         # Play composer from Library
         composer = composers[0]

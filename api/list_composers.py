@@ -65,9 +65,7 @@ if output_id is None:
 # List matching composers
 composers = roonapi.list_media(output_id, ["Library", "Composers", composersearch])
 if excomposersearch is not None and len(composers) > 0:
-    for chkcomposer in composers:
-        if excomposersearch in chkcomposer:
-            composers.remove(chkcomposer)
+    composers = [chkcomposer for chkcomposer in composers if not excomposersearch in chkcomposer]
 if len(composers) > 0:
     if composersearch == "__all__":
         print("\nAll Composers in Library:\n")

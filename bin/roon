@@ -30,6 +30,7 @@ albumlist=
 artistlist=
 artalbumlist=
 composerlist=
+comalbumlist=
 exalbum=
 exartist=
 genrelist=
@@ -53,7 +54,7 @@ zonelist=
 usage() {
   [ "${showusage}" ] && {
     printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group"
-    printf "\n\t-l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones]"
+    printf "\n\t-l [albums|artists|artalbums|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]"
     printf "\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
     printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
     printf "\n\t-X ex_album -x ex_artist [-EuU]"
@@ -65,8 +66,8 @@ usage() {
     printf "\n\t\t-G zone_group specifies a zone grouping specified in roon_api.ini"
     printf "\n\t\t-L setup roon to execute local commands rather than remote via SSH"
     printf "\n\t\t-S Set Roon defaults in roon_api.ini"
-    printf "\n\t\t-l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones]"
-    printf "\n\t\t\tindicates list albums, artists, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
+    printf "\n\t\t-l [albums|artists|artalbums|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]"
+    printf "\n\t\t\tindicates list albums, artists, albums by artist, composers, albums by composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
     printf "\n\t\t-r radio selects a live radio stream to play"
     printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
     printf "\n\t\t-T track specifies a track to play"
@@ -74,8 +75,8 @@ usage() {
     printf "\n\t\t-z zone selects the Roon Zone in which to play"
     printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
     printf "\n\t\t\tissues the command in the selected zone"
-    printf "\n\t\t-X ex_album specifies a string to exclude from album names"
-    printf "\n\t\t-x ex_artist specifies a string to exclude from artist/composer names"
+    printf "\n\t\t-X ex_album specifies a string to exclude from album/genre names"
+    printf "\n\t\t-x ex_artist specifies a string to exclude from artist/composer/playlist names"
     printf "\n\t\t-u displays a full usage message with examples"
     printf "\n\t\t-U displays a usage message without examples"
     printf "\n\t\t-E displays examples with no usage message"
@@ -763,6 +764,9 @@ while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:x:X:EuU flag; do
             elif [ "$listname" == "composers" ] || [ "$listname" == "composer" ]
             then
                 composerlist=1
+            elif [ "$listname" == "comalbums" ] || [ "$listname" == "comalbum" ]
+            then
+                comalbumlist=1
             elif [ "$listname" == "genres" ] || [ "$listname" == "genre" ]
             then
                 genrelist=1
@@ -907,6 +911,23 @@ done
     fi
     album=
     artist=
+}
+[ "$comalbumlist" ] && {
+    [ "$composer" ] || {
+        [ "$search" ] && composer=$search
+    }
+    [ "$album" ] || album="__all__"
+    [ "${exalbum}" ] && {
+      [ "${exartist}" ] || exartist="None"
+    }
+    if [ "${LOCAL}" = true ]
+    then
+        list_composer_albums "$composer" "$album" "$exartist" "$exalbum"
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_composer_albums $composer $album $exartist $exalbum\""
+    fi
+    album=
+    composer=
 }
 [ "$composerlist" ] && {
     [ "$composer" ] || {

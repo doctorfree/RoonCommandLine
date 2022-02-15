@@ -65,9 +65,7 @@ if output_id is None:
 # List matching genres
 genres = roonapi.list_media(output_id, ["Genres", genresearch])
 if exgenresearch is not None and len(genres) > 0:
-    for chkgenre in genres:
-        if exgenresearch in chkgenre:
-            genres.remove(chkgenre)
+    genres = [chk for chk in genres if not exgenresearch in chk]
 if len(genres) > 0:
     if genresearch == "__all__":
         print("\nAll Genres in Library:\n")
