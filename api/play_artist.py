@@ -16,13 +16,18 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--artist", help="artist selection")
+parser.add_argument("-x", "--exartist", help="artist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.artist:
-    artist = args.artist
+    artistsearch = args.artist
 else:
-    artist = config['DEFAULT']['DefaultArtist']
+    artistsearch = config['DEFAULT']['DefaultArtist']
+if args.exartist:
+    exartistsearch = args.exartist
+else:
+    exartistsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -57,23 +62,26 @@ if output_id is None:
     err = "No zone found matching " + target_zone
     sys.exit(err)
 else:
-    # Play artist from Library
-    found = roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)
-    if found:
-        print("Found media for artist search term:", artist)
-    else:
-        artists = roonapi.list_media(output_id, ["Library", "Artists", artist])
-        if len(artists) == 0:
-            print("\nNo artist name partially matching", artist, "\n")
-        else:
-            print("\nArtist names partially matching", artist, ":\n")
+    artist = None
+    # List matching artists from Library
+    artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
+    # Filter out excluded artist titles
+    if exartistsearch is not None and len(artists) > 0:
+        for chkartist in artists:
+            if exartistsearch in chkartist:
+                artists.remove(chkartist)
+    if len(artists) > 0:
+        # Play artist from Library
+        artist = artists[0]
+        print("Playing artist title", artist)
+        roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)
+        if len(artists) > 1:
+            print("\nArtist titles partially matching", artistsearch, ":\n")
             print(*artists, sep = "\n")
-            if len(artists) == 1:
-                artist = artists[0]
-                roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)
-            else:
-                print("\nTo play an artist by name either specify the full name")
-                print("or enough of a substring to provide a single match")
+            print("\nTo play another artist with this title either specify the")
+            print("full title or enough of a substring to provide a single match\n")
+    if artist is None:
+        print("No artists found matching", artistsearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

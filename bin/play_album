@@ -35,7 +35,7 @@ fi
 }
 # Construct the exclusion args if passed
 EXARGS=
-[ "${EXALBUM}" ] && EXARGS="-X ${EXALBUM}"
+[ "${EXALBUM}" ] && EXARGS="-x ${EXALBUM}"
 
 have_python3=`type -p python3`
 if [ "${have_python3}" ]

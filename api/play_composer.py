@@ -16,13 +16,18 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--composer", help="composer selection")
+parser.add_argument("-x", "--excomposer", help="composer exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.composer:
-    composer = args.composer
+    composersearch = args.composer
 else:
-    composer = config['DEFAULT']['DefaultComposer']
+    composersearch = config['DEFAULT']['DefaultComposer']
+if args.excomposer:
+    excomposersearch = args.excomposer
+else:
+    excomposersearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -57,23 +62,26 @@ if output_id is None:
     err = "No zone found matching " + target_zone
     sys.exit(err)
 else:
-    # Play composer from Library
-    found = roonapi.play_media(output_id, ["Library", "Composers", composer], None, False)
-    if found:
-        print("Found media for composer search term:", composer)
-    else:
-        composers = roonapi.list_media(output_id, ["Library", "Composers", composer])
-        if len(composers) == 0:
-            print("\nNo composer name partially matching", composer, "\n")
-        else:
-            print("\nComposer names partially matching", composer, ":\n")
+    composer = None
+    # List matching composers from Library
+    composers = roonapi.list_media(output_id, ["Library", "Composers", composersearch])
+    # Filter out excluded composer titles
+    if excomposersearch is not None and len(composers) > 0:
+        for chkcomposer in composers:
+            if excomposersearch in chkcomposer:
+                composers.remove(chkcomposer)
+    if len(composers) > 0:
+        # Play composer from Library
+        composer = composers[0]
+        print("Playing composer title", composer)
+        roonapi.play_media(output_id, ["Library", "Composers", composer], None, False)
+        if len(composers) > 1:
+            print("\nComposer titles partially matching", composersearch, ":\n")
             print(*composers, sep = "\n")
-            if len(composers) == 1:
-                composer = composers[0]
-                roonapi.play_media(output_id, ["Library", "Composers", composer], None, False)
-            else:
-                print("\nTo play a composer by name either specify the full name")
-                print("or enough of a substring to provide a single match")
+            print("\nTo play another composer with this title either specify the")
+            print("full title or enough of a substring to provide a single match\n")
+    if composer is None:
+        print("No composers found matching", composersearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

@@ -16,7 +16,7 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-g", "--genre", help="genre search term")
-parser.add_argument("-X", "--exgenre", help="genre exclude search term")
+parser.add_argument("-x", "--exgenre", help="genre exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 

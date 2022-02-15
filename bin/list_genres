@@ -35,7 +35,7 @@ fi
 }
 # Construct the exclusion args if passed
 EXARGS=
-[ "${EXGENRE}" ] && EXARGS="-X ${EXGENRE}"
+[ "${EXGENRE}" ] && EXARGS="-x ${EXGENRE}"
 
 have_python3=`type -p python3`
 if [ "${have_python3}" ]

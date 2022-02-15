@@ -16,7 +16,7 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--album", help="album search term")
-parser.add_argument("-X", "--exalbum", help="album exclude search term")
+parser.add_argument("-x", "--exalbum", help="album exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 

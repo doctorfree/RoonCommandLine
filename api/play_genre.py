@@ -16,13 +16,18 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-g", "--genre", help="genre selection")
+parser.add_argument("-x", "--exgenre", help="genre exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.genre:
-    genre = args.genre
+    genresearch = args.genre
 else:
-    genre = config['DEFAULT']['DefaultGenre']
+    genresearch = config['DEFAULT']['DefaultGenre']
+if args.exgenre:
+    exgenresearch = args.exgenre
+else:
+    exgenresearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -57,23 +62,26 @@ if output_id is None:
     err = "No zone found matching " + target_zone
     sys.exit(err)
 else:
-    # Play genre
-    found = roonapi.play_media(output_id, ["Genres", genre], None, False)
-    if found:
-        print("Found media for genre search term:", genre)
-    else:
-        genres = roonapi.list_media(output_id, ["Genres", genre])
-        if len(genres) == 0:
-            print("\nNo genre name partially matching", genre, "\n")
-        else:
-            print("\nGenres partially matching", genre, ":\n")
+    genre = None
+    # List matching genres from Library
+    genres = roonapi.list_media(output_id, ["Genres", genresearch])
+    # Filter out excluded genre titles
+    if exgenresearch is not None and len(genres) > 0:
+        for chkgenre in genres:
+            if exgenresearch in chkgenre:
+                genres.remove(chkgenre)
+    if len(genres) > 0:
+        # Play genre from Library
+        genre = genres[0]
+        print("Playing genre title", genre)
+        roonapi.play_media(output_id, ["Genres", genre], None, False)
+        if len(genres) > 1:
+            print("\nGenre titles partially matching", genresearch, ":\n")
             print(*genres, sep = "\n")
-            if len(genres) == 1:
-                genre = genres[0]
-                roonapi.play_media(output_id, ["Genres", genre], None, False)
-            else:
-                print("\nTo play a genre by name either specify the full name")
-                print("or enough of a substring to provide a single match")
+            print("\nTo play another genre with this title either specify the")
+            print("full title or enough of a substring to provide a single match\n")
+    if genre is None:
+        print("No genres found matching", genresearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

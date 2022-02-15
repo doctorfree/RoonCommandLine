@@ -1057,34 +1057,34 @@ done
     then
         play_album "$album" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album "$exalbum"\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album $exalbum\""
     fi
 }
 [ "$artist" ] && {
     [ "${artist}" == "default" ] && artist=
     if [ "${LOCAL}" = true ]
     then
-        play_artist "$artist"
+        play_artist "$artist" "$exartist"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $artist\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $artist $exartist\""
     fi
 }
 [ "$composer" ] && {
     [ "${composer}" == "default" ] && composer=
     if [ "${LOCAL}" = true ]
     then
-        play_composer "$composer"
+        play_composer "$composer" "$exartist"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer $composer\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer $composer $exartist\""
     fi
 }
 [ "$genre" ] && {
     [ "${genre}" == "default" ] && genre=
     if [ "${LOCAL}" = true ]
     then
-        play_genre "$genre"
+        play_genre "$genre" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $genre\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $genre $exalbum\""
     fi
 }
 [ "$playlist" ] && {
