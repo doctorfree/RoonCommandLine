@@ -16,13 +16,18 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--album", help="album selection")
+parser.add_argument("-X", "--exalbum", help="album exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.album:
-    album = args.album
+    albumsearch = args.album
 else:
-    album = config['DEFAULT']['DefaultAlbum']
+    albumsearch = config['DEFAULT']['DefaultAlbum']
+if args.exalbum:
+    exalbumsearch = args.exalbum
+else:
+    exalbumsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -57,23 +62,26 @@ if output_id is None:
     err = "No zone found matching " + target_zone
     sys.exit(err)
 else:
-    # Play album from Library
-    found = roonapi.play_media(output_id, ["Library", "Albums", album], None, False)
-    if found:
-        print("Found media for album search term:", album)
-    else:
-        albums = roonapi.list_media(output_id, ["Library", "Albums", album])
-        if len(albums) == 0:
-            print("\nNo album titles partially matching", album, "\n")
-        else:
-            print("\nAlbum titles partially matching", album, ":\n")
+    album = None
+    # List matching albums from Library
+    albums = roonapi.list_media(output_id, ["Library", "Albums", albumsearch])
+    # Filter out excluded album titles
+    if exalbumsearch is not None and len(albums) > 0:
+        for chkalbum in albums:
+            if exalbumsearch in chkalbum:
+                albums.remove(chkalbum)
+    if len(albums) > 0:
+        # Play album from Library
+        album = albums[0]
+        print("Playing album title", album)
+        roonapi.play_media(output_id, ["Library", "Albums", album], None, False)
+        if len(albums) > 1:
+            print("\nAlbum titles partially matching", albumsearch, ":\n")
             print(*albums, sep = "\n")
-            if len(albums) == 1:
-                album = albums[0]
-                roonapi.play_media(output_id, ["Library", "Albums", album], None, False)
-            else:
-                print("\nTo play an album by name either specify the full name")
-                print("or enough of a substring to provide a single match")
+            print("\nTo play another album with this title either specify the")
+            print("full title or enough of a substring to provide a single match\n")
+    if album is None:
+        print("No albums found matching", albumsearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

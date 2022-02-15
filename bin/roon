@@ -550,36 +550,36 @@ main_menu() {
             "List Albums",*|*,"List Albums")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_albums __all__
+                    list_albums __all__ "${exalbum}"
                 else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums __all__ ${exalbum}\""
                 fi
                 break
                 ;;
             "List Artists",*|*,"List Artists")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_artists __all__
+                    list_artists __all__ ${exartist}
                 else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists __all__ ${exartist}\""
                 fi
                 break
                 ;;
             "List Composers",*|*,"List Composers")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_composers __all__
+                    list_composers __all__ $exartist
                 else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers __all__ $exartist\""
                 fi
                 break
                 ;;
             "List Genres",*|*,"List Genres")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_genres __all__
+                    list_genres __all__ $exalbum
                 else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres __all__ $exalbum\""
                 fi
                 break
                 ;;
@@ -866,19 +866,27 @@ done
 }
 
 [ "$albumlist" ] && {
+    [ "$album" ] || {
+        [ "$search" ] && album="$search"
+    }
+    [ "$album" ] || album="__all__"
     if [ "${LOCAL}" = true ]
     then
-        list_albums $search
+        list_albums "$album" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums $album $exalbum\""
     fi
 }
 [ "$artistlist" ] && {
+    [ "$artist" ] || {
+        [ "$search" ] && artist="$search"
+    }
+    [ "$artist" ] || artist="__all__"
     if [ "${LOCAL}" = true ]
     then
-        list_artists $search
+        list_artists "$artist" "$exartist"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists $artist $exartist\""
     fi
 }
 [ "$artalbumlist" ] && {
@@ -899,19 +907,27 @@ done
     artist=
 }
 [ "$composerlist" ] && {
+    [ "$composer" ] || {
+        [ "$search" ] && composer="$search"
+    }
+    [ "$composer" ] || composer="__all__"
     if [ "${LOCAL}" = true ]
     then
-        list_composers $search
+        list_composers "$composer" "$exartist"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers $composer $exartist\""
     fi
 }
 [ "$genrelist" ] && {
+    [ "$genre" ] || {
+        [ "$search" ] && genre="$search"
+    }
+    [ "$genre" ] || genre="__all__"
     if [ "${LOCAL}" = true ]
     then
-        list_genres $search
+        list_genres "$genre" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres $genre $exalbum\""
     fi
 }
 [ "$genalbumlist" ] && {
@@ -1035,9 +1051,9 @@ done
     [ "${album}" == "default" ] && album=
     if [ "${LOCAL}" = true ]
     then
-        play_album "$album"
+        play_album "$album" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album "$exalbum"\""
     fi
 }
 [ "$artist" ] && {

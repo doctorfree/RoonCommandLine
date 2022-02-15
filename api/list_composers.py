@@ -16,13 +16,18 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--composer", help="composer search term")
+parser.add_argument("-x", "--excomposer", help="composer exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.composer:
-    searchterm = args.composer
+    composersearch = args.composer
 else:
-    searchterm = config['DEFAULT']['DefaultComposer']
+    composersearch = config['DEFAULT']['DefaultComposer']
+if args.excomposer:
+    excomposersearch = args.excomposer
+else:
+    excomposersearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -58,12 +63,19 @@ if output_id is None:
     sys.exit(err)
 
 # List matching composers
-composers = roonapi.list_media(output_id, ["Library", "Composers", searchterm])
-
-if composers:
+composers = roonapi.list_media(output_id, ["Library", "Composers", composersearch])
+if excomposersearch is not None and len(composers) > 0:
+    for chkcomposer in composers:
+        if excomposersearch in chkcomposer:
+            composers.remove(chkcomposer)
+if len(composers) > 0:
+    if composersearch == "__all__":
+        print("\nAll Composers in Library:\n")
+    else:
+        print("\nComposers with", composersearch, "in title", ":\n")
     print(*composers, sep = "\n")
 else:
-    print("No composers found matching ", searchterm)
+    print("No composers found matching", composersearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

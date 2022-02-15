@@ -16,13 +16,18 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-g", "--genre", help="genre search term")
+parser.add_argument("-X", "--exgenre", help="genre exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.genre:
-    searchterm = args.genre
+    genresearch = args.genre
 else:
-    searchterm = config['DEFAULT']['DefaultGenre']
+    genresearch = config['DEFAULT']['DefaultGenre']
+if args.exgenre:
+    exgenresearch = args.exgenre
+else:
+    exgenresearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -58,12 +63,19 @@ if output_id is None:
     sys.exit(err)
 
 # List matching genres
-genres = roonapi.list_media(output_id, ["Genres", searchterm])
-
-if genres:
+genres = roonapi.list_media(output_id, ["Genres", genresearch])
+if exgenresearch is not None and len(genres) > 0:
+    for chkgenre in genres:
+        if exgenresearch in chkgenre:
+            genres.remove(chkgenre)
+if len(genres) > 0:
+    if genresearch == "__all__":
+        print("\nAll Genres in Library:\n")
+    else:
+        print("\nGenres with", genresearch, "in title", ":\n")
     print(*genres, sep = "\n")
 else:
-    print("No genres found matching ", searchterm)
+    print("No genres found matching", genresearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

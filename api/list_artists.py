@@ -16,13 +16,18 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--artist", help="artist search term")
+parser.add_argument("-x", "--exartist", help="artist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.artist:
-    searchterm = args.artist
+    artistsearch = args.artist
 else:
-    searchterm = config['DEFAULT']['DefaultArtist']
+    artistsearch = config['DEFAULT']['DefaultArtist']
+if args.exartist:
+    exartistsearch = args.exartist
+else:
+    exartistsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -58,12 +63,19 @@ if output_id is None:
     sys.exit(err)
 
 # List matching artists
-artists = roonapi.list_media(output_id, ["Library", "Artists", searchterm])
-
-if artists:
+artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
+if exartistsearch is not None and len(artists) > 0:
+    for chkartist in artists:
+        if exartistsearch in chkartist:
+            artists.remove(chkartist)
+if len(artists) > 0:
+    if artistsearch == "__all__":
+        print("\nAll Artists in Library:\n")
+    else:
+        print("\nArtists with", artistsearch, "in title", ":\n")
     print(*artists, sep = "\n")
 else:
-    print("No artists found matching ", searchterm)
+    print("No artists found matching ", artistsearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

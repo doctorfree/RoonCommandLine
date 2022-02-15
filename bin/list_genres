@@ -6,6 +6,7 @@ ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 LIST=list_genres.py
 GENRE=
+EXGENRE=
 
 [ -d ${ROONAPI} ] || exit 1
 
@@ -13,7 +14,8 @@ cd ${ROONAPI}
 
 [ -f $LIST ] || exit 2
 
-[ "$1" ] && GENRE="$*"
+[ "$1" ] && GENRE="$1"
+[ "$2" ] && EXGENRE="$2"
 
 # Get the zone if it is set
 if [ -f ${ROONCONF} ]
@@ -31,11 +33,14 @@ fi
     # Remove leading and trailing spaces in GENRE
     GENRE="$(echo -e "${GENRE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
+# Construct the exclusion args if passed
+EXARGS=
+[ "${EXGENRE}" ] && EXARGS="-X ${EXGENRE}"
 
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    python3 $LIST -g "$GENRE" -z "$ROON_ZONE"
+    python3 $LIST -g "$GENRE" -z "$ROON_ZONE" "$EXARGS"
 else
-    python $LIST -g "$GENRE" -z "$ROON_ZONE"
+    python $LIST -g "$GENRE" -z "$ROON_ZONE" "$EXARGS"
 fi

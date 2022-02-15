@@ -16,13 +16,18 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--album", help="album search term")
+parser.add_argument("-X", "--exalbum", help="album exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.album:
-    searchterm = args.album
+    albumsearch = args.album
 else:
-    searchterm = config['DEFAULT']['DefaultArtist']
+    albumsearch = config['DEFAULT']['DefaultArtist']
+if args.exalbum:
+    exalbumsearch = args.exalbum
+else:
+    exalbumsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -58,12 +63,19 @@ if output_id is None:
     sys.exit(err)
 
 # List matching albums
-albums = roonapi.list_media(output_id, ["Library", "Albums", searchterm])
-
-if albums:
+albums = roonapi.list_media(output_id, ["Library", "Albums", albumsearch])
+if exalbumsearch is not None and len(albums) > 0:
+    for chkalbum in albums:
+        if exalbumsearch in chkalbum:
+            albums.remove(chkalbum)
+if len(albums) > 0:
+    if albumsearch == "__all__":
+        print("\nAll Albums in Library:\n")
+    else:
+        print("\nAlbums with", albumsearch, "in title", ":\n")
     print(*albums, sep = "\n")
 else:
-    print("No albums found matching ", searchterm)
+    print("No albums found matching ", albumsearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:
