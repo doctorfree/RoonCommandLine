@@ -16,13 +16,18 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--playlist", help="playlist selection")
+parser.add_argument("-x", "--explaylist", help="playlist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.playlist:
-    playlist = args.playlist
+    playlistsearch = args.playlist
 else:
-    playlist = config['DEFAULT']['DefaultPlaylist']
+    playlistsearch = config['DEFAULT']['DefaultPlaylist']
+if args.explaylist:
+    explaylistsearch = args.explaylist
+else:
+    explaylistsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -57,23 +62,26 @@ if output_id is None:
     err = "No zone found matching " + target_zone
     sys.exit(err)
 else:
-    # Play playlist
-    found = roonapi.play_media(output_id, ["Playlists", playlist], None, False)
-    if found:
-        print("Found media for playlist search term:", playlist)
-    else:
-        playlists = roonapi.list_media(output_id, ["Playlists", playlist])
-        if len(playlists) == 0:
-            print("\nNo playlist name partially matching", playlist, "\n")
-        else:
-            print("\nPlaylist titles partially matching", playlist, ":\n")
+    playlist = None
+    # List matching playlists from Library
+    playlists = roonapi.list_media(output_id, ["Playlists", playlistsearch])
+    # Filter out excluded playlist titles
+    if explaylistsearch is not None and len(playlists) > 0:
+        for chkplaylist in playlists:
+            if explaylistsearch in chkplaylist:
+                playlists.remove(chkplaylist)
+    if len(playlists) > 0:
+        # Play playlist from Library
+        playlist = playlists[0]
+        print("Playing playlist title", playlist)
+        roonapi.play_media(output_id, ["Playlists", playlist], None, False)
+        if len(playlists) > 1:
+            print("\nPlaylist titles partially matching", playlistsearch, ":\n")
             print(*playlists, sep = "\n")
-            if len(playlists) == 1:
-                playlist = playlists[0]
-                roonapi.play_media(output_id, ["Playlists", playlist], None, False)
-            else:
-                print("\nTo play a playlist by name either specify the full name")
-                print("or enough of a substring to provide a single match")
+            print("\nTo play another playlist with this title either specify the")
+            print("full title or enough of a substring to provide a single match\n")
+    if playlist is None:
+        print("No playlists found matching", playlistsearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

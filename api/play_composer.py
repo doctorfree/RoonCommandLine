@@ -65,7 +65,7 @@ else:
     composer = None
     # List matching composers from Library
     composers = roonapi.list_media(output_id, ["Library", "Composers", composersearch])
-    # Filter out excluded composer titles
+    # Filter out excluded composer names
     if excomposersearch is not None and len(composers) > 0:
         for chkcomposer in composers:
             if excomposersearch in chkcomposer:
@@ -73,13 +73,13 @@ else:
     if len(composers) > 0:
         # Play composer from Library
         composer = composers[0]
-        print("Playing composer title", composer)
+        print("Playing composer name", composer)
         roonapi.play_media(output_id, ["Library", "Composers", composer], None, False)
         if len(composers) > 1:
-            print("\nComposer titles partially matching", composersearch, ":\n")
+            print("\nComposer names partially matching", composersearch, ":\n")
             print(*composers, sep = "\n")
-            print("\nTo play another composer with this title either specify the")
-            print("full title or enough of a substring to provide a single match\n")
+            print("\nTo play another composer with this name either specify the")
+            print("full name or enough of a substring to provide a single match\n")
     if composer is None:
         print("No composers found matching", composersearch)
 

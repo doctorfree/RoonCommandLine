@@ -16,13 +16,18 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--playlist", help="playlist search term")
+parser.add_argument("-x", "--explaylist", help="playlist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
 if args.playlist:
-    searchterm = args.playlist
+    playlistsearch = args.playlist
 else:
-    searchterm = config['DEFAULT']['DefaultPlaylist']
+    playlistsearch = config['DEFAULT']['DefaultPlaylist']
+if args.explaylist:
+    explaylistsearch = args.explaylist
+else:
+    explaylistsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -58,12 +63,19 @@ if output_id is None:
     sys.exit(err)
 
 # List matching playlists
-playlists = roonapi.list_media(output_id, ["Playlists", searchterm])
-
-if playlists:
+playlists = roonapi.list_media(output_id, ["Playlists", playlistsearch])
+if explaylistsearch is not None and len(playlists) > 0:
+    for chkplaylist in playlists:
+        if explaylistsearch in chkplaylist:
+            playlists.remove(chkplaylist)
+if len(playlists) > 0:
+    if playlistsearch == "__all__":
+        print("\nAll Playlists in Library:\n")
+    else:
+        print("\nPlaylists with", playlistsearch, "in title", ":\n")
     print(*playlists, sep = "\n")
 else:
-    print("No playlists found matching ", searchterm)
+    print("No playlists found matching ", playlistsearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

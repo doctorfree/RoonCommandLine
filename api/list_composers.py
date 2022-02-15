@@ -72,7 +72,7 @@ if len(composers) > 0:
     if composersearch == "__all__":
         print("\nAll Composers in Library:\n")
     else:
-        print("\nComposers with", composersearch, "in title", ":\n")
+        print("\nComposers with", composersearch, "in name", ":\n")
     print(*composers, sep = "\n")
 else:
     print("No composers found matching", composersearch)

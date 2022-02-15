@@ -72,7 +72,7 @@ if len(artists) > 0:
     if artistsearch == "__all__":
         print("\nAll Artists in Library:\n")
     else:
-        print("\nArtists with", artistsearch, "in title", ":\n")
+        print("\nArtists with", artistsearch, "in name", ":\n")
     print(*artists, sep = "\n")
 else:
     print("No artists found matching ", artistsearch)

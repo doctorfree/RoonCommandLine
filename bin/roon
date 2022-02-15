@@ -559,7 +559,7 @@ main_menu() {
             "List Artists",*|*,"List Artists")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_artists __all__ ${exartist}
+                    list_artists __all__ "${exartist}"
                 else
                     ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists __all__ ${exartist}\""
                 fi
@@ -568,7 +568,7 @@ main_menu() {
             "List Composers",*|*,"List Composers")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_composers __all__ $exartist
+                    list_composers __all__ "$exartist"
                 else
                     ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers __all__ $exartist\""
                 fi
@@ -577,7 +577,7 @@ main_menu() {
             "List Genres",*|*,"List Genres")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_genres __all__ $exalbum
+                    list_genres __all__ "$exalbum"
                 else
                     ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres __all__ $exalbum\""
                 fi
@@ -586,9 +586,9 @@ main_menu() {
             "List Playlists",*|*,"List Playlists")
                 if [ "${LOCAL}" = true ]
                 then
-                    list_playlists __all__
+                    list_playlists __all__ "$exartist"
                 else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists __all__\""
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists __all__ $exartist\""
                 fi
                 break
                 ;;
@@ -965,12 +965,16 @@ done
     genre=
 }
 [ "$playlistlist" ] && {
+    [ "$playlist" ] || {
+        [ "$search" ] && playlist="$search"
+    }
     if [ "${LOCAL}" = true ]
     then
-        list_playlists $search
+        list_playlists $playlist "$exartist"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists $search\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists $playlist $exartist\""
     fi
+    playlist=
 }
 [ "$radiolist" ] && {
     if [ "${LOCAL}" = true ]
@@ -1091,9 +1095,9 @@ done
     [ "${playlist}" == "default" ] && playlist=
     if [ "${LOCAL}" = true ]
     then
-        play_playlist "$playlist"
+        play_playlist "$playlist" "$exartist"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $playlist\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $playlist $exartist\""
     fi
 }
 [ "$tag" ] && {

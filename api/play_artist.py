@@ -65,7 +65,7 @@ else:
     artist = None
     # List matching artists from Library
     artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
-    # Filter out excluded artist titles
+    # Filter out excluded artist names
     if exartistsearch is not None and len(artists) > 0:
         for chkartist in artists:
             if exartistsearch in chkartist:
@@ -73,13 +73,13 @@ else:
     if len(artists) > 0:
         # Play artist from Library
         artist = artists[0]
-        print("Playing artist title", artist)
+        print("Playing artist name", artist)
         roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)
         if len(artists) > 1:
-            print("\nArtist titles partially matching", artistsearch, ":\n")
+            print("\nArtist names partially matching", artistsearch, ":\n")
             print(*artists, sep = "\n")
-            print("\nTo play another artist with this title either specify the")
-            print("full title or enough of a substring to provide a single match\n")
+            print("\nTo play another artist with this name either specify the")
+            print("full name or enough of a substring to provide a single match\n")
     if artist is None:
         print("No artists found matching", artistsearch)
 

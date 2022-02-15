@@ -6,6 +6,7 @@ ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 PLAY=play_playlist.py
 PLAYLIST=
+EXPLAYLIST=
 
 [ -d ${ROONAPI} ] || exit 1
 
@@ -13,7 +14,8 @@ cd ${ROONAPI}
 
 [ -f $PLAY ] || exit 2
 
-[ "$1" ] && PLAYLIST="$*"
+[ "$1" ] && PLAYLIST="$1"
+[ "$2" ] && EXPLAYLIST="$2"
 
 # Get the zone if it is set
 if [ -f ${ROONCONF} ]
@@ -31,12 +33,15 @@ fi
     # Remove leading and trailing spaces in PLAYLIST
     PLAYLIST="$(echo -e "${PLAYLIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
+# Construct the exclusion args if passed
+EXARGS=
+[ "${EXPLAYLIST}" ] && EXARGS="-x ${EXPLAYLIST}"
 
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    python3 $PLAY -p "$PLAYLIST" -z "$ROON_ZONE"
+    python3 $PLAY -p "$PLAYLIST" -z "$ROON_ZONE" $EXARGS
 else
-    python $PLAY -p "$PLAYLIST" -z "$ROON_ZONE"
+    python $PLAY -p "$PLAYLIST" -z "$ROON_ZONE" $EXARGS
 fi
 
