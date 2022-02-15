@@ -17,6 +17,8 @@ tokenfile = config['DEFAULT']['TokenFileName']
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--artist", help="artist search term")
 parser.add_argument("-g", "--genre", help="genre search term")
+parser.add_argument("-X", "--exartist", help="artist exclude search term")
+parser.add_argument("-x", "--exgenre", help="genre exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -28,6 +30,14 @@ if args.genre:
     genresearch = args.genre
 else:
     genresearch = config['DEFAULT']['DefaultGenre']
+if args.exartist:
+    exartistsearch = args.exartist
+else:
+    exartistsearch = None
+if args.exgenre:
+    exgenresearch = args.exgenre
+else:
+    exgenresearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -67,11 +77,24 @@ genres = roonapi.list_media(output_id, ["Genres", genresearch])
 
 if genres:
     for genre in genres:
+        if exgenresearch is not None:
+          if exgenresearch in genre:
+            continue
         # List matching artists
         artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
-        if artists:
-            print("\nArtists in", genre, "genre with", artistsearch, "in name", ":\n")
+        if exartistsearch is not None and len(artists) > 0:
+          for chkartist in artists:
+            if exrtistsearch in chkartist:
+              artists.remove(chkartist)
+        if len(artists) > 0:
+            artist = artists[0]
+            if artistsearch == "__all__":
+              print("\nArtists in genre", genre, ":\n")
+            else:
+              print("\nArtists in", genre, "genre with", artistsearch, "in name", ":\n")
             print(*artists, sep = "\n")
+    if artist is None:
+        print("No artists found matching", artistsearch)
 else:
     print("No genres found matching ", genresearch)
 

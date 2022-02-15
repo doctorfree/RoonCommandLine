@@ -17,6 +17,8 @@ tokenfile = config['DEFAULT']['TokenFileName']
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--artist", help="artist search term")
 parser.add_argument("-g", "--genre", help="genre search term")
+parser.add_argument("-X", "--exartist", help="artist exclude search term")
+parser.add_argument("-x", "--exgenre", help="genre exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -28,6 +30,14 @@ if args.genre:
     genresearch = args.genre
 else:
     genresearch = config['DEFAULT']['DefaultGenre']
+if args.exartist:
+    exartistsearch = args.exartist
+else:
+    exartistsearch = None
+if args.exgenre:
+    exgenresearch = args.exgenre
+else:
+    exgenresearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -67,23 +77,29 @@ else:
     if genres:
       artist = None
       for genre in genres:
-        if artist is None:
-          # List matching artists
-          artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
-          if len(artists) == 0:
-            print("\nIn genre", genre, "no artist names partially matching", artistsearch, "\n")
-          else:
-            if len(artists) == 1:
-              artist = artists[0]
-              print("Playing artist name", artist, "in", genre, "genre")
-              roonapi.play_media(output_id, ["Genres", genre, "Artists", artist], None, False)
-            else:
+        if exgenresearch is not None:
+          if exgenresearch in genre:
+            continue
+        # List matching artists
+        artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
+        if exartistsearch is not None and len(artists) > 0:
+          for chkartist in artists:
+            if exrtistsearch in chkartist:
+              artists.remove(chkartist)
+          if len(artists) > 0:
+            artist = artists[0]
+            print("Playing artist name", artist, "in", genre, "genre")
+            roonapi.play_media(output_id, ["Genres", genre, "Artists", artist], None, False)
+            if len(artists) > 1:
               print("\nArtist names in", genre, "genre matching", artistsearch, ":\n")
               print(*artists, sep = "\n")
-              print("\nTo play an artist in this genre by name either specify the full name")
-              print("or enough of a substring to provide a single match\n")
+              print("\nTo play another artist in this genre by name either specify")
+              print("the full name or enough of a substring to provide a single match\n")
+            break
+      if artist is None:
+        print("No artists found matching", artistsearch)
     else:
-        print("No genres found matching ", genresearch)
+      print("No genres found matching ", genresearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

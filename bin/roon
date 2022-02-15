@@ -55,7 +55,8 @@ usage() {
     printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group"
     printf "\n\t-l [albums|artists|artalbums|composers|genres|genalbums|genartists|playlists|tags|zones]"
     printf "\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
-    printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio [-EuU]"
+    printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
+    printf "\n\t-X ex_album -x ex_artist [-EuU]"
     printf "\n\tWhere:\n\t\t-A album selects an album to play"
     printf "\n\t\t-a artist selects an artist to list/play"
     printf "\n\t\t-C composer selects a composer to play"
@@ -73,6 +74,8 @@ usage() {
     printf "\n\t\t-z zone selects the Roon Zone in which to play"
     printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
     printf "\n\t\t\tissues the command in the selected zone"
+    printf "\n\t\t-X ex_album specifies a string to exclude from album names"
+    printf "\n\t\t-x ex_artist specifies a string to exclude from artist/composer names"
     printf "\n\t\t-u displays a full usage message with examples"
     printf "\n\t\t-U displays a usage message without examples"
     printf "\n\t\t-E displays examples with no usage message"
@@ -913,11 +916,14 @@ done
 }
 [ "$genalbumlist" ] && {
     [ "$album" ] || album="__all__"
+    [ "${exalbum}" ] && {
+      [ "${exartist}" ] || exartist="None"
+    }
     if [ "${LOCAL}" = true ]
     then
-        list_genre_albums "$genre" "$album"
+        list_genre_albums "$genre" "$album" "$exartist" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_artists $genre $album\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_albums $genre $album $exartist $exalbum\""
     fi
     album=
     genre=
@@ -926,11 +932,14 @@ done
     [ "$genre" ] || {
         [ "$search" ] && genre=$search
     }
+    [ "${exalbum}" ] && {
+      [ "${exartist}" ] || exartist="None"
+    }
     if [ "${LOCAL}" = true ]
     then
-        list_genre_artists "$genre" "$artist"
+        list_genre_artists "$genre" "$artist" "$exartist" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_artists $genre $artist\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_artists $genre $artist $exartist $exalbum\""
     fi
     artist=
     genre=
@@ -996,22 +1005,28 @@ done
 # Third, handle album or artist and genre requested
 [ "$album" ] && [ "$genre" ] && {
     [ "${album}" == "default" ] && album=
+    [ "${exalbum}" ] && {
+      [ "${exartist}" ] || exartist="None"
+    }
     if [ "${LOCAL}" = true ]
     then
-        play_genre_album "$genre" "$album"
+        play_genre_album "$genre" "$album" "$exartist" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album $genre $album\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album $genre $album $exartist $exalbum\""
     fi
     album=
     genre=
 }
 [ "$artist" ] && [ "$genre" ] && {
     [ "${artist}" == "default" ] && artist=
+    [ "${exalbum}" ] && {
+      [ "${exartist}" ] || exartist="None"
+    }
     if [ "${LOCAL}" = true ]
     then
-        play_genre_artist "$genre" "$artist"
+        play_genre_artist "$genre" "$artist" "$exartist" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist $genre $artist\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist $genre $artist $exartist $exalbum\""
     fi
     artist=
     genre=

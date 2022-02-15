@@ -80,22 +80,22 @@ else:
         if exartistsearch is not None:
           if exartistsearch in artist:
             continue
-        if album is None:
-          # List matching albums
-          albums = roonapi.list_media(output_id, ["Library", "Artists", artist, albumsearch])
-          if exalbumsearch is not None and len(albums) > 0:
-            for chkalbum in albums:
-              if exalbumsearch in chkalbum:
-                albums.remove(chkalbum)
-          if len(albums) > 0:
-            album = albums[0]
-            print("Playing album title", album, "by artist", artist)
-            roonapi.play_media(output_id, ["Library", "Artists", artist, album], None, False)
-            if len(albums) > 1:
-              print("\nAlbum titles by", artist, "artist matching", albumsearch, ":\n")
-              print(*albums, sep = "\n")
-              print("\nTo play another album by this artist by title either specify")
-              print("the full title or enough of a substring to provide a single match\n")
+        # List matching albums
+        albums = roonapi.list_media(output_id, ["Library", "Artists", artist, albumsearch])
+        if exalbumsearch is not None and len(albums) > 0:
+          for chkalbum in albums:
+            if exalbumsearch in chkalbum:
+              albums.remove(chkalbum)
+        if len(albums) > 0:
+          album = albums[0]
+          print("Playing album title", album, "by artist", artist)
+          roonapi.play_media(output_id, ["Library", "Artists", artist, album], None, False)
+          if len(albums) > 1:
+            print("\nAlbum titles by", artist, "artist matching", albumsearch, ":\n")
+            print(*albums, sep = "\n")
+            print("\nTo play another album by this artist by title either specify")
+            print("the full title or enough of a substring to provide a single match\n")
+          break
       if album is None:
         print("No albums found matching", albumsearch)
     else:

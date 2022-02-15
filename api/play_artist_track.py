@@ -67,18 +67,19 @@ else:
     if artists:
       track = None
       for artist in artists:
-        if track is None:
-          # Search through this artist's albums for specified track
-          albums = roonapi.list_media(output_id, ["Library", "Artists", artist, "__all__"])
-          if albums:
-            for album in albums:
-              if track is None:
-                # List matching tracks
-                tracks = roonapi.list_media(output_id, ["Library", "Artists", artist, album, tracksearch])
-                if len(tracks) >= 1:
-                  track = tracks[0]
-                  print("Playing track title", track, "on album", album, "by artist", artist)
-                  roonapi.play_media(output_id, ["Library", "Artists", artist, album, track], None, False)
+        # Search through this artist's albums for specified track
+        albums = roonapi.list_media(output_id, ["Library", "Artists", artist, "__all__"])
+        if albums:
+          for album in albums:
+            # List matching tracks
+            tracks = roonapi.list_media(output_id, ["Library", "Artists", artist, album, tracksearch])
+            if len(tracks) >= 1:
+              track = tracks[0]
+              print("Playing track title", track, "on album", album, "by artist", artist)
+              roonapi.play_media(output_id, ["Library", "Artists", artist, album, track], None, False)
+              break
+        if track is not None:
+          break
     else:
         print("No artists found matching ", artistsearch)
 
