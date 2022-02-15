@@ -30,6 +30,8 @@ albumlist=
 artistlist=
 artalbumlist=
 composerlist=
+exalbum=
+exartist=
 genrelist=
 genartistlist=
 genalbumlist=
@@ -714,7 +716,8 @@ main_menu() {
   done
 }
 
-while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:EuU flag; do
+exact=
+while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:x:X:EuU flag; do
     case $flag in
         A)
             album="$OPTARG"
@@ -809,6 +812,12 @@ while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:EuU flag; do
         S)
             setdefs=1
             ;;
+        X)
+            exalbum="$OPTARG"
+            ;;
+        x)
+            exartist="$OPTARG"
+            ;;
         E)
             showusage=
             showexamples=1
@@ -874,11 +883,14 @@ done
         [ "$search" ] && artist=$search
     }
     [ "$album" ] || album="__all__"
+    [ "${exalbum}" ] && {
+      [ "${exartist}" ] || exartist="None"
+    }
     if [ "${LOCAL}" = true ]
     then
-        list_artist_albums "$artist" "$album"
+        list_artist_albums "$artist" "$album" "$exartist" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_artist_albums $artist $album\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_artist_albums $artist $album $exartist $exalbum\""
     fi
     album=
     artist=
@@ -959,11 +971,14 @@ done
 [ "$album" ] && [ "$artist" ] && {
     [ "${album}" == "default" ] && album=
     [ "${artist}" == "default" ] && artist=
+    [ "${exalbum}" ] && {
+      [ "${exartist}" ] || exartist="None"
+    }
     if [ "${LOCAL}" = true ]
     then
-        play_artist_album "$artist" "$album"
+        play_artist_album "$artist" "$album" "$exartist" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_album $artist $album\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_album $artist $album $exartist $exalbum\""
     fi
     album=
     artist=

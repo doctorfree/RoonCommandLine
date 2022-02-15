@@ -17,6 +17,8 @@ tokenfile = config['DEFAULT']['TokenFileName']
 parser = argparse.ArgumentParser()
 parser.add_argument("-A", "--album", help="album search term")
 parser.add_argument("-a", "--artist", help="artist search term")
+parser.add_argument("-X", "--exalbum", help="album exclude search term")
+parser.add_argument("-x", "--exartist", help="artist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -28,6 +30,14 @@ if args.artist:
     artistsearch = args.artist
 else:
     artistsearch = config['DEFAULT']['DefaultArtist']
+if args.exalbum:
+    exalbumsearch = args.exalbum
+else:
+    exalbumsearch = None
+if args.exartist:
+    exartistsearch = args.exartist
+else:
+    exartistsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -67,12 +77,17 @@ else:
     if artists:
       album = None
       for artist in artists:
+        if exartistsearch is not None:
+          if exartistsearch in artist:
+            continue
         if album is None:
           # List matching albums
           albums = roonapi.list_media(output_id, ["Library", "Artists", artist, albumsearch])
-          if len(albums) == 0:
-            print("\nFor artist", artist, "no album titles matching", albumsearch, "\n")
-          else:
+          if exalbumsearch is not None and len(albums) > 0:
+            for chkalbum in albums:
+              if exalbumsearch in chkalbum:
+                albums.remove(chkalbum)
+          if len(albums) > 0:
             album = albums[0]
             print("Playing album title", album, "by artist", artist)
             roonapi.play_media(output_id, ["Library", "Artists", artist, album], None, False)
@@ -81,8 +96,10 @@ else:
               print(*albums, sep = "\n")
               print("\nTo play another album by this artist by title either specify")
               print("the full title or enough of a substring to provide a single match\n")
+      if album is None:
+        print("No albums found matching", albumsearch)
     else:
-        print("No artists found matching ", artistsearch)
+      print("No artists found matching", artistsearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

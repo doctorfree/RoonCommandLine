@@ -17,6 +17,8 @@ tokenfile = config['DEFAULT']['TokenFileName']
 parser = argparse.ArgumentParser()
 parser.add_argument("-A", "--album", help="album search term")
 parser.add_argument("-a", "--artist", help="artist search term")
+parser.add_argument("-X", "--exalbum", help="album exclude search term")
+parser.add_argument("-x", "--exartist", help="artist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -28,6 +30,14 @@ if args.artist:
     artistsearch = args.artist
 else:
     artistsearch = config['DEFAULT']['DefaultArtist']
+if args.exalbum:
+    exalbumsearch = args.exalbum
+else:
+    exalbumsearch = None
+if args.exartist:
+    exartistsearch = args.exartist
+else:
+    exartistsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -66,17 +76,29 @@ if output_id is None:
 artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
 
 if artists:
+    album = None
     for artist in artists:
+        if exartistsearch is not None:
+          if exartistsearch in artist:
+            continue
         # List matching albums
         albums = roonapi.list_media(output_id, ["Library", "Artists", artist, albumsearch])
-        if albums:
-            if "Play Artist" in albums:
-                albums.remove("Play Artist")
+        if exalbumsearch is not None and len(albums) > 0:
+          for chkalbum in albums:
+            if exalbumsearch in chkalbum:
+              albums.remove(chkalbum)
+        if len(albums) > 0:
+          if "Play Artist" in albums:
+            albums.remove("Play Artist")
+        if len(albums) > 0:
+            album = albums[0]
             if albumsearch == "__all__":
                 print("\nAlbums by artist", artist, ":\n")
             else:
                 print("\nAlbums by artist", artist, "with", albumsearch, "in title", ":\n")
             print(*albums, sep = "\n")
+    if album is None:
+        print("No albums found matching", albumsearch) 
 else:
     print("No artists found matching ", artistsearch)
 
