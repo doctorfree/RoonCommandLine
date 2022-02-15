@@ -40,7 +40,7 @@ EXARGS=
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    python3 $LIST -a "$ARTIST" -z "$ROON_ZONE" "$EXARGS"
+    python3 $LIST -a "$ARTIST" -z "$ROON_ZONE" $EXARGS
 else
-    python $LIST -a "$ARTIST" -z "$ROON_ZONE" "$EXARGS"
+    python $LIST -a "$ARTIST" -z "$ROON_ZONE" $EXARGS
 fi

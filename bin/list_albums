@@ -41,8 +41,8 @@ EXARGS=
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    python3 $LIST -a "$ALBUM" -z "$ROON_ZONE" "$EXARGS"
+    python3 $LIST -a "$ALBUM" -z "$ROON_ZONE" $EXARGS
 else
-    python $LIST -a "$ALBUM" -z "$ROON_ZONE" "$EXARGS"
+    python $LIST -a "$ALBUM" -z "$ROON_ZONE" $EXARGS
 fi
 

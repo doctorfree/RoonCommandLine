@@ -876,6 +876,7 @@ done
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums $album $exalbum\""
     fi
+    album=
 }
 [ "$artistlist" ] && {
     [ "$artist" ] || {
@@ -888,6 +889,7 @@ done
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists $artist $exartist\""
     fi
+    artist=
 }
 [ "$artalbumlist" ] && {
     [ "$artist" ] || {
@@ -917,6 +919,7 @@ done
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers $composer $exartist\""
     fi
+    composer=
 }
 [ "$genrelist" ] && {
     [ "$genre" ] || {
@@ -929,6 +932,7 @@ done
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres $genre $exalbum\""
     fi
+    genre=
 }
 [ "$genalbumlist" ] && {
     [ "$album" ] || album="__all__"
