@@ -1062,6 +1062,22 @@ done
     album=
     genre=
 }
+# Fourth, handle album and composer requested
+[ "$album" ] && [ "$composer" ] && {
+    [ "${album}" == "default" ] && album=
+    [ "${composer}" == "default" ] && composer=
+    [ "${exalbum}" ] && {
+      [ "${exartist}" ] || exartist="None"
+    }
+    if [ "${LOCAL}" = true ]
+    then
+        play_composer_album "$composer" "$album" "$exartist" "$exalbum"
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer_album $composer $album $exartist $exalbum\""
+    fi
+    album=
+    composer=
+}
 [ "$artist" ] && [ "$genre" ] && {
     [ "${artist}" == "default" ] && artist=
     [ "${exalbum}" ] && {

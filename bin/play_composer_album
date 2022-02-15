@@ -1,0 +1,60 @@
+#!/bin/bash
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+PLAY=play_composer_album.py
+COMPOSER=
+ALBUM=
+EXCOMPOSER=
+EXALBUM=
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI}
+
+[ -f $PLAY ] || exit 2
+
+# First argument is composer, second is album (required)
+# Third optional argument is composer exclusion string (optional)
+# Fourth optional argument is album exclusion string (optional)
+[ "$1" ] && COMPOSER="$1"
+[ "$2" ] && ALBUM="$2"
+[ "$3" ] && EXCOMPOSER="$3"
+[ "$4" ] && EXALBUM="$4"
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    ${ROON}/bin/set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+
+# Get the default composer if one is not provided
+[ "${COMPOSER}" ] || {
+    COMPOSER=`grep ^DefaultComposer ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in COMPOSER
+    COMPOSER="$(echo -e "${COMPOSER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
+# Get the default album if one is not provided
+[ "${ALBUM}" ] || {
+    ALBUM=`grep ^DefaultAlbum ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in ALBUM
+    ALBUM="$(echo -e "${ALBUM}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
+# Construct the exclusion args if passed
+EXARGS=
+[ "${EXALBUM}" ] && EXARGS="-X ${EXALBUM}"
+[ "${EXCOMPOSER}" ] && EXARGS="-x ${EXCOMPOSER} ${EXARGS}"
+
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $PLAY -a "$ALBUM" -c "$COMPOSER" -z "$ROON_ZONE" $EXARGS
+else
+    python $PLAY -a "$ALBUM" -c "$COMPOSER" -z "$ROON_ZONE" $EXARGS
+fi
