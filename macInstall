@@ -33,7 +33,7 @@ fi
     exit 1
 }
 
-${SUDO} ${PYTHON} -m ensurepip --upgrade
+# ${SUDO} ${PYTHON} -m ensurepip --upgrade
 
 [ -f "${SRC}/${SRC_NAME}/VERSION" ] || {
     echo "$SRC/$SRC_NAME/VERSION does not exist. Exiting."

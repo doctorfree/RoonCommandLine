@@ -48,7 +48,26 @@ else
         [[ "$(python --version)" =~ "Python 3" ]] && have_python3=1
     fi
 fi
-[ "${have_python3}" ] || {
+have_pip=
+if type -p pip3 > /dev/null
+then
+    inst_pip3=1
+else
+    inst_pip3=
+fi
+if [ "${inst_pip3}" ]
+then
+    have_pip=1
+else
+    if type -p pip > /dev/null
+    then
+      inst_pip=1
+    else
+      inst_pip=
+    fi
+    [ "${inst_pip}" ] && have_pip=1
+fi
+[ "${have_pip}" ] && [ "${have_python3}" ] || {
     echo "RoonCommandLine requires Python 3 and Pip"
     echo "Install Python 3 and restart this installation"
     echo "See https://docs.python-guide.org/starting/install3/osx/"

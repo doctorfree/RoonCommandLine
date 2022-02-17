@@ -7,9 +7,17 @@
 
 set -e
 
-update-alternatives --install /usr/bin/python python /usr/bin/python3 10
-python3 -m ensurepip --upgrade
-python3 -m pip install roonapi
+# update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+PYTHON=
+python3_inst=`type -p python3`
+if [ "${python3_inst}" ]
+then
+    PYTHON="python3"
+else
+    PYTHON="python"
+fi
+# ${PYTHON} -m ensurepip --upgrade
+${PYTHON} -m pip install roonapi
 export PATH=/usr/local/bin:/usr/bin:$PATH
 [ -d /usr/local ] || mkdir /usr/local
 [ -d /usr/local/bin ] || mkdir /usr/local/bin
@@ -87,12 +95,7 @@ rm -f /tmp/roon$$
 
 PYTHONUSERBASE=
 # Check the global site directories
-if type -p python3 > /dev/null
-then
-  SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-else
-  SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-fi
+SITES=($(${PYTHON} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
 for site in ${SITES[@]}
 do
     site=`echo $site | sed -e "s/'//g"`
@@ -115,7 +118,7 @@ then
     fi
     . ${ROONCONF}
 
-    RVER=`python3 -m pip show roonapi | grep Version | awk -F ':' ' { print $2 } '`
+    RVER=`${PYTHON} -m pip show roonapi | grep Version | awk -F ':' ' { print $2 } '`
     # Remove leading and trailing spaces in RVER
     RVER="$(echo -e "${RVER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     # Only patch Roonapi version 0.0.38 and earlier
