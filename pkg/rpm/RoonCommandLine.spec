@@ -22,6 +22,42 @@ Manage your Roon Audio System from the command line
 %install
 cp -a %{_sourcedir}/usr %{buildroot}/usr
 
+%pre
+exec 1>/proc/${PPID}/fd/1
+exec 2>/proc/${PPID}/fd/2
+export PATH=/usr/local/bin:$PATH
+have_python3=
+if type -p python3 > /dev/null
+then
+    inst_python3=1
+else
+    inst_python3=
+fi
+if [ "${inst_python3}" ]
+then
+    have_python3=1
+else
+    if type -p python > /dev/null
+    then
+      inst_python=1
+    else
+      inst_python=
+    fi
+    if [ "${inst_python}" ]
+    then
+        [[ "$(python --version)" =~ "Python 3" ]] && have_python3=1
+    fi
+fi
+[ "${have_python3}" ] || {
+    echo "RoonCommandLine requires Python 3 and Pip"
+    echo "Install Python 3 and restart this installation"
+    echo "See https://docs.python-guide.org/starting/install3/osx/"
+    echo "for step by step instructions to install Homebrew and Python 3"
+    echo "If you already have Homebrew, install Python 3 with:"
+    echo "brew install python"
+    exit 1
+}
+
 %post
 exec 1>/proc/${PPID}/fd/1
 exec 2>/proc/${PPID}/fd/2

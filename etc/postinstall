@@ -8,6 +8,7 @@
 set -e
 
 update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+python3 -m ensurepip --upgrade
 python3 -m pip install roonapi
 export PATH=/usr/local/bin:/usr/bin:$PATH
 [ -d /usr/local ] || mkdir /usr/local

@@ -11,35 +11,19 @@ ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 export SUDO=sudo
 
-need_pip=
-need_python=
-pip3_inst=`type -p pip3`
-if [ "${pip3_inst}" ]
-then
-    PIP="pip3"
-else
-    pip_inst=`type -p pip`
-    if [ "${pip_inst}" ]
-    then
-        PIP="pip"
-    else
-        need_pip=1
-    fi
-fi
+PYTHON=
 python3_inst=`type -p python3`
 if [ "${python3_inst}" ]
 then
     PYTHON="python3"
 else
     python_inst=`type -p python`
-    if [ "${python3_inst}" ]
+    if [ "${python_inst}" ]
     then
-        PYTHON="python"
-    else
-        need_python=1
+        [[ "$(python --version)" =~ "Python 3" ]] && PYTHON="python"
     fi
 fi
-[ "${need_pip}" ] || [ "${need_python}" ] && {
+[ "${PYTHON}" ] || {
     echo "RoonCommandLine requires Python 3 and Pip"
     echo "Install Python 3 and restart this installation"
     echo "See https://docs.python-guide.org/starting/install3/osx/"
@@ -48,6 +32,8 @@ fi
     echo "brew install python"
     exit 1
 }
+
+${SUDO} ${PYTHON} -m ensurepip --upgrade
 
 [ -f "${SRC}/${SRC_NAME}/VERSION" ] || {
     echo "$SRC/$SRC_NAME/VERSION does not exist. Exiting."
@@ -76,7 +62,7 @@ done
 export PATH=/usr/local/bin:/usr/bin:$PATH
 
 # Install the Python Roon API
-${SUDO} ${PYTHON} -m ${PIP} install roonapi
+${SUDO} ${PYTHON} -m pip install roonapi
 
 [ -d /usr/local ] || ${SUDO} mkdir /usr/local
 [ -d /usr/local/bin ] || ${SUDO} mkdir /usr/local/bin
@@ -244,7 +230,7 @@ then
     fi
     . ${ROONCONF}
 
-    RVER=`${PYTHON} -m ${PIP} show roonapi | grep Version | awk -F ':' ' { print $2 } '`
+    RVER=`${PYTHON} -m pip show roonapi | grep Version | awk -F ':' ' { print $2 } '`
     # Remove leading and trailing spaces in RVER
     RVER="$(echo -e "${RVER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     # Only patch Roonapi version 0.0.38 and earlier
