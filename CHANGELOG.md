@@ -2,16 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-Feb 15, 2022 :
+Feb 17, 2022 :
     Version 2.0.3 Release 2 adds several new commands including support for
     playing a specified track by artist, playing a specified album by artist,
     playing either a specified artist or album in designated genre, playing
     a specified composer, and additional listing options. Listing and playing
     commands now include support for artist and album name exclusion strings
     allowing searches for a specified artist/album/composer/genre/playlist
-    whose name includes a specified string but not another string.
-    This exclusion filtering enables narrower listing and playing
+    whose name includes a specified string but not another string. This
+    exclusion filtering enables narrower listing, searching, and playing
     of library media.
+
+    Checks for Python 3 and Pip have been added to pre-installation scripts,
+    MacOS installation has been significantly improved, installation of the
+    roonapi Pip module is handled more gracefully.
 
 Feb 11, 2022 :
     Version 2.0.3 Release 1 ensures RoonCommandLine commands are in PATH.
@@ -43,6 +47,22 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Thu Feb 17 10:30:10 2022 -0800 e080242 :
+   Do not chown /usr/local in Mac install
+Thu Feb 17 10:13:43 2022 -0800 1365d6e :
+   Add preinst script and pre section to rpm spec to check for Python 3 and pip
+Thu Feb 17 09:54:41 2022 -0800 517200b :
+   Check for Python 3 in preinstallation, make sure pip is installed, invoke pip via Python
+Wed Feb 16 16:32:43 2022 -0800 d7384bb :
+   Add command to list tracks by artist, add Python usage message to man pages, update macInstall script to use Python/Pip 3
+Tue Feb 15 16:12:44 2022 -0800 4ae73bb :
+   Add man pages for list_composer_albums and play_composer_album
+Tue Feb 15 15:28:58 2022 -0800 399da1b :
+   Update macInstall script to deal with new roonapi package version
+Tue Feb 15 14:07:12 2022 -0800 73a0958 :
+   Add command to play album by composer
+Tue Feb 15 13:55:19 2022 -0800 1c4d7fd :
+   Fix bug when looping thru a list and modifying the list, update README and usage, add command to list albums by composer
 Tue Feb 15 10:18:05 2022 -0800 7b58fca :
    Add exclusion filter to playlist list and play
 Tue Feb 15 09:44:00 2022 -0800 5a498c8 :

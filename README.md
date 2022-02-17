@@ -58,6 +58,12 @@ Currently the command line Roon control scripts provide support for:
 - Play playlist by playlist name
 - Play tag
 - Play Roon Radio
+- Play named album by specified artist
+- Play named track by specified artist
+- Play composer
+- Play named album by specified composer
+- Play named album in specified genre
+- Play named artist in specified genre
 - Issue one of the following commands in the specified zone
   - group
   - ungroup
@@ -73,7 +79,7 @@ Currently the command line Roon control scripts provide support for:
   - unrepeat
   - mute
   - unmute
-- List albums, artists, genres, playlists, tags, or Roon zones
+- List albums, artists, albums by artist, tracks by artist, albums by composer, composers, albums by genre, artists by genre, genres, playlists, live radio stations, tags, and Roon zones
 - Set the default Roon output zone
 - Select Roon audio zone or zone grouping
 
@@ -758,7 +764,12 @@ in `/usr/local/Roon/etc/roon_api.ini`. Yes, you can change the zone grouping
 in Roon but it takes quite a few actions on the user's part to accomplish this.
 In my household I find it frequently desirable to be able to switch zone
 groupings easily and quickly and I can do so by configuring these presets to
-my typical use cases.
+my typical use cases. Another feature of RoonCommandLine not easily found in
+the Roon GUI is the ability to search the Roon Database for tracks by an
+artist and other combinations of search filters. While the Roon GUI has an
+exceptional filtering mechanism, try doing a search for all tracks containing
+the string "Love" by the artists with name containg the string "Beatles". It's
+quick and easy to do with a single RoonCommandLine command.
 
 ### Applications
 
