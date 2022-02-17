@@ -21,12 +21,14 @@
 play_genre_artist - Play Roon Library Artist in Genre
 .SH SYNOPSIS
 .PP
-\f[B]play_genre_artist\f[R] [ GENRE ] [ ARTIST ]
+\f[B]play_genre_artist\f[R] [ GENRE ] [ ARTIST ] [ EXGENRE ] [ EXARTIST
+]
 .SH DESCRIPTION
 .PP
 Plays Roon Library genre\[aq]s artist matching the specified artist name
 or substring.
-This command is invoked by \[dq]roon -g genre [-a artist]\[dq].
+This command is invoked by \[dq]roon -g genre [-a artist] [-x exgenre]
+[-X exartist]\[dq].
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]GENRE\f[R]
@@ -41,12 +43,28 @@ case-sensitive substring.
 All Roon library artist names matching the provided artist name or
 containing the substring will be returned and the first one returned
 will be played.
+.TP
+\f[B]EXGENRE\f[R]
+Provide a genre exclusion string, in quotes if it contains spaces.
+No Roon library genre names including the provided genre exclusion
+string will be searched
+.TP
+\f[B]EXARTIST\f[R]
+Provide an artist exclusion string, in quotes if it contains spaces.
+No Roon library artist names including the provided artist exclusion
+string will be played
 .SH EXAMPLES
 .TP
 \f[B]play_genre_artist Prog Yes\f[R]
 Will play the first artist returned in a list of all Roon library artist
 names with names containing the string \[dq]Yes\[dq] by the genres whose
 name contains \[dq]Prog\[dq]
+.TP
+\f[B]play_genre_artist Rock Johnny foo Cash\f[R]
+Will play the first artist returned in a list of all Roon library artist
+names with names containing the string \[dq]Johnny\[dq] but not
+\[dq]Cash\[dq] by the genres whose name contains \[dq]Rock\[dq] but not
+\[dq]foo\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
@@ -80,3 +98,30 @@ Submit bug reports online at:
 .PP
 Full documentation and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>
+.PP
+The corresponding Python script,
+\f[I]/usr/local/Roon/api/play_genre_artist.py\f[R], can be invoked
+directly as:
+.PP
+\f[B]python3 /usr/local/Roon/api/play_genre_artist.py [ options]\f[R]
+.PP
+Where [ options ] are described in the following usage message:
+.IP
+.nf
+\f[C]
+usage: play_genre_artist.py [-h] [-a ARTIST] [-g GENRE] [-X EXARTIST]
+                            [-x EXGENRE] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ARTIST, --artist ARTIST
+                        artist search term
+  -g GENRE, --genre GENRE
+                        genre search term
+  -X EXARTIST, --exartist EXARTIST
+                        artist exclude search term
+  -x EXGENRE, --exgenre EXGENRE
+                        genre exclude search term
+  -z ZONE, --zone ZONE  zone selection
+\f[R]
+.fi

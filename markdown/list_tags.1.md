@@ -39,3 +39,18 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_tags.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_tags.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_tags.py [-h] [-t TAG] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t TAG, --tag TAG     tag search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

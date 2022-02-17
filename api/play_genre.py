@@ -37,7 +37,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.2",
+    "display_version": "2.0.3",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }
@@ -66,9 +66,9 @@ else:
     # List matching genres from Library
     genres = roonapi.list_media(output_id, ["Genres", genresearch])
     # Filter out excluded genre titles
-    if exgenresearch is not None and len(genres) > 0:
+    if exgenresearch is not None and genres:
         genres = [chk for chk in genres if not exgenresearch in chk]
-    if len(genres) > 0:
+    if genres:
         # Play genre from Library
         genre = genres[0]
         print("Playing genre title", genre)

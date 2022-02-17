@@ -9,10 +9,10 @@ date: February 13, 2022
 play_genre_album - Play Roon Library Album in Genre
 
 # SYNOPSIS
-**play_genre_album** [ GENRE ] [ ALBUM ]
+**play_genre_album** [ GENRE ] [ ALBUM ] [ EXGENRE ] [ EXALBUM ]
 
 # DESCRIPTION
-Plays Roon Library genre's album matching the specified album name or substring. This command is invoked by "roon -g genre [-A album]".
+Plays Roon Library genre's album matching the specified album name or substring. This command is invoked by "roon -g genre [-A album] [-x exgenre] [-X exalbum]".
 
 # COMMAND LINE OPTIONS
 **GENRE**
@@ -21,9 +21,18 @@ Plays Roon Library genre's album matching the specified album name or substring.
 **ALBUM**
 : Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library album names matching the provided album name or containing the substring will be returned and the first one returned will be played.
 
+**EXGENRE**
+: Provide a genre exclusion string, in quotes if it contains spaces. No Roon library genre names including the provided genre exclusion string will be searched
+
+**EXALBUM**
+: Provide an album exclusion string, in quotes if it contains spaces. No Roon library album names including the provided album exclusion string will be played
+
 # EXAMPLES
 **play_genre_album Prog Edge**
 : Will play the first album returned in a list of all Roon library album names with titles containing the string "Edge" by the genres whose name contains "Prog"
+
+**play_genre_album Rock Close Surf Closer**
+: Will play the first album returned in a list of all Roon library album names with titles containing the string "Close" but not "Closer" by the genres whose name contains "Rock" but not "Surf"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -42,3 +51,26 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/play_genre_album.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/play_genre_album.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: play_genre_album.py [-h] [-a ALBUM] [-g GENRE] [-X EXALBUM]
+                           [-x EXGENRE] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ALBUM, --album ALBUM
+                        album search term
+  -g GENRE, --genre GENRE
+                        genre search term
+  -X EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -x EXGENRE, --exgenre EXGENRE
+                        genre exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

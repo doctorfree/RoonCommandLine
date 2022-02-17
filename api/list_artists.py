@@ -37,7 +37,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.2",
+    "display_version": "2.0.3",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }
@@ -64,9 +64,9 @@ if output_id is None:
 
 # List matching artists
 artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
-if exartistsearch is not None and len(artists) > 0:
+if exartistsearch is not None and artists:
     artists = [chkartist for chkartist in artists if not exartistsearch in chkartist]
-if len(artists) > 0:
+if artists:
     if artistsearch == "__all__":
         print("\nAll Artists in Library:\n")
     else:

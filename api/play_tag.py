@@ -32,7 +32,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.2",
+    "display_version": "2.0.3",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }
@@ -59,9 +59,7 @@ if output_id is None:
 else:
     # Play tag (not yet working)
     tags = roonapi.list_media(output_id, ["Library", "Tags", tag])
-    if len(tags) == 0:
-        print("\nNo tags matching", tag, "\n")
-    else:
+    if tags:
         print("\nTags matching", tag, ":\n")
         print(*tags, sep = "\n")
         if len(tags) == 1:
@@ -72,6 +70,8 @@ else:
         else:
             print("\nTo play a tag by name either specify the full name")
             print("or enough of a substring to provide a single match")
+    else:
+        print("\nNo tags matching", tag, "\n")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

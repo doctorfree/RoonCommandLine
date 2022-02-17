@@ -21,12 +21,14 @@
 play_composer_album - Play Roon Library Album by Composer
 .SH SYNOPSIS
 .PP
-\f[B]play_composer_album\f[R] [ COMPOSER ] [ ALBUM ]
+\f[B]play_composer_album\f[R] [ COMPOSER ] [ ALBUM ] [ EXCOMPOSER ] [
+EXALBUM ]
 .SH DESCRIPTION
 .PP
 Plays Roon Library composer\[aq]s album matching the specified album
 name or substring.
-This command is invoked by \[dq]roon -C composer [-A album]\[dq].
+This command is invoked by \[dq]roon -C composer [-A album] [-x
+excomposer] [-X exalbum]\[dq].
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]COMPOSER\f[R]
@@ -41,12 +43,28 @@ case-sensitive substring.
 All Roon library album names matching the provided album name or
 containing the substring will be returned and the first one returned
 will be played.
+.TP
+\f[B]EXCOMPOSER\f[R]
+Provide a composer exclusion string, in quotes if it contains spaces.
+No Roon library composer names including the provided composer exclusion
+string will be searched
+.TP
+\f[B]EXALBUM\f[R]
+Provide an album exclusion string, in quotes if it contains spaces.
+No Roon library album names including the provided album exclusion
+string will be played
 .SH EXAMPLES
 .TP
 \f[B]play_composer_album Mozart Concerto\f[R]
 Will play the first album returned in a list of all Roon library album
 names with titles containing the string \[dq]Concerto\[dq] by the
 composers whose name contains \[dq]Mozart\[dq]
+.TP
+\f[B]play_composer_album Bach Love Sebastian Lovers\f[R]
+Will play the first album returned in a list of all Roon library album
+names with titles containing the string \[dq]Love\[dq] but not
+\[dq]Lovers\[dq] by the composers whose name contains \[dq]Bach\[dq] but
+not \[dq]Sebastian\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
@@ -80,3 +98,30 @@ Submit bug reports online at:
 .PP
 Full documentation and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>
+.PP
+The corresponding Python script,
+\f[I]/usr/local/Roon/api/play_composer_album.py\f[R], can be invoked
+directly as:
+.PP
+\f[B]python3 /usr/local/Roon/api/play_composer_album.py [ options]\f[R]
+.PP
+Where [ options ] are described in the following usage message:
+.IP
+.nf
+\f[C]
+usage: play_composer_album.py [-h] [-a ALBUM] [-c COMPOSER] [-X EXALBUM]
+                              [-x EXCOMPOSER] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ALBUM, --album ALBUM
+                        album search term
+  -c COMPOSER, --composer COMPOSER
+                        composer search term
+  -X EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -x EXCOMPOSER, --excomposer EXCOMPOSER
+                        composer exclude search term
+  -z ZONE, --zone ZONE  zone selection
+\f[R]
+.fi

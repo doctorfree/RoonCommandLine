@@ -9,10 +9,10 @@ date: February 13, 2022
 play_composer_album - Play Roon Library Album by Composer
 
 # SYNOPSIS
-**play_composer_album** [ COMPOSER ] [ ALBUM ]
+**play_composer_album** [ COMPOSER ] [ ALBUM ] [ EXCOMPOSER ] [ EXALBUM ]
 
 # DESCRIPTION
-Plays Roon Library composer's album matching the specified album name or substring. This command is invoked by "roon -C composer [-A album]".
+Plays Roon Library composer's album matching the specified album name or substring. This command is invoked by "roon -C composer [-A album] [-x excomposer] [-X exalbum]".
 
 # COMMAND LINE OPTIONS
 **COMPOSER**
@@ -21,9 +21,18 @@ Plays Roon Library composer's album matching the specified album name or substri
 **ALBUM**
 : Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library album names matching the provided album name or containing the substring will be returned and the first one returned will be played.
 
+**EXCOMPOSER**
+: Provide a composer exclusion string, in quotes if it contains spaces. No Roon library composer names including the provided composer exclusion string will be searched
+
+**EXALBUM**
+: Provide an album exclusion string, in quotes if it contains spaces. No Roon library album names including the provided album exclusion string will be played
+
 # EXAMPLES
 **play_composer_album Mozart Concerto**
 : Will play the first album returned in a list of all Roon library album names with titles containing the string "Concerto" by the composers whose name contains "Mozart"
+
+**play_composer_album Bach Love Sebastian Lovers**
+: Will play the first album returned in a list of all Roon library album names with titles containing the string "Love" but not "Lovers" by the composers whose name contains "Bach" but not "Sebastian"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -42,3 +51,26 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/play_composer_album.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/play_composer_album.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: play_composer_album.py [-h] [-a ALBUM] [-c COMPOSER] [-X EXALBUM]
+                              [-x EXCOMPOSER] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ALBUM, --album ALBUM
+                        album search term
+  -c COMPOSER, --composer COMPOSER
+                        composer search term
+  -X EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -x EXCOMPOSER, --excomposer EXCOMPOSER
+                        composer exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

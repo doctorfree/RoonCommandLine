@@ -21,7 +21,7 @@ else
     pip_inst=`type -p pip`
     if [ "${pip_inst}" ]
     then
-        PIP="pip3"
+        PIP="pip"
     else
         need_pip=1
     fi
@@ -74,15 +74,9 @@ do
 done
 
 export PATH=/usr/local/bin:/usr/bin:$PATH
-have_python3=`type -p python3`
 
 # Install the Python Roon API
-if [ "${have_python3}" ]
-then
-    ${SUDO} python3 -m pip install roonapi
-else
-    ${SUDO} python -m pip install roonapi
-fi
+${SUDO} ${PYTHON} -m ${PIP} install roonapi
 
 [ -d /usr/local ] || ${SUDO} mkdir /usr/local
 [ -d /usr/local/bin ] || ${SUDO} mkdir /usr/local/bin
@@ -224,12 +218,7 @@ ${SUDO} rm -f /tmp/roon$$
 
 PYTHONUSERBASE=
 # Check the global site directories
-if [ "${have_python3}" ]
-then
-    SITES=($(python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-else
-    SITES=($(python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-fi
+SITES=($(${PYTHON} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
 for site in ${SITES[@]}
 do
     site=`echo $site | sed -e "s/'//g"`
@@ -255,12 +244,7 @@ then
     fi
     . ${ROONCONF}
 
-    if [ "${have_python3}" ]
-    then
-      RVER=`python3 -m pip show roonapi | grep Version | awk -F ':' ' { print $2 } '`
-    else
-      RVER=`python -m pip show roonapi | grep Version | awk -F ':' ' { print $2 } '`
-    fi
+    RVER=`${PYTHON} -m ${PIP} show roonapi | grep Version | awk -F ':' ' { print $2 } '`
     # Remove leading and trailing spaces in RVER
     RVER="$(echo -e "${RVER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     # Only patch Roonapi version 0.0.38 and earlier

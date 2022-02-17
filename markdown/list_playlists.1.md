@@ -9,7 +9,7 @@ date: December 05, 2021
 list_playlists - List Roon Library Playlists
 
 # SYNOPSIS
-**list_playlists** [ PLAYLIST ]
+**list_playlists** [ PLAYLIST ] [ EXPLAYLIST ]
 
 # DESCRIPTION
 Lists Roon Library playlists matching the specified playlist name or substring
@@ -18,9 +18,15 @@ Lists Roon Library playlists matching the specified playlist name or substring
 **PLAYLIST**
 : Provide an playlist name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library playlist names matching the provided playlist name or containing the substring will be returned
 
+**EXPLAYLIST**
+: Provide a playlist exclusion string, in quotes if it contains spaces. No Roon library playlist names including the provided playlist exclusion string will be listed
+
 # EXAMPLES
 **list_playlists Mood**
 : Will return a list of Roon library playlist names, one per line, that contain the string "Mood"
+
+**list_playlists Guster Best**
+: Will return a list of Roon library playlist names, one per line, that contain the string "Guster" but not "Best"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -39,3 +45,21 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_playlists.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_playlists.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_playlists.py [-h] [-p PLAYLIST] [-x EXPLAYLIST] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p PLAYLIST, --playlist PLAYLIST
+                        playlist search term
+  -x EXPLAYLIST, --explaylist EXPLAYLIST
+                        playlist exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

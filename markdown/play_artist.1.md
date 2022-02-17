@@ -9,18 +9,24 @@ date: December 05, 2021
 play_artist - Play Roon Library Artist
 
 # SYNOPSIS
-**play_artist** [ ARTIST ]
+**play_artist** [ ARTIST ] [ EXARTIST ]
 
 # DESCRIPTION
-Plays the Roon Library artist named *ARTIST*. If no library artist name matches *ARTIST* exactly, search for Roon Library artist whose name contains the case-sensitive string *ARTIST*. If there is a unique match on the search substring then *play_artist* will play that artist. If more than one Roon Library artist name matches the search substring then *play_artist* will return a list of matching artist names. To play an artist using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library artist name.
+Plays the Roon Library artist named *ARTIST*. If no library artist name matches *ARTIST* exactly, search for Roon Library artist whose name contains the case-sensitive string *ARTIST*. If there is a match on the search substring then *play_artist* will play that artist. If more than one Roon Library artist name matches the search substring then *play_artist* will return a list of matching artist names and play the first one in the list.
 
 # COMMAND LINE OPTIONS
 **ARTIST**
-:  Provide an artist name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library artist name matching the provided artist name or containing the substring will be played if a unique match is found.
+:  Provide an artist name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library artist name matching the provided artist name or containing the substring will be played if a match is found.
+
+**EXARTIST**
+: Provide an artist exclusion string, in quotes if it contains spaces. No Roon library artist names including the provided artist exclusion string will be played
 
 # EXAMPLES
 **play_artist Young**
-: Will play Roon library artist name "Young" if it exists. If not then it will play the Roon library artist whose name contains the string "Young" if only one match is found.
+: Will play Roon library artist name "Young" if it exists. If not then it will play the Roon library artist whose name contains the string "Young" if a match is found.
+
+**play_artist Young Neil**
+: Will play Roon library artist name "Young" if it exists. If not then it will play the Roon library artist whose name contains the string "Young" but not "Neil" if a match is found.
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -39,3 +45,21 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/play_artist.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/play_artist.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: play_artist.py [-h] [-a ARTIST] [-x EXARTIST] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ARTIST, --artist ARTIST
+                        artist selection
+  -x EXARTIST, --exartist EXARTIST
+                        artist exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

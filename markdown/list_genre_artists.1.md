@@ -9,10 +9,10 @@ date: February 13, 2022
 list_genre_artists - List Roon Library Artists in Genre
 
 # SYNOPSIS
-**list_genre_artists** [ GENRE ] [ ARTIST ]
+**list_genre_artists** [ GENRE ] [ ARTIST ] [ EXGENRE ] [ EXARTIST ]
 
 # DESCRIPTION
-Lists Roon Library artists in the given genre matching the specified artist name or substring. The special string "__all__" can be used to retrieve all artists by the specified genre. This command is invoked by "roon -l genartists -g genre [-a artist]".
+Lists Roon Library artists in the given genre matching the specified artist name or substring. The special string "__all__" can be used to retrieve all artists by the specified genre. This command is invoked by "roon -l genartists -g genre [-a artist] [-x exartist] [-X exgenre]".
 
 # COMMAND LINE OPTIONS
 **GENRE**
@@ -21,12 +21,21 @@ Lists Roon Library artists in the given genre matching the specified artist name
 **ARTIST**
 : Provide an artist name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library artist names matching the provided artist name or containing the substring will be returned
 
+**EXGENRE**
+: Provide an genre exclusion string, in quotes if it contains spaces. No Roon library genre names including the provided genre exclusion string will be searched
+
+**EXARTIST**
+: Provide an artist exclusion string, in quotes if it contains spaces. No Roon library artist names including the provided artist exclusion string will be listed
+
 # EXAMPLES
 **list_genre_artists Classical __all__**
 : Will return a list of all Roon library artist names in the Classical genre
 
 **list_genre_artists Rock Deep**
 : Will return a list of Roon library artist names in genres whose name contains "Rock", one per line, displaying only those artists that contain the string "Deep"
+
+**list_genre_artists Rock Boys Pop**
+: Will return a list of Roon library artist names in genres whose name contains "Rock" but not "Pop", one per line, displaying only those artists that contain the string "Boys"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -45,3 +54,26 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_genre_artists.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_genre_artists.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_genre_artists.py [-h] [-a ARTIST] [-g GENRE] [-X EXARTIST]
+                             [-x EXGENRE] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ARTIST, --artist ARTIST
+                        artist search term
+  -g GENRE, --genre GENRE
+                        genre search term
+  -X EXARTIST, --exartist EXARTIST
+                        artist exclude search term
+  -x EXGENRE, --exgenre EXGENRE
+                        genre exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

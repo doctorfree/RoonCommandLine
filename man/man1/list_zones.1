@@ -73,3 +73,22 @@ Submit bug reports online at:
 .PP
 Full documentation and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>
+.PP
+The corresponding Python script,
+\f[I]/usr/local/Roon/api/list_zones.py\f[R], can be invoked directly as:
+.PP
+\f[B]python3 /usr/local/Roon/api/list_zones.py [ options]\f[R]
+.PP
+Where [ options ] are described in the following usage message:
+.IP
+.nf
+\f[C]
+usage: list_zones.py [-h] [-g] [-i] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -g, --get             Get a comma separated list of zones
+  -i, --info            Get zone info
+  -z ZONE, --zone ZONE  Zone selection
+\f[R]
+.fi

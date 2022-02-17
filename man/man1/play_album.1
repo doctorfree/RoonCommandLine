@@ -21,32 +21,40 @@
 play_album - Play Roon Library Album
 .SH SYNOPSIS
 .PP
-\f[B]play_album\f[R] [ ALBUM ]
+\f[B]play_album\f[R] [ ALBUM ] [ EXALBUM ]
 .SH DESCRIPTION
 .PP
 Plays the Roon Library album named \f[I]ALBUM\f[R].
 If no library album name matches \f[I]ALBUM\f[R] exactly, search for
 Roon Library albums whose name contains the case-sensitive string
 \f[I]ALBUM\f[R].
-If there is a unique match on the search substring then
-\f[I]play_album\f[R] will play that album.
+If there is a match on the search substring then \f[I]play_album\f[R]
+will play the first album in the list of matches.
 If more than one Roon Library album name matches the search substring
 then \f[I]play_album\f[R] will return a list of matching album names.
-To play an album using the substring search facility, enough of a
-substring must be supplied to uniquely match a Roon Library album name.
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]ALBUM\f[R]
 Provide an album name, in quotes if it contains spaces, or a
 case-sensitive substring.
 A Roon library album name matching the provided album name or containing
-the substring will be played if a unique match is found.
+the substring will be played if a match is found.
+.TP
+\f[B]EXALBUM\f[R]
+Provide an album exclusion string, in quotes if it contains spaces.
+No Roon library album names including the provided album exclusion
+string will be played
 .SH EXAMPLES
 .TP
 \f[B]play_album Moon\f[R]
 Will play Roon library album name \[dq]Moon\[dq] if it exists.
-If not then it will play the Roon library album whose name contains the
-string \[dq]Moon\[dq] if only one match is found.
+If not then it will play the first Roon library album whose name
+contains the string \[dq]Moon\[dq]
+.TP
+\f[B]play_album Moon Light\f[R]
+Will play Roon library album name \[dq]Moon\[dq] if it exists.
+If not then it will play the first Roon library album whose name
+contains the string \[dq]Moon\[dq] but not \[dq]Light\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
@@ -80,3 +88,24 @@ Submit bug reports online at:
 .PP
 Full documentation and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>
+.PP
+The corresponding Python script,
+\f[I]/usr/local/Roon/api/play_album.py\f[R], can be invoked directly as:
+.PP
+\f[B]python3 /usr/local/Roon/api/play_album.py [ options]\f[R]
+.PP
+Where [ options ] are described in the following usage message:
+.IP
+.nf
+\f[C]
+usage: play_album.py [-h] [-a ALBUM] [-x EXALBUM] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ALBUM, --album ALBUM
+                        album selection
+  -x EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -z ZONE, --zone ZONE  zone selection
+\f[R]
+.fi

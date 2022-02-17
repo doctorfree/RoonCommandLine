@@ -9,18 +9,24 @@ date: February 13, 2022
 play_composer - Play Roon Library Composer
 
 # SYNOPSIS
-**play_composer** [ COMPOSER ]
+**play_composer** [ COMPOSER ] [ EXCOMPOSER ]
 
 # DESCRIPTION
-Plays the Roon Library composer named *COMPOSER*. If no library composer name matches *COMPOSER* exactly, search for Roon Library composer whose name contains the case-sensitive string *COMPOSER*. If there is a unique match on the search substring then *play_composer* will play that composer. If more than one Roon Library composer name matches the search substring then *play_composer* will return a list of matching composer names. To play a composer using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library composer name.
+Plays the Roon Library composer named *COMPOSER*. If no library composer name matches *COMPOSER* exactly, search for Roon Library composer whose name contains the case-sensitive string *COMPOSER*. If there is a match on the search substring then *play_composer* will play that composer. If more than one Roon Library composer name matches the search substring then *play_composer* will return a list of matching composer names.
 
 # COMMAND LINE OPTIONS
 **COMPOSER**
-:  Provide a composer name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library composer name matching the provided composer name or containing the substring will be played if a unique match is found.
+:  Provide a composer name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library composer name matching the provided composer name or containing the substring will be played if a match is found.
+
+**EXCOMPOSER**
+: Provide a composer exclusion string, in quotes if it contains spaces. No Roon library composer names including the provided composer exclusion string will be played
 
 # EXAMPLES
 **play_composer Mozart**
 : Will play Roon library composer name "Mozart" if it exists. If not then it will play the Roon library composer whose name contains the string "Mozart" if only one match is found.
+
+**play_composer Bach Burt**
+: Will play Roon library composer composer whose name contains the string "Bach" but not "Burt". If more than one composer name matches these criteria, the first composer found will be played and a list of all matching composer names returned.
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -39,3 +45,21 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/play_composer.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/play_composer.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: play_composer.py [-h] [-c COMPOSER] [-x EXCOMPOSER] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c COMPOSER, --composer COMPOSER
+                        composer selection
+  -x EXCOMPOSER, --excomposer EXCOMPOSER
+                        composer exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

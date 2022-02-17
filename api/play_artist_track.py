@@ -17,6 +17,8 @@ tokenfile = config['DEFAULT']['TokenFileName']
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--track", help="track search term")
 parser.add_argument("-a", "--artist", help="artist search term")
+parser.add_argument("-X", "--extrack", help="track exclude search term")
+parser.add_argument("-x", "--exartist", help="artist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -28,6 +30,14 @@ if args.artist:
     artistsearch = args.artist
 else:
     artistsearch = config['DEFAULT']['DefaultArtist']
+if args.extrack:
+    extracksearch = args.extrack
+else:
+    extracksearch = None
+if args.exartist:
+    exartistsearch = args.exartist
+else:
+    exartistsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -37,7 +47,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.2",
+    "display_version": "2.0.3",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }
@@ -67,21 +77,33 @@ else:
     if artists:
       track = None
       for artist in artists:
+        if exartistsearch is not None:
+          if exartistsearch in artist:
+            continue
         # Search through this artist's albums for specified track
         albums = roonapi.list_media(output_id, ["Library", "Artists", artist, "__all__"])
         if albums:
           for album in albums:
             # List matching tracks
             tracks = roonapi.list_media(output_id, ["Library", "Artists", artist, album, tracksearch])
-            if len(tracks) >= 1:
+            if extracksearch is not None and tracks:
+              tracks = [chk for chk in tracks if not extracksearch in chk]
+            if tracks:
               track = tracks[0]
               print("Playing track title", track, "on album", album, "by artist", artist)
               roonapi.play_media(output_id, ["Library", "Artists", artist, album, track], None, False)
+              if len(tracks) > 1:
+                print("\nTrack titles by", artist, "artist matching", tracksearch, ":\n")
+                print(*tracks, sep = "\n")
+                print("\nTo play another track by this artist by title either specify")
+                print("the full title or enough of a substring to provide a single match\n")
               break
         if track is not None:
           break
+      if track is None:
+        print("No tracks found matching", tracksearch)
     else:
-        print("No artists found matching ", artistsearch)
+      print("No artists found matching ", artistsearch)
 
 # save the token for next time
 with open(tokenfile, "w") as f:

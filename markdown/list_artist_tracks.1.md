@@ -1,47 +1,47 @@
 ---
-title: PLAY_ARTIST_TRACK
+title: LIST_ARTIST_TRACKS
 section: 1
 header: User Manual
-footer: play_artist_track 2.0.1
+footer: list_artist_tracks 2.0.1
 date: February 13, 2022
 ---
 # NAME
-play_artist_track - Play Roon Library Track by Artist
+list_artist_tracks - List Roon Library Tracks by Artist
 
 # SYNOPSIS
-**play_artist_track** [ ARTIST ] [ TRACK ] [ EXARTIST ] [ EXTRACK ]
+**list_artist_tracks** [ ARTIST ] [ TRACK ] [ EXARTIST ] [ EXTRACK ]
 
 # DESCRIPTION
-Plays Roon Library artist's track matching the specified track name or substring. This command is invoked by "roon -a artist [-T track] [-x exartist] [-X extrack]".
+Lists Roon Library artist's tracks matching the specified track name or substring. This command is invoked by "roon -l artracks -a artist [-T track] [-x exartist] [-X extrack]".
 
 # COMMAND LINE OPTIONS
 **ARTIST**
 : Provide an artist name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library artist names matching the provided artist name or containing the substring will be searched for tracks
 
 **TRACK**
-: Provide a track name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library track names matching the provided track name or containing the substring will be returned and the first one returned will be played.
+: Provide a track name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library track names matching the provided track name or containing the substring will be listed.
 
 **EXARTIST**
 : Provide an artist exclusion string, in quotes if it contains spaces. No Roon library artist names including the provided artist exclusion string will be searched
 
 **EXTRACK**
-: Provide a track exclusion string, in quotes if it contains spaces. No Roon library track names including the provided track exclusion string will be played
+: Provide a track exclusion string, in quotes if it contains spaces. No Roon library track names including the provided track exclusion string will be listed
 
 # EXAMPLES
-**play_artist_track Beatles Yesterday**
-: Will play the first track returned in a list of all Roon library track names with titles containing the string "Yesterday" by the artists whose name contains "Beatles"
+**list_artist_track Beatles Yesterday**
+: Will list the tracks titles containing the string "Yesterday" by the artists whose name contains "Beatles"
 
-**play_artist_track Beatles Love foo "Love version"**
-: Will play the first track returned in a list of all Roon library track names with titles containing the string "Love" but not "Love version" by the artists whose name contains "Beatles" but not "foo"
+**list_artist_track Beatles Love foo "Love version"**
+: Will list the tracks titles containing the string "Love" but not the string "Love version" by the artists whose name contains "Beatles" but not "foo"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-PLAY_ARTIST_TRACK is distributed under an Open Source license.
-See the file LICENSE in the PLAY_ARTIST_TRACK source distribution
+LIST_ARTIST_TRACKS is distributed under an Open Source license.
+See the file LICENSE in the LIST_ARTIST_TRACKS source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using PLAY_ARTIST_TRACK and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using LIST_ARTIST_TRACKS and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
@@ -51,16 +51,16 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
-The corresponding Python script, */usr/local/Roon/api/play_artist_track.py*,
+The corresponding Python script, */usr/local/Roon/api/list_artist_tracks.py*,
 can be invoked directly as:
 
-**python3 /usr/local/Roon/api/play_artist_track.py [ options]**
+**python3 /usr/local/Roon/api/list_artist_tracks.py [ options]**
 
 Where [ options ] are described in the following usage message:
 
 ~~~~
-usage: play_artist_track.py [-h] [-t TRACK] [-a ARTIST] [-X EXTRACK]
-                            [-x EXARTIST] [-z ZONE]
+usage: list_artist_tracks.py [-h] [-t TRACK] [-a ARTIST] [-X EXTRACK]
+                             [-x EXARTIST] [-z ZONE]
 
 optional arguments:
   -h, --help            show this help message and exit

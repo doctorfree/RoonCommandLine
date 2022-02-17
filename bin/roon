@@ -1039,11 +1039,15 @@ done
 }
 # Second, handle artist and track requested
 [ "$track" ] && [ "$artist" ] && {
+    [ "${artist}" == "default" ] && artist=
+    [ "${exalbum}" ] && {
+      [ "${exartist}" ] || exartist="None"
+    }
     if [ "${LOCAL}" = true ]
     then
-        play_artist_track "$artist" "$track"
+        play_artist_track "$artist" "$track" "$exartist" "$exalbum"
     else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_track $artist $track\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_track $artist $track $exartist $exalbum\""
     fi
     artist=
 }

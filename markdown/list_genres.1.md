@@ -9,7 +9,7 @@ date: December 05, 2021
 list_genres - List Roon Library Genres
 
 # SYNOPSIS
-**list_genres** [ GENRE ]
+**list_genres** [ GENRE ] [ EXGENRE ]
 
 # DESCRIPTION
 Lists Roon Library genres matching the specified genre name or substring
@@ -18,9 +18,15 @@ Lists Roon Library genres matching the specified genre name or substring
 **GENRE**
 : Provide an genre name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library genre names matching the provided genre name or containing the substring will be returned
 
+**EXGENRE**
+: Provide a genre exclusion string, in quotes if it contains spaces. No Roon library genre names including the provided genre exclusion string will be listed
+
 # EXAMPLES
 **list_genres Rock**
 : Will return a list of Roon library genre names, one per line, that contain the string "Rock"
+
+**list_genres Rock Pop**
+: Will return a list of Roon library genre names, one per line, that contain the string "Rock" but not "Pop"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -39,3 +45,21 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_genres.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_genres.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_genres.py [-h] [-g GENRE] [-x EXGENRE] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -g GENRE, --genre GENRE
+                        genre search term
+  -x EXGENRE, --exgenre EXGENRE
+                        genre exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

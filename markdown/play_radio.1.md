@@ -39,3 +39,19 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/play_radio.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/play_radio.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: play_radio.py [-h] [-r RADIO] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -r RADIO, --radio RADIO
+                        radio selection
+  -z ZONE, --zone ZONE  zone selection
+~~~~

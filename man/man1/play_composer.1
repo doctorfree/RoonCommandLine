@@ -21,34 +21,43 @@
 play_composer - Play Roon Library Composer
 .SH SYNOPSIS
 .PP
-\f[B]play_composer\f[R] [ COMPOSER ]
+\f[B]play_composer\f[R] [ COMPOSER ] [ EXCOMPOSER ]
 .SH DESCRIPTION
 .PP
 Plays the Roon Library composer named \f[I]COMPOSER\f[R].
 If no library composer name matches \f[I]COMPOSER\f[R] exactly, search
 for Roon Library composer whose name contains the case-sensitive string
 \f[I]COMPOSER\f[R].
-If there is a unique match on the search substring then
-\f[I]play_composer\f[R] will play that composer.
+If there is a match on the search substring then \f[I]play_composer\f[R]
+will play that composer.
 If more than one Roon Library composer name matches the search substring
 then \f[I]play_composer\f[R] will return a list of matching composer
 names.
-To play a composer using the substring search facility, enough of a
-substring must be supplied to uniquely match a Roon Library composer
-name.
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]COMPOSER\f[R]
 Provide a composer name, in quotes if it contains spaces, or a
 case-sensitive substring.
 A Roon library composer name matching the provided composer name or
-containing the substring will be played if a unique match is found.
+containing the substring will be played if a match is found.
+.TP
+\f[B]EXCOMPOSER\f[R]
+Provide a composer exclusion string, in quotes if it contains spaces.
+No Roon library composer names including the provided composer exclusion
+string will be played
 .SH EXAMPLES
 .TP
 \f[B]play_composer Mozart\f[R]
 Will play Roon library composer name \[dq]Mozart\[dq] if it exists.
 If not then it will play the Roon library composer whose name contains
 the string \[dq]Mozart\[dq] if only one match is found.
+.TP
+\f[B]play_composer Bach Burt\f[R]
+Will play Roon library composer composer whose name contains the string
+\[dq]Bach\[dq] but not \[dq]Burt\[dq].
+If more than one composer name matches these criteria, the first
+composer found will be played and a list of all matching composer names
+returned.
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
@@ -82,3 +91,25 @@ Submit bug reports online at:
 .PP
 Full documentation and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>
+.PP
+The corresponding Python script,
+\f[I]/usr/local/Roon/api/play_composer.py\f[R], can be invoked directly
+as:
+.PP
+\f[B]python3 /usr/local/Roon/api/play_composer.py [ options]\f[R]
+.PP
+Where [ options ] are described in the following usage message:
+.IP
+.nf
+\f[C]
+usage: play_composer.py [-h] [-c COMPOSER] [-x EXCOMPOSER] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c COMPOSER, --composer COMPOSER
+                        composer selection
+  -x EXCOMPOSER, --excomposer EXCOMPOSER
+                        composer exclude search term
+  -z ZONE, --zone ZONE  zone selection
+\f[R]
+.fi

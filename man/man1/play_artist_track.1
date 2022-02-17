@@ -21,12 +21,14 @@
 play_artist_track - Play Roon Library Track by Artist
 .SH SYNOPSIS
 .PP
-\f[B]play_artist_track\f[R] [ ARTIST ] [ TRACK ]
+\f[B]play_artist_track\f[R] [ ARTIST ] [ TRACK ] [ EXARTIST ] [ EXTRACK
+]
 .SH DESCRIPTION
 .PP
 Plays Roon Library artist\[aq]s track matching the specified track name
 or substring.
-This command is invoked by \[dq]roon -a artist [-T track]\[dq].
+This command is invoked by \[dq]roon -a artist [-T track] [-x exartist]
+[-X extrack]\[dq].
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]ARTIST\f[R]
@@ -41,12 +43,28 @@ case-sensitive substring.
 All Roon library track names matching the provided track name or
 containing the substring will be returned and the first one returned
 will be played.
+.TP
+\f[B]EXARTIST\f[R]
+Provide an artist exclusion string, in quotes if it contains spaces.
+No Roon library artist names including the provided artist exclusion
+string will be searched
+.TP
+\f[B]EXTRACK\f[R]
+Provide a track exclusion string, in quotes if it contains spaces.
+No Roon library track names including the provided track exclusion
+string will be played
 .SH EXAMPLES
 .TP
 \f[B]play_artist_track Beatles Yesterday\f[R]
 Will play the first track returned in a list of all Roon library track
 names with titles containing the string \[dq]Yesterday\[dq] by the
 artists whose name contains \[dq]Beatles\[dq]
+.TP
+\f[B]play_artist_track Beatles Love foo \[dq]Love version\[dq]\f[R]
+Will play the first track returned in a list of all Roon library track
+names with titles containing the string \[dq]Love\[dq] but not \[dq]Love
+version\[dq] by the artists whose name contains \[dq]Beatles\[dq] but
+not \[dq]foo\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
@@ -80,3 +98,30 @@ Submit bug reports online at:
 .PP
 Full documentation and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>
+.PP
+The corresponding Python script,
+\f[I]/usr/local/Roon/api/play_artist_track.py\f[R], can be invoked
+directly as:
+.PP
+\f[B]python3 /usr/local/Roon/api/play_artist_track.py [ options]\f[R]
+.PP
+Where [ options ] are described in the following usage message:
+.IP
+.nf
+\f[C]
+usage: play_artist_track.py [-h] [-t TRACK] [-a ARTIST] [-X EXTRACK]
+                            [-x EXARTIST] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t TRACK, --track TRACK
+                        track search term
+  -a ARTIST, --artist ARTIST
+                        artist search term
+  -X EXTRACK, --extrack EXTRACK
+                        track exclude search term
+  -x EXARTIST, --exartist EXARTIST
+                        artist exclude search term
+  -z ZONE, --zone ZONE  zone selection
+\f[R]
+.fi

@@ -37,7 +37,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.2",
+    "display_version": "2.0.3",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }
@@ -66,9 +66,9 @@ else:
     # List matching composers from Library
     composers = roonapi.list_media(output_id, ["Library", "Composers", composersearch])
     # Filter out excluded composer names
-    if excomposersearch is not None and len(composers) > 0:
+    if excomposersearch is not None and composers:
         composers = [chk for chk in composers if not excomposersearch in chk]
-    if len(composers) > 0:
+    if composers:
         # Play composer from Library
         composer = composers[0]
         print("Playing composer name", composer)

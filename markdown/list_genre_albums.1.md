@@ -9,10 +9,10 @@ date: February 13, 2022
 list_genre_albums - List Roon Library Albums in Genre
 
 # SYNOPSIS
-**list_genre_albums** [ GENRE ] [ ALBUM ]
+**list_genre_albums** [ GENRE ] [ ALBUM ] [ EXGENRE ] [ EXALBUM ]
 
 # DESCRIPTION
-Lists Roon Library albums in the given genre matching the specified album name or substring. The special string "__all__" can be used to retrieve all albums by the specified genre. This command is invoked by "roon -l genalbums -g genre [-A album]".
+Lists Roon Library albums in the given genre matching the specified album name or substring. The special string "__all__" can be used to retrieve all albums by the specified genre. This command is invoked by "roon -l genalbums -g genre [-A album] [-x exgenre] [-X exalbum]".
 
 # COMMAND LINE OPTIONS
 **GENRE**
@@ -21,12 +21,21 @@ Lists Roon Library albums in the given genre matching the specified album name o
 **ALBUM**
 : Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library album names matching the provided album name or containing the substring will be returned
 
+**EXGENRE**
+: Provide a genre exclusion string, in quotes if it contains spaces. No Roon library genre names including the provided genre exclusion string will be searched
+
+**EXALBUM**
+: Provide an album exclusion string, in quotes if it contains spaces. No Roon library album names including the provided album exclusion string will be listed
+
 # EXAMPLES
 **list_genre_albums Classical __all__**
 : Will return a list of all Roon library album names in the Classical genre
 
 **list_genre_albums Rock Moon**
 : Will return a list of Roon library album names in genres whose name contains "Rock", one per line, displaying only those albums that contain the string "Moon"
+
+**list_genre_albums Classical "Peer Gynt" Art**
+: Will return a list of Roon library album names in genres whose name contains "Classical" but not "Art", one per line, displaying only those albums that contain the string "Peer Gynt"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -45,3 +54,26 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_genre_albums.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_genre_albums.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_genre_albums.py [-h] [-a ALBUM] [-g GENRE] [-X EXALBUM]
+                            [-x EXGENRE] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ALBUM, --album ALBUM
+                        album search term
+  -g GENRE, --genre GENRE
+                        genre search term
+  -X EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -x EXGENRE, --exgenre EXGENRE
+                        genre exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

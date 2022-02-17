@@ -9,7 +9,7 @@ date: February 13, 2022
 list_composers - List Roon Library Composers
 
 # SYNOPSIS
-**list_composers** [ COMPOSER ]
+**list_composers** [ COMPOSER ] [ EXCOMPOSER ]
 
 # DESCRIPTION
 Lists Roon Library composers matching the specified composer name or substring
@@ -18,9 +18,15 @@ Lists Roon Library composers matching the specified composer name or substring
 **COMPOSER**
 : Provide an composer name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library composer names matching the provided composer name or containing the substring will be returned
 
+**EXCOMPOSER**
+: Provide a composer exclusion string, in quotes if it contains spaces. No Roon library composer names including the provided composer exclusion string will be listed
+
 # EXAMPLES
 **list_composers Bach**
 : Will return a list of Roon library composer names, one per line, that contain the string "Bach"
+
+**list_composers Bach Burt**
+: Will return a list of Roon library composer names, one per line, that contain the string "Bach" but not the string "Burt"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -39,3 +45,21 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_composers.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_composers.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_composers.py [-h] [-c COMPOSER] [-x EXCOMPOSER] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c COMPOSER, --composer COMPOSER
+                        composer search term
+  -x EXCOMPOSER, --excomposer EXCOMPOSER
+                        composer exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

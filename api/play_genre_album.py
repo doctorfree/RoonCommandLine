@@ -47,7 +47,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.2",
+    "display_version": "2.0.3",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }
@@ -82,9 +82,9 @@ else:
             continue
         # List matching albums
         albums = roonapi.list_media(output_id, ["Genres", genre, "Albums", albumsearch])
-        if exalbumsearch is not None and len(albums) > 0:
+        if exalbumsearch is not None and albums:
             albums = [chk for chk in albums if not exalbumsearch in chk]
-        if len(albums) > 0:
+        if albums:
             album = albums[0]
             print("Playing album title", album, "in", genre, "genre")
             roonapi.play_media(output_id, ["Genres", genre, "Albums", album], None, False)

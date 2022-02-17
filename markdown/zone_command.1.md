@@ -42,3 +42,19 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/zone_command.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/zone_command.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: zone_command.py [-h] [-c COMMAND] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c COMMAND, --command COMMAND
+                        command selection
+  -z ZONE, --zone ZONE  zone selection
+~~~~

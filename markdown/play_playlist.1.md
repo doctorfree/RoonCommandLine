@@ -9,18 +9,24 @@ date: December 05, 2021
 play_playlist - Play Roon Library Playlist
 
 # SYNOPSIS
-**play_playlist** [ PLAYLIST ]
+**play_playlist** [ PLAYLIST ] [ EXPLAYLIST ]
 
 # DESCRIPTION
-Plays the Roon Library playlist named *PLAYLIST*. If no library playlist name matches *PLAYLIST* exactly, search for Roon Library playlist whose name contains the case-sensitive string *PLAYLIST*. If there is a unique match on the search substring then *play_playlist* will play that playlist. If more than one Roon Library playlist name matches the search substring then *play_playlist* will return a list of matching playlist names. To play an playlist using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library playlist name.
+Plays the Roon Library playlist named *PLAYLIST*. Search for Roon Library playlists whose name contains the case-sensitive string *PLAYLIST*. If there is a match on the search substring then *play_playlist* will play the first playlist returned. If more than one Roon Library playlist name matches the search substring then *play_playlist* will also return a list of matching playlist names.
 
 # COMMAND LINE OPTIONS
 **PLAYLIST**
-:  Provide an playlist name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library playlist name matching the provided playlist name or containing the substring will be played if a unique match is found.
+:  Provide an playlist name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library playlist name matching the provided playlist name or containing the substring will be played if a match is found.
+
+**EXPLAYLIST**
+: Provide a playlist exclusion string, in quotes if it contains spaces. No Roon library playlist names including the provided playlist exclusion string will be played
 
 # EXAMPLES
 **play_playlist Mood**
-: Will play Roon library playlist name "Mood" if it exists. If not then it will play the Roon library playlist whose name contains the string "Mood" if only one match is found.
+: Will play the Roon library playlist whose name contains the string "Mood". If more than one playlist name matches, the first returned will be played.
+
+**play_playlist Best Gold**
+: Will play the Roon library playlist whose name contains the string "Best" but not "Gold". If more than one playlist name matches, the first returned will be played.
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -39,3 +45,21 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/play_playlist.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/play_playlist.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: play_playlist.py [-h] [-p PLAYLIST] [-x EXPLAYLIST] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p PLAYLIST, --playlist PLAYLIST
+                        playlist selection
+  -x EXPLAYLIST, --explaylist EXPLAYLIST
+                        playlist exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

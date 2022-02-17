@@ -21,12 +21,13 @@
 play_genre_album - Play Roon Library Album in Genre
 .SH SYNOPSIS
 .PP
-\f[B]play_genre_album\f[R] [ GENRE ] [ ALBUM ]
+\f[B]play_genre_album\f[R] [ GENRE ] [ ALBUM ] [ EXGENRE ] [ EXALBUM ]
 .SH DESCRIPTION
 .PP
 Plays Roon Library genre\[aq]s album matching the specified album name
 or substring.
-This command is invoked by \[dq]roon -g genre [-A album]\[dq].
+This command is invoked by \[dq]roon -g genre [-A album] [-x exgenre]
+[-X exalbum]\[dq].
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]GENRE\f[R]
@@ -41,12 +42,28 @@ case-sensitive substring.
 All Roon library album names matching the provided album name or
 containing the substring will be returned and the first one returned
 will be played.
+.TP
+\f[B]EXGENRE\f[R]
+Provide a genre exclusion string, in quotes if it contains spaces.
+No Roon library genre names including the provided genre exclusion
+string will be searched
+.TP
+\f[B]EXALBUM\f[R]
+Provide an album exclusion string, in quotes if it contains spaces.
+No Roon library album names including the provided album exclusion
+string will be played
 .SH EXAMPLES
 .TP
 \f[B]play_genre_album Prog Edge\f[R]
 Will play the first album returned in a list of all Roon library album
 names with titles containing the string \[dq]Edge\[dq] by the genres
 whose name contains \[dq]Prog\[dq]
+.TP
+\f[B]play_genre_album Rock Close Surf Closer\f[R]
+Will play the first album returned in a list of all Roon library album
+names with titles containing the string \[dq]Close\[dq] but not
+\[dq]Closer\[dq] by the genres whose name contains \[dq]Rock\[dq] but
+not \[dq]Surf\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
@@ -80,3 +97,30 @@ Submit bug reports online at:
 .PP
 Full documentation and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>
+.PP
+The corresponding Python script,
+\f[I]/usr/local/Roon/api/play_genre_album.py\f[R], can be invoked
+directly as:
+.PP
+\f[B]python3 /usr/local/Roon/api/play_genre_album.py [ options]\f[R]
+.PP
+Where [ options ] are described in the following usage message:
+.IP
+.nf
+\f[C]
+usage: play_genre_album.py [-h] [-a ALBUM] [-g GENRE] [-X EXALBUM]
+                           [-x EXGENRE] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ALBUM, --album ALBUM
+                        album search term
+  -g GENRE, --genre GENRE
+                        genre search term
+  -X EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -x EXGENRE, --exgenre EXGENRE
+                        genre exclude search term
+  -z ZONE, --zone ZONE  zone selection
+\f[R]
+.fi

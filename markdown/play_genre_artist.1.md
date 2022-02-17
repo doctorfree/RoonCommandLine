@@ -9,10 +9,10 @@ date: February 13, 2022
 play_genre_artist - Play Roon Library Artist in Genre
 
 # SYNOPSIS
-**play_genre_artist** [ GENRE ] [ ARTIST ]
+**play_genre_artist** [ GENRE ] [ ARTIST ] [ EXGENRE ] [ EXARTIST ]
 
 # DESCRIPTION
-Plays Roon Library genre's artist matching the specified artist name or substring. This command is invoked by "roon -g genre [-a artist]".
+Plays Roon Library genre's artist matching the specified artist name or substring. This command is invoked by "roon -g genre [-a artist] [-x exgenre] [-X exartist]".
 
 # COMMAND LINE OPTIONS
 **GENRE**
@@ -21,9 +21,18 @@ Plays Roon Library genre's artist matching the specified artist name or substrin
 **ARTIST**
 : Provide an artist name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library artist names matching the provided artist name or containing the substring will be returned and the first one returned will be played.
 
+**EXGENRE**
+: Provide a genre exclusion string, in quotes if it contains spaces. No Roon library genre names including the provided genre exclusion string will be searched
+
+**EXARTIST**
+: Provide an artist exclusion string, in quotes if it contains spaces. No Roon library artist names including the provided artist exclusion string will be played
+
 # EXAMPLES
 **play_genre_artist Prog Yes**
 : Will play the first artist returned in a list of all Roon library artist names with names containing the string "Yes" by the genres whose name contains "Prog"
+
+**play_genre_artist Rock Johnny foo Cash**
+: Will play the first artist returned in a list of all Roon library artist names with names containing the string "Johnny" but not "Cash" by the genres whose name contains "Rock" but not "foo"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -42,3 +51,26 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/play_genre_artist.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/play_genre_artist.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: play_genre_artist.py [-h] [-a ARTIST] [-g GENRE] [-X EXARTIST]
+                            [-x EXGENRE] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ARTIST, --artist ARTIST
+                        artist search term
+  -g GENRE, --genre GENRE
+                        genre search term
+  -X EXARTIST, --exartist EXARTIST
+                        artist exclude search term
+  -x EXGENRE, --exgenre EXGENRE
+                        genre exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

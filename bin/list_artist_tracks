@@ -4,7 +4,7 @@ ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
-PLAY=play_artist_track.py
+LIST=list_artist_track.py
 ARTIST=
 TRACK=
 EXARTIST=
@@ -14,7 +14,7 @@ EXTRACK=
 
 cd ${ROONAPI}
 
-[ -f $PLAY ] || exit 2
+[ -f $LIST ] || exit 2
 
 # First argument is artist, second is track
 # Third optional argument is artist exclusion string (optional)
@@ -36,7 +36,7 @@ fi
 
 [ "${TRACK}" ] || {
     echo "No track specified. Artist and track required."
-    echo "Usage: play_artist_track artist track"
+    echo "Usage: list_artist_track artist track [exartist] [extrack]"
     exit 1
 }
 # Construct the exclusion args if passed
@@ -47,7 +47,7 @@ EXARGS=
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    python3 $PLAY -t "$TRACK" -a "$ARTIST" -z "$ROON_ZONE" $EXARGS
+    python3 $LIST -t "$TRACK" -a "$ARTIST" -z "$ROON_ZONE" $EXARGS
 else
-    python $PLAY -t "$TRACK" -a "$ARTIST" -z "$ROON_ZONE" $EXARGS
+    python $LIST -t "$TRACK" -a "$ARTIST" -z "$ROON_ZONE" $EXARGS
 fi

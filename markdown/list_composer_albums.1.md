@@ -9,10 +9,10 @@ date: February 13, 2022
 list_composer_albums - List Roon Library Composer's Albums
 
 # SYNOPSIS
-**list_composer_albums** [ COMPOSER ] [ ALBUM ]
+**list_composer_albums** [ COMPOSER ] [ ALBUM ] [ EXCOMPOSER ] [ EXALBUM ]
 
 # DESCRIPTION
-Lists Roon Library composer's albums matching the specified album name or substring. The special string "__all__" can be used to retrieve all albums by the specified composer. This command is invoked by "roon -l comalbums -C composer [-A album]".
+Lists Roon Library composer's albums matching the specified album name or substring. The special string "__all__" can be used to retrieve all albums by the specified composer. This command is invoked by "roon -l comalbums -C composer [-A album] [-x excomposer] [-X exalbum]".
 
 # COMMAND LINE OPTIONS
 **COMPOSER**
@@ -21,12 +21,23 @@ Lists Roon Library composer's albums matching the specified album name or substr
 **ALBUM**
 : Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library album names matching the provided album name or containing the substring will be returned
 
+**EXCOMPOSER**
+: Provide a composer exclusion string, in quotes if it contains spaces. No Roon library composer names including the provided composer exclusion string will be searched
+
+**EXALBUM**
+: Provide an album exclusion string, in quotes if it contains spaces. No Roon library album names including the provided album exclusion string will be listed
+
 # EXAMPLES
 **list_composer_albums Mozart __all__**
 : Will return a list of all Roon library album names by the composers whose name contains "Mozart"
 
 **list_composer_albums Bach Brandenburg**
 : Will return a list of Roon library album names by composers whose name contains "Bach", one per line, displaying only those albums that contain the string "Brandenburg"
+
+**list_composer_albums Bach Little Sebastian Book**
+: Will return a list of Roon library album names by composers whose name contains "Bach" but not "Sebastian", one per line, displaying only those albums that contain the string "Little" but not "Book". This will ignore all albums by Johann Sebastian Bach, return albums by Burt Bacharach, ignore those with "Book" in their name, and list those with "Little" in their name. This would be invoked with the command:
+
+**roon -l comalbums -C Bach -A Little -x Sebastian -X Book**
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -46,3 +57,26 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_composer_albums.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_composer_albums.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_composer_albums.py [-h] [-a ALBUM] [-c COMPOSER] [-X EXALBUM]
+                               [-x EXCOMPOSER] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ALBUM, --album ALBUM
+                        album search term
+  -c COMPOSER, --composer COMPOSER
+                        composer search term
+  -X EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -x EXCOMPOSER, --excomposer EXCOMPOSER
+                        composer exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

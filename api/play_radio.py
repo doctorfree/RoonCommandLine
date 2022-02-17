@@ -32,7 +32,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.2",
+    "display_version": "2.0.3",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }
@@ -63,9 +63,7 @@ else:
         print("Found media for radio search term:", radio)
     else:
         stations = roonapi.list_media(output_id, ["My Live Radio", radio])
-        if len(stations) == 0:
-            print("\nNo radio station name partially matching", radio, "\n")
-        else:
+        if stations:
             print("\nRadio station names partially matching", radio, ":\n")
             print(*stations, sep = "\n")
             if len(stations) == 1:
@@ -74,6 +72,8 @@ else:
             else:
                 print("\nTo play a radio station by name either specify the full name")
                 print("or enough of a substring to provide a single match")
+        else:
+            print("\nNo radio station name partially matching", radio, "\n")
 
 # save the token for next time
 with open(tokenfile, "w") as f:

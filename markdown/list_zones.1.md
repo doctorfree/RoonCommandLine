@@ -39,3 +39,19 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_zones.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_zones.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_zones.py [-h] [-g] [-i] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -g, --get             Get a comma separated list of zones
+  -i, --info            Get zone info
+  -z ZONE, --zone ZONE  Zone selection
+~~~~

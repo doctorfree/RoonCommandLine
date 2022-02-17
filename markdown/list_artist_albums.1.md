@@ -9,10 +9,10 @@ date: February 13, 2022
 list_artist_albums - List Roon Library Artist's Albums
 
 # SYNOPSIS
-**list_artist_albums** [ ARTIST ] [ ALBUM ]
+**list_artist_albums** [ ARTIST ] [ ALBUM ] [ EXARTIST ] [ EXALBUM ]
 
 # DESCRIPTION
-Lists Roon Library artist's albums matching the specified album name or substring. The special string "__all__" can be used to retrieve all albums by the specified artist. This command is invoked by "roon -l artalbums -a artist [-A album]".
+Lists Roon Library artist's albums matching the specified album name or substring. The special string "__all__" can be used to retrieve all albums by the specified artist. This command is invoked by "roon -l artalbums -a artist [-A album] [-x exartist] [-X exalbum]".
 
 # COMMAND LINE OPTIONS
 **ARTIST**
@@ -21,12 +21,21 @@ Lists Roon Library artist's albums matching the specified album name or substrin
 **ALBUM**
 : Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library album names matching the provided album name or containing the substring will be returned
 
+**EXARTIST**
+: Provide an artist exclusion string, in quotes if it contains spaces. No Roon library artist names including the provided artist exclusion string will be searched
+
+**EXALBUM**
+: Provide an album exclusion string, in quotes if it contains spaces. No Roon library album names including the provided album exclusion string will be listed
+
 # EXAMPLES
 **list_artist_albums Beatles __all__**
 : Will return a list of all Roon library album names by the artists whose name contains "Beatles"
 
 **list_artist_albums Rocky Moon**
 : Will return a list of Roon library album names by artists whose name contains "Rocky", one per line, displaying only those albums that contain the string "Moon"
+
+**list_artist_albums Rocky Moon Squirrel Light**
+: Will return a list of Roon library album names by artists whose name contains "Rocky" but do not contain the string "Squirrel", one per line, displaying only those albums that contain the string "Moon" but do not contain the string "Light"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -46,3 +55,26 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_artist_albums.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_artist_albums.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_artist_albums.py [-h] [-A ALBUM] [-a ARTIST] [-X EXALBUM]
+                             [-x EXARTIST] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -A ALBUM, --album ALBUM
+                        album search term
+  -a ARTIST, --artist ARTIST
+                        artist search term
+  -X EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -x EXARTIST, --exartist EXARTIST
+                        artist exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

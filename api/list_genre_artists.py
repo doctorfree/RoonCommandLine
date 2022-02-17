@@ -47,7 +47,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.2",
+    "display_version": "2.0.3",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }
@@ -76,15 +76,16 @@ if output_id is None:
 genres = roonapi.list_media(output_id, ["Genres", genresearch])
 
 if genres:
+    artist = None
     for genre in genres:
         if exgenresearch is not None:
           if exgenresearch in genre:
             continue
         # List matching artists
         artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
-        if exartistsearch is not None and len(artists) > 0:
+        if exartistsearch is not None and artists:
             artists = [chk for chk in artists if not exartistsearch in chk]
-        if len(artists) > 0:
+        if artists:
             artist = artists[0]
             if artistsearch == "__all__":
               print("\nArtists in genre", genre, ":\n")

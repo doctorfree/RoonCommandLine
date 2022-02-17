@@ -37,7 +37,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.2",
+    "display_version": "2.0.3",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }
@@ -66,9 +66,9 @@ else:
     # List matching playlists from Library
     playlists = roonapi.list_media(output_id, ["Playlists", playlistsearch])
     # Filter out excluded playlist titles
-    if explaylistsearch is not None and len(playlists) > 0:
+    if explaylistsearch is not None and playlists:
         playlists = [chk for chk in playlists if not explaylistsearch in chk]
-    if len(playlists) > 0:
+    if playlists:
         # Play playlist from Library
         playlist = playlists[0]
         print("Playing playlist title", playlist)

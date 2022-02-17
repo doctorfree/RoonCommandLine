@@ -21,22 +21,35 @@
 list_albums - List Roon Library Albums
 .SH SYNOPSIS
 .PP
-\f[B]list_albums\f[R] [ ALBUM ]
+\f[B]list_albums\f[R] [ ALBUM ] [ EXALBUM ]
 .SH DESCRIPTION
 .PP
-Lists Roon Library albums matching the specified album name or substring
+Lists Roon Library albums matching the specified album name or
+substring.
+Optionally, an exclusion string can be provided as the second argument.
+Album names containing the exclusion string will not be listed.
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]ALBUM\f[R]
 Provide an album name, in quotes if it contains spaces, or a
 case-sensitive substring.
 All Roon library album names matching the provided album name or
-containing the substring will be returned
+containing the substring will be listed
+.TP
+\f[B]EXALBUM\f[R]
+Provide an album exclusion string, in quotes if it contains spaces.
+No Roon library album names including the provided album exclusion
+string will be listed
 .SH EXAMPLES
 .TP
 \f[B]list_albums Moon\f[R]
 Will return a list of Roon library album names, one per line, that
 contain the string \[dq]Moon\[dq]
+.TP
+\f[B]list_albums Moon Light\f[R]
+Will return a list of Roon library album names, one per line, that
+contain the string \[dq]Moon\[dq] but do not contain the string
+\[dq]Light\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
@@ -70,3 +83,25 @@ Submit bug reports online at:
 .PP
 Full documentation and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>
+.PP
+The corresponding Python script,
+\f[I]/usr/local/Roon/api/list_albums.py\f[R], can be invoked directly
+as:
+.PP
+\f[B]python3 /usr/local/Roon/api/list_albums.py [ options]\f[R]
+.PP
+Where [ options ] are described in the following usage message:
+.IP
+.nf
+\f[C]
+usage: list_albums.py [-h] [-a ALBUM] [-x EXALBUM] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ALBUM, --album ALBUM
+                        album search term
+  -x EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -z ZONE, --zone ZONE  zone selection
+\f[R]
+.fi

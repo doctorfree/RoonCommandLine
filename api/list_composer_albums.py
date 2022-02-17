@@ -47,7 +47,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.2",
+    "display_version": "2.0.3",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }
@@ -83,12 +83,12 @@ if composers:
             continue
         # List matching albums
         albums = roonapi.list_media(output_id, ["Library", "Composers", composer, albumsearch])
-        if exalbumsearch is not None and len(albums) > 0:
+        if exalbumsearch is not None and albums:
           albums = [chkalbum for chkalbum in albums if not exalbumsearch in chkalbum]
-        if len(albums) > 0:
+        if albums:
           if "Play Composer" in albums:
             albums.remove("Play Composer")
-        if len(albums) > 0:
+        if albums:
             album = albums[0]
             if albumsearch == "__all__":
                 print("\nAlbums by composer", composer, ":\n")

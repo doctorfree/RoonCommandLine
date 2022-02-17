@@ -70,3 +70,21 @@ Submit bug reports online at:
 .PP
 Full documentation and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>
+.PP
+The corresponding Python script,
+\f[I]/usr/local/Roon/api/list_tags.py\f[R], can be invoked directly as:
+.PP
+\f[B]python3 /usr/local/Roon/api/list_tags.py [ options]\f[R]
+.PP
+Where [ options ] are described in the following usage message:
+.IP
+.nf
+\f[C]
+usage: list_tags.py [-h] [-t TAG] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t TAG, --tag TAG     tag search term
+  -z ZONE, --zone ZONE  zone selection
+\f[R]
+.fi

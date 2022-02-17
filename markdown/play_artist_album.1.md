@@ -9,10 +9,10 @@ date: February 13, 2022
 play_artist_album - Play Roon Library Album by Artist
 
 # SYNOPSIS
-**play_artist_album** [ ARTIST ] [ ALBUM ]
+**play_artist_album** [ ARTIST ] [ ALBUM ] [ EXARTIST ] [ EXALBUM ]
 
 # DESCRIPTION
-Plays Roon Library artist's album matching the specified album name or substring. This command is invoked by "roon -a artist [-A album]".
+Plays Roon Library artist's album matching the specified album name or substring. This command is invoked by "roon -a artist [-A album] [-x exartist] [-X exalbum]".
 
 # COMMAND LINE OPTIONS
 **ARTIST**
@@ -21,9 +21,18 @@ Plays Roon Library artist's album matching the specified album name or substring
 **ALBUM**
 : Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library album names matching the provided album name or containing the substring will be returned and the first one returned will be played.
 
+**EXARTIST**
+: Provide an artist exclusion string, in quotes if it contains spaces. No Roon library artist names including the provided artist exclusion string will be searched
+
+**EXALBUM**
+: Provide an album exclusion string, in quotes if it contains spaces. No Roon library album names including the provided album exclusion string will be played
+
 # EXAMPLES
 **play_artist_album Beatles Lonely**
 : Will play the first album returned in a list of all Roon library album names with titles containing the string "Lonely" by the artists whose name contains "Beatles"
+
+**play_artist_album Jackson Late Joe**
+: Will play the first album returned in a list of all Roon library album names with titles containing the string "Late" by the artists whose name contains "Jackson" but not "Joe"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -42,3 +51,26 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/play_artist_album.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/play_artist_album.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: play_artist_album.py [-h] [-A ALBUM] [-a ARTIST] [-X EXALBUM]
+                            [-x EXARTIST] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -A ALBUM, --album ALBUM
+                        album search term
+  -a ARTIST, --artist ARTIST
+                        artist search term
+  -X EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -x EXARTIST, --exartist EXARTIST
+                        artist exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

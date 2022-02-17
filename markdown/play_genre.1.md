@@ -9,18 +9,24 @@ date: December 05, 2021
 play_genre - Play Roon Library Genre
 
 # SYNOPSIS
-**play_genre** [ GENRE ]
+**play_genre** [ GENRE ] [ EXGENRE ]
 
 # DESCRIPTION
-Plays the Roon Library genre named *GENRE*. If no library genre name matches *GENRE* exactly, search for Roon Library genre whose name contains the case-sensitive string *GENRE*. If there is a unique match on the search substring then *play_genre* will play that genre. If more than one Roon Library genre name matches the search substring then *play_genre* will return a list of matching genre names. To play an genre using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library genre name.
+Plays the Roon Library genre named *GENRE*. Search for Roon Library genres whose name contains the case-sensitive string *GENRE*. If there is a match on the search substring then *play_genre* will play the first genre that matches. If more than one Roon Library genre name matches the search substring then *play_genre* will return a list of matching genre names.
 
 # COMMAND LINE OPTIONS
 **GENRE**
-:  Provide an genre name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library genre name matching the provided genre name or containing the substring will be played if a unique match is found.
+:  Provide an genre name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library genre name matching the provided genre name or containing the substring will be played if a match is found.
+
+**EXGENRE**
+: Provide a genre exclusion string, in quotes if it contains spaces. No Roon library genre names including the provided genre exclusion string will be played
 
 # EXAMPLES
 **play_genre Rock**
-: Will play Roon library genre name "Rock" if it exists. If not then it will play the Roon library genre whose name contains the string "Rock" if only one match is found.
+: Will play the Roon library genre whose name contains the string "Rock". If more than one genre name matches, it will play the first match and list all matches
+
+**play_genre Rock Pop**
+: Will play the Roon library genre whose name contains the string "Rock" but not the string "Pop"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -39,3 +45,21 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/play_genre.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/play_genre.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: play_genre.py [-h] [-g GENRE] [-x EXGENRE] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -g GENRE, --genre GENRE
+                        genre selection
+  -x EXGENRE, --exgenre EXGENRE
+                        genre exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

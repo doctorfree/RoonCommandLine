@@ -9,18 +9,24 @@ date: December 05, 2021
 list_albums - List Roon Library Albums
 
 # SYNOPSIS
-**list_albums** [ ALBUM ]
+**list_albums** [ ALBUM ] [ EXALBUM ]
 
 # DESCRIPTION
-Lists Roon Library albums matching the specified album name or substring
+Lists Roon Library albums matching the specified album name or substring. Optionally, an exclusion string can be provided as the second argument. Album names containing the exclusion string will not be listed.
 
 # COMMAND LINE OPTIONS
 **ALBUM**
-: Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library album names matching the provided album name or containing the substring will be returned
+: Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library album names matching the provided album name or containing the substring will be listed
+
+**EXALBUM**
+: Provide an album exclusion string, in quotes if it contains spaces. No Roon library album names including the provided album exclusion string will be listed
 
 # EXAMPLES
 **list_albums Moon**
 : Will return a list of Roon library album names, one per line, that contain the string "Moon"
+
+**list_albums Moon Light**
+: Will return a list of Roon library album names, one per line, that contain the string "Moon" but do not contain the string "Light"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -39,3 +45,21 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_albums.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_albums.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_albums.py [-h] [-a ALBUM] [-x EXALBUM] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ALBUM, --album ALBUM
+                        album search term
+  -x EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

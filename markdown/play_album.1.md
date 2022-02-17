@@ -9,18 +9,24 @@ date: December 05, 2021
 play_album - Play Roon Library Album
 
 # SYNOPSIS
-**play_album** [ ALBUM ]
+**play_album** [ ALBUM ] [ EXALBUM ]
 
 # DESCRIPTION
-Plays the Roon Library album named *ALBUM*. If no library album name matches *ALBUM* exactly, search for Roon Library albums whose name contains the case-sensitive string *ALBUM*. If there is a unique match on the search substring then *play_album* will play that album. If more than one Roon Library album name matches the search substring then *play_album* will return a list of matching album names. To play an album using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library album name.
+Plays the Roon Library album named *ALBUM*. If no library album name matches *ALBUM* exactly, search for Roon Library albums whose name contains the case-sensitive string *ALBUM*. If there is a match on the search substring then *play_album* will play the first album in the list of matches. If more than one Roon Library album name matches the search substring then *play_album* will return a list of matching album names.
 
 # COMMAND LINE OPTIONS
 **ALBUM**
-:  Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library album name matching the provided album name or containing the substring will be played if a unique match is found.
+:  Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library album name matching the provided album name or containing the substring will be played if a match is found.
+
+**EXALBUM**
+: Provide an album exclusion string, in quotes if it contains spaces. No Roon library album names including the provided album exclusion string will be played
 
 # EXAMPLES
 **play_album Moon**
-: Will play Roon library album name "Moon" if it exists. If not then it will play the Roon library album whose name contains the string "Moon" if only one match is found.
+: Will play Roon library album name "Moon" if it exists. If not then it will play the first Roon library album whose name contains the string "Moon"
+
+**play_album Moon Light**
+: Will play Roon library album name "Moon" if it exists. If not then it will play the first Roon library album whose name contains the string "Moon" but not "Light"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -39,3 +45,21 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/play_album.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/play_album.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: play_album.py [-h] [-a ALBUM] [-x EXALBUM] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ALBUM, --album ALBUM
+                        album selection
+  -x EXALBUM, --exalbum EXALBUM
+                        album exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~

@@ -9,18 +9,24 @@ date: December 05, 2021
 list_artists - List Roon Library Artists
 
 # SYNOPSIS
-**list_artists** [ ARTIST ]
+**list_artists** [ ARTIST ] [ EXARTIST ]
 
 # DESCRIPTION
-Lists Roon Library artists matching the specified artist name or substring
+Lists Roon Library artists matching the specified artist name or substring. Optionally, a second argument can be provided which specifies an exclusion string. Artists whose name includes the exclusion string will not be listed.
 
 # COMMAND LINE OPTIONS
 **ARTIST**
 : Provide an artist name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library artist names matching the provided artist name or containing the substring will be returned
 
+**EXARTIST**
+: Provide an artist exclusion string, in quotes if it contains spaces. No Roon library artist names including the provided artist exclusion string will be listed
+
 # EXAMPLES
 **list_artists Young**
 : Will return a list of Roon library artist names, one per line, that contain the string "Young"
+
+**list_artists Young Neil**
+: Will return a list of Roon library artist names, one per line, that contain the string "Young" but do not contain the string "Neil"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
@@ -39,3 +45,21 @@ Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issu
 
 Full documentation and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 
+The corresponding Python script, */usr/local/Roon/api/list_artists.py*,
+can be invoked directly as:
+
+**python3 /usr/local/Roon/api/list_artists.py [ options]**
+
+Where [ options ] are described in the following usage message:
+
+~~~~
+usage: list_artists.py [-h] [-a ARTIST] [-x EXARTIST] [-z ZONE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ARTIST, --artist ARTIST
+                        artist search term
+  -x EXARTIST, --exartist EXARTIST
+                        artist exclude search term
+  -z ZONE, --zone ZONE  zone selection
+~~~~
