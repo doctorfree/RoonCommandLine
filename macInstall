@@ -115,7 +115,7 @@ ${SUDO} chmod 755 ${ROON}/bin/* \
                   ${DESTDIR}/share/man \
                   ${DESTDIR}/share/man/*
 ${SUDO} chown -R root:wheel ${ROON}
-${SUDO} chown -R root:wheel ${DESTDIR}
+# ${SUDO} chown -R root:wheel ${DESTDIR}
 
 # Try to configure the roon script with the IP and username
 IP=`ifconfig en0 |awk '/inet / {print $2; }'`
