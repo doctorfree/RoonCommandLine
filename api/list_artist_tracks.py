@@ -84,14 +84,21 @@ if artists:
         # Search through this artist's albums for specified track
         albums = roonapi.list_media(output_id, ["Library", "Artists", artist, "__all__"])
         if albums:
+          if "Play Artist" in albums:
+            albums.remove("Play Artist")
           for album in albums:
             # List matching tracks
             tracks = roonapi.list_media(output_id, ["Library", "Artists", artist, album, tracksearch])
             if extracksearch is not None and tracks:
               tracks = [chktrack for chktrack in tracks if not extracksearch in chktrack]
             if tracks:
+              if "Play Album" in tracks:
+                tracks.remove("Play Album")
               found = tracks[0]
-              print("\nTrack titles by", artist, "on album", album, "matching", tracksearch, ":\n")
+              if tracksearch == "__all__":
+                print("\nTrack titles by", artist, "on album", album, ":\n")
+              else:
+                print("\nTrack titles by", artist, "on album", album, "matching", tracksearch, ":\n")
               print(*tracks, sep = "\n")
     if found is None:
         print("No tracks found matching", tracksearch) 
