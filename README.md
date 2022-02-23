@@ -446,6 +446,12 @@ any of the following commands:
 ## Screenshots
 
 <p float="left">
+List tracks containing "Satin" by Artists containing "Moody"<br/>
+  <img src="screenshots/Roon_List_Artist_Tracks.jpg" style="width:800px;height:600px;">
+Play first track containing "Satin" by Artists containing "Moody"<br/>
+  <img src="screenshots/Roon_Play_Artist_Track.jpg" style="width:800px;height:600px;">
+</p>
+<p float="left">
 Interactive menus when invoked with no arguments<br/>
   <img src="screenshots/Roon_UI.png" style="width:800px;height:600px;">
   <img src="screenshots/Roon_Set_Zone.png" style="width:800px;height:600px;">
