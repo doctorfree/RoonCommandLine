@@ -30,6 +30,7 @@ For example, the man page output for the `roon` command would be found at
 - [**play_playlist.1.md**](play_playlist.1.md) - Play Roon Library Playlist
 - [**play_radio.1.md**](play_radio.1.md) - Play Roon Live Radio Channel
 - [**play_tag.1.md**](play_tag.1.md) - Play Roon Library Tag
+- [**set_volume.1.md**](set_volume.1.md) - Set the Roon Zone volume level
 - [**set_zone.1.md**](set_zone.1.md) - Set the Roon Zone
 - [**set_zone_group.1.md**](set_zone_group.1.md) - Set the Roon Zone Group
 - [**zone_command.1.md**](zone_command.1.md) - Execute a Roon command
