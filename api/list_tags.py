@@ -32,7 +32,7 @@ from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.3",
+    "display_version": "2.0.4",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }

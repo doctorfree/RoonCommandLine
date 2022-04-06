@@ -26,9 +26,9 @@ roon - Command line control of the Roon Audio System
 genalbums | genartists | playlists | tags | zones ] [ \f[B]-A\f[R] album
 ] [ \f[B]-a\f[R] artist ] [ \f[B]-C\f[R] composer ] [ \f[B]-g\f[R] genre
 ] [ \f[B]-p\f[R] playlist ] [ \f[B]-r\f[R] radio ] [ \f[B]-t\f[R] tag ]
-[ \f[B]-s\f[R] search ] [ \f[B]-z\f[R] zone ] [ \f[B]-G\f[R] zone_group
-] [ \f[B]-c\f[R] group | ungroup | play | pause | stop | next | previous
-| shuffle | unshuffle | repeat | unrepeat | mute | unmute ] [
+[ \f[B]-s\f[R] search ] [-v volume] [ \f[B]-z\f[R] zone ] [ \f[B]-G\f[R]
+zone_group ] [ \f[B]-c\f[R] group | ungroup | play | pause | stop | next
+| previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute ] [
 \f[B]-T\f[R] track ]
 .SH DESCRIPTION
 .PP
@@ -96,6 +96,8 @@ List albums, artists, albums by artist, albums by genre, artists by
 genre, genres, composers, playlists, tags, or Roon zones
 .IP \[bu] 2
 Set the default Roon output zone
+.IP \[bu] 2
+Set the volume level of a specified Roon zone or zone grouping
 .IP \[bu] 2
 Select Roon audio zone or zone grouping
 .PP
@@ -165,6 +167,20 @@ Selects an track to play
 .TP
 \f[B]-t\f[R] tag
 Selects an tag to play
+.TP
+\f[B]-v\f[R] volume
+Sets the volume level of a Roon zone or zone grouping
+.PP
+The \f[V]volume\f[R] argument has the format \f[V][g:][r:][s:]num\f[R]
+where:
+.PP
+\[aq]g\[aq] indicates set volume for all zones in the zone grouping
+.PP
+\[aq]r\[aq] specifies use relative method volume setting
+.PP
+\[aq]s\[aq] specifies use relative_step method volume setting
+.PP
+\[aq]num\[aq] can be absolute, a percentage, and negative or positive
 .TP
 \f[B]-z\f[R] zone
 Selects the Roon Zone in which to play
@@ -289,8 +305,8 @@ Submit bug reports online at:
 \f[B]play_genre\f[R](1), \f[B]play_genre_album\f[R](1),
 \f[B]play_genre_artist\f[R](1), \f[B]play_playlist\f[R](1),
 \f[B]play_radio\f[R](1), \f[B]play_tag\f[R](1), \f[B]roon\f[R](1),
-\f[B]set_zone\f[R](1), \f[B]set_zone_group\f[R](1),
-\f[B]zone_command\f[R](1)
+\f[B]set_volume\f[R](1), \f[B]set_zone\f[R](1),
+\f[B]set_zone_group\f[R](1), \f[B]zone_command\f[R](1)
 .PP
 Full documentation, installation packages, and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>

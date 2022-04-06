@@ -42,12 +42,14 @@ radiolist=
 taglist=
 playlist=
 radio=
+relative=
 search=
 setdefs=
 showusage=1
 showexamples=1
 tag=
 track=
+volume=
 zone=
 zonegroup=
 zonelist=
@@ -76,6 +78,12 @@ usage() {
     printf "\n\t\t-z zone selects the Roon Zone in which to play"
     printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
     printf "\n\t\t\tissues the command in the selected zone"
+    printf "\n\t\t-v volume sets the volume level in the selected zone"
+    printf "\n\t\t\tThe volume argument has the format [g:][r:][s:]num"
+    printf "\n\t\t\tWhere 'g' indicates set volume for all zones in the group"
+    printf "\n\t\t\t'r' specifies use relative method volume setting"
+    printf "\n\t\t\t's' specifies use relative_step method volume setting"
+    printf "\n\t\t\t'num' can be absolute, a percentage and negative or positive"
     printf "\n\t\t-X ex_album specifies a string to exclude from album/genre names"
     printf "\n\t\t-x ex_artist specifies a string to exclude from artist/composer/playlist names"
     printf "\n\t\t-u displays a full usage message with examples"
@@ -722,13 +730,16 @@ main_menu() {
 }
 
 exact=
-while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:x:X:EuU flag; do
+while getopts A:a:c:C:g:G:p:T:t:z:l:s:LSr:v:x:X:EuU flag; do
     case $flag in
         A)
             album="$OPTARG"
             ;;
         a)
             artist="$OPTARG"
+            ;;
+        c)
+            comm="$OPTARG"
             ;;
         C)
             composer="$OPTARG"
@@ -747,9 +758,6 @@ while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:x:X:EuU flag; do
             ;;
         z)
             zone="$OPTARG"
-            ;;
-        c)
-            comm="$OPTARG"
             ;;
         l)
             listname="$OPTARG"
@@ -822,6 +830,39 @@ while getopts A:a:C:g:G:p:T:t:z:c:l:s:LSr:x:X:EuU flag; do
             ;;
         S)
             setdefs=1
+            ;;
+        v)
+            # The volume argument has the format [g:][r:][s:]num
+            # Where 'g' indicates set volume for all zones in the group
+            # 'r' specifies use relative method volume setting
+            # 's' specifies use relative_step method volume setting
+            # 'num' can be absolute, a percentage, and can be negative or positive
+            volume=$OPTARG
+            grouped=
+            relative=
+            step=
+            need_num=1
+            while [ "${need_num}" ]
+            do
+              first_two=${volume:0:2}
+              case "${first_two}" in
+                g:)
+                  grouped="-g"
+                  volume=${volume:2}
+                  ;;
+                r:)
+                  relative="-r"
+                  volume=${volume:2}
+                  ;;
+                s:)
+                  step="-s"
+                  volume=${volume:2}
+                  ;;
+                *)
+                  need_num=
+                  ;;
+              esac
+            done
             ;;
         X)
             exalbum="$OPTARG"
@@ -1181,8 +1222,17 @@ done
     fi
 }
 
-[ "$comm" ] && {
-    case "$comm" in
+[ "${volume}" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+        set_volume -v ${volume} ${grouped} ${relative} ${step}
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} ${grouped} ${relative} ${step}\""
+    fi
+}
+
+[ "${comm}" ] && {
+    case "${comm}" in
     "shuffle"|"unshuffle"|"repeat"|"unrepeat"|"mute"|"unmute"|"next"|"previous"|"play"|"pause"|"stop"|"playpause")
         if [ "${LOCAL}" = true ]
         then

@@ -1,3 +1,5 @@
+RoonCommandLine version 2.0.4 release 1 adds zone and zone grouping volume control.
+
 RoonCommandLine version 2.0.3 release 2 adds several new commands including support for playing a specified track by artist, playing a specified album by artist, playing either a specified artist or album in designated genre, playing a specified composer, and additional listing options. Listing and playing commands now include support for artist and album name exclusion strings allowing searches for a specified artist/album/composer/genre/playlist whose name includes a specified string but not another string. This exclusion filtering enables narrower listing, searching, and playing of library media.
 
 Checks for Python 3 and Pip have been added to pre-installation scripts, MacOS installation has been significantly improved, installation of the roonapi Pip module is handled more gracefully.
@@ -12,12 +14,12 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./RoonCommandLine_2.0.3-2.deb
+sudo apt install ./RoonCommandLine_2.0.4-1.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.3-2.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.4-1.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:

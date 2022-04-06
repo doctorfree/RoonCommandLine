@@ -1,6 +1,5 @@
 import argparse
 import configparser
-import os.path
 from os import path
 import sys
 
@@ -28,11 +27,13 @@ if args.zone:
 else:
     target_zone = config['DEFAULT']['DefaultZone']
 
+zone_name = target_zone
+
 from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.3",
+    "display_version": "2.0.4",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
 }

@@ -81,6 +81,7 @@ Currently the command line Roon control scripts provide support for:
   - unmute
 - List albums, artists, albums by artist, tracks by artist, albums by composer, composers, albums by genre, artists by genre, genres, playlists, live radio stations, tags, and Roon zones
 - Set the default Roon output zone
+- Set the volume level in a specified Roon zone or zone grouping
 - Select Roon audio zone or zone grouping
 
 In addition, search capabilities have been added to the scripts
@@ -439,6 +440,7 @@ any of the following commands:
 - [man play_playlist](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_playlist.1.md)
 - [man play_radio](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_radio.1.md)
 - [man play_tag](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_tag.1.md)
+- [man set_volume](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_volume.1.md)
 - [man set_zone](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_zone.1.md)
 - [man set_zone_group](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_zone_group.1.md)
 - [man zone_command](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/zone_command.1.md)
@@ -863,6 +865,8 @@ executing the following commands directly.
 [**list_tags**](bin/list_tags) - Search and list the available Roon Library tags
 
 [**list_zones**](bin/list_zones) - List the available Roon Zones
+
+[**set_volume**](bin/set_volume) - Set the volume level of selected Roon Zone
 
 [**set_zone**](bin/set_zone) - Set the Roon Zone in which subsequent commands will run
 
