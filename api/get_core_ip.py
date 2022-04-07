@@ -13,6 +13,7 @@ appinfo = {
     "display_version": "2.0.4",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
+    "website": "https://gitlab.com/doctorfree/RoonCommandLine",
 }
 
 discover = RoonDiscovery(None)

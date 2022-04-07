@@ -31,6 +31,7 @@ appinfo = {
     "display_version": "2.0.4",
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
+    "website": "https://gitlab.com/doctorfree/RoonCommandLine",
 }
 
 # Can be None if you don't yet have a token
