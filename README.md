@@ -580,7 +580,7 @@ Where:
 		Where 'g' indicates set volume for all zones in the group
 		'r' specifies use relative method volume setting
 		's' specifies use relative_step method volume setting
-		'num' can be absolute, relative, and negative or positive
+		'num' can be absolute (0-100) or relative (negative or positive)
 	-X ex_album specifies a string to exclude from album/genre names
 	-x ex_artist specifies a string to exclude from artist/composer/playlist names
 	-u displays a full usage message with examples

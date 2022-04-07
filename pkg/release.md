@@ -1,5 +1,16 @@
 RoonCommandLine version 2.0.4 release 1 adds zone and zone grouping volume control.
 
+```
+The command `roon -v volume` sets the volume level in the selected zone.
+
+The `volume` argument has the format `[g:][r:][s:]num`
+
+Where `g` indicates set volume for all zones in the group
+      `r` specifies use relative method volume setting
+      `s` specifies use relative_step method volume setting
+      `num` can be absolute (0-100) or relative (negative or positive)
+```
+
 RoonCommandLine version 2.0.3 release 2 adds several new commands including support for playing a specified track by artist, playing a specified album by artist, playing either a specified artist or album in designated genre, playing a specified composer, and additional listing options. Listing and playing commands now include support for artist and album name exclusion strings allowing searches for a specified artist/album/composer/genre/playlist whose name includes a specified string but not another string. This exclusion filtering enables narrower listing, searching, and playing of library media.
 
 Checks for Python 3 and Pip have been added to pre-installation scripts, MacOS installation has been significantly improved, installation of the roonapi Pip module is handled more gracefully.

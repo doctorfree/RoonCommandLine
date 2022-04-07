@@ -2,8 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-Apr 06, 2022 :
-    Version 2.0.4 Release 1 adds Roon zone and grouped zone volume control
+Apr 07, 2022 :
+    Version 2.0.4 Release 1 adds Roon zone and grouped zone volume control.
+        `roon -v volume` sets the volume level in the selected zone
+
+    The volume argument has the format [g:][r:][s:]num
+        Where 'g' indicates set volume for all zones in the group
+              'r' specifies use relative method volume setting
+              's' specifies use relative_step method volume setting
+              'num' can be absolute (0-100) or relative (negative or positive)
 
 Feb 17, 2022 :
     Version 2.0.3 Release 2 adds several new commands including support for
@@ -50,6 +57,12 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Thu Apr 7 12:08:27 2022 -0700 870518a :
+   Add website to appinfo
+Thu Apr 7 11:51:15 2022 -0700 eb221ef :
+   Add volume control to interactive menus, check volume range if absolute
+Wed Apr 6 13:20:01 2022 -0700 d8a522f :
+   Bumped minor version number, updated changelog and release notes in preparation for 2.0.4 release
 Wed Apr 6 13:17:32 2022 -0700 5676be7 :
    Add support for zone and grouped zone volume control
 Wed Feb 23 14:04:26 2022 -0800 3b8db2a :
