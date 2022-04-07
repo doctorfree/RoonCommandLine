@@ -43,11 +43,18 @@ else:
 if args.volume:
     zone_volume = args.volume
 else:
-    zone_volume = None
+    sys.exit("Volume argument required")
 if args.zone:
     target_zone = args.zone
 else:
     target_zone = config['DEFAULT']['DefaultZone']
+
+# If given an absolute volume level, force it in [0, 100]
+if not step and not relative:
+    if float(zone_volume) > 100.0:
+        zone_volume = 100
+    if float(zone_volume) < 0.0:
+        zone_volume = 0
 
 zone_name = target_zone
 

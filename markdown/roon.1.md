@@ -10,7 +10,7 @@ roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
 
-**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone\_group ] [ **-c** group | ungroup | play | pause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute ] [ **-T** track ]
+**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | pause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute ] [ **-T** track ]
 
 # DESCRIPTION
 The *roon* command acts as a front-end for executing the RoonCommandLine
@@ -47,7 +47,7 @@ Command line Roon control provides support for:
   - unmute
 - List albums, artists, albums by artist, albums by genre, artists by genre, genres, composers, playlists, tags, or Roon zones
 - Set the default Roon output zone
-- Set the volume level of a specified Roon zone or zone grouping
+- Adjust the volume level of a specified Roon zone or zone grouping
 - Select Roon audio zone or zone grouping
 
 <!-- end of list -->
@@ -92,14 +92,14 @@ Additional detail and info can be found in the
 **-p** playlist
 : Selects a playlist to play
 
-**-G** zone\_group
-: Specifies a zone grouping specified in roon\_api.ini
+**-G** zone_group
+: Specifies a zone grouping specified in `roon_api.ini`
 
 **-L**
 : Setup roon to execute local commands rather than remote via SSH
 
 **-S**
-: Set Roon defaults in roon\_api.ini
+: Set Roon defaults in `roon_api.ini`
 
 **-l** **[**albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones**]**
 : Indicates list albums, artists, albums by artist, composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones
@@ -127,7 +127,9 @@ The `volume` argument has the format `[g:][r:][s:]num` where:
 
 's' specifies use relative_step method volume setting
 
-'num' can be absolute, a percentage, and negative or positive
+'num' can be absolute (in the range 0-100) or relative (negative or positive)
+
+Outputs are queried and the specified volume level converted to dB if necessary
 
 **-z** zone
 : Selects the Roon Zone in which to play
@@ -139,8 +141,8 @@ Combine '-a artist' and '-A album' to play an album by a specified artist
 Combine '-a artist' and '-T track' to play a track by a specified artist
 Combine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre
 
-Special search term **\_\_all\_\_** matches all entries
-Special name **default** plays the default setting in roon\_api.ini
+Special search term `__all__` matches all entries
+Special name **default** plays the default setting in `roon_api.ini`
 
 # CONFIGURATION
 Roon utilizes two configuration files, **/usr/local/Roon/etc/pyroonconf**
@@ -207,7 +209,19 @@ tools to the system on which they are installed.
 : List all playlists containing the string 'Best'
 
 **roon -G foobar -c group**
-: Group the zones listed in roon\_api.ini Group\_foobar
+: Group the zones listed in `roon_api.ini` `Group_foobar`
+
+**roon -v 50**
+: Set the volume level to 50 in the currently active zone
+
+**roon -v r:-10**
+: Decrease the volume level by 10 in the currently active zone
+
+**roon -v g:40 -z "Mac Pro DAC"**
+: Set the volume level to 40 in all zones grouped with the zone named "Mac Pro DAC"
+
+**roon -v g:r:20 -z "Mac Pro DAC"**
+: Increase the volume level by 20 in all zones grouped with the zone named "Mac Pro DAC"
 
 **NOTE:** Use quotes to specify media names which contain spaces.
 For example, to play the album 'Love Bomb':

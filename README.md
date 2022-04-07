@@ -88,7 +88,7 @@ In addition, search capabilities have been added to the scripts
 with partial matching facilities. Thus a substring can be supplied to use as a
 search term with partial matching returning albums, artists, playlists, genres,
 or tags which contain the specified substring (case sensitive). The special search
-term "\_\_all\_\_" indicates match all albums, artists, playlists, genres, or tags.
+term `__all__` indicates match all albums, artists, playlists, genres, or tags.
 
 All commands and playback can target a specified Roon output zone.
 
@@ -550,79 +550,96 @@ is presented from which the user can select commands and queries.
 
 Here is the current output of "roon -u" which displays a usage message.
 
+```
+
 Usage: roon -A album -a artist -C composer -g genre -G zone_group
-    -l [albums|artists|artalbums|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
-    -c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
-    -s search -p playlist -T track -t tag -z zone -L -S -r radio
-    -X ex_album -x ex_artist [-EuU]
-    Where:
-        -A album selects an album to play
-        -a artist selects an artist to list/play
-        -C composer selects a composer to play
-        -g genre selects a genre to list/play
-        -p playlist selects a playlist to play
-        -G zone_group specifies a zone grouping specified in roon_api.ini
-        -L setup roon to execute local commands rather than remote via SSH
-        -S Set Roon defaults in roon_api.ini
-        -l [albums|artists|artalbums|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
-            indicates list albums, artists, albums by artist, composers, albums by composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones
-        -r radio selects a live radio stream to play
-        -s search specifies a term to search for in the lists retrieved with -l
-        -T track specifies a track to play
-        -t tag selects an tag to play
-        -z zone selects the Roon Zone in which to play
-        -c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
-            issues the command in the selected zone
-        -X ex_album specifies a string to exclude from album/genre names
-        -x ex_artist specifies a string to exclude from artist/composer/playlist names
-        -u displays a full usage message with examples
-        -U displays a usage message without examples
-        -E displays examples with no usage message
-    Combine '-a artist' and '-A album' to play an album by a specified artist
-    Combine '-a artist' and '-T track' to play a track by a specified artist
-    Combine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre
+	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
+	-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+	-s search -p playlist -T track -t tag -z zone -L -S -r radio
+	-X ex_album -x ex_artist [-EuU]
+Where:
+	-A album selects an album to play
+	-a artist selects an artist to list/play
+	-C composer selects a composer to play
+	-g genre selects a genre to list/play
+	-p playlist selects a playlist to play
+	-G zone_group specifies a zone grouping specified in roon_api.ini
+	-L setup roon to execute local commands rather than remote via SSH
+	-S Set Roon defaults in roon_api.ini
+	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
+		indicates list albums, artists, albums by artist, composers, albums by composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones
+	-r radio selects a live radio stream to play
+	-s search specifies a term to search for in the lists retrieved with -l
+	-T track specifies a track to play
+	-t tag selects an tag to play
+	-z zone selects the Roon Zone in which to play
+	-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+		issues the command in the selected zone
+	-v volume sets the volume level in the selected zone
+		The volume argument has the format [g:][r:][s:]num
+		Where 'g' indicates set volume for all zones in the group
+		'r' specifies use relative method volume setting
+		's' specifies use relative_step method volume setting
+		'num' can be absolute, relative, and negative or positive
+	-X ex_album specifies a string to exclude from album/genre names
+	-x ex_artist specifies a string to exclude from artist/composer/playlist names
+	-u displays a full usage message with examples
+	-U displays a usage message without examples
+	-E displays examples with no usage message
+Combine '-a artist' and '-A album' to play an album by a specified artist
+Combine '-a artist' and '-T track' to play a track by a specified artist
+Combine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre
 
-    Special search term __all__ matches all entries
-    Special name default plays the default setting in roon_api.ini
+Special search term __all__ matches all entries
+Special name default plays the default setting in roon_api.ini
 
-    Example invocations
-        Play artist:
-            roon -a "Deep Purple"
-        Play album by artist:
-            roon -a "Deep Purple" -A Burn
-        Play track by artist:
-            roon -a "Aretha Franklin" -T Think
-        Play artist in specified zone:
-            roon -a "Jethro Tull" -z "Mac Pro DAC"
-        Play genre:
-            roon -g Classical
-        Play default live radio:
-            roon -r default
-        Play playlist:
-            roon -p "Bowie Favs"
-        Play next track:
-            roon -c next
-        Stop play in specified zone:
-            roon -c stop -z Kitchen
-        Mute a specified zone:
-            roon -c mute -z "Mac Pro DAC"
-        List all playlists containing the string 'Best':
-            roon -l playlists -s Best
-        List albums by artist:
-            roon -l artalbums -a "Deep Purple"
-        List artists containing the string 'Will' in the 'Country' genre:
-            roon -l genartists -a Will -g Country
-        List albums containing the string 'Magic' in the 'Rock' genre:
-            roon -l genalbums -A Magic -g Rock
-        Play artist containing the string 'Willie' in the 'Country' genre:
-            roon -a Willie -g Country
-        Play album containing the string 'Magic' in the 'Rock' genre:
-            roon -A Magic -g Rock
-        Group the zones listed in roon_api.ini Group_foobar:
-            roon -G foobar -c group
-        NOTE: Use quotes to specify media names which contain spaces.
-        For example, to play the album 'Love Bomb':
-            roon -A "Love Bomb"
+Example invocations
+	Play artist:
+		roon -a "Deep Purple"
+	Play album by artist:
+		roon -a "Deep Purple" -A Burn
+	Play track by artist:
+		roon -a "Aretha Franklin" -T Think
+	Play artist in specified zone:
+		roon -a "Jethro Tull" -z "Mac Pro DAC"
+	Play genre:
+		roon -g Classical
+	Play default live radio:
+		roon -r default
+	Play playlist:
+		roon -p "Bowie Favs"
+	Play next track:
+		roon -c next
+	Stop play in specified zone:
+		roon -c stop -z Kitchen
+	Mute a specified zone:
+		roon -c mute -z "Mac Pro DAC"
+	List all playlists containing the string 'Best':
+		roon -l playlists -s Best
+	List albums by artist:
+		roon -l artalbums -a "Deep Purple"
+	List artists containing the string 'Will' in the 'Country' genre:
+		roon -l genartists -a Will -g Country
+	List albums containing the string 'Magic' in the 'Rock' genre:
+		roon -l genalbums -A Magic -g Rock
+	Play artist containing the string 'Willie' in the 'Country' genre:
+		roon -a Willie -g Country
+	Play album containing the string 'Magic' in the 'Rock' genre:
+		roon -A Magic -g Rock
+	Group the zones listed in roon_api.ini Group_foobar:
+		roon -G foobar -c group
+	Set the volume level to 50 in the currently active zone
+		roon -v 50
+	Decrease the volume level by 10 in the currently active zone
+		roon -v r:-10
+	Set the volume level to 40 in all zones grouped with the zone named Mac
+		roon -v g:40 -z Mac
+	Increase the volume level by 20 in all zones grouped with the zone named Mac
+		roon -v g:r:20 -z Mac
+	NOTE: Use quotes to specify media names which contain spaces.
+	For example, to play the album 'Love Bomb':
+		roon -A "Love Bomb"
+```
 
 When playing media from the command line it is possible to specify a substring
 with which a partial match can be made. In order to play media, either the full

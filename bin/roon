@@ -61,79 +61,87 @@ usage() {
     printf "\n\t-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
     printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
     printf "\n\t-X ex_album -x ex_artist [-EuU]"
-    printf "\n\tWhere:\n\t\t-A album selects an album to play"
-    printf "\n\t\t-a artist selects an artist to list/play"
-    printf "\n\t\t-C composer selects a composer to play"
-    printf "\n\t\t-g genre selects a genre to list/play"
-    printf "\n\t\t-p playlist selects a playlist to play"
-    printf "\n\t\t-G zone_group specifies a zone grouping specified in roon_api.ini"
-    printf "\n\t\t-L setup roon to execute local commands rather than remote via SSH"
-    printf "\n\t\t-S Set Roon defaults in roon_api.ini"
-    printf "\n\t\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]"
-    printf "\n\t\t\tindicates list albums, artists, albums by artist, composers, albums by composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
-    printf "\n\t\t-r radio selects a live radio stream to play"
-    printf "\n\t\t-s search specifies a term to search for in the lists retrieved with -l"
-    printf "\n\t\t-T track specifies a track to play"
-    printf "\n\t\t-t tag selects an tag to play"
-    printf "\n\t\t-z zone selects the Roon Zone in which to play"
-    printf "\n\t\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
-    printf "\n\t\t\tissues the command in the selected zone"
-    printf "\n\t\t-v volume sets the volume level in the selected zone"
-    printf "\n\t\t\tThe volume argument has the format [g:][r:][s:]num"
-    printf "\n\t\t\tWhere 'g' indicates set volume for all zones in the group"
-    printf "\n\t\t\t'r' specifies use relative method volume setting"
-    printf "\n\t\t\t's' specifies use relative_step method volume setting"
-    printf "\n\t\t\t'num' can be absolute, a percentage and negative or positive"
-    printf "\n\t\t-X ex_album specifies a string to exclude from album/genre names"
-    printf "\n\t\t-x ex_artist specifies a string to exclude from artist/composer/playlist names"
-    printf "\n\t\t-u displays a full usage message with examples"
-    printf "\n\t\t-U displays a usage message without examples"
-    printf "\n\t\t-E displays examples with no usage message"
-    printf "\n\tCombine '-a artist' and '-A album' to play an album by a specified artist"
-    printf "\n\tCombine '-a artist' and '-T track' to play a track by a specified artist"
-    printf "\n\tCombine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre\n"
-    printf "\n\tSpecial search term "__all__" matches all entries"
-    printf "\n\tSpecial name "default" plays the default setting in roon_api.ini\n"
+    printf "\nWhere:\n\t-A album selects an album to play"
+    printf "\n\t-a artist selects an artist to list/play"
+    printf "\n\t-C composer selects a composer to play"
+    printf "\n\t-g genre selects a genre to list/play"
+    printf "\n\t-p playlist selects a playlist to play"
+    printf "\n\t-G zone_group specifies a zone grouping specified in roon_api.ini"
+    printf "\n\t-L setup roon to execute local commands rather than remote via SSH"
+    printf "\n\t-S Set Roon defaults in roon_api.ini"
+    printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]"
+    printf "\n\t\tindicates list albums, artists, albums by artist, composers, albums by composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
+    printf "\n\t-r radio selects a live radio stream to play"
+    printf "\n\t-s search specifies a term to search for in the lists retrieved with -l"
+    printf "\n\t-T track specifies a track to play"
+    printf "\n\t-t tag selects an tag to play"
+    printf "\n\t-z zone selects the Roon Zone in which to play"
+    printf "\n\t-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]"
+    printf "\n\t\tissues the command in the selected zone"
+    printf "\n\t-v volume sets the volume level in the selected zone"
+    printf "\n\t\tThe volume argument has the format [g:][r:][s:]num"
+    printf "\n\t\tWhere 'g' indicates set volume for all zones in the group"
+    printf "\n\t\t'r' specifies use relative method volume setting"
+    printf "\n\t\t's' specifies use relative_step method volume setting"
+    printf "\n\t\t'num' can be absolute, relative, and negative or positive"
+    printf "\n\t-X ex_album specifies a string to exclude from album/genre names"
+    printf "\n\t-x ex_artist specifies a string to exclude from artist/composer/playlist names"
+    printf "\n\t-u displays a full usage message with examples"
+    printf "\n\t-U displays a usage message without examples"
+    printf "\n\t-E displays examples with no usage message"
+    printf "\nCombine '-a artist' and '-A album' to play an album by a specified artist"
+    printf "\nCombine '-a artist' and '-T track' to play a track by a specified artist"
+    printf "\nCombine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre\n"
+    printf "\nSpecial search term "__all__" matches all entries"
+    printf "\nSpecial name "default" plays the default setting in roon_api.ini\n"
   }
   [ "${showexamples}" ] && {
-    printf "\n\tExample invocations"
-    printf "\n\t\tPlay artist:"
-    printf "\n\t\t\troon -a \"Deep Purple\""
-    printf "\n\t\tPlay album by artist:"
-    printf "\n\t\t\troon -a \"Deep Purple\" -A Burn"
-    printf "\n\t\tPlay track by artist:"
-    printf "\n\t\t\troon -a \"Aretha Franklin\" -T Think"
-    printf "\n\t\tPlay artist in specified zone:"
-    printf "\n\t\t\troon -a \"Jethro Tull\" -z \"Mac Pro DAC\""
-    printf "\n\t\tPlay genre:"
-    printf "\n\t\t\troon -g Classical"
-    printf "\n\t\tPlay default live radio:"
-    printf "\n\t\t\troon -r default"
-    printf "\n\t\tPlay playlist:"
-    printf "\n\t\t\troon -p \"Bowie Favs\""
-    printf "\n\t\tPlay next track:"
-    printf "\n\t\t\troon -c next"
-    printf "\n\t\tStop play in specified zone:"
-    printf "\n\t\t\troon -c stop -z Kitchen"
-    printf "\n\t\tMute a specified zone:"
-    printf "\n\t\t\troon -c mute -z \"Mac Pro DAC\""
-    printf "\n\t\tList all playlists containing the string 'Best':"
-    printf "\n\t\t\troon -l playlists -s Best"
-    printf "\n\t\tList albums by artist:"
-    printf "\n\t\t\troon -l artalbums -a \"Deep Purple\""
-    printf "\n\t\tList artists containing the string 'Will' in the 'Country' genre:"
-    printf "\n\t\t\troon -l genartists -a Will -g Country"
-    printf "\n\t\tList albums containing the string 'Magic' in the 'Rock' genre:"
-    printf "\n\t\t\troon -l genalbums -A Magic -g Rock"
-    printf "\n\t\tPlay artist containing the string 'Willie' in the 'Country' genre:"
-    printf "\n\t\t\troon -a Willie -g Country"
-    printf "\n\t\tPlay album containing the string 'Magic' in the 'Rock' genre:"
-    printf "\n\t\t\troon -A Magic -g Rock"
-    printf "\n\t\tGroup the zones listed in roon_api.ini Group_foobar:"
-    printf "\n\t\t\troon -G foobar -c group"
-    printf "\n\t\tNOTE: Use quotes to specify media names which contain spaces."
-    printf "\n\t\tFor example, to play the album 'Love Bomb':"
-    printf "\n\t\t\troon -A \"Love Bomb\"\n"
+    printf "\nExample invocations"
+    printf "\n\tPlay artist:"
+    printf "\n\t\troon -a \"Deep Purple\""
+    printf "\n\tPlay album by artist:"
+    printf "\n\t\troon -a \"Deep Purple\" -A Burn"
+    printf "\n\tPlay track by artist:"
+    printf "\n\t\troon -a \"Aretha Franklin\" -T Think"
+    printf "\n\tPlay artist in specified zone:"
+    printf "\n\t\troon -a \"Jethro Tull\" -z \"Mac Pro DAC\""
+    printf "\n\tPlay genre:"
+    printf "\n\t\troon -g Classical"
+    printf "\n\tPlay default live radio:"
+    printf "\n\t\troon -r default"
+    printf "\n\tPlay playlist:"
+    printf "\n\t\troon -p \"Bowie Favs\""
+    printf "\n\tPlay next track:"
+    printf "\n\t\troon -c next"
+    printf "\n\tStop play in specified zone:"
+    printf "\n\t\troon -c stop -z Kitchen"
+    printf "\n\tMute a specified zone:"
+    printf "\n\t\troon -c mute -z \"Mac Pro DAC\""
+    printf "\n\tList all playlists containing the string 'Best':"
+    printf "\n\t\troon -l playlists -s Best"
+    printf "\n\tList albums by artist:"
+    printf "\n\t\troon -l artalbums -a \"Deep Purple\""
+    printf "\n\tList artists containing the string 'Will' in the 'Country' genre:"
+    printf "\n\t\troon -l genartists -a Will -g Country"
+    printf "\n\tList albums containing the string 'Magic' in the 'Rock' genre:"
+    printf "\n\t\troon -l genalbums -A Magic -g Rock"
+    printf "\n\tPlay artist containing the string 'Willie' in the 'Country' genre:"
+    printf "\n\t\troon -a Willie -g Country"
+    printf "\n\tPlay album containing the string 'Magic' in the 'Rock' genre:"
+    printf "\n\t\troon -A Magic -g Rock"
+    printf "\n\tGroup the zones listed in roon_api.ini Group_foobar:"
+    printf "\n\t\troon -G foobar -c group"
+    printf "\n\tSet the volume level to 50 in the currently active zone"
+    printf "\n\t\troon -v 50"
+    printf "\n\tDecrease the volume level by 10 in the currently active zone"
+    printf "\n\t\troon -v r:-10"
+    printf "\n\tSet the volume level to 40 in all zones grouped with the zone named "Mac Pro DAC""
+    printf "\n\t\troon -v g:40 -z "Mac Pro DAC""
+    printf "\n\tIncrease the volume level by 20 in all zones grouped with the zone named "Mac Pro DAC""
+    printf "\n\t\troon -v g:r:20 -z "Mac Pro DAC""
+    printf "\n\tNOTE: Use quotes to specify media names which contain spaces."
+    printf "\n\tFor example, to play the album 'Love Bomb':"
+    printf "\n\t\troon -A \"Love Bomb\"\n"
   }
   exit 1
 }
@@ -380,6 +388,80 @@ select_media() {
   done
 }
 
+select_set_volume() {
+  volume_options=("Mute Volume" "Unmute Volume" "Set Volume to 10" "Set Volume to 20" "Set Volume to 30" "Set Volume to 40" "Set Volume to 50" "Set Volume to 60" "Set Volume to 70" "Set Volume to 80" "Set Volume to 90" "Set Volume to 100" "Increase Volume by 1" "Increase Volume by 5" "Increase Volume by 10" "Increase Volume by 20" "Increase Volume by 40" "Decrease Volume by 1" "Decrease Volume by 5" "Decrease Volume by 10" "Decrease Volume by 20" "Decrease Volume by 40" "Main Menu" "Quit")
+  while true
+  do
+    printf "\n"
+    PS3="${BOLD}Please enter the volume adjustment you wish to make (numeric or text): ${NORMAL}"
+    select opt in "${volume_options[@]}"
+    do
+      case "$opt,$REPLY" in
+        "Set Volume to "*,*|*,"Set Volume to "*)
+          volume=`echo $opt | awk ' { print $NF } '`
+          if [ "${LOCAL}" = true ]
+          then
+            set_volume -v ${volume} -g
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -g\""
+          fi
+          break
+          ;;
+        "Increase Volume by "*,*|*,"Increase Volume by "*)
+          volume=`echo $opt | awk ' { print $NF } '`
+          if [ "${LOCAL}" = true ]
+          then
+            set_volume -v ${volume} -g -r
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -g -r\""
+          fi
+          break
+          ;;
+        "Decrease Volume by "*,*|*,"Decrease Volume by "*)
+          volume=`echo $opt | awk ' { print $NF } '`
+          if [ "${LOCAL}" = true ]
+          then
+            set_volume -v -${volume} -g -r
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v -${volume} -g -r\""
+          fi
+          break
+          ;;
+        "Mute Volume",*|*,"Mute Volume")
+          printf "\nExecuting Roon command to mute audio ..."
+          if [ "${LOCAL}" = true ]
+          then
+            zone_command -c mute
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Unmute Volume",*|*,"Unmute Volume")
+          printf "\nExecuting Roon command to unmute audio ..."
+          if [ "${LOCAL}" = true ]
+          then
+            zone_command -c unmute
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c unmute\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Main Menu",*|*,"Main Menu")
+          main_menu
+          break 2
+          ;;
+        "Quit",*|*,"Quit"|"quit",*|*,"quit")
+          printf "\nExiting\n"
+          exit 0
+          ;;
+      esac
+    done
+  done
+}
+
 list_defaults() {
   defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Main Menu" "Quit")
   while true
@@ -417,7 +499,7 @@ main_menu() {
   while true
   do
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Quit")
+    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Pause" "Next Track" "Previous Track" "Mute" "Unmute" "Repeat ON" "Repeat OFF" "Shuffle ON" "Shuffle OFF" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Volume" "Quit")
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
@@ -720,6 +802,10 @@ main_menu() {
                 fi
                 break
                 ;;
+            "Volume",*|*,"Volume")
+                select_set_volume
+                break
+                ;;
             "Quit",*|*,"Quit"|"quit",*|*,"quit")
                 printf "\nExiting\n"
                 exit 0
@@ -836,7 +922,7 @@ while getopts A:a:c:C:g:G:p:T:t:z:l:s:LSr:v:x:X:EuU flag; do
             # Where 'g' indicates set volume for all zones in the group
             # 'r' specifies use relative method volume setting
             # 's' specifies use relative_step method volume setting
-            # 'num' can be absolute, a percentage, and can be negative or positive
+            # 'num' can be absolute, relative, and negative or positive
             volume=$OPTARG
             grouped=
             relative=
