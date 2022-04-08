@@ -1,3 +1,7 @@
+RoonCommandLine version 2.0.4 release 2 is a bugfix release.
+
+This release fixes a bug with muting/unmuting ungrouped zones.
+
 RoonCommandLine version 2.0.4 release 1 adds zone and zone grouping volume control.
 
 ```
@@ -25,12 +29,12 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./RoonCommandLine_2.0.4-1.deb
+sudo apt install ./RoonCommandLine_2.0.4-2.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.4-1.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.4-2.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
