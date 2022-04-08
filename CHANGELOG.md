@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+Apr 08, 2022 :
+    Version 2.0.4 Release 2 is a bugfix release.
+
+    This release fixes a bug with muting/unmuting ungrouped zones
+
 Apr 07, 2022 :
     Version 2.0.4 Release 1 adds Roon zone and grouped zone volume control.
         `roon -v volume` sets the volume level in the selected zone
@@ -57,6 +62,12 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Fri Apr 8 12:00:51 2022 -0700 1fd3553 :
+   Bump release number for this bugfix release, update release notes
+Fri Apr 8 11:58:07 2022 -0700 afc49b5 :
+   Fix bug with muting/unmuting ungrouped zones
+Thu Apr 7 12:27:44 2022 -0700 d62040e :
+   Finalize changelog and release notes for 2.0.4
 Thu Apr 7 12:08:27 2022 -0700 870518a :
    Add website to appinfo
 Thu Apr 7 11:51:15 2022 -0700 eb221ef :
