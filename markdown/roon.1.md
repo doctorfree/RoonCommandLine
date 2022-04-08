@@ -203,7 +203,7 @@ tools to the system on which they are installed.
 : Stop play in specified zone
 
 **roon -c mute -z "Mac Pro DAC"**
-: Mute a specified zone
+: Mute/Unmute a specified zone
 
 **roon -l playlists -s Best**
 : List all playlists containing the string 'Best'

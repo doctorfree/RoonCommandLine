@@ -612,7 +612,7 @@ Example invocations
 		roon -c next
 	Stop play in specified zone:
 		roon -c stop -z Kitchen
-	Mute a specified zone:
+	Mute/Unmute a specified zone:
 		roon -c mute -z "Mac Pro DAC"
 	List all playlists containing the string 'Best':
 		roon -l playlists -s Best

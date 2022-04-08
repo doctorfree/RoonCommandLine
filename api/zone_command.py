@@ -77,21 +77,22 @@ else:
                 for (k, v) in outputs.items():
                     if zone_name in v["display_name"]:
                         output_id = k
-                        if zone_command == "mute":
-                          roonapi.mute(output_id, True)
-                        else:
+                        if outputs[output_id]["volume"]["is_muted"]:
                           roonapi.mute(output_id, False)
+                        else:
+                          roonapi.mute(output_id, True)
           else:
-            if zone_command == "mute":
-              roonapi.mute(output_id, True)
-            else:
+            if outputs[output_id]["volume"]["is_muted"]:
               roonapi.mute(output_id, False)
+            else:
+              roonapi.mute(output_id, True)
         else:
           # Send the command to the specified zone
-          if zone_command == "mute":
-            roonapi.mute(output_id, True)
-          elif zone_command == "unmute":
-            roonapi.mute(output_id, False)
+          if zone_command == "mute" or zone_command == "unmute":
+            if outputs[output_id]["volume"]["is_muted"]:
+              roonapi.mute(output_id, False)
+            else:
+              roonapi.mute(output_id, True)
           elif zone_command == "shuffle":
             roonapi.shuffle(output_id, True)
           elif zone_command == "unshuffle":

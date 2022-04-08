@@ -21,6 +21,7 @@ Usage: roon -A album -a artist -C composer -g genre -G zone_group
 		-z zone selects the Roon Zone in which to play
 		-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 			issues the command in the selected zone
+			both 'mute' and 'unmute' toggle the zone's muted or unmuted state
 		-X ex_album specifies a string to exclude from album/genre names
 		-x ex_artist specifies a string to exclude from artist/composer/playlist names
 		-u displays a full usage message with examples
@@ -52,7 +53,7 @@ Usage: roon -A album -a artist -C composer -g genre -G zone_group
 			roon -c next
 		Stop play in specified zone:
 			roon -c stop -z Kitchen
-		Mute a specified zone:
+		Mute/Unmute a specified zone:
 			roon -c mute -z "Mac Pro DAC"
 		List all playlists containing the string 'Best':
 			roon -l playlists -s Best

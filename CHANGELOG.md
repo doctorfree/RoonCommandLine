@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+Apr 09, 2022 :
+    Version 2.0.4 Release 3 is a feature modification.
+
+    This release modifies the muting/unmuting feature, changing it to a toggle.
+    Muting is now a single command which toggles the state between muted and unmuted.
+
 Apr 08, 2022 :
     Version 2.0.4 Release 2 is a bugfix release.
 
