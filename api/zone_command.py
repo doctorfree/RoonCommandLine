@@ -81,6 +81,11 @@ else:
                           roonapi.mute(output_id, True)
                         else:
                           roonapi.mute(output_id, False)
+          else:
+            if zone_command == "mute":
+              roonapi.mute(output_id, True)
+            else:
+              roonapi.mute(output_id, False)
         else:
           # Send the command to the specified zone
           if zone_command == "mute":
