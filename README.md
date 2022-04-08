@@ -77,8 +77,7 @@ Currently the command line Roon control scripts provide support for:
   - unshuffle
   - repeat
   - unrepeat
-  - mute
-  - unmute
+  - mute/unmute (toggle muted/unmuted in selected zone or zone grouping)
 - List albums, artists, albums by artist, tracks by artist, albums by composer, composers, albums by genre, artists by genre, genres, playlists, live radio stations, tags, and Roon zones
 - Set the default Roon output zone
 - Set the volume level in a specified Roon zone or zone grouping
