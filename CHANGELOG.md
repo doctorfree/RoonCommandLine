@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 Apr 09, 2022 :
-    Version 2.0.4 Release 3 is a feature modification.
+    RoonCommandLine version 2.0.4 release 3 is a feature modification
 
     This release modifies the muting/unmuting feature, changing it to a toggle.
     Muting is now a single command which toggles the state between muted and unmuted.
@@ -68,6 +68,14 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Fri Apr 8 17:24:57 2022 -0700 23caa01 :
+   Print default zone settings in test script
+Fri Apr 8 16:42:50 2022 -0700 eb03326 :
+   Update man page and README with new mute toggle
+Fri Apr 8 16:18:45 2022 -0700 a0f40a3 :
+   Change mute/unmute to a toggled mute/unmute by querying output is_muted property
+Fri Apr 8 12:03:17 2022 -0700 dc6c0db :
+   Update changelog for 2.0.4r2
 Fri Apr 8 12:00:51 2022 -0700 1fd3553 :
    Bump release number for this bugfix release, update release notes
 Fri Apr 8 11:58:07 2022 -0700 afc49b5 :

@@ -1,3 +1,11 @@
+RoonCommandLine version 2.0.4 release 3 is a feature modification release.
+
+This release changes the mute/unmute commands to a toggle. Both commands
+operate exactly the same, toggling the muting/unmuting of the selected
+zone or zone grouping. The two commands are retained rather than removing
+`unmute` in order to preserve compatibility with any existing scripts that
+use these commands.
+
 RoonCommandLine version 2.0.4 release 2 is a bugfix release.
 
 This release fixes a bug with muting/unmuting ungrouped zones.
@@ -29,12 +37,12 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./RoonCommandLine_2.0.4-2.deb
+sudo apt install ./RoonCommandLine_2.0.4-3.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.4-2.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.4-3.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
