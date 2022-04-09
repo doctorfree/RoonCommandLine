@@ -46,7 +46,11 @@ with RoonApi(appinfo, token, server, port) as roonapi:
 # auto_radio  boolean     indicates whether auto-radio mode is enabled on the zone
 
     for zone in roonapi.zones.values():
-        print("Zone name: %s" % zone["display_name"])
+        zone_name = zone["display_name"]
+        print("Zone name: %s" % zone_name)
         print("Zone settings: %s" % zone["settings"])
+        if target_zone in zone_name:
+            print("Default zone name: %s" % zone_name)
+            print("Default zone settings: %s" % zone["settings"])
 
     roonapi.stop()
