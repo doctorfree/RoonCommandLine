@@ -1,6 +1,5 @@
 import argparse
 import configparser
-import os.path
 from os import path
 
 config = configparser.ConfigParser()
@@ -114,4 +113,4 @@ if args.get:
 
 # save the token for next time
 with open(tokenfile, "w") as f:
-    f.write(roonapi.token)
+    f.write(str(roonapi.token))

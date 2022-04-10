@@ -36,4 +36,4 @@ print("RoonCorePort =", api._port)
 
 # save the token for next time
 with open(tokenfile, "w") as f:
-    f.write(api.token)
+    f.write(str(api.token))

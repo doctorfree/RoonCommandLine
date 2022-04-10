@@ -119,4 +119,4 @@ else:
 
 # save the token for next time
 with open(tokenfile, "w") as f:
-    f.write(roonapi.token)
+    f.write(str(roonapi.token))

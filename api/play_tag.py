@@ -1,6 +1,5 @@
 import argparse
 import configparser
-import os.path
 from os import path
 import sys
 
@@ -80,4 +79,4 @@ else:
 
 # save the token for next time
 with open(tokenfile, "w") as f:
-    f.write(roonapi.token)
+    f.write(str(roonapi.token))
