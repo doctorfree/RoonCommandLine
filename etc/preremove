@@ -12,7 +12,12 @@ ROONAPI=${ROON}/api
 ROONBIN=${ROON}/bin
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
-ROONINI=${ROONETC}/roon_api.ini
+ROON_INI=${ROONETC}/roon_api.ini
+
+# Save roon_api.ini in case this is prep for an upgrade
+[ -f ${ROON_INI} ] && {
+    cp ${ROON_INI} /tmp/_roon_api_ini_.save
+}
 
 # Locate the global site directories
 ROON_SITE_DIR=
@@ -33,7 +38,7 @@ do
     }
 done
 
-rm -f ${ROONCONF} ${ROONINI} ${ROONBIN}/*.orig ${ROONETC}/*
+rm -f ${ROONCONF} ${ROON_INI} ${ROONBIN}/*.orig ${ROONETC}/*
 
 if [ "$ROON_SITE_DIR" ]
 then

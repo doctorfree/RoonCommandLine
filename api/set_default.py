@@ -1,10 +1,7 @@
 import argparse
 import configparser
-import os.path
-from os import path
 
 config = configparser.RawConfigParser(comment_prefixes='/', allow_no_value=True)
-config.optionxform = lambda option: option
 config.read('/usr/local/Roon/etc/roon_api.ini')
 
 parser = argparse.ArgumentParser()

@@ -76,6 +76,9 @@ fi
     echo "brew install python"
     exit 1
 }
+[ -f /usr/local/Roon/etc/roon_api.ini ] && {
+    cp /usr/local/Roon/etc/roon_api.ini /tmp/_roon_api_ini_.save
+}
 
 %post
 exec 1>/proc/${PPID}/fd/1

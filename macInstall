@@ -8,6 +8,7 @@ SRC=${HOME}/src
 SRC_NAME="RoonCommandLine"
 ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
+ROON_INI=${ROONETC}/roon_api.ini
 ROONCONF=${ROONETC}/pyroonconf
 export SUDO=sudo
 
@@ -41,11 +42,12 @@ fi
 }
 
 . "${SRC}/${SRC_NAME}/VERSION"
-PKG_VER=${VERSION}
+version=${VERSION}
+release=${RELEASE}
 
 while true
 do
-  read -p "Install ${SRC_NAME} version ${PKG_VER} ? ('Y'/'N'): " yn
+  read -p "Install ${SRC_NAME} version ${version}r${release} ? ('Y'/'N'): " yn
   case $yn in
       [Yy]*)
           break
@@ -72,6 +74,9 @@ ${SUDO} ${PYTHON} -m pip install roonapi
 [ -d ${DESTDIR}/share/doc ] || ${SUDO} mkdir ${DESTDIR}/share/doc
 [ -d ${DESTDIR}/share/doc/${PKG} ] || ${SUDO} mkdir ${DESTDIR}/share/doc/${PKG}
 
+[ -f /usr/local/Roon/etc/roon_api.ini ] && {
+    cp /usr/local/Roon/etc/roon_api.ini /tmp/_roon_api_ini_.save
+}
 for dir in bin etc api patches
 do
     [ -d ${ROON}/${dir} ] && ${SUDO} rm -rf ${ROON}/${dir}
@@ -80,6 +85,7 @@ done
 ${SUDO} cp -a api ${ROON}/api
 ${SUDO} cp -a bin ${ROON}/bin
 ${SUDO} cp -a etc ${ROON}/etc
+${SUDO} cp VERSION ${ROON}/etc
 ${SUDO} cp -a patches ${ROON}/patches
 
 ${SUDO} cp *.desktop "${DESTDIR}/share/applications"
@@ -136,15 +142,54 @@ do
     fi
 done
 
+# Copy in distributed roon_api.ini template if no previous one exists
+[ -f ${ROON_INI} ] || {
+  # Restore previously saved roon_api.ini if one exists
+  if [ -f /tmp/_roon_api_ini_.save ]
+  then
+    cp /tmp/_roon_api_ini_.save ${ROON_INI}
+    rm -f /tmp/_roon_api_ini_.save
+  else
+    cp ${ROONETC}/roon_api.ini-dist ${ROON_INI}
+  fi
+}
+EX_CORE_IP=`cat ${ROON_INI} | grep RoonCoreIP | awk -F '=' ' { print $2 } '`
+EX_CORE_IP="$(echo -e "${EX_CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+EX_CORE_PORT=`cat ${ROON_INI} | grep RoonCorePort | awk -F '=' ' { print $2 } '`
+EX_CORE_PORT="$(echo -e "${EX_CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
+updatever=`grep RoonCommandLineVersion ${ROON_INI}`
+if [ "${updatever}" ]
+then
+  cat ${ROON_INI} | sed -e "s/RoonCommandLineVersion.*/RoonCommandLineVersion = ${version}/" > /tmp/v$$
+else
+  cat ${ROON_INI} | sed -e "/RoonCorePort.*/a RoonCommandLineVersion = __VERSION__" > /tmp/v$$
+fi
+cp /tmp/v$$ ${ROON_INI}
+rm -f /tmp/v$$
+
+updaterel=`grep RoonCommandLineRelease ${ROON_INI}`
+if [ "${updaterel}" ]
+then
+  cat ${ROON_INI} | sed -e "s/RoonCommandLineRelease.*/RoonCommandLineRelease = ${release}/" > /tmp/r$$
+else
+  cat ${ROON_INI} | sed -e "/RoonCommandLineVersion.*/a RoonCommandLineRelease = __RELEASE__" > /tmp/r$$
+fi
+cp /tmp/r$$ ${ROON_INI}
+rm -f /tmp/r$$
+
 users=
 numusers=0
-for user in /Users/*
+for homedir in /Users/*
 do
-    [ "${user}" == "/Users/*" ] && continue
-    [ -d ${user} ] && {
-        base_user=`basename ${user}`
-        users="${users} ${base_user}"
-        numusers=`expr ${numusers} + 1`
+    [ "${homedir}" == "/Users/*" ] && continue
+    [ -d ${homedir} ] && {
+        username=`basename ${homedir}`
+        exists=`id -g -n ${username} > /dev/null 2>&1`
+        [ "${exists}" ] && {
+            users="${users} ${username}"
+            numusers=`expr ${numusers} + 1`
+        }
     }
 done
 
@@ -309,9 +354,8 @@ CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } '`
 CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 CORE_PORT=`cat /tmp/discover$$ | grep RoonCorePort | awk -F '=' ' { print $2 } '`
 CORE_PORT="$(echo -e "${CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-cat ${ROONETC}/roon_api.ini | sed -e "s/XX.X.X.XX/${CORE_IP}/" -e "s/__CORE_PORT__/${CORE_PORT}/" > /tmp/core$$
-${SUDO} cp ${ROONETC}/roon_api.ini ${ROONETC}/roon_api.ini.orig
-${SUDO} cp /tmp/core$$ ${ROONETC}/roon_api.ini
+cat ${ROON_INI} | sed -e "s/${EX_CORE_IP}/${CORE_IP}/" -e "s/${EX_CORE_PORT}/${CORE_PORT}/" > /tmp/core$$
+${SUDO} cp /tmp/core$$ ${ROON_INI}
 ${SUDO} rm -f /tmp/core$$ /tmp/discover$$
 
 # Get and set the default zone and initial zone groupings
@@ -378,17 +422,19 @@ numWith=0
     fi
   fi
 }
-cat ${ROONETC}/roon_api.ini | \
+cat ${ROON_INI} | \
     sed -e "s/__ALL_ZONES__/${zones}/" \
         -e "s/__GROUP_ONE__/${groupOne}/" \
         -e "s/__GROUP_TWO__/${groupTwo}/" \
         -e "s/__GROUP_REE__/${groupRee}/" \
         -e "s/__GROUP_FOR__/${groupFor}/" \
+        -e "s/__VERSION__/${version}/" \
+        -e "s/__RELEASE__/${release}/" \
         -e "s/__DEF_ZONE__/${defaultZone}/" > /tmp/zones$$
-cp /tmp/zones$$ ${ROONETC}/roon_api.ini
+cp /tmp/zones$$ ${ROON_INI}
 rm -f /tmp/zones$$
 
-DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+DEFZONE=`grep ^DefaultZone ${ROON_INI} | awk -F '=' ' { print $2 } '`
 # Remove leading and trailing spaces in DEFZONE
 DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 # Set ROON_ZONE in pyroonconf if not already set
@@ -407,5 +453,5 @@ echo "and copy the 'roon' frontend shell script to a location in your execution"
 echo "PATH on all systems from which you wish to control Roon via SSH"
 echo ""
 echo "Edit the Roon Command Line configuration settings at:"
-echo "${ROONETC}/roon_api.ini"
+echo "${ROON_INI}"
 echo "and verify the settings in the configuration file ${ROONCONF}"

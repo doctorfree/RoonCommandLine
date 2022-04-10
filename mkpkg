@@ -81,6 +81,7 @@ done
 ${SUDO} cp -a api ${OUT_DIR}/${ROON}/api
 ${SUDO} cp -a bin ${OUT_DIR}/${ROON}/bin
 ${SUDO} cp -a etc ${OUT_DIR}/${ROON}/etc
+${SUDO} cp VERSION ${OUT_DIR}/${ROON}/etc
 ${SUDO} cp -a patches ${OUT_DIR}/${ROON}/patches
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"

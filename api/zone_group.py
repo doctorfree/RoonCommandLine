@@ -32,11 +32,15 @@ group_zones = target_zone.split(",")
 for i in range(len(group_zones)):
     group_zones[i] = group_zones[i].strip()
 
+version = config['DEFAULT']['RoonCommandLineVersion']
+release = config['DEFAULT']['RoonCommandLineRelease']
+fullver = version + "-" + release
+
 from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
-    "display_version": "2.0.4",
+    "display_version": fullver,
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
     "website": "https://gitlab.com/doctorfree/RoonCommandLine",

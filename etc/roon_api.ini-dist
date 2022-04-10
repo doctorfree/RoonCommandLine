@@ -10,6 +10,8 @@ DefaultZone = __DEF_ZONE__
 TokenFileName = /usr/local/Roon/etc/roontoken.txt
 RoonCoreIP = XX.X.X.XX
 RoonCorePort = __CORE_PORT__
+RoonCommandLineVersion = __VERSION__
+RoonCommandLineRelease = __RELEASE__
 
 [ZONEGROUPS]
 # Zone Groups can be anything of the form "Group_<your group zone name>".
