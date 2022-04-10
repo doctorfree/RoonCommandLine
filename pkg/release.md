@@ -1,10 +1,6 @@
 RoonCommandLine version 2.0.4 release 3 is a feature modification release.
 
-This release changes the mute/unmute commands to a toggle. Both commands
-operate exactly the same, toggling the muting/unmuting of the selected
-zone or zone grouping. The two commands are retained rather than removing
-`unmute` in order to preserve compatibility with any existing scripts that
-use these commands.
+This release changes the mute/unmute commands to a toggle. Both commands operate exactly the same, toggling the muting/unmuting of the selected zone or zone grouping. The two commands are retained rather than removing `unmute` in order to preserve compatibility with any existing scripts that use these commands.
 
 RoonCommandLine version 2.0.4 release 2 is a bugfix release.
 

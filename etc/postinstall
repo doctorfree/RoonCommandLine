@@ -44,13 +44,16 @@ IP=`hostname -I | awk ' { print $1 } '`
 USER="root"
 numusers=0
 users=
-for user in /home/*
+for homedir in /home/*
 do
-    [ "${user}" == "/home/*" ] && continue
-    [ -d ${user} ] && {
-        USER=`basename ${user}`
-        users="${users} ${USER}"
-        numusers=`expr ${numusers} + 1`
+    [ "${homedir}" == "/home/*" ] && continue
+    [ -d ${homedir} ] && {
+        username=`basename ${homedir}`
+        exists=`id -g -n ${username} > /dev/null 2>&1`
+        [ "${exists}" ] && {
+            users="${users} ${username}"
+            numusers=`expr ${numusers} + 1`
+        }
     }
 done
 [ $numusers -gt 1 ] && {
