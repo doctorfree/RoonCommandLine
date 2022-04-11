@@ -373,7 +373,7 @@ numZones=`echo "${zones}" | awk -F ',' ' { print NF } '`
 numWith=0
 [ ${numZones} -gt 0 ] && {
   defaultZone=`echo "${zones}" | awk -F ',' ' { print $1 } '`
-  withDefaultZone=`${ROON}/bin/get_zone_info -l "${defaultZone}"`
+  withDefaultZone=`${ROON}/bin/get_zone_info -l -z "${defaultZone}"`
   numWith=`echo "${withDefaultZone}" | awk -F ',' ' { print NF } '`
 }
 [ ${numZones} -gt 2 ] && {
@@ -410,7 +410,7 @@ numWith=0
 
     zoneTwo=${Array3[0]}
     [ "${zoneTwo}" ] || zoneTwo=${arrayone[1]}
-    withZoneTwo=`${ROON}/bin/get_zone_info -l "${zoneTwo}"`
+    withZoneTwo=`${ROON}/bin/get_zone_info -l -z "${zoneTwo}"`
     numWithTwo=`echo "${withZoneTwo}" | awk -F ',' ' { print NF } '`
     [ ${numWithTwo} -gt 0 ] && {
       groupTwo=`echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/"`
@@ -421,7 +421,7 @@ numWith=0
 }
 [ ${numZones} -gt 3 ] && {
   secondZone=`echo "${zones}" | awk -F ',' ' { print $2 } ' | sed -e "s/^ //"`
-  withSecondZone=`${ROON}/bin/get_zone_info -l "${secondZone}"`
+  withSecondZone=`${ROON}/bin/get_zone_info -l -z "${secondZone}"`
   withSecondZone=`echo ${withSecondZone} | sed -e "s/${defaultZone},//"`
   numWith=`echo "${withSecondZone}" | awk -F ',' ' { print NF } '`
   if [ ${numWith} -gt 1 ]
@@ -437,7 +437,7 @@ numWith=0
 }
 [ ${numZones} -gt 4 ] && {
   lastZone=`echo "${zones}" | awk -F ',' ' { print $(NF) } ' | sed -e "s/^ //"`
-  withLastZone=`${ROON}/bin/get_zone_info -l "${lastZone}"`
+  withLastZone=`${ROON}/bin/get_zone_info -l -z "${lastZone}"`
   withLastZone=`echo ${withLastZone} | sed -e "s/${defaultZone},//"`
   withLastZone=`echo ${withLastZone} | sed -e "s/${secondZone},//"`
   numWith=`echo "${withLastZone}" | awk -F ',' ' { print NF } '`
