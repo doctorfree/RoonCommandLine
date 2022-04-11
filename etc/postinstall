@@ -22,6 +22,7 @@ export PATH=/usr/local/bin:/usr/bin:$PATH
 [ -d /usr/local ] || mkdir /usr/local
 [ -d /usr/local/bin ] || mkdir /usr/local/bin
 cd /usr/local/bin
+
 ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
@@ -41,9 +42,10 @@ do
   fi
 done
 
-if [ -f "${ROONETC}/VERSION" ]
+ROON_DOC=/usr/local/share/doc/rooncommandline
+if [ -f "${ROON_DOC}/VERSION" ]
 then
-  . "${ROONETC}/VERSION"
+  . "${ROON_DOC}/VERSION"
   version=${VERSION}
   release=${RELEASE}
 else
@@ -68,7 +70,8 @@ EX_CORE_IP="$(echo -e "${EX_CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:spac
 EX_CORE_PORT=`cat ${ROON_INI} | grep RoonCorePort | awk -F '=' ' { print $2 } '`
 EX_CORE_PORT="$(echo -e "${EX_CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 
-updatever=`grep RoonCommandLineVersion ${ROON_INI}`
+updatever=
+grep RoonCommandLineVersion ${ROON_INI} > /dev/null && updatever=1
 if [ "${updatever}" ]
 then
   cat ${ROON_INI} | sed -e "s/RoonCommandLineVersion.*/RoonCommandLineVersion = ${version}/" > /tmp/v$$
@@ -78,7 +81,8 @@ fi
 cp /tmp/v$$ ${ROON_INI}
 rm -f /tmp/v$$
 
-updaterel=`grep RoonCommandLineRelease ${ROON_INI}`
+updaterel=
+grep RoonCommandLineRelease ${ROON_INI} > /dev/null && updaterel=1
 if [ "${updaterel}" ]
 then
   cat ${ROON_INI} | sed -e "s/RoonCommandLineRelease.*/RoonCommandLineRelease = ${release}/" > /tmp/r$$
@@ -98,7 +102,7 @@ do
     [ "${homedir}" == "/home/*" ] && continue
     [ -d ${homedir} ] && {
         username=`basename ${homedir}`
-        exists=`id -g -n ${username} > /dev/null 2>&1`
+        exists=`id -g -n ${username}`
         [ "${exists}" ] && {
             USER="${username}"
             users="${users} ${username}"
@@ -268,12 +272,45 @@ numWith=0
 }
 [ ${numZones} -gt 2 ] && {
   [ ${numWith} -gt 0 ] && {
-    withDefOne=`echo "${withDefaultZone}" | awk -F ',' ' { print $1 } '`
-    groupOne="${defaultZone}, ${withDefOne}"
-    [ ${numWith} -gt 1 ] && {
-      withDefTwo=`echo "${withDefaultZone}" | awk -F ',' ' { print $1 ", " $2 } '`
-      groupTwo="${defaultZone}, ${withDefTwo}"
+    groupOne=`echo "${defaultZone},${withDefaultZone}" | sed -e "s/,/, /g" -e "s/:/,/"`
+    # Find a zone not in groupOne and use it for the second zone group
+    zoneTwo=
+    numWithTwo=0
+    zonearray=()
+    arrayone=()
+    unset saved_IFS
+    [ -n "${IFS+set}" ] && saved_IFS=$IFS
+    IFS=","
+    for i in ${zones}
+    do
+      thiszone="$(echo -e "$i" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+      zonearray+=("${thiszone}")
+    done
+    for i in ${groupOne}
+    do
+      thisgroup="$(echo -e "$i" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+      arrayone+=("${thisgroup}")
+    done
+
+    Array3=()
+    for zone in ${zonearray[@]}
+    do
+      for one in ${arrayone[@]}
+      do
+        [ "${zone}" == "${one}" ] && continue 2
+      done
+      Array3+=("${zone}")
+    done
+
+    zoneTwo=${Array3[0]}
+    [ "${zoneTwo}" ] || zoneTwo=${arrayone[1]}
+    withZoneTwo=`${ROON}/bin/get_zone_info -l "${zoneTwo}"`
+    numWithTwo=`echo "${withZoneTwo}" | awk -F ',' ' { print NF } '`
+    [ ${numWithTwo} -gt 0 ] && {
+      groupTwo=`echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/"`
     }
+    unset IFS
+    [ -n "${saved_IFS+set}" ] && { IFS=$saved_IFS; unset saved_IFS; }
   }
 }
 [ ${numZones} -gt 3 ] && {

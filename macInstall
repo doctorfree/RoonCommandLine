@@ -85,7 +85,6 @@ done
 ${SUDO} cp -a api ${ROON}/api
 ${SUDO} cp -a bin ${ROON}/bin
 ${SUDO} cp -a etc ${ROON}/etc
-${SUDO} cp VERSION ${ROON}/etc
 ${SUDO} cp -a patches ${ROON}/patches
 
 ${SUDO} cp *.desktop "${DESTDIR}/share/applications"
@@ -93,6 +92,7 @@ ${SUDO} cp AUTHORS ${DESTDIR}/share/doc/${PKG}/AUTHORS
 ${SUDO} cp LICENSE ${DESTDIR}/share/doc/${PKG}/copyright
 ${SUDO} cp CHANGELOG.md ${DESTDIR}/share/doc/${PKG}/changelog
 ${SUDO} cp README.md ${DESTDIR}/share/doc/${PKG}/README
+${SUDO} cp VERSION ${DESTDIR}/share/doc/${PKG}/VERSION
 ${SUDO} gzip -9 ${DESTDIR}/share/doc/${PKG}/changelog
 
 ${SUDO} cp -a man ${DESTDIR}/share/man
@@ -196,10 +196,10 @@ done
 [ ${numusers} -gt 1 ] && {
   while true
   do
-    read -p "Using ${USER} as the SSH user. 'Y' for OK, 'N' to select a different user: " yn
+    read -p "Using ${USER} as the Roon user. 'Y' for OK, 'N' to select a different user: " yn
     case $yn in
       [Nn]*)
-          PS3="${BOLD}Please enter SSH user (numeric or text): ${NORMAL}"
+          PS3="${BOLD}Please enter Roon user (numeric or text): ${NORMAL}"
           options=(${users} "None")
           select opt in "${options[@]}"
           do
@@ -354,9 +354,12 @@ CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } '`
 CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 CORE_PORT=`cat /tmp/discover$$ | grep RoonCorePort | awk -F '=' ' { print $2 } '`
 CORE_PORT="$(echo -e "${CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+# Could use Python (or better, yq) to modify roon_api.ini something like:
+# python -c 'import yaml;f=open("roon_api.ini");y=yaml.safe_load(f);y["DEFAULT"]["RoonCoreIP"] = ${CORE_IP}; print(yaml.dump(y, default_flow_style=False, sort_keys=False))'
+# But for now we use sed
 cat ${ROON_INI} | sed -e "s/${EX_CORE_IP}/${CORE_IP}/" -e "s/${EX_CORE_PORT}/${CORE_PORT}/" > /tmp/core$$
-${SUDO} cp /tmp/core$$ ${ROON_INI}
-${SUDO} rm -f /tmp/core$$ /tmp/discover$$
+cp /tmp/core$$ ${ROON_INI}
+rm -f /tmp/core$$ /tmp/discover$$
 
 # Get and set the default zone and initial zone groupings
 # Attempting to avoid grouping incompatible zones is somewhat convoluted
@@ -375,12 +378,45 @@ numWith=0
 }
 [ ${numZones} -gt 2 ] && {
   [ ${numWith} -gt 0 ] && {
-    withDefOne=`echo "${withDefaultZone}" | awk -F ',' ' { print $1 } '`
-    groupOne="${defaultZone}, ${withDefOne}"
-    [ ${numWith} -gt 1 ] && {
-      withDefTwo=`echo "${withDefaultZone}" | awk -F ',' ' { print $1 ", " $2 } '`
-      groupTwo="${defaultZone}, ${withDefTwo}"
+    groupOne=`echo "${defaultZone},${withDefaultZone}" | sed -e "s/,/, /g" -e "s/:/,/"`
+    # Find a zone not in groupOne and use it for the second zone group
+    zoneTwo=
+    numWithTwo=0
+    zonearray=()
+    arrayone=()
+    unset saved_IFS
+    [ -n "${IFS+set}" ] && saved_IFS=$IFS
+    IFS=","
+    for i in ${zones}
+    do
+      thiszone="$(echo -e "$i" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+      zonearray+=("${thiszone}")
+    done
+    for i in ${groupOne}
+    do
+      thisgroup="$(echo -e "$i" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+      arrayone+=("${thisgroup}")
+    done
+
+    Array3=()
+    for zone in ${zonearray[@]}
+    do
+      for one in ${arrayone[@]}
+      do
+        [ "${zone}" == "${one}" ] && continue 2
+      done
+      Array3+=("${zone}")
+    done
+
+    zoneTwo=${Array3[0]}
+    [ "${zoneTwo}" ] || zoneTwo=${arrayone[1]}
+    withZoneTwo=`${ROON}/bin/get_zone_info -l "${zoneTwo}"`
+    numWithTwo=`echo "${withZoneTwo}" | awk -F ',' ' { print NF } '`
+    [ ${numWithTwo} -gt 0 ] && {
+      groupTwo=`echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/"`
     }
+    unset IFS
+    [ -n "${saved_IFS+set}" ] && { IFS=$saved_IFS; unset saved_IFS; }
   }
 }
 [ ${numZones} -gt 3 ] && {

@@ -81,7 +81,6 @@ done
 ${SUDO} cp -a api ${OUT_DIR}/${ROON}/api
 ${SUDO} cp -a bin ${OUT_DIR}/${ROON}/bin
 ${SUDO} cp -a etc ${OUT_DIR}/${ROON}/etc
-${SUDO} cp VERSION ${OUT_DIR}/${ROON}/etc
 ${SUDO} cp -a patches ${OUT_DIR}/${ROON}/patches
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
@@ -89,6 +88,7 @@ ${SUDO} cp AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/AUTHORS
 ${SUDO} cp LICENSE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/copyright
 ${SUDO} cp CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
 ${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/README
+${SUDO} cp VERSION ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/VERSION
 ${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
 ${SUDO} cp -a markdown "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/markdown"
 ${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/man"

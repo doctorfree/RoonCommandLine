@@ -1,6 +1,6 @@
 RoonCommandLine version 2.0.5 release 1 adds upgrade features.
 
-This minor release preserves existing configuration if it detects a previous release of RoonCommandLine is already installed. Only the Roon Core IP and port are reconfigured if necessary.
+This minor release preserves existing configuration if it detects a previous release of RoonCommandLine is already installed. Only the Roon Core IP and port are reconfigured if necessary. In addition, the default zone groupings in `roon_api.ini` are improved to avoid grouping incompatible zones. Python scripts utilizing the Roon API have been improved to remove all warnings and use a single source for providing the extension version to Roon.
 
 RoonCommandLine version 2.0.4 release 3 is a feature modification release.
 
