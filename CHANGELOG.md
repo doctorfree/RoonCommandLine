@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+Apr 12, 2022 :
+    RoonCommandLine version 2.0.5 release 1 is a minor version update
+
+    This minor release preserves existing configuration if it detects
+    a previous release of RoonCommandLine is already installed. Only the
+    Roon Core IP and port are reconfigured if necessary. In addition,
+    the default zone groupings in `roon_api.ini` are improved to avoid
+    grouping incompatible zones. Python scripts utilizing the Roon API
+    have been improved to remove all warnings and use a single source for
+    providing the extension version to Roon.
+
 Apr 09, 2022 :
     RoonCommandLine version 2.0.4 release 3 is a feature modification
 
@@ -68,6 +79,16 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Mon Apr 11 11:59:21 2022 -0700 ef79181 :
+   Improved default grouping to avoid grouping incompatible zones, further enhancements for upgrades
+Sun Apr 10 16:48:56 2022 -0700 12aa909 :
+   Resolve all warnings in Python code by removing duplicate import and converting token write to string
+Sun Apr 10 16:04:57 2022 -0700 bb7668d :
+   Preserve user customizations in roon_api.ini if possible, get version from /usr/local/Roon/etc/VERSION rather than hard coding in all the Python scripts
+Sun Apr 10 10:38:03 2022 -0700 ba8fff6 :
+   Fix postinstall bug selecting SSH user if /home/user is not a real user
+Sat Apr 9 13:59:13 2022 -0700 1cebb9a :
+   Bump release, update release notes and changelog
 Fri Apr 8 17:24:57 2022 -0700 23caa01 :
    Print default zone settings in test script
 Fri Apr 8 16:42:50 2022 -0700 eb03326 :
