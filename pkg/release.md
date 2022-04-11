@@ -1,6 +1,12 @@
-RoonCommandLine version 2.0.5 release 1 adds upgrade features.
+RoonCommandLine version 2.0.5 release 1 adds upgrade features, zone info, and commands.
 
-This minor release preserves existing configuration if it detects a previous release of RoonCommandLine is already installed. Only the Roon Core IP and port are reconfigured if necessary. In addition, the default zone groupings in `roon_api.ini` are improved to avoid grouping incompatible zones. Python scripts utilizing the Roon API have been improved to remove all warnings and use a single source for providing the extension version to Roon.
+This release preserves existing configuration if it detects a previous release of RoonCommandLine is already installed. Only the Roon Core IP and port are reconfigured if necessary. In addition, the default zone groupings in `roon_api.ini` are improved to avoid grouping incompatible zones. Python scripts utilizing the Roon API have been improved to remove all warnings and use a single source for providing the extension version to Roon.
+
+Changes to RoonCommandLine commands include changing the `shuffle` and `repeat` commands to toggles, similar to what was done for `mute`. Note that `repeat` does not mimic the Roon `loop` feature which cycles through three values - 'loop', 'loop_one', and 'disabled'. The `repeat` command in RoonCommandLine and the Python Roon API is a Boolean and toggles between 'loop' and 'disabled'.
+
+A `pause_all` command was added to pause playback in all Roon zones.
+
+A `-i` option was added to the `roon` command to display zone information. In the absence of any `-z zone` argument, information on all zones is displayed. If a zone is specified in combination with the `-i` argument, e.g. `-i -z Kitchen`, then extended information is displayed for that zone alone. The Python script `zone_properties.py` was added to support this feature.
 
 RoonCommandLine version 2.0.4 release 3 is a feature modification release.
 

@@ -3,10 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 Apr 12, 2022 :
-    RoonCommandLine version 2.0.5 release 1 is a minor version update
+    RoonCommandLine version 2.0.5 release 1 is a feature update
 
-    This minor release preserves existing configuration if it detects
-    a previous release of RoonCommandLine is already installed. Only the
+    This release preserves existing configuration if it detects a
+    previous release of RoonCommandLine is already installed. Only the
     Roon Core IP and port are reconfigured if necessary. In addition,
     the default zone groupings in `roon_api.ini` are improved to avoid
     grouping incompatible zones. Python scripts utilizing the Roon API
@@ -21,6 +21,12 @@ Apr 12, 2022 :
     toggles between 'loop' and 'disabled'.
 
     A `pause_all` command was added to pause playback in all Roon zones.
+
+    A `-i` option was added to the `roon` command to display zone information.
+    In the absence of any `-z zone` argument, information on all zones is displayed.
+    If a zone is specified in combination with the `-i` argument, e.g. `-i -z Kitchen`,
+    then extended information is displayed for that zone alone. The Python script
+    `zone_properties.py` was added to support this feature.
 
 Apr 09, 2022 :
     RoonCommandLine version 2.0.4 release 3 is a feature modification
@@ -88,6 +94,18 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Mon Apr 11 16:20:30 2022 -0700 d0c0def :
+   Installation scripts need to pass -z zone argument to get_zone_info now
+Mon Apr 11 16:15:03 2022 -0700 80827da :
+   Add zone_properties.py to api/README.md
+Mon Apr 11 16:12:02 2022 -0700 11a9de3 :
+   Add zone_properties.py and command line argument to roon to display zone info, get_zone_info modified for zone info display
+Mon Apr 11 14:49:39 2022 -0700 a80224a :
+   Reworked zone_command.py to apply zone settings and other commands if not already applied or if not grouped. It's weird
+Mon Apr 11 13:01:39 2022 -0700 48fb1c2 :
+   Added command to pause playback in all Roon zones (pause_all)
+Mon Apr 11 12:04:34 2022 -0700 5f98265 :
+   Update changelog in prep for 2.0.5 release
 Mon Apr 11 11:59:21 2022 -0700 ef79181 :
    Improved default grouping to avoid grouping incompatible zones, further enhancements for upgrades
 Sun Apr 10 16:48:56 2022 -0700 12aa909 :
