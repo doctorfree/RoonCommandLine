@@ -13,6 +13,15 @@ Apr 12, 2022 :
     have been improved to remove all warnings and use a single source for
     providing the extension version to Roon.
 
+    Changes to RoonCommandLine commands include changing the `shuffle`
+    and `repeat` commands to toggles, similar to what was done for `mute`.
+    Note that `repeat` does not mimic the Roon `loop` feature which cycles
+    through three values - 'loop', 'loop_one', and 'disabled'. The `repeat`
+    command in RoonCommandLine and the Python Roon API is a Boolean and
+    toggles between 'loop' and 'disabled'.
+
+    A `pause_all` command was added to pause playback in all Roon zones.
+
 Apr 09, 2022 :
     RoonCommandLine version 2.0.4 release 3 is a feature modification
 

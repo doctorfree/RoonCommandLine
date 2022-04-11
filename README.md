@@ -74,11 +74,9 @@ Currently the command line Roon control scripts provide support for:
   - stop
   - next
   - previous
-  - shuffle
-  - unshuffle
-  - repeat
-  - unrepeat
-  - mute/unmute (toggle muted/unmuted in selected zone or zone grouping)
+  - mute (toggle muted/unmuted in selected zone or zone grouping)
+  - shuffle (toggle shuffle/unshuffle zone playback)
+  - repeat (toggle loop/unlooped zone playback)
 - List albums, artists, albums by artist, tracks by artist, albums by composer, composers, albums by genre, artists by genre, genres, playlists, live radio stations, tags, and Roon zones
 - Set the default Roon output zone
 - Set the volume level in a specified Roon zone or zone grouping
@@ -551,10 +549,9 @@ is presented from which the user can select commands and queries.
 Here is the current output of "roon -u" which displays a usage message.
 
 ```
-
 Usage: roon -A album -a artist -C composer -g genre -G zone_group
 	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
-	-c [group|ungroup|play|pause|pause_all|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+	-c [group|ungroup|play|pause|pause_all|stop|next|previous|shuffle|repeat|mute]
 	-s search -p playlist -T track -t tag -z zone -L -S -r radio
 	-X ex_album -x ex_artist [-EuU]
 Where:
@@ -573,14 +570,17 @@ Where:
 	-T track specifies a track to play
 	-t tag selects an tag to play
 	-z zone selects the Roon Zone in which to play
-	-c [group|ungroup|play|pause|pause_all|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+	-c [group|ungroup|play|pause|pause_all|playpause|stop|next|previous|shuffle|repeat|mute]
 		issues the command in the selected zone
+		'mute' toggles the zone's muted or unmuted state
+		'shuffle' toggles the zone's shuffled or unshuffled setting
+		'repeat' toggles the zone's looping or non-looping setting
 	-v volume sets the volume level in the selected zone
 		The volume argument has the format [g:][r:][s:]num
 		Where 'g' indicates set volume for all zones in the group
 		'r' specifies use relative method volume setting
 		's' specifies use relative_step method volume setting
-		'num' can be absolute (0-100) or relative (negative or positive)
+		'num' can be absolute, relative, and negative or positive
 	-X ex_album specifies a string to exclude from album/genre names
 	-x ex_artist specifies a string to exclude from artist/composer/playlist names
 	-u displays a full usage message with examples

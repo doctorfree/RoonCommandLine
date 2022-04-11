@@ -55,6 +55,7 @@ roonapi = RoonApi(appinfo, token, server, port)
 outputs = roonapi.outputs
 
 output_id = None
+not_executed = True
 for (k, v) in outputs.items():
     if target_zone in v["display_name"]:
         zone_name = v["display_name"]
@@ -71,40 +72,88 @@ else:
         err = "No zone found matching " + target_zone
         sys.exit(err)
     else:
-        # Apply the mute/unmute command to all zones in a zone grouping
-        if zone_command == "mute" or zone_command == "unmute":
-          is_grouped = roonapi.is_grouped(output_id)
-          if is_grouped:
-            grouped_zone_names = roonapi.grouped_zone_names(output_id)
-            if grouped_zone_names is not None:
-              for zone_name in grouped_zone_names:
-                for (k, v) in outputs.items():
-                    if zone_name in v["display_name"]:
-                        output_id = k
-                        if outputs[output_id]["volume"]["is_muted"]:
-                          roonapi.mute(output_id, False)
-                        else:
-                          roonapi.mute(output_id, True)
+        # Apply the mute command to all zones in a zone grouping
+        is_grouped = roonapi.is_grouped(output_id)
+        if is_grouped:
+          grouped_zone_names = roonapi.grouped_zone_names(output_id)
+          if grouped_zone_names is not None:
+            for zone_name in grouped_zone_names:
+              for (k, v) in outputs.items():
+                if zone_name in v["display_name"]:
+                  output_id = k
+                  if zone_command == "mute" or zone_command == "unmute":
+                    if outputs[output_id]["volume"]["is_muted"]:
+                      roonapi.mute(output_id, False)
+                    else:
+                      roonapi.mute(output_id, True)
+                    not_executed = False
           else:
-            if outputs[output_id]["volume"]["is_muted"]:
-              roonapi.mute(output_id, False)
-            else:
-              roonapi.mute(output_id, True)
+            if zone_command == "mute" or zone_command == "unmute":
+              if outputs[output_id]["volume"]["is_muted"]:
+                roonapi.mute(output_id, False)
+              else:
+                roonapi.mute(output_id, True)
+              not_executed = False
         else:
           # Send the command to the specified zone
+          # zone settings properties:
+          # loop setting on the zone
+          #     loop        'loop' | 'loop_one' | 'disabled'
+          # indicates whether shuffle is enabled on the zone
+          #     shuffle     boolean
+          # indicates whether auto-radio mode is enabled on the zone
+          #     auto_radio  boolean
+          #
+          # for zone in roonapi.zones.values():
+          #     print("Zone name: %s" % zone["display_name"])
+          #     print("Zone settings: %s" % zone["settings"])
           if zone_command == "mute" or zone_command == "unmute":
             if outputs[output_id]["volume"]["is_muted"]:
               roonapi.mute(output_id, False)
             else:
               roonapi.mute(output_id, True)
-          elif zone_command == "shuffle":
-            roonapi.shuffle(output_id, True)
-          elif zone_command == "unshuffle":
-            roonapi.shuffle(output_id, False)
-          elif zone_command == "repeat":
-            roonapi.repeat(output_id, True)
-          elif zone_command == "unrepeat":
-            roonapi.repeat(output_id, False)
+            not_executed = False
+          elif zone_command == "pause_all":
+            roonapi.pause_all()
+            not_executed = False
+          elif zone_command == "repeat" or zone_command == "unrepeat":
+            zone = roonapi.zone_by_output_id(output_id)
+            if zone is not None:
+              looping = zone["settings"]["loop"]
+              if looping == "loop" or looping == "loop_one":
+                roonapi.repeat(output_id, False)
+              else:
+                roonapi.repeat(output_id, True)
+              not_executed = False
+          elif zone_command == "shuffle" or zone_command == "unshuffle":
+            zone = roonapi.zone_by_output_id(output_id)
+            if zone is not None:
+              if zone["settings"]["shuffle"]:
+                roonapi.shuffle(output_id, False)
+              else:
+                roonapi.shuffle(output_id, True)
+              not_executed = False
+          else:
+            roonapi.playback_control(output_id, zone_command)
+            not_executed = False
+        if not_executed:
+          if zone_command == "pause_all":
+            roonapi.pause_all()
+          elif zone_command == "repeat" or zone_command == "unrepeat":
+            zone = roonapi.zone_by_output_id(output_id)
+            if zone is not None:
+              looping = zone["settings"]["loop"]
+              if looping == "loop" or looping == "loop_one":
+                roonapi.repeat(output_id, False)
+              else:
+                roonapi.repeat(output_id, True)
+          elif zone_command == "shuffle" or zone_command == "unshuffle":
+            zone = roonapi.zone_by_output_id(output_id)
+            if zone is not None:
+              if zone["settings"]["shuffle"]:
+                roonapi.shuffle(output_id, False)
+              else:
+                roonapi.shuffle(output_id, True)
           else:
             roonapi.playback_control(output_id, zone_command)
 
