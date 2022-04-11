@@ -56,7 +56,7 @@ zonelist=
 
 usage() {
   [ "${showusage}" ] && {
-    printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group"
+    printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -i"
     printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]"
     printf "\n\t-c [group|ungroup|play|pause|pause_all|stop|next|previous|shuffle|repeat|mute]"
     printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
@@ -65,6 +65,8 @@ usage() {
     printf "\n\t-a artist selects an artist to list/play"
     printf "\n\t-C composer selects a composer to play"
     printf "\n\t-g genre selects a genre to list/play"
+    printf "\n\t-i displays zone information (combine with '-z zone' for extended"
+    printf "\n\t\tinfo on a specified zone, otherwise display info on all zones)"
     printf "\n\t-p playlist selects a playlist to play"
     printf "\n\t-G zone_group specifies a zone grouping specified in roon_api.ini"
     printf "\n\t-L setup roon to execute local commands rather than remote via SSH"
@@ -138,10 +140,14 @@ usage() {
     printf "\n\t\troon -v 50"
     printf "\n\tDecrease the volume level by 10 in the currently active zone"
     printf "\n\t\troon -v r:-10"
-    printf "\n\tSet the volume level to 40 in all zones grouped with the zone named "Mac Pro DAC""
-    printf "\n\t\troon -v g:40 -z "Mac Pro DAC""
-    printf "\n\tIncrease the volume level by 20 in all zones grouped with the zone named "Mac Pro DAC""
-    printf "\n\t\troon -v g:r:20 -z "Mac Pro DAC""
+    printf "\n\tSet the volume level to 40 in all zones grouped with the zone named 'Mac Pro DAC'"
+    printf "\n\t\troon -v g:40 -z 'Mac Pro DAC'"
+    printf "\n\tIncrease the volume level by 20 in all zones grouped with the zone named 'Mac Pro DAC'"
+    printf "\n\t\troon -v g:r:20 -z 'Mac Pro DAC'"
+    printf "\n\tGet info on all Roon zones"
+    printf "\n\t\troon -i -z 'Mac Pro DAC'"
+    printf "\n\tGet extended info on Roon zone named 'Mac Pro DAC'"
+    printf "\n\t\troon -i -z 'Mac Pro DAC'"
     printf "\n\tNOTE: Use quotes to specify media names which contain spaces."
     printf "\n\tFor example, to play the album 'Love Bomb':"
     printf "\n\t\troon -A \"Love Bomb\"\n"
@@ -786,7 +792,8 @@ main_menu() {
 }
 
 exact=
-while getopts A:a:c:C:g:G:p:T:t:z:l:s:LSr:v:x:X:EuU flag; do
+info=
+while getopts A:a:c:C:g:G:ip:T:t:z:l:s:LSr:v:x:X:EuU flag; do
     case $flag in
         A)
             album="$OPTARG"
@@ -802,6 +809,9 @@ while getopts A:a:c:C:g:G:p:T:t:z:l:s:LSr:v:x:X:EuU flag; do
             ;;
         g)
             genre="$OPTARG"
+            ;;
+        i)
+            info=1
             ;;
         p)
             playlist="$OPTARG"
@@ -967,6 +977,25 @@ done
         ${ROON}/bin/set_zone_group $comm $zonegroup
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone_group $comm $zonegroup\""
+    fi
+}
+
+[ "$info" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+      if [ "$zone" ]
+      then
+        ${ROON}/bin/get_zone_info -z $zone
+      else
+        ${ROON}/bin/get_zone_info
+      fi
+    else
+      if [ "$zone" ]
+      then
+        ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info -z $zone\""
+      else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info\""
+      fi
     fi
 }
 

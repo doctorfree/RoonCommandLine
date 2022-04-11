@@ -9,21 +9,27 @@ date: December 05, 2021
 get_zone_info - Get Roon Zone Info
 
 # SYNOPSIS
-**get_zone_info** [ **-l** ] [ ZONE ]
+**get_zone_info** [ **-l** ] [ **-z** ZONE ]
 
 # DESCRIPTION
-Retrieves information on specified/default zone(s)
+Retrieves information on specified zone or all zones if no zone is specified. If a zone is specified using the `-z zone` option then extended information on that zone is displayed. If the `-l` flag is provided then only the listing of zone grouping is displayed.
 
 # COMMAND LINE OPTIONS
 **-l**
 : Retrieve a comma separated list of the zone grouping for specified/default zone(s) 
 
-**ZONE**
+**-z ZONE**
 : If a *ZONE* is specified then retrieve info/grouping for that zone only. If no *ZONE* is sprovided on the command line then retrieve info/grouping for all zones.
 
 # EXAMPLES
+**get_zone_info**
+: Displays info and zone groupings for all zones
+
 **get_zone_info -l**
 : Retrieves a comma separated list of zone groupings for all zones
+
+**get_zone_info -z Kitchen**
+: Displays extensive information on the Roon zone named "Kitchen"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

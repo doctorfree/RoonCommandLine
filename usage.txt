@@ -1,4 +1,4 @@
-Usage: roon -A album -a artist -C composer -g genre -G zone_group
+Usage: roon -A album -a artist -C composer -g genre -G zone_group -i
 	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
 	-c [group|ungroup|play|pause|pause_all|stop|next|previous|shuffle|repeat|mute]
 	-s search -p playlist -T track -t tag -z zone -L -S -r radio
@@ -8,6 +8,8 @@ Where:
 	-a artist selects an artist to list/play
 	-C composer selects a composer to play
 	-g genre selects a genre to list/play
+	-i displays zone information (combine with '-z zone' for extended
+		info on a specified zone, otherwise display info on all zones)
 	-p playlist selects a playlist to play
 	-G zone_group specifies a zone grouping specified in roon_api.ini
 	-L setup roon to execute local commands rather than remote via SSH
@@ -81,10 +83,14 @@ Example invocations
 		roon -v 50
 	Decrease the volume level by 10 in the currently active zone
 		roon -v r:-10
-	Set the volume level to 40 in all zones grouped with the zone named Mac
-		roon -v g:40 -z Mac
-	Increase the volume level by 20 in all zones grouped with the zone named Mac
-		roon -v g:r:20 -z Mac
+	Set the volume level to 40 in all zones grouped with the zone named 'Mac Pro DAC'
+		roon -v g:40 -z 'Mac Pro DAC'
+	Increase the volume level by 20 in all zones grouped with the zone named 'Mac Pro DAC'
+		roon -v g:r:20 -z 'Mac Pro DAC'
+	Get info on all Roon zones
+		roon -i -z 'Mac Pro DAC'
+	Get extended info on Roon zone named 'Mac Pro DAC'
+		roon -i -z 'Mac Pro DAC'
 	NOTE: Use quotes to specify media names which contain spaces.
 	For example, to play the album 'Love Bomb':
 		roon -A "Love Bomb"

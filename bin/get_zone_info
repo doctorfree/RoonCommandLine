@@ -5,6 +5,7 @@ ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 LIST=list_zones.py
+INFO=zone_properties.py
 ZONE=
 
 [ -d ${ROONAPI} ] || exit 1
@@ -25,11 +26,16 @@ else
 fi
 
 getwith=
-[ "$1" == "-l" ] && {
-    getwith="-g"
-    shift
-}
-[ "$1" ] && ZONE="$*"
+while getopts "lz:" flag; do
+    case $flag in
+        l)
+            getwith="-g"
+            ;;
+        z)
+            ZONE="$OPTARG"
+            ;;
+    esac
+done
 
 # Get all zones if no zone is specified
 [ "${ZONE}" ] || ZONE="__all__"
@@ -38,6 +44,12 @@ have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
     python3 $LIST ${getwith} -i -z "${ZONE}"
+    [ "${ZONE}" == "__all__" ] || {
+        [ "${getwith}" ] || python3 $INFO -z "${ZONE}"
+    }
 else
     python $LIST ${getwith} -i -z "${ZONE}"
+    [ "${ZONE}" == "__all__" ] || {
+        [ "${getwith}" ] || python $INFO -z "${ZONE}"
+    }
 fi

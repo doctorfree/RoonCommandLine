@@ -21,25 +21,36 @@
 get_zone_info - Get Roon Zone Info
 .SH SYNOPSIS
 .PP
-\f[B]get_zone_info\f[R] [ \f[B]-l\f[R] ] [ ZONE ]
+\f[B]get_zone_info\f[R] [ \f[B]-l\f[R] ] [ \f[B]-z\f[R] ZONE ]
 .SH DESCRIPTION
 .PP
-Retrieves information on specified/default zone(s)
+Retrieves information on specified zone or all zones if no zone is
+specified.
+If a zone is specified using the \f[V]-z zone\f[R] option then extended
+information on that zone is displayed.
+If the \f[V]-l\f[R] flag is provided then only the listing of zone
+grouping is displayed.
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]-l\f[R]
 Retrieve a comma separated list of the zone grouping for
 specified/default zone(s)
 .TP
-\f[B]ZONE\f[R]
+\f[B]-z ZONE\f[R]
 If a \f[I]ZONE\f[R] is specified then retrieve info/grouping for that
 zone only.
 If no \f[I]ZONE\f[R] is sprovided on the command line then retrieve
 info/grouping for all zones.
 .SH EXAMPLES
 .TP
+\f[B]get_zone_info\f[R]
+Displays info and zone groupings for all zones
+.TP
 \f[B]get_zone_info -l\f[R]
 Retrieves a comma separated list of zone groupings for all zones
+.TP
+\f[B]get_zone_info -z Kitchen\f[R]
+Displays extensive information on the Roon zone named \[dq]Kitchen\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
