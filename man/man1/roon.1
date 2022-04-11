@@ -27,9 +27,9 @@ genalbums | genartists | playlists | tags | zones ] [ \f[B]-A\f[R] album
 ] [ \f[B]-a\f[R] artist ] [ \f[B]-C\f[R] composer ] [ \f[B]-g\f[R] genre
 ] [ \f[B]-p\f[R] playlist ] [ \f[B]-r\f[R] radio ] [ \f[B]-t\f[R] tag ]
 [ \f[B]-s\f[R] search ] [-v volume] [ \f[B]-z\f[R] zone ] [ \f[B]-G\f[R]
-zone_group ] [ \f[B]-c\f[R] group | ungroup | play | pause | stop | next
-| previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute ] [
-\f[B]-T\f[R] track ]
+zone_group ] [ \f[B]-c\f[R] group | ungroup | play | pause | pause_all |
+stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute
+| unmute ] [ \f[B]-T\f[R] track ]
 .SH DESCRIPTION
 .PP
 The \f[I]roon\f[R] command acts as a front-end for executing the
@@ -70,6 +70,8 @@ ungroup
 play
 .IP \[bu] 2
 pause
+.IP \[bu] 2
+pause_all
 .IP \[bu] 2
 playpause
 .IP \[bu] 2
@@ -188,7 +190,7 @@ necessary
 \f[B]-z\f[R] zone
 Selects the Roon Zone in which to play
 .TP
-\f[B]-c\f[R] \f[B][\f[R]group | ungroup | play | pause | playpause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute\f[B]]\f[R]
+\f[B]-c\f[R] \f[B][\f[R]group | ungroup | play | pause | pause_all | playpause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute\f[B]]\f[R]
 Issues the command in the selected zone
 .PP
 Combine \[aq]-a artist\[aq] and \[aq]-A album\[aq] to play an album by a

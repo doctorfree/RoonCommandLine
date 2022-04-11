@@ -12,7 +12,7 @@ zone_command - Execute a Roon command in a specified Roon Zone
 **zone_command** [ **-c** COMMAND ] [ **-z** ZONE ]
 
 # DESCRIPTION
-Executes the specified Roon command in the given Roon zone. If no *-c COMMAND* is provided then the "**play**" command is used. If no *ZONE* is provided then the configured default Roon zone is used. **COMMAND** can be one of "*play*", "*pause*", "*next*", "*previous*", "*mute*", "*unmute*", "*repeat*", "*unrepeat*", "*shuffle*", or "*unshuffle*". The *ZONE* name provided on the command line must match exactly the configured Roon Zone name in which to execute the Roon command. Partial matching is not yet implemented.
+Executes the specified Roon command in the given Roon zone. If no *-c COMMAND* is provided then the "**play**" command is used. If no *ZONE* is provided then the configured default Roon zone is used. **COMMAND** can be one of "*play*", "*pause*", "*pause_all*", "*next*", "*previous*", "*mute*", "*unmute*", "*repeat*", "*unrepeat*", "*shuffle*", or "*unshuffle*". The *ZONE* name provided on the command line must match exactly the configured Roon Zone name in which to execute the Roon command. Partial matching is not yet implemented.
 
 # COMMAND LINE OPTIONS
 **-c COMMAND**
@@ -22,8 +22,14 @@ Executes the specified Roon command in the given Roon zone. If no *-c COMMAND* i
 : Execute specified Roon command in Roon zone *zone*
 
 # EXAMPLES
+**zone_command -c mute -z HomePod**
+: Toggles Mute/Unmute playback in the Roon Zone named "HomePod"
+
 **zone_command -c pause -z HomePod**
 : Pause playback in the Roon Zone named "HomePod"
+
+**zone_command -c pause_all**
+: Pause playback in all Roon zones
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

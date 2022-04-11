@@ -69,6 +69,7 @@ Currently the command line Roon control scripts provide support for:
   - ungroup
   - play
   - pause
+  - pause_all
   - playpause
   - stop
   - next
@@ -553,7 +554,7 @@ Here is the current output of "roon -u" which displays a usage message.
 
 Usage: roon -A album -a artist -C composer -g genre -G zone_group
 	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
-	-c [group|ungroup|play|pause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+	-c [group|ungroup|play|pause|pause_all|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 	-s search -p playlist -T track -t tag -z zone -L -S -r radio
 	-X ex_album -x ex_artist [-EuU]
 Where:
@@ -572,7 +573,7 @@ Where:
 	-T track specifies a track to play
 	-t tag selects an tag to play
 	-z zone selects the Roon Zone in which to play
-	-c [group|ungroup|play|pause|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
+	-c [group|ungroup|play|pause|pause_all|playpause|stop|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|unmute]
 		issues the command in the selected zone
 	-v volume sets the volume level in the selected zone
 		The volume argument has the format [g:][r:][s:]num
@@ -888,7 +889,7 @@ executing the following commands directly.
 
 [**set_zone_group**](bin/set_zone_group) - Set one of the Roon Zone groupings specified in roon_api.ini
 
-[**zone_command**](bin/zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, mute, unmute, next track, previous track)
+[**zone_command**](bin/zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, pause_all, mute, unmute, next track, previous track)
 
 [**LICENSE**](LICENSE) - Apache License version 2.0
 

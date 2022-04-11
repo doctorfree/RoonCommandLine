@@ -30,11 +30,11 @@ command is used.
 If no \f[I]ZONE\f[R] is provided then the configured default Roon zone
 is used.
 \f[B]COMMAND\f[R] can be one of \[dq]\f[I]play\f[R]\[dq],
-\[dq]\f[I]pause\f[R]\[dq], \[dq]\f[I]next\f[R]\[dq],
-\[dq]\f[I]previous\f[R]\[dq], \[dq]\f[I]mute\f[R]\[dq],
-\[dq]\f[I]unmute\f[R]\[dq], \[dq]\f[I]repeat\f[R]\[dq],
-\[dq]\f[I]unrepeat\f[R]\[dq], \[dq]\f[I]shuffle\f[R]\[dq], or
-\[dq]\f[I]unshuffle\f[R]\[dq].
+\[dq]\f[I]pause\f[R]\[dq], \[dq]\f[I]pause_all\f[R]\[dq],
+\[dq]\f[I]next\f[R]\[dq], \[dq]\f[I]previous\f[R]\[dq],
+\[dq]\f[I]mute\f[R]\[dq], \[dq]\f[I]unmute\f[R]\[dq],
+\[dq]\f[I]repeat\f[R]\[dq], \[dq]\f[I]unrepeat\f[R]\[dq],
+\[dq]\f[I]shuffle\f[R]\[dq], or \[dq]\f[I]unshuffle\f[R]\[dq].
 The \f[I]ZONE\f[R] name provided on the command line must match exactly
 the configured Roon Zone name in which to execute the Roon command.
 Partial matching is not yet implemented.
@@ -47,8 +47,14 @@ Execute Roon command \f[I]COMMAND\f[R] in the specified zone
 Execute specified Roon command in Roon zone \f[I]zone\f[R]
 .SH EXAMPLES
 .TP
+\f[B]zone_command -c mute -z HomePod\f[R]
+Toggles Mute/Unmute playback in the Roon Zone named \[dq]HomePod\[dq]
+.TP
 \f[B]zone_command -c pause -z HomePod\f[R]
 Pause playback in the Roon Zone named \[dq]HomePod\[dq]
+.TP
+\f[B]zone_command -c pause_all\f[R]
+Pause playback in all Roon zones
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

@@ -10,7 +10,7 @@ roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
 
-**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | pause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute ] [ **-T** track ]
+**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | pause | pause_all | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute ] [ **-T** track ]
 
 # DESCRIPTION
 The *roon* command acts as a front-end for executing the RoonCommandLine
@@ -35,6 +35,7 @@ Command line Roon control provides support for:
   - ungroup
   - play
   - pause
+  - pause_all
   - playpause
   - stop
   - next
@@ -133,7 +134,7 @@ Outputs are queried and the specified volume level converted to dB if necessary
 **-z** zone
 : Selects the Roon Zone in which to play
 
-**-c** **[**group | ungroup | play | pause | playpause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute**]**
+**-c** **[**group | ungroup | play | pause | pause_all | playpause | stop | next | previous | shuffle | unshuffle | repeat | unrepeat | mute | unmute**]**
 : Issues the command in the selected zone
 
 Combine '-a artist' and '-A album' to play an album by a specified artist
