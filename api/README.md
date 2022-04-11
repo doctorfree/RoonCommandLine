@@ -37,3 +37,5 @@ Python scripts to access the Python Roon API
 [**zone_command.py**](zone_command.py) - Python script backend for sending commands to selected Roon Zone (play, pause, mute, next track, etc)
 
 [**zone_group.py**](zone_group.py) - Python script backend for grouping and ungrouping zones specified in roon_api.ini
+
+[**zone_properties.py**](zone_properties.py) - Python script backend for displaying information and properties of specified Roon zone
