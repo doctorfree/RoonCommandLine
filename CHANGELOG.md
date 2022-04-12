@@ -21,6 +21,7 @@ Apr 12, 2022 :
     toggles between 'loop' and 'disabled'.
 
     A `mute_all` command was added to toggle playback muting in all Roon zones.
+
     A `pause_all` command was added to pause playback in all Roon zones.
 
     A `-i` option was added to the `roon` command to display zone information.
@@ -95,6 +96,14 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Tue Apr 12 10:20:24 2022 -0700 3e53615 :
+   Do not redirect to /dev/null when setting var with command output
+Tue Apr 12 10:07:32 2022 -0700 60af2ac :
+   Add note in Upgrades section on preserving customizations
+Tue Apr 12 09:56:53 2022 -0700 bb71047 :
+   Add mute_all command to toggle muting in all zones
+Mon Apr 11 16:33:22 2022 -0700 6051adb :
+   Updated changelog and release notes with final changes for 2.0.5r1
 Mon Apr 11 16:20:30 2022 -0700 d0c0def :
    Installation scripts need to pass -z zone argument to get_zone_info now
 Mon Apr 11 16:15:03 2022 -0700 80827da :
