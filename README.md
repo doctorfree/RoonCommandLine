@@ -328,13 +328,23 @@ not to install the RoonCommandLine package there (see the section below on
 ## Upgrades
 
 If you are upgrading from a previous version of RoonCommandLine, starting
-with Version 2.0.5, customization made to `/usr/local/Roon/etc/roon_api.ini`
+with Version 2.0.5, customizations made to `/usr/local/Roon/etc/roon_api.ini`
 will be preserved. Unfortunately, upgrading from versions prior to 2.0.5
-will not preserve those customizations. If you are upgrading from 2.0.4
-or earlier it will be necessary to backup `roon_api.ini` and reapply your
-customizations to the newly installed `roon_api.ini`. If you are upgrading
-from 2.0.5 or later this should not be necessary but a backup prior to
-upgrading is recommended anyway.
+will not preserve those customizations without some manual effort.
+
+If you are upgrading from 2.0.4 or earlier it will be necessary to either:
+
+- Backup `roon_api.ini` and reapply your customizations to the newly installed `roon_api.ini`
+
+or
+
+- Prior to applying the upgrade, copy `roon_api.ini` to `/tmp/_roon_api_ini_.save`
+
+The latter, copying `roon_api.ini` to `/tmp/_roon_api_ini_.save`, allows the
+upgrade to automatically preserve your customizations.
+
+If you are upgrading from 2.0.5 or later this should not be necessary
+but a backup prior to upgrading is recommended anyway.
 
 ## Remote deployment
 
