@@ -185,7 +185,7 @@ do
     [ "${homedir}" == "/Users/*" ] && continue
     [ -d ${homedir} ] && {
         username=`basename ${homedir}`
-        exists=`id -g -n ${username} > /dev/null 2>&1`
+        exists=`id -g -n ${username}`
         [ "${exists}" ] && {
             users="${users} ${username}"
             numusers=`expr ${numusers} + 1`
