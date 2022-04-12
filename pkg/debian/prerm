@@ -19,7 +19,10 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-        [ -x /usr/local/Roon/etc/preremove ] && /usr/local/Roon/etc/preremove
+        if [ -x /usr/local/Roon/etc/preremove ]
+        then
+            /usr/local/Roon/etc/preremove
+        fi
     ;;
 
     failed-upgrade)

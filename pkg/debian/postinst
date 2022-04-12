@@ -20,7 +20,10 @@ set -e
 
 case "$1" in
     configure)
-        [ -x /usr/local/Roon/etc/postinstall ] && /usr/local/Roon/etc/postinstall
+        if [ -x /usr/local/Roon/etc/postinstall ]
+        then
+            /usr/local/Roon/etc/postinstall
+        fi
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

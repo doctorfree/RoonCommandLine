@@ -70,25 +70,28 @@ fi
 [ "${have_pip}" ] && [ "${have_python3}" ] || {
     echo "RoonCommandLine requires Python 3 and Pip"
     echo "Install Python 3 and restart this installation"
-    echo "See https://docs.python-guide.org/starting/install3/osx/"
-    echo "for step by step instructions to install Homebrew and Python 3"
-    echo "If you already have Homebrew, install Python 3 with:"
-    echo "brew install python"
     exit 1
 }
-[ -f /usr/local/Roon/etc/roon_api.ini ] && {
+if [ -f /usr/local/Roon/etc/roon_api.ini ]
+then
     cp /usr/local/Roon/etc/roon_api.ini /tmp/_roon_api_ini_.save
-}
+fi
 
 %post
 exec 1>/proc/${PPID}/fd/1
 exec 2>/proc/${PPID}/fd/2
-[ -x /usr/local/Roon/etc/postinstall ] && /usr/local/Roon/etc/postinstall
+if [ -x /usr/local/Roon/etc/postinstall ]
+then
+    /usr/local/Roon/etc/postinstall
+fi
 
 %preun
 exec 1>/proc/${PPID}/fd/1
 exec 2>/proc/${PPID}/fd/2
-[ -x /usr/local/Roon/etc/preremove ] && /usr/local/Roon/etc/preremove
+if [ -x /usr/local/Roon/etc/preremove ]
+then
+    /usr/local/Roon/etc/preremove
+fi
 
 %files
 /usr
