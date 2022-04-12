@@ -4,6 +4,7 @@ This release preserves existing configuration if it detects a previous release o
 
 Changes to RoonCommandLine commands include changing the `shuffle` and `repeat` commands to toggles, similar to what was done for `mute`. Note that `repeat` does not mimic the Roon `loop` feature which cycles through three values - 'loop', 'loop_one', and 'disabled'. The `repeat` command in RoonCommandLine and the Python Roon API is a Boolean and toggles between 'loop' and 'disabled'.
 
+A `mute_all` command was added to toggle playback muting in all Roon zones.
 A `pause_all` command was added to pause playback in all Roon zones.
 
 A `-i` option was added to the `roon` command to display zone information. In the absence of any `-z zone` argument, information on all zones is displayed. If a zone is specified in combination with the `-i` argument, e.g. `-i -z Kitchen`, then extended information is displayed for that zone alone. The Python script `zone_properties.py` was added to support this feature.

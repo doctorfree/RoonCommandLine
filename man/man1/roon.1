@@ -28,8 +28,8 @@ genalbums | genartists | playlists | tags | zones ] [ \f[B]-A\f[R] album
 ] [ \f[B]-p\f[R] playlist ] [ \f[B]-r\f[R] radio ] [ \f[B]-t\f[R] tag ]
 [ \f[B]-s\f[R] search ] [-v volume] [ \f[B]-z\f[R] zone ] [ \f[B]-G\f[R]
 zone_group ] [ \f[B]-c\f[R] group | ungroup | play | pause | pause_all |
-stop | next | previous | shuffle | repeat | mute ] [ \f[B]-T\f[R] track
-]
+stop | next | previous | shuffle | repeat | mute | mute_all ] [
+\f[B]-T\f[R] track ]
 .SH DESCRIPTION
 .PP
 The \f[I]roon\f[R] command acts as a front-end for executing the
@@ -81,8 +81,10 @@ next
 .IP \[bu] 2
 previous
 .IP \[bu] 2
-mute/unmute (toggles the muted/unmuted volome in the selected zone or
-zone group)
+mute (toggles the muted/unmuted volome in the selected zone or zone
+group)
+.IP \[bu] 2
+mute_all (toggles the muted/unmuted volome in all zones)
 .IP \[bu] 2
 shuffle (toggles shuffle/unshuffle playback in the selected zone or zone
 group)
@@ -188,7 +190,7 @@ necessary
 \f[B]-z\f[R] zone
 Selects the Roon Zone in which to play
 .TP
-\f[B]-c\f[R] \f[B][\f[R]group | ungroup | play | pause | pause_all | playpause | stop | next | previous | shuffle | repeat | mute\f[B]]\f[R]
+\f[B]-c\f[R] \f[B][\f[R]group | ungroup | play | pause | pause_all | playpause | stop | next | previous | shuffle | repeat | mute | mute_all\f[B]]\f[R]
 Issues the command in the selected zone
 .PP
 Combine \[aq]-a artist\[aq] and \[aq]-A album\[aq] to play an album by a
@@ -270,6 +272,9 @@ Stop play in specified zone
 .TP
 \f[B]roon -c mute -z \[dq]Mac Pro DAC\[dq]\f[R]
 Mute/Unmute a specified zone
+.TP
+\f[B]roon -c mute_all\f[R]
+Mute/Unmute all zones
 .TP
 \f[B]roon -l playlists -s Best\f[R]
 List all playlists containing the string \[aq]Best\[aq]

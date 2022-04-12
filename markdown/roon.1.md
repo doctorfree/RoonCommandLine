@@ -10,7 +10,7 @@ roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
 
-**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | pause | pause_all | stop | next | previous | shuffle | repeat | mute ] [ **-T** track ]
+**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | pause | pause_all | stop | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ]
 
 # DESCRIPTION
 The *roon* command acts as a front-end for executing the RoonCommandLine
@@ -40,7 +40,8 @@ Command line Roon control provides support for:
   - stop
   - next
   - previous
-  - mute/unmute (toggles the muted/unmuted volome in the selected zone or zone group)
+  - mute (toggles the muted/unmuted volome in the selected zone or zone group)
+  - mute_all (toggles the muted/unmuted volome in all zones)
   - shuffle (toggles shuffle/unshuffle playback in the selected zone or zone group)
   - repeat (toggles looped/non-looped playback in the selected zone or zone group)
 - List albums, artists, albums by artist, albums by genre, artists by genre, genres, composers, playlists, tags, or Roon zones
@@ -132,7 +133,7 @@ Outputs are queried and the specified volume level converted to dB if necessary
 **-z** zone
 : Selects the Roon Zone in which to play
 
-**-c** **[**group | ungroup | play | pause | pause_all | playpause | stop | next | previous | shuffle | repeat | mute**]**
+**-c** **[**group | ungroup | play | pause | pause_all | playpause | stop | next | previous | shuffle | repeat | mute | mute_all**]**
 : Issues the command in the selected zone
 
 Combine '-a artist' and '-A album' to play an album by a specified artist
@@ -202,6 +203,9 @@ tools to the system on which they are installed.
 
 **roon -c mute -z "Mac Pro DAC"**
 : Mute/Unmute a specified zone
+
+**roon -c mute_all**
+: Mute/Unmute all zones
 
 **roon -l playlists -s Best**
 : List all playlists containing the string 'Best'

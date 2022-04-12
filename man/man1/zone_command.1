@@ -32,8 +32,8 @@ is used.
 \f[B]COMMAND\f[R] can be one of \[dq]\f[I]play\f[R]\[dq],
 \[dq]\f[I]pause\f[R]\[dq], \[dq]\f[I]pause_all\f[R]\[dq],
 \[dq]\f[I]next\f[R]\[dq], \[dq]\f[I]previous\f[R]\[dq],
-\[dq]\f[I]mute\f[R]\[dq], \[dq]\f[I]repeat\f[R]\[dq], or
-\[dq]\f[I]shuffle\f[R]\[dq].
+\[dq]\f[I]mute\f[R]\[dq], \[dq]\f[I]mute_all\f[R]\[dq],
+\[dq]\f[I]repeat\f[R]\[dq], or \[dq]\f[I]shuffle\f[R]\[dq].
 The \f[I]ZONE\f[R] name provided on the command line must match exactly
 the configured Roon Zone name in which to execute the Roon command.
 Partial matching is not yet implemented.
@@ -48,6 +48,9 @@ Execute specified Roon command in Roon zone \f[I]zone\f[R]
 .TP
 \f[B]zone_command -c mute -z HomePod\f[R]
 Toggles Mute/Unmute playback in the Roon Zone named \[dq]HomePod\[dq]
+.TP
+\f[B]zone_command -c mute_all\f[R]
+Toggles Mute/Unmute playback in all Roon Zones
 .TP
 \f[B]zone_command -c shuffle -z HomePod\f[R]
 Toggles Shuffle/Unshuffle playback in the Roon Zone named

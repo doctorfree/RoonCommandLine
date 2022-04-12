@@ -20,6 +20,7 @@ Apr 12, 2022 :
     command in RoonCommandLine and the Python Roon API is a Boolean and
     toggles between 'loop' and 'disabled'.
 
+    A `mute_all` command was added to toggle playback muting in all Roon zones.
     A `pause_all` command was added to pause playback in all Roon zones.
 
     A `-i` option was added to the `roon` command to display zone information.

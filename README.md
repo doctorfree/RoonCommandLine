@@ -26,6 +26,7 @@
         1. [Zone groupings and defaults](#zone-groupings-and-defaults)
         1. [SSH public key authentication](#ssh-public-key-authentication)
     1. [Manual installation](#manual-installation)
+1. [Upgrades](#upgrades)
 1. [Remote deployment](#remote-deployment)
     1. [RoonCommandLine Light deployment](#rooncommandline-light-deployment)
 1. [Removal](#removal)
@@ -75,6 +76,7 @@ Currently the command line Roon control scripts provide support for:
   - next
   - previous
   - mute (toggle muted/unmuted in selected zone or zone grouping)
+  - mute_all (toggle muted/unmuted in all zones)
   - shuffle (toggle shuffle/unshuffle zone playback)
   - repeat (toggle loop/unlooped zone playback)
 - List albums, artists, albums by artist, tracks by artist, albums by composer, composers, albums by genre, artists by genre, genres, playlists, live radio stations, tags, and Roon zones
@@ -323,6 +325,17 @@ not to install the RoonCommandLine package there (see the section below on
     # "roon -L" on that system. This will enable local execution of the
     # Roon Command Line scripts rather than remote execution via SSH.
 
+## Upgrades
+
+If you are upgrading from a previous version of RoonCommandLine, starting
+with Version 2.0.5, customization made to `/usr/local/Roon/etc/roon_api.ini`
+will be preserved. Unfortunately, upgrading from versions prior to 2.0.5
+will not preserve those customizations. If you are upgrading from 2.0.4
+or earlier it will be necessary to backup `roon_api.ini` and reapply your
+customizations to the newly installed `roon_api.ini`. If you are upgrading
+from 2.0.5 or later this should not be necessary but a backup prior to
+upgrading is recommended anyway.
+
 ## Remote deployment
 
 Recommended deployment of the RoonCommandLine package is to install the
@@ -551,7 +564,7 @@ Here is the current output of "roon -u" which displays a usage message.
 ```
 Usage: roon -A album -a artist -C composer -g genre -G zone_group -i
 	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
-	-c [group|ungroup|play|pause|pause_all|stop|next|previous|shuffle|repeat|mute]
+	-c [group|ungroup|play|pause|pause_all|stop|next|previous|shuffle|repeat|mute|mute_all]
 	-s search -p playlist -T track -t tag -z zone -L -S -r radio
 	-X ex_album -x ex_artist [-EuU]
 Where:
@@ -572,9 +585,10 @@ Where:
 	-T track specifies a track to play
 	-t tag selects an tag to play
 	-z zone selects the Roon Zone in which to play
-	-c [group|ungroup|play|pause|pause_all|playpause|stop|next|previous|shuffle|repeat|mute]
+	-c [group|ungroup|play|pause|pause_all|playpause|stop|next|previous|shuffle|repeat|mute|mute_all]
 		issues the command in the selected zone
 		'mute' toggles the zone's muted or unmuted state
+		'mute_all' toggles all zones' muted or unmuted state
 		'shuffle' toggles the zone's shuffled or unshuffled setting
 		'repeat' toggles the zone's looping or non-looping setting
 	-v volume sets the volume level in the selected zone
@@ -616,6 +630,8 @@ Example invocations
 		roon -c stop -z Kitchen
 	Mute/Unmute a specified zone:
 		roon -c mute -z "Mac Pro DAC"
+	Mute/Unmute all zones:
+		roon -c mute_all
 	List all playlists containing the string 'Best':
 		roon -l playlists -s Best
 	List albums by artist:
@@ -895,7 +911,7 @@ executing the following commands directly.
 
 [**set_zone_group**](bin/set_zone_group) - Set one of the Roon Zone groupings specified in roon_api.ini
 
-[**zone_command**](bin/zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, pause_all, mute, unmute, next track, previous track)
+[**zone_command**](bin/zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, pause_all, mute, mute_all, next track, previous track)
 
 [**LICENSE**](LICENSE) - Apache License version 2.0
 

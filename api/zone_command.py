@@ -34,6 +34,8 @@ release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
 from roonapi import RoonApi
+# import roonapi
+
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -95,18 +97,6 @@ else:
                 roonapi.mute(output_id, True)
               not_executed = False
         else:
-          # Send the command to the specified zone
-          # zone settings properties:
-          # loop setting on the zone
-          #     loop        'loop' | 'loop_one' | 'disabled'
-          # indicates whether shuffle is enabled on the zone
-          #     shuffle     boolean
-          # indicates whether auto-radio mode is enabled on the zone
-          #     auto_radio  boolean
-          #
-          # for zone in roonapi.zones.values():
-          #     print("Zone name: %s" % zone["display_name"])
-          #     print("Zone settings: %s" % zone["settings"])
           if zone_command == "mute" or zone_command == "unmute":
             if outputs[output_id]["volume"]["is_muted"]:
               roonapi.mute(output_id, False)
@@ -154,6 +144,12 @@ else:
                 roonapi.shuffle(output_id, False)
               else:
                 roonapi.shuffle(output_id, True)
+          elif zone_command == "mute_all":
+            for (k, v) in outputs.items():
+              if outputs[k]["volume"]["is_muted"]:
+                roonapi.mute(k, False)
+              else:
+                roonapi.mute(k, True)
           else:
             roonapi.playback_control(output_id, zone_command)
 
