@@ -166,6 +166,8 @@ ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 LOCAL=false
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
 [ -f ${ROONCONF} ] && . ${ROONCONF}
 
 [[ ":$PATH:" == *":/usr/local/bin:"* ]] || export PATH=${PATH}:/usr/local/bin
