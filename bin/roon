@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# roon - frontend shell script to issue remote commands to Roon via SSH and the Roon API
+# roon - frontend script to issue commands to Roon via the Python Roon API
 #
-#  Copyright 2021, Ronald Joe Record
+#  Copyright 2021-2022, Ronald Joe Record
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -16,10 +16,20 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-# Edit these two settings
+# Edit these two settings if necessary
+#
+#   Both of these should have been set correctly during
+#   installation of the RoonCommandLine package. Manual
+#   setting of these variables is uncommon and only necessary
+#   if the Python Roon API is installed on another system
+#
 #   The IP address of the system on which the Python Roon API is installed
+#
 server="XX.X.X.XXX"
-#   The username that has public key authorized SSH access to the Python Roon API system
+#
+#   The username with public key authorized SSH access to the system on
+#   which the Python Roon API is installed
+#
 user="SSH_USERNAME"
 
 album=
