@@ -68,7 +68,7 @@ usage() {
   [ "${showusage}" ] && {
     printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -i"
     printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]"
-    printf "\n\t-c [group|ungroup|play|pause|pause_all|stop|next|previous|shuffle|repeat|mute|mute_all]"
+    printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]"
     printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
     printf "\n\t-X ex_album -x ex_artist [-EuU]"
     printf "\nWhere:\n\t-A album selects an album to play"
@@ -88,10 +88,13 @@ usage() {
     printf "\n\t-T track specifies a track to play"
     printf "\n\t-t tag selects an tag to play"
     printf "\n\t-z zone selects the Roon Zone in which to play"
-    printf "\n\t-c [group|ungroup|play|pause|pause_all|playpause|stop|next|previous|shuffle|repeat|mute|mute_all]"
+    printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]"
     printf "\n\t\tissues the command in the selected zone"
     printf "\n\t\t'mute' toggles the zone's muted or unmuted state"
     printf "\n\t\t'mute_all' toggles all zones' muted or unmuted state"
+    printf "\n\t\t'pause_all' pauses playback in all zones"
+    printf "\n\t\t'play_all' begins playback in all zones"
+    printf "\n\t\t'stop_all' stops playback in all zones and releases devices"
     printf "\n\t\t'shuffle' toggles the zone's shuffled or unshuffled setting"
     printf "\n\t\t'repeat' toggles the zone's looping or non-looping setting"
     printf "\n\t-v volume sets the volume level in the selected zone"
@@ -523,7 +526,7 @@ main_menu() {
   while true
   do
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Pause" "Pause All" "Next Track" "Previous Track" "Toggle Mute" "Toggle Mute All" "Toggle Repeat" "Toggle Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Volume" "Quit")
+    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Toggle Repeat" "Toggle Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Volume" "Quit")
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
@@ -560,6 +563,17 @@ main_menu() {
                     zone_command -c play
                 else
                     ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play\""
+                fi
+                printf " Done\n\n"
+                break
+                ;;
+            "Play All",*|*,"Play All")
+                printf "\nExecuting Roon command to play in all zones ..."
+                if [ "${LOCAL}" = true ]
+                then
+                    zone_command -c play_all
+                else
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play_all\""
                 fi
                 printf " Done\n\n"
                 break
@@ -604,6 +618,28 @@ main_menu() {
                     zone_command -c previous
                 else
                     ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c previous\""
+                fi
+                printf " Done\n\n"
+                break
+                ;;
+            "Stop",*|*,"Stop")
+                printf "\nExecuting Roon command to stop ..."
+                if [ "${LOCAL}" = true ]
+                then
+                    zone_command -c stop
+                else
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop\""
+                fi
+                printf " Done\n\n"
+                break
+                ;;
+            "Stop All",*|*,"Stop All")
+                printf "\nExecuting Roon command to stop in all zones ..."
+                if [ "${LOCAL}" = true ]
+                then
+                    zone_command -c stop_all
+                else
+                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop_all\""
                 fi
                 printf " Done\n\n"
                 break
@@ -1355,7 +1391,7 @@ done
 
 [ "${comm}" ] && {
     case "${comm}" in
-    "shuffle"|"unshuffle"|"repeat"|"unrepeat"|"mute"|"unmute"|"mute_all"|"next"|"previous"|"play"|"pause"|"pause_all"|"stop"|"playpause")
+    "shuffle"|"unshuffle"|"repeat"|"unrepeat"|"mute"|"unmute"|"mute_all"|"next"|"previous"|"play"|"play_all"|"pause"|"pause_all"|"stop"|"playpause")
         if [ "${LOCAL}" = true ]
         then
             zone_command -c ${comm}

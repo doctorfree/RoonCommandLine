@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-Apr 12, 2022 :
+Apr 15, 2022 :
     RoonCommandLine version 2.0.5 release 1 is a feature update
 
     This release preserves existing configuration if it detects a
@@ -23,6 +23,10 @@ Apr 12, 2022 :
     A `mute_all` command was added to toggle playback muting in all Roon zones.
 
     A `pause_all` command was added to pause playback in all Roon zones.
+
+    A `play_all` command was added to begin playback in all Roon zones.
+
+    A `stop_all` command was added to stop playback in all Roon zones and release devices.
 
     A `-i` option was added to the `roon` command to display zone information.
     In the absence of any `-z zone` argument, information on all zones is displayed.

@@ -1,6 +1,6 @@
 Usage: roon -A album -a artist -C composer -g genre -G zone_group -i
 	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
-	-c [group|ungroup|play|pause|pause_all|stop|next|previous|shuffle|repeat|mute|mute_all]
+	-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]
 	-s search -p playlist -T track -t tag -z zone -L -S -r radio
 	-X ex_album -x ex_artist [-EuU]
 Where:
@@ -21,10 +21,13 @@ Where:
 	-T track specifies a track to play
 	-t tag selects an tag to play
 	-z zone selects the Roon Zone in which to play
-	-c [group|ungroup|play|pause|pause_all|playpause|stop|next|previous|shuffle|repeat|mute|mute_all]
+	-c [group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]
 		issues the command in the selected zone
 		'mute' toggles the zone's muted or unmuted state
 		'mute_all' toggles all zones' muted or unmuted state
+		'pause_all' pauses playback in all zones
+		'play_all' begins playback in all zones
+		'stop_all' stops playback in all zones and releases devices
 		'shuffle' toggles the zone's shuffled or unshuffled setting
 		'repeat' toggles the zone's looping or non-looping setting
 	-v volume sets the volume level in the selected zone

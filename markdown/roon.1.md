@@ -10,7 +10,7 @@ roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
 
-**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | pause | pause_all | stop | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ]
+**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | play_all | pause | pause_all | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ]
 
 # DESCRIPTION
 The *roon* command acts as a front-end for executing the RoonCommandLine
@@ -34,10 +34,12 @@ Command line Roon control provides support for:
   - group
   - ungroup
   - play
+  - play_all (begin playback in all zones)
   - pause
-  - pause_all
+  - pause_all (pause playback in all zones)
   - playpause
   - stop
+  - stop_all (stop playback in all zones and release devices)
   - next
   - previous
   - mute (toggles the muted/unmuted volome in the selected zone or zone group)
@@ -133,8 +135,8 @@ Outputs are queried and the specified volume level converted to dB if necessary
 **-z** zone
 : Selects the Roon Zone in which to play
 
-**-c** **[**group | ungroup | play | pause | pause_all | playpause | stop | next | previous | shuffle | repeat | mute | mute_all**]**
-: Issues the command in the selected zone
+**-c** **[**group | ungroup | play | play_all | pause | pause_all | playpause | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all**]**
+: Issues the command in the selected zone or all zones (`mute_all`, `play_all`, `pause_all`, `stop_all`)
 
 Combine '-a artist' and '-A album' to play an album by a specified artist
 Combine '-a artist' and '-T track' to play a track by a specified artist
@@ -224,6 +226,9 @@ tools to the system on which they are installed.
 
 **roon -v g:r:20 -z "Mac Pro DAC"**
 : Increase the volume level by 20 in all zones grouped with the zone named "Mac Pro DAC"
+
+**roon -c stop_all**
+: Stop play in all zones and release devices
 
 **NOTE:** Use quotes to specify media names which contain spaces.
 For example, to play the album 'Love Bomb':

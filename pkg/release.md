@@ -8,6 +8,10 @@ A `mute_all` command was added to toggle playback muting in all Roon zones.
 
 A `pause_all` command was added to pause playback in all Roon zones.
 
+A `play_all` command was added to begin playback in all Roon zones.
+
+A `stop_all` command was added to stop playback in all Roon zones and release devices.
+
 A `-i` option was added to the `roon` command to display zone information. In the absence of any `-z zone` argument, information on all zones is displayed. If a zone is specified in combination with the `-i` argument, e.g. `-i -z Kitchen`, then extended information is displayed for that zone alone. The Python script `zone_properties.py` was added to support this feature.
 
 RoonCommandLine version 2.0.4 release 3 is a feature modification release.

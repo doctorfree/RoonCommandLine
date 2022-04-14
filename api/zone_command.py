@@ -123,6 +123,14 @@ else:
               else:
                 roonapi.shuffle(output_id, True)
               not_executed = False
+          elif zone_command == "play_all":
+            for (k, v) in outputs.items():
+              roonapi.playback_control(k, "play")
+            not_executed = False
+          elif zone_command == "stop_all":
+            for (k, v) in outputs.items():
+              roonapi.playback_control(k, "stop")
+            not_executed = False
           else:
             roonapi.playback_control(output_id, zone_command)
             not_executed = False
@@ -144,6 +152,12 @@ else:
                 roonapi.shuffle(output_id, False)
               else:
                 roonapi.shuffle(output_id, True)
+          elif zone_command == "play_all":
+            for (k, v) in outputs.items():
+              roonapi.playback_control(k, "play")
+          elif zone_command == "stop_all":
+            for (k, v) in outputs.items():
+              roonapi.playback_control(k, "stop")
           elif zone_command == "mute_all":
             for (k, v) in outputs.items():
               if outputs[k]["volume"]["is_muted"]:

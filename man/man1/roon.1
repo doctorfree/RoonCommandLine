@@ -27,9 +27,9 @@ genalbums | genartists | playlists | tags | zones ] [ \f[B]-A\f[R] album
 ] [ \f[B]-a\f[R] artist ] [ \f[B]-C\f[R] composer ] [ \f[B]-g\f[R] genre
 ] [ \f[B]-p\f[R] playlist ] [ \f[B]-r\f[R] radio ] [ \f[B]-t\f[R] tag ]
 [ \f[B]-s\f[R] search ] [-v volume] [ \f[B]-z\f[R] zone ] [ \f[B]-G\f[R]
-zone_group ] [ \f[B]-c\f[R] group | ungroup | play | pause | pause_all |
-stop | next | previous | shuffle | repeat | mute | mute_all ] [
-\f[B]-T\f[R] track ]
+zone_group ] [ \f[B]-c\f[R] group | ungroup | play | play_all | pause |
+pause_all | stop | stop_all | next | previous | shuffle | repeat | mute
+| mute_all ] [ \f[B]-T\f[R] track ]
 .SH DESCRIPTION
 .PP
 The \f[I]roon\f[R] command acts as a front-end for executing the
@@ -69,13 +69,17 @@ ungroup
 .IP \[bu] 2
 play
 .IP \[bu] 2
+play_all (begin playback in all zones)
+.IP \[bu] 2
 pause
 .IP \[bu] 2
-pause_all
+pause_all (pause playback in all zones)
 .IP \[bu] 2
 playpause
 .IP \[bu] 2
 stop
+.IP \[bu] 2
+stop_all (stop playback in all zones and release devices)
 .IP \[bu] 2
 next
 .IP \[bu] 2
@@ -190,8 +194,10 @@ necessary
 \f[B]-z\f[R] zone
 Selects the Roon Zone in which to play
 .TP
-\f[B]-c\f[R] \f[B][\f[R]group | ungroup | play | pause | pause_all | playpause | stop | next | previous | shuffle | repeat | mute | mute_all\f[B]]\f[R]
-Issues the command in the selected zone
+\f[B]-c\f[R] \f[B][\f[R]group | ungroup | play | play_all | pause | pause_all | playpause | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all\f[B]]\f[R]
+Issues the command in the selected zone or all zones
+(\f[V]mute_all\f[R], \f[V]play_all\f[R], \f[V]pause_all\f[R],
+\f[V]stop_all\f[R])
 .PP
 Combine \[aq]-a artist\[aq] and \[aq]-A album\[aq] to play an album by a
 specified artist Combine \[aq]-a artist\[aq] and \[aq]-T track\[aq] to
@@ -295,6 +301,9 @@ Set the volume level to 40 in all zones grouped with the zone named
 \f[B]roon -v g:r:20 -z \[dq]Mac Pro DAC\[dq]\f[R]
 Increase the volume level by 20 in all zones grouped with the zone named
 \[dq]Mac Pro DAC\[dq]
+.TP
+\f[B]roon -c stop_all\f[R]
+Stop play in all zones and release devices
 .PP
 \f[B]NOTE:\f[R] Use quotes to specify media names which contain spaces.
 For example, to play the album \[aq]Love Bomb\[aq]: \f[B]roon -A
