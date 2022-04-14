@@ -57,6 +57,7 @@ Priority: optional
 Architecture: all
 Depends: qterminal (>= 0.14.1), git (>= 2.20.1), python3-pip
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
+Installed-Size: 11000
 Build-Depends: debhelper (>= 11)
 Standards-Version: 4.1.3
 Homepage: https://gitlab.com/doctorfree/RoonCommandLine
