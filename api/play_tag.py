@@ -70,7 +70,7 @@ else:
             tag = tags[0]
             print("\nPlaying media by tag is not yet working. Found tag for", tag, "\n")
             # Need to identify the media here, somehow use tag to search for media. How?
-            roonapi.play_media(output_id, ["Library", "Tags", tag], None, False)
+            # roonapi.play_media(output_id, ["Library", "Tags", tag], None, False)
         else:
             print("\nTo play a tag by name either specify the full name")
             print("or enough of a substring to provide a single match")
