@@ -58,9 +58,10 @@ fi
 
 # Copy in distributed roon_api.ini template if no previous one exists
 [ -f ${ROON_INI} ] || {
-  # Restore previously saved roon_api.ini if one exists
+  # Restore previously saved roon_api.ini and pyroonconf
   if [ -f /tmp/_roon_api_ini_.save ]
   then
+    echo "Restoring saved ${ROON_INI}"
     cp /tmp/_roon_api_ini_.save ${ROON_INI}
     rm -f /tmp/_roon_api_ini_.save
   else
@@ -134,7 +135,16 @@ done
     done
 }
 
-echo "Setting the Python Roon API server IP address to $IP"
+# Copy in saved pyroonconf if it exists
+[ -f ${ROONCONF} ] || {
+  # Restore previously saved pyroonconf
+  if [ -f /tmp/_pyroonconf_.save ]
+  then
+    echo "Restoring saved ${ROONCONF}"
+    cp /tmp/_pyroonconf_.save ${ROONCONF}
+    rm -f /tmp/_pyroonconf_.save
+  fi
+}
 
 echo "Enabling local access in ${ROONCONF}"
 if [ -f ${ROONCONF} ]
@@ -147,6 +157,7 @@ fi
 cp /tmp/roon$$ ${ROONCONF}
 rm -f /tmp/roon$$
 
+echo "Setting the Python Roon API server IP address to $IP"
 cat ${ROON}/bin/roon | sed -e "s/XX.X.X.XXX/$IP/" -e "s/SSH_USERNAME/$USER/" > /tmp/roon$$
 cp ${ROON}/bin/roon ${ROON}/bin/roon.orig
 cp /tmp/roon$$ ${ROON}/bin/roon

@@ -76,6 +76,10 @@ if [ -f /usr/local/Roon/etc/roon_api.ini ]
 then
     cp /usr/local/Roon/etc/roon_api.ini /tmp/_roon_api_ini_.save
 fi
+if [ -f /usr/local/Roon/etc/pyroonconf ]
+then
+    cp /usr/local/Roon/etc/pyroonconf /tmp/_pyroonconf_.save
+fi
 
 %post
 exec 1>/proc/${PPID}/fd/1

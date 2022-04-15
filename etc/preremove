@@ -18,6 +18,10 @@ ROON_INI=${ROONETC}/roon_api.ini
 [ -f ${ROON_INI} ] && {
     cp ${ROON_INI} /tmp/_roon_api_ini_.save
 }
+# Save pyroonconf in case this is prep for an upgrade
+[ -f ${ROONCONF} ] && {
+    cp ${ROONCONF} /tmp/_pyroonconf_.save
+}
 
 # Locate the global site directories
 ROON_SITE_DIR=
