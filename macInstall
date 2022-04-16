@@ -77,7 +77,7 @@ ${SUDO} ${PYTHON} -m pip install roonapi
 [ -d ${DESTDIR}/share/doc/${PKG} ] || ${SUDO} mkdir ${DESTDIR}/share/doc/${PKG}
 
 [ -f /usr/local/Roon/etc/roon_api.ini ] && {
-    cp /usr/local/Roon/etc/roon_api.ini /tmp/_roon_api_ini_.save
+    ${SUDO} cp /usr/local/Roon/etc/roon_api.ini /tmp/_roon_api_ini_.save
 }
 for dir in bin etc api patches
 do
@@ -149,10 +149,10 @@ done
   # Restore previously saved roon_api.ini if one exists
   if [ -f /tmp/_roon_api_ini_.save ]
   then
-    cp /tmp/_roon_api_ini_.save ${ROON_INI}
-    rm -f /tmp/_roon_api_ini_.save
+    ${SUDO} cp /tmp/_roon_api_ini_.save ${ROON_INI}
+    ${SUDO} rm -f /tmp/_roon_api_ini_.save
   else
-    cp ${ROONETC}/roon_api.ini-dist ${ROON_INI}
+    ${SUDO} cp ${ROONETC}/roon_api.ini-dist ${ROON_INI}
   fi
 }
 EX_CORE_IP=`cat ${ROON_INI} | grep RoonCoreIP | awk -F '=' ' { print $2 } '`
@@ -167,8 +167,8 @@ then
 else
   cat ${ROON_INI} | sed -e "/RoonCorePort.*/a RoonCommandLineVersion = __VERSION__" > /tmp/v$$
 fi
-cp /tmp/v$$ ${ROON_INI}
-rm -f /tmp/v$$
+${SUDO} cp /tmp/v$$ ${ROON_INI}
+${SUDO} rm -f /tmp/v$$
 
 updaterel=`grep RoonCommandLineRelease ${ROON_INI}`
 if [ "${updaterel}" ]
@@ -177,14 +177,15 @@ then
 else
   cat ${ROON_INI} | sed -e "/RoonCommandLineVersion.*/a RoonCommandLineRelease = __RELEASE__" > /tmp/r$$
 fi
-cp /tmp/r$$ ${ROON_INI}
-rm -f /tmp/r$$
+${SUDO} cp /tmp/r$$ ${ROON_INI}
+${SUDO} rm -f /tmp/r$$
 
 users=
 numusers=0
 for homedir in /Users/*
 do
     [ "${homedir}" == "/Users/*" ] && continue
+    [ "${homedir}" == "/Users/Shared" ] && continue
     [ -d ${homedir} ] && {
         username=`basename ${homedir}`
         exists=`id -g -n ${username}`
@@ -287,8 +288,8 @@ then
       # Mark it as having been patched
       grep -v ROONAPIPATCHED ${ROONCONF} > /tmp/roonconf$$
       echo "ROONAPIPATCHED=true" >> /tmp/roonconf$$
-      cp /tmp/roonconf$$ ${ROONCONF}
-      rm -f /tmp/roonconf$$
+      ${SUDO} cp /tmp/roonconf$$ ${ROONCONF}
+      ${SUDO} rm -f /tmp/roonconf$$
     else
       # Apply the Python Roon API patch if it has not already been applied
       if [ "${ROONAPIPATCHED}" = true ]
@@ -360,8 +361,8 @@ CORE_PORT="$(echo -e "${CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:
 # python -c 'import yaml;f=open("roon_api.ini");y=yaml.safe_load(f);y["DEFAULT"]["RoonCoreIP"] = ${CORE_IP}; print(yaml.dump(y, default_flow_style=False, sort_keys=False))'
 # But for now we use sed
 cat ${ROON_INI} | sed -e "s/${EX_CORE_IP}/${CORE_IP}/" -e "s/${EX_CORE_PORT}/${CORE_PORT}/" > /tmp/core$$
-cp /tmp/core$$ ${ROON_INI}
-rm -f /tmp/core$$ /tmp/discover$$
+${SUDO} cp /tmp/core$$ ${ROON_INI}
+${SUDO} rm -f /tmp/core$$ /tmp/discover$$
 
 # Get and set the default zone and initial zone groupings
 # Attempting to avoid grouping incompatible zones is somewhat convoluted
@@ -469,7 +470,7 @@ cat ${ROON_INI} | \
         -e "s/__VERSION__/${version}/" \
         -e "s/__RELEASE__/${release}/" \
         -e "s/__DEF_ZONE__/${defaultZone}/" > /tmp/zones$$
-cp /tmp/zones$$ ${ROON_INI}
+${SUDO} cp /tmp/zones$$ ${ROON_INI}
 rm -f /tmp/zones$$
 
 DEFZONE=`grep ^DefaultZone ${ROON_INI} | awk -F '=' ' { print $2 } '`
