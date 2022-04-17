@@ -34,11 +34,15 @@ else
     . ${ROONCONF}
 fi
 
-[ "${TRACK}" ] || {
-    echo "No track specified. Artist and track required."
-    echo "Usage: play_artist_track artist track"
-    exit 1
+# Get the default artist if one is not provided
+[ "${ARTIST}" ] || {
+    ARTIST=`grep ^DefaultArtist ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in ARTIST
+    ARTIST="$(echo -e "${ARTIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
+
+[ "${TRACK}" ] || TRACK="__all__"
+
 # Construct the exclusion args if passed
 EXARGS=
 [ "${EXTRACK}" ] && EXARGS="-X ${EXTRACK}"

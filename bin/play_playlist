@@ -33,6 +33,7 @@ fi
     # Remove leading and trailing spaces in PLAYLIST
     PLAYLIST="$(echo -e "${PLAYLIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
+
 # Construct the exclusion args if passed
 EXARGS=
 [ "${EXPLAYLIST}" ] && EXARGS="-x ${EXPLAYLIST}"

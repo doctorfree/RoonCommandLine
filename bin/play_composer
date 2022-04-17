@@ -33,6 +33,7 @@ fi
     # Remove leading and trailing spaces in COMPOSER
     COMPOSER="$(echo -e "${COMPOSER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
+
 # Construct the exclusion args if passed
 EXARGS=
 [ "${EXCOMPOSER}" ] && EXARGS="-x ${EXCOMPOSER}"

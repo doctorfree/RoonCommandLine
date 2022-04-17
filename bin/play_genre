@@ -33,6 +33,7 @@ fi
     # Remove leading and trailing spaces in GENRE
     GENRE="$(echo -e "${GENRE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
+
 # Construct the exclusion args if passed
 EXARGS=
 [ "${EXGENRE}" ] && EXARGS="-x ${EXGENRE}"
