@@ -25,12 +25,7 @@ else
     . ${ROONCONF}
 fi
 
-# Get the default album if one is not provided
-[ "${RADIO}" ] || {
-    RADIO=`grep ^DefaultRadio ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    # Remove leading and trailing spaces in RADIO
-    RADIO="$(echo -e "${RADIO}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-}
+[ "${RADIO}" ] || RADIO="__all__"
 
 have_python3=`type -p python3`
 if [ "${have_python3}" ]

@@ -27,12 +27,8 @@ else
     . ${ROONCONF}
 fi
 
-# Get the default genre if one is not provided
-[ "${GENRE}" ] || {
-    GENRE=`grep ^DefaultGenre ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    # Remove leading and trailing spaces in GENRE
-    GENRE="$(echo -e "${GENRE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-}
+[ "${GENRE}" ] || GENRE="__all__"
+
 # Construct the exclusion args if passed
 EXARGS=
 [ "${EXGENRE}" ] && EXARGS="-x ${EXGENRE}"

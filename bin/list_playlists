@@ -27,12 +27,9 @@ else
     . ${ROONCONF}
 fi
 
-# Get the default playlist if one is not provided
-[ "${PLAYLIST}" ] || {
-    PLAYLIST=`grep ^DefaultPlaylist ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    # Remove leading and trailing spaces in PLAYLIST
-    PLAYLIST="$(echo -e "${PLAYLIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-}
+# If no playlist search term is provided then list all
+[ "${PLAYLIST}" ] || PLAYLIST="__all__"
+
 # Construct the exclusion args if passed
 EXARGS=
 [ "${EXPLAYLIST}" ] && EXARGS="-x ${EXPLAYLIST}"

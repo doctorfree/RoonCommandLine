@@ -27,12 +27,8 @@ else
     . ${ROONCONF}
 fi
 
-# Get the default artist if one is not provided
-[ "${ARTIST}" ] || {
-    ARTIST=`grep ^DefaultArtist ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    # Remove leading and trailing spaces in ARTIST
-    ARTIST="$(echo -e "${ARTIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-}
+[ "${ARTIST}" ] || ARTIST="__all__"
+
 # Construct the exclusion args if passed
 EXARGS=
 [ "${EXARTIST}" ] && EXARGS="-x ${EXARTIST}"

@@ -27,12 +27,8 @@ else
     . ${ROONCONF}
 fi
 
-# Get the default composer if one is not provided
-[ "${COMPOSER}" ] || {
-    COMPOSER=`grep ^DefaultComposer ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    # Remove leading and trailing spaces in COMPOSER
-    COMPOSER="$(echo -e "${COMPOSER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-}
+[ "${COMPOSER}" ] || COMPOSER="__all__"
+
 # Construct the exclusion args if passed
 EXARGS=
 [ "${EXCOMPOSER}" ] && EXARGS="-x ${EXCOMPOSER}"

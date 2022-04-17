@@ -25,12 +25,7 @@ else
     . ${ROONCONF}
 fi
 
-# Get the default album if one is not provided
-[ "${TAG}" ] || {
-    TAG=`grep ^DefaultTag ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    # Remove leading and trailing spaces in TAG
-    TAG="$(echo -e "${TAG}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-}
+[ "${TAG}" ] || TAG="__all__"
 
 have_python3=`type -p python3`
 if [ "${have_python3}" ]

@@ -40,12 +40,9 @@ fi
     # Remove leading and trailing spaces in ARTIST
     ARTIST="$(echo -e "${ARTIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
-# Get the default album if one is not provided
-[ "${ALBUM}" ] || {
-    ALBUM=`grep ^DefaultAlbum ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    # Remove leading and trailing spaces in ALBUM
-    ALBUM="$(echo -e "${ALBUM}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-}
+
+[ "${ALBUM}" ] || ALBUM="__all__"
+
 # Construct the exclusion args if passed
 EXARGS=
 [ "${EXALBUM}" ] && EXARGS="-X ${EXALBUM}"
