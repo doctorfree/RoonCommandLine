@@ -29,10 +29,8 @@ fi
 [ "${PYTHON}" ] || {
     echo "RoonCommandLine requires Python 3 and Pip"
     echo "Install Python 3 and restart this installation"
-    echo "See https://docs.python-guide.org/starting/install3/osx/"
-    echo "for step by step instructions to install Homebrew and Python 3"
-    echo "If you already have Homebrew, install Python 3 with:"
-    echo "brew install python"
+    echo "See https://docs.python-guide.org/starting/install3/linux/"
+    echo "for step by step instructions to install Python 3 on Linux"
     exit 1
 }
 
@@ -122,11 +120,11 @@ ${SUDO} chmod 755 ${ROON}/bin/* \
                   ${ROON}/patches/roon-web-controller \
                   ${DESTDIR}/share/man \
                   ${DESTDIR}/share/man/*
-${SUDO} chown -R root:wheel ${ROON}
-# ${SUDO} chown -R root:wheel ${DESTDIR}
+${SUDO} chown -R root:root ${ROON}
+# ${SUDO} chown -R root:root ${DESTDIR}
 
 # Try to configure the roon script with the IP and username
-IP=`ifconfig en0 |awk '/inet / {print $2; }'`
+IP=`hostname -I | awk ' { print $1 } '`
 USER=`id -u -n`
 
 cd /usr/local/bin
@@ -182,10 +180,9 @@ ${SUDO} rm -f /tmp/r$$
 
 users=
 numusers=0
-for homedir in /Users/*
+for homedir in /home/*
 do
-    [ "${homedir}" == "/Users/*" ] && continue
-    [ "${homedir}" == "/Users/Shared" ] && continue
+    [ "${homedir}" == "/home/*" ] && continue
     [ -d ${homedir} ] && {
         username=`basename ${homedir}`
         exists=`id -g -n ${username}`
@@ -211,7 +208,7 @@ done
                     break
                     ;;
                 *)
-                    [ -d /Users/${opt} ] && {
+                    [ -d /home/${opt} ] && {
                         USER="${opt}"
                         break
                     }

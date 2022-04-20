@@ -87,101 +87,120 @@ else
 
   get_available_packages
 
-  [ "$PKG_AVAILABLE}" ] || {
-    echo "No packages for version ${PKG_VER} are currently available. Exiting."
-    exit 1
-  }
-
-  [ "$1" ] && {
-    # If invoked with -i argument, present a menu of options to select from
-    if [ "$1" == "-i" ]
-    then
-      shift
-      PKG_NAMES="$*"
-      [ "${PKG_AVAILABLE}" ] && {
-        echo "Currently available RoonCommandLine packages:"
-        echo ""
-        for avaipkg in ${PKG_AVAILABLE}
-        do
-          echo "$avaipkg"
-        done
-        echo ""
-      }
-      while true
-      do
-        PS3="${BOLD}Please enter your desire (numeric or text): ${NORMAL}"
-        options=("Install All" "Install Selected" "Quit")
-        select opt in "${options[@]}"
-        do
-          case "$opt,$REPLY" in
-              "Install All",*|*,"Install All")
-                  PKG_NAMES="${PKG_AVAILABLE}"
-                  break 2
-                  ;;
-              "Install Selected",*|*,"Install Selected")
-                  install_selected
-                  PKG_NAMES="${PKG_SELECTED}"
-                  break 2
-                  ;;
-              "Quit",*|*,"Quit"|"quit",*|*,"quit")
-                  printf "\nExiting\n"
-                  exit 0
-                  ;;
-          esac
-        done
-      done
-    else
-      PKG_NAMES="$*"
-    fi
-  }
-
-  [ "${PKG_NAMES}" ] || {
-    echo "No valid Package names specified. Exiting."
-    exit 1
-  }
-
-  for PKG_NAME in ${PKG_NAMES}
-  do
-    PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF}"
-    [ -f "${PKG}" ] || {
-      echo "${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF} not found."
-      for pkgs in ${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.${SUF}
-      do
-        [ "${pkgs}" == "${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.${SUF}" ] || {
-          echo "Found existing packages:"
-          echo "${pkgs}"
+  if [ "${PKG_AVAILABLE}" ]
+  then
+    [ "$1" ] && {
+      # If invoked with -i argument, present a menu of options to select from
+      if [ "$1" == "-i" ]
+      then
+        shift
+        PKG_NAMES="$*"
+        [ "${PKG_AVAILABLE}" ] && {
+          echo "Currently available RoonCommandLine packages:"
+          echo ""
+          for avaipkg in ${PKG_AVAILABLE}
+          do
+            echo "$avaipkg"
+          done
+          echo ""
         }
-      done
-      echo ""
-      continue
+        while true
+        do
+          PS3="${BOLD}Please enter your desire (numeric or text): ${NORMAL}"
+          options=("Install All" "Install Selected" "Quit")
+          select opt in "${options[@]}"
+          do
+            case "$opt,$REPLY" in
+                "Install All",*|*,"Install All")
+                    PKG_NAMES="${PKG_AVAILABLE}"
+                    break 2
+                    ;;
+                "Install Selected",*|*,"Install Selected")
+                    install_selected
+                    PKG_NAMES="${PKG_SELECTED}"
+                    break 2
+                    ;;
+                "Quit",*|*,"Quit"|"quit",*|*,"quit")
+                    printf "\nExiting\n"
+                    exit 0
+                    ;;
+            esac
+          done
+        done
+      else
+        PKG_NAMES="$*"
+      fi
     }
 
-    echo "Installing ${PKG}"
-    if [ "${debian}" ]
-    then
-      if [ "${have_apt}" ]
+    [ "${PKG_NAMES}" ] || {
+      echo "No valid Package names specified. Exiting."
+      exit 1
+    }
+
+    for PKG_NAME in ${PKG_NAMES}
+    do
+      PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF}"
+      [ -f "${PKG}" ] || {
+        echo "${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF} not found."
+        for pkgs in ${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.${SUF}
+        do
+          [ "${pkgs}" == "${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.${SUF}" ] || {
+            echo "Found existing packages:"
+            echo "${pkgs}"
+          }
+        done
+        echo ""
+        continue
+      }
+
+      echo "Installing ${PKG}"
+      if [ "${debian}" ]
       then
-        sudo apt install "${PKG}"
-      else
-        if [ "${have_dpkg}" ]
+        if [ "${have_apt}" ]
         then
-          sudo dpkg -i "${PKG}"
+          sudo apt install "${PKG}"
         else
-          echo "Cannot locate either apt or dpkg to install. Skipping."
+          if [ "${have_dpkg}" ]
+          then
+            sudo dpkg -i "${PKG}"
+          else
+            echo "Cannot locate either apt or dpkg to install. Skipping."
+          fi
+        fi
+      else
+        if [ "${have_yum}" ]
+        then
+          sudo yum localinstall "${PKG}"
+        else
+          if [ "${have_rpm}" ]
+          then
+            sudo rpm -i "${PKG}"
+          else
+            echo "Cannot locate either yum or rpm to install. Skipping."
+          fi
         fi
       fi
-    else
-      if [ "${have_yum}" ]
-      then
-        sudo yum localinstall "${PKG}"
-      else
-        if [ "${have_rpm}" ]
-        then
-          sudo rpm -i "${PKG}"
-        else
-          echo "Cannot locate either yum or rpm to install. Skipping."
-        fi
-      fi
-    fi
-  done
+    done
+  else
+    while true
+    do
+      echo ""
+      echo "No packages for version ${PKG_VER} are currently available."
+      echo "Would you like to perform a scripted install on this platform?"
+      echo ""
+      read -p "Install ${pkg} ? ('Y'/'N'): " yn
+      case $yn in
+          [Yy]*)
+              ./linInstall
+              break
+              ;;
+          [Nn]*)
+              break
+              ;;
+          *)
+              echo "Please answer yes or no."
+              ;;
+      esac
+    done
+  fi
 fi

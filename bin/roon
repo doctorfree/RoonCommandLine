@@ -1391,7 +1391,7 @@ done
 
 [ "${comm}" ] && {
     case "${comm}" in
-    "shuffle"|"unshuffle"|"repeat"|"unrepeat"|"mute"|"unmute"|"mute_all"|"next"|"previous"|"play"|"play_all"|"pause"|"pause_all"|"stop"|"playpause")
+    "shuffle"|"unshuffle"|"repeat"|"unrepeat"|"mute"|"unmute"|"mute_all"|"next"|"previous"|"play"|"play_all"|"pause"|"pause_all"|"stop"|"stop_all"|"playpause")
         if [ "${LOCAL}" = true ]
         then
             zone_command -c ${comm}
