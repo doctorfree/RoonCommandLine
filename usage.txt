@@ -94,7 +94,7 @@ Example invocations
 	Increase the volume level by 20 in all zones grouped with the zone named 'Mac Pro DAC'
 		roon -v g:r:20 -z 'Mac Pro DAC'
 	Get info on all Roon zones
-		roon -i -z 'Mac Pro DAC'
+		roon -i
 	Get extended info on Roon zone named 'Mac Pro DAC'
 		roon -i -z 'Mac Pro DAC'
 	NOTE: Use quotes to specify media names which contain spaces.

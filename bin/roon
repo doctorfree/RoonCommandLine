@@ -161,7 +161,7 @@ usage() {
     printf "\n\tIncrease the volume level by 20 in all zones grouped with the zone named 'Mac Pro DAC'"
     printf "\n\t\troon -v g:r:20 -z 'Mac Pro DAC'"
     printf "\n\tGet info on all Roon zones"
-    printf "\n\t\troon -i -z 'Mac Pro DAC'"
+    printf "\n\t\troon -i"
     printf "\n\tGet extended info on Roon zone named 'Mac Pro DAC'"
     printf "\n\t\troon -i -z 'Mac Pro DAC'"
     printf "\n\tNOTE: Use quotes to specify media names which contain spaces."
