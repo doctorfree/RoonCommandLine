@@ -21,6 +21,7 @@
 1. [Installation](#installation)
     1. [Debian Package installation](#debian-package-installation)
     1. [RPM Package installation](#rpm-package-installation)
+    1. [Scripted Linux installation](#scripted-linux-installation)
     1. [Mac OS X installation](#mac-os-x-installation)
     1. [Post installation configuration](#post-installation-configuration)
         1. [Zone groupings and defaults](#zone-groupings-and-defaults)
@@ -53,6 +54,7 @@ command line control of the Roon audio system over a local network.
 package resides entirely on other systems within your local area network.
 
 Currently the command line Roon control scripts provide support for:
+
 - Play album by album name
 - Play artist name
 - Play genre
@@ -121,14 +123,16 @@ Ensure that a Roon Core System is running on the local area network and
 Python 3 is installed on the Linux or Mac on which you wish to install
 the RoonCommandLine package. Most modern Linux systems will have Python 3
 already installed. A good guide for installing Python 3 on Mac OS X can
-be found at https://docs.python-guide.org/starting/install3/osx/
+be found at https://docs.python-guide.org/starting/install3/osx/ and on
+Linux at https://docs.python-guide.org/starting/install3/linux/
 
 ## Installation
 
 RoonCommandLine v2.0.0 and later can be installed on Linux systems using
 either the Debian packaging format or the Red Hat Package Manager (RPM).
-Support is also included for installing on Mac OS X. Other systems will
-require a manual installation described below. The Mac OS X installation
+Support is also included for installing on Mac OS X and Linux variants
+that do not support Debian or Red Hat packages. Other systems will
+require a manual installation described below. The scripted Linux installation
 procedure may also work under Microsoft's Windows Subsystem for Linux but
 it is as yet untested.
 
@@ -174,6 +178,31 @@ or
 ```console
 sudo rpm -i ./RoonCommandLine_<version>-<release>.rpm
 ```
+
+### Scripted Linux installation
+
+**NOTE:** If your Linux system supports Debian or Red Hat package format
+installation, it is recommended to use the latest release of the RoonCommandLine
+package for your platform. The scripted installation described here is
+intended for use on those Linux platforms that do not support Debian or
+Red Hat format installation packages.
+
+RoonCommandLine requires Python 3. See the
+[Guide to installing Python on Linux](https://docs.python-guide.org/starting/install3/linux/)
+for step by step instructions to install Python 3 on Linux.
+
+Once the Python 3 dependency is met, install RoonCommandLine by
+cloning the RoonCommandLine repository and executing the `Install` script:
+
+```bash
+    git clone `https://gitlab.com/doctorfree/RoonCommandLine.git`
+    cd RoonCommandLine
+    ./Install
+```
+
+**Note:** A cleaner installation can be accomplished by executing the `Install`
+script as a user with `sudo` privileges, not the `root` user. If you are not
+going to enable SSH support, at least make sure the user has sudo privileges.
 
 ### Mac OS X installation
 
