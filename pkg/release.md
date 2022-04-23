@@ -1,3 +1,14 @@
+RoonCommandLine version 2.0.5 release 2 adds support for:
+
+* A `now_playing` command and roon command `-n` option to retrieve now playing info for specified zone or all Roon zones
+* A `linInstall` script to perform scripted Linux install when no package available
+* When playing media by artist, composer, or in genre and no album or track is specified, use first in all matching
+* If no search term provided, list commands list all rather than default
+* Use sudo when upgrading in macInstall
+* Save and restore pyroonconf on upgrades
+* Added Size field to Debian control file
+* Add play_all and stop_all commands
+
 RoonCommandLine version 2.0.5 release 1 adds upgrade features, zone info, and commands.
 
 This release preserves existing configuration if it detects a previous release of RoonCommandLine is already installed. Only the Roon Core IP and port are reconfigured if necessary. In addition, the default zone groupings in `roon_api.ini` are improved to avoid grouping incompatible zones. Python scripts utilizing the Roon API have been improved to remove all warnings and use a single source for providing the extension version to Roon.

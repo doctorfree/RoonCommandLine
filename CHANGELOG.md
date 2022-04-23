@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+Apr 24, 2022 :
+    RoonCommandLine version 2.0.5 release 2 is a feature update
+
+    This release adds support for:
+        * A `now_playing` command and roon command `-n` option to retrieve now playing info for specified zone or all Roon zones
+        * A `linInstall` script to perform scripted Linux install when no package available
+        * When playing media by artist, composer, or in genre and no album or track is specified, use first in all matching
+        * If no search term provided, list commands list all rather than default
+        * Use sudo when upgrading in macInstall
+        * Save and restore pyroonconf on upgrades
+        * Added Size field to Debian control file
+        * Add play_all and stop_all commands
+
 Apr 15, 2022 :
     RoonCommandLine version 2.0.5 release 1 is a feature update
 
@@ -100,6 +113,36 @@ Dec 5, 2021 :
     of commands averting the need for SSH public key authentication,
     and many bug fixes and improvements.
 
+Sat Apr 23 10:01:01 2022 -0700 9f834af :
+   Add support for 'now playing' command, man page, Python script, and roon command option
+Fri Apr 22 09:57:03 2022 -0700 4603351 :
+   Fix typo in example for zones info
+Wed Apr 20 10:45:23 2022 -0700 eb9728b :
+   Add linInstall command to perform scripted install when no package available
+Mon Apr 18 13:15:05 2022 -0700 1e5ba75 :
+   Added test version of roonapi.py
+Sun Apr 17 11:01:09 2022 -0700 403b1ca :
+   When playing media by artist, composer, or in genre and no album or track is specified, use first in all matching
+Sun Apr 17 10:41:30 2022 -0700 ad5e948 :
+   If no search term provided, list commands list all rather than default
+Sat Apr 16 11:58:47 2022 -0700 35911ae :
+   Use sudo when upgrading in macInstall
+Fri Apr 15 10:18:52 2022 -0700 c70e45b :
+   Save and restore pyroonconf on upgrades
+Thu Apr 14 15:22:19 2022 -0700 ccc0fad :
+   Comment out play_media for selected tag, not yet working
+Thu Apr 14 15:02:06 2022 -0700 cf5b5fa :
+   Added Size field to Debian control file
+Thu Apr 14 15:00:13 2022 -0700 4d3fc10 :
+   Add play_all and stop_all commands
+Thu Apr 14 14:25:56 2022 -0700 7ad0b65 :
+   Clarify comments on manual modifications at beginning of 'roon' script
+Wed Apr 13 11:20:10 2022 -0700 0fd6362 :
+   Define BOLD and NORMAL for emphasized text
+Tue Apr 12 13:16:54 2022 -0700 d7482bf :
+   Use if then construction in installation scrips to avoid error exits
+Tue Apr 12 10:22:42 2022 -0700 426bb12 :
+   Final final changes to changelog and release notes for 2.0.5
 Tue Apr 12 10:20:24 2022 -0700 3e53615 :
    Do not redirect to /dev/null when setting var with command output
 Tue Apr 12 10:07:32 2022 -0700 60af2ac :
