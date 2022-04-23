@@ -80,7 +80,7 @@ Removal of the package on RPM based systems can be accomplished by issuing the c
 sudo yum remove RoonCommandLine
 ```
 
-To install on Mac OS X, clone the repository and execute the `Install` command:
+To install on Mac OS X or a Linux system without support for Debian or Red Hat installation packages, clone the repository and execute the `Install` command:
 
 ```bash
 git clone https://gitlab.com/doctorfree/RoonCommandLine.git
