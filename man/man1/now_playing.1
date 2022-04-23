@@ -14,40 +14,44 @@
 . ftr VB CB
 . ftr VBI CBI
 .\}
-.TH "GET_ZONES" "1" "December 05, 2021" "get_zones 2.0.1" "User Manual"
+.TH "NOW_PLAYING" "1" "April 24, 2022" "now_playing 2.0.1" "User Manual"
 .hy
 .SH NAME
 .PP
-get_zones - Get the Roon Zones
+now_playing - Get track, artist, and album now playing in specified Roon
+zone
 .SH SYNOPSIS
 .PP
-\f[B]get_zones\f[R] [ ZONE ]
+\f[B]now_playing\f[R] [ \f[B]-z\f[R] ZONE ]
 .SH DESCRIPTION
 .PP
-Retrieves a comma separated list of Roon zones.
-If no zone is specified, \f[I]get_zones\f[R] returns a comma separated
-list of all zones.
+Retrieves now playing information on specified zone or all zones if no
+zone is specified.
+If a zone is specified using the \f[V]-z zone\f[R] option then now
+playing information on only that zone is displayed.
 .SH COMMAND LINE OPTIONS
 .TP
-\f[B]ZONE\f[R]
-If a zone is specified on the command line then only that zone is
-returned.
-A case-sensitive substring can be used to retrieve all zone names that
-contain that string.
+\f[B]-z ZONE\f[R]
+If a \f[I]ZONE\f[R] is specified then retrieve now playing information
+for that zone only.
+If no \f[I]ZONE\f[R] is sprovided on the command line then retrieve now
+playing information for all zones.
 .SH EXAMPLES
 .TP
-\f[B]get_zones HomePod\f[R]
-Retrieves a comma separated list of all Roon zone names containing the
-string \[dq]HomePod\[dq]
+\f[B]now_playing\f[R]
+Displays now playing info for all zones
+.TP
+\f[B]now_playing -z Kitchen\f[R]
+Displays now playing info for the Roon zone named \[dq]Kitchen\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
 .SH LICENSING
 .PP
-GET_ZONES is distributed under an Open Source license.
-See the file LICENSE in the GET_ZONES source distribution for
+NOW_PLAYING is distributed under an Open Source license.
+See the file LICENSE in the NOW_PLAYING source distribution for
 information on terms & conditions for accessing and otherwise using
-GET_ZONES and for a DISCLAIMER OF ALL WARRANTIES.
+NOW_PLAYING and for a DISCLAIMER OF ALL WARRANTIES.
 .SH BUGS
 .PP
 Submit bug reports online at:
@@ -55,7 +59,7 @@ Submit bug reports online at:
 .SH SEE ALSO
 .PP
 \f[B]clone_pyroon\f[R](1), \f[B]get_core_ip\f[R](1),
-\f[B]get_zone_info\f[R](1), \f[B]now_playing\f[R](1),
+\f[B]get_zone_info\f[R](1), \f[B]get_zones\f[R](1),
 \f[B]list_albums\f[R](1), \f[B]list_artist_albums\f[R](1),
 \f[B]list_artists\f[R](1), \f[B]list_composers\f[R](1),
 \f[B]list_genre_albums\f[R](1), \f[B]list_genre_artists\f[R](1),

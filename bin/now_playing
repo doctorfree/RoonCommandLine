@@ -1,0 +1,44 @@
+#!/bin/bash
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+NOWP=now_playing.py
+ZONE=
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI}
+
+[ -f $NOWP ] || exit 2
+
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in DEFZONE
+    DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    ${ROON}/bin/set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+
+while getopts "z:" flag; do
+    case $flag in
+        z)
+            ZONE="$OPTARG"
+            ;;
+    esac
+done
+
+# Get all zones if no zone is specified
+[ "${ZONE}" ] || ZONE="__all__"
+
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $NOWP -z "${ZONE}"
+else
+    python $NOWP -z "${ZONE}"
+fi

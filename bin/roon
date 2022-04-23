@@ -77,6 +77,7 @@ usage() {
     printf "\n\t-g genre selects a genre to list/play"
     printf "\n\t-i displays zone information (combine with '-z zone' for extended"
     printf "\n\t\tinfo on a specified zone, otherwise display info on all zones)"
+    printf "\n\t-n displays 'now playing' info for all zones (combine with '-z zone' for 'now playing' in that zone"
     printf "\n\t-p playlist selects a playlist to play"
     printf "\n\t-G zone_group specifies a zone grouping specified in roon_api.ini"
     printf "\n\t-L setup roon to execute local commands rather than remote via SSH"
@@ -866,7 +867,8 @@ main_menu() {
 
 exact=
 info=
-while getopts A:a:c:C:g:G:ip:T:t:z:l:s:LSr:v:x:X:EuU flag; do
+now_playing=
+while getopts A:a:c:C:g:G:inp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
     case $flag in
         A)
             album="$OPTARG"
@@ -885,6 +887,9 @@ while getopts A:a:c:C:g:G:ip:T:t:z:l:s:LSr:v:x:X:EuU flag; do
             ;;
         i)
             info=1
+            ;;
+        n)
+            now_playing=1
             ;;
         p)
             playlist="$OPTARG"
@@ -1068,6 +1073,25 @@ done
         ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info -z $zone\""
       else
         ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info\""
+      fi
+    fi
+}
+
+[ "$now_playing" ] && {
+    if [ "${LOCAL}" = true ]
+    then
+      if [ "$zone" ]
+      then
+        ${ROON}/bin/now_playing -z $zone
+      else
+        ${ROON}/bin/now_playing
+      fi
+    else
+      if [ "$zone" ]
+      then
+        ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing -z $zone\""
+      else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing\""
       fi
     fi
 }

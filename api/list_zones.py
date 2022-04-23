@@ -51,7 +51,6 @@ zonelist = ""
 zone_number = 1
 
 for (k, v) in outputs.items():
-    zone_id = v["zone_id"]
     output_id = k
     zone_name = v["display_name"]
     zone_with_names = []

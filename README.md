@@ -81,6 +81,8 @@ Currently the command line Roon control scripts provide support for:
   - mute_all (toggle muted/unmuted in all zones)
   - shuffle (toggle shuffle/unshuffle zone playback)
   - repeat (toggle loop/unlooped zone playback)
+- Get zone information and settings
+- Get track/artist/album now playing in specified zone or all zones
 - List albums, artists, albums by artist, tracks by artist, albums by composer, composers, albums by genre, artists by genre, genres, playlists, live radio stations, tags, and Roon zones
 - Set the default Roon output zone
 - Set the volume level in a specified Roon zone or zone grouping
@@ -457,6 +459,7 @@ any of the following commands:
 - [man list_radio](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_radio.1.md)
 - [man list_tags](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_tags.1.md)
 - [man list_zones](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_zones.1.md)
+- [man now_playing](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/now_playing.1.md)
 - [man play_album](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_album.1.md)
 - [man play_artist](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist.1.md)
 - [man play_genre](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre.1.md)
@@ -586,6 +589,7 @@ Where:
 	-g genre selects a genre to list/play
 	-i displays zone information (combine with '-z zone' for extended
 		info on a specified zone, otherwise display info on all zones)
+	-n displays 'now playing' info for all zones (combine with '-z zone' for 'now playing' in that zone
 	-p playlist selects a playlist to play
 	-G zone_group specifies a zone grouping specified in roon_api.ini
 	-L setup roon to execute local commands rather than remote via SSH

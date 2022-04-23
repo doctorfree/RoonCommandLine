@@ -24,6 +24,7 @@ For example, the man page output for the `roon` command would be found at
 - [**list_radio.1.md**](list_radio.1.md) - List Roon Live Radio Channels
 - [**list_tags.1.md**](list_tags.1.md) - List Roon Library Tags
 - [**list_zones.1.md**](list_zones.1.md) - List Roon Zones
+- [**now_playing.1.md**](now_playing.1.md) - Get Roon Zone Now Playing Info
 - [**play_album.1.md**](play_album.1.md) - Play Roon Library Album
 - [**play_artist.1.md**](play_artist.1.md) - Play Roon Library Artist
 - [**play_genre.1.md**](play_genre.1.md) - Play Roon Library Genre
