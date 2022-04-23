@@ -618,7 +618,8 @@ Where:
 	-g genre selects a genre to list/play
 	-i displays zone information (combine with '-z zone' for extended
 		info on a specified zone, otherwise display info on all zones)
-	-n displays 'now playing' info for all zones (combine with '-z zone' for 'now playing' in that zone
+	-n displays 'now playing' information for all zones
+		(combine with '-z zone' for 'now playing' in only that zone)
 	-p playlist selects a playlist to play
 	-G zone_group specifies a zone grouping specified in roon_api.ini
 	-L setup roon to execute local commands rather than remote via SSH
@@ -706,6 +707,10 @@ Example invocations
 		roon -i
 	Get extended info on Roon zone named 'Mac Pro DAC'
 		roon -i -z 'Mac Pro DAC'
+	Get now playing info on all Roon zones
+		roon -n
+	Get now playing info on Roon zone named 'Mac Pro DAC'
+		roon -n -z 'Mac Pro DAC'
 	NOTE: Use quotes to specify media names which contain spaces.
 	For example, to play the album 'Love Bomb':
 		roon -A "Love Bomb"
