@@ -1063,7 +1063,7 @@ done
     then
       if [ "$zone" ]
       then
-        ${ROON}/bin/get_zone_info -z $zone
+        ${ROON}/bin/get_zone_info -z "$zone"
       else
         ${ROON}/bin/get_zone_info
       fi
@@ -1082,7 +1082,7 @@ done
     then
       if [ "$zone" ]
       then
-        ${ROON}/bin/now_playing -z $zone
+        ${ROON}/bin/now_playing -z "$zone"
       else
         ${ROON}/bin/now_playing
       fi
