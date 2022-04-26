@@ -11,30 +11,31 @@
 # sudo dpkg -i "${PKG}"
 # sudo apt-get install -f
 
-SRC_NAME="RoonCommandLine"
+DIR_NAME="RoonCommandLine"
 PKG_NAMES="RoonCommandLine"
 APT_NAMES="rooncommandline"
-SRC="${HOME}/src"
 BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
 
 PKG_AVAILABLE=
 PKG_SELECTED=
 
-[ -f "${SRC}/${SRC_NAME}/VERSION" ] || {
-  echo "Missing VERSION file: ${SRC}/${SRC_NAME}/VERSION"
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+[ -f "${SCRIPT_DIR}/VERSION" ] || {
+  echo "Missing VERSION file: ${SCRIPT_DIR}/VERSION"
   echo "Exiting"
   exit 1
 }
 
-. "${SRC}/${SRC_NAME}/VERSION"
+. "${SCRIPT_DIR}/VERSION"
 PKG_VER=${VERSION}
 PKG_REL=${RELEASE}
 
 get_available_packages() {
-  for pkgs in ${SRC}/${SRC_NAME}/releases/${PKG_VER}/*.${SUF}
+  for pkgs in ${SCRIPT_DIR}/releases/${PKG_VER}/*.${SUF}
   do
-    [ "${pkgs}" == "${SRC}/${SRC_NAME}/releases/${PKG_VER}/*.${SUF}" ] || {
+    [ "${pkgs}" == "${SCRIPT_DIR}/releases/${PKG_VER}/*.${SUF}" ] || {
       for pkg in ${pkgs}
       do
         pkgname=`basename ${pkg} | sed -e "s/_${PKG_VER}-${PKG_REL}.${SUF}//"` 
@@ -139,12 +140,12 @@ else
 
     for PKG_NAME in ${PKG_NAMES}
     do
-      PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF}"
+      PKG="${SCRIPT_DIR}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF}"
       [ -f "${PKG}" ] || {
         echo "${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF} not found."
-        for pkgs in ${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.${SUF}
+        for pkgs in ${SCRIPT_DIR}/releases/*/${PKG_NAME}_*.${SUF}
         do
-          [ "${pkgs}" == "${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.${SUF}" ] || {
+          [ "${pkgs}" == "${SCRIPT_DIR}/releases/*/${PKG_NAME}_*.${SUF}" ] || {
             echo "Found existing packages:"
             echo "${pkgs}"
           }

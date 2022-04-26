@@ -4,8 +4,7 @@ PKG="RoonCommandLine"
 TOP="/usr"
 DESTDIR="${TOP}/local"
 ROON="${DESTDIR}/Roon"
-SRC=${HOME}/src
-SRC_NAME="RoonCommandLine"
+PKG_NAME="RoonCommandLine"
 ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROON_INI=${ROONETC}/roon_api.ini
@@ -36,18 +35,20 @@ fi
 
 # ${SUDO} ${PYTHON} -m ensurepip --upgrade
 
-[ -f "${SRC}/${SRC_NAME}/VERSION" ] || {
-    echo "$SRC/$SRC_NAME/VERSION does not exist. Exiting."
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+[ -f "${SCRIPT_DIR}/VERSION" ] || {
+    echo "$SCRIPT_DIR/VERSION does not exist. Exiting."
     exit 1
 }
 
-. "${SRC}/${SRC_NAME}/VERSION"
+. "${SCRIPT_DIR}/VERSION"
 version=${VERSION}
 release=${RELEASE}
 
 while true
 do
-  read -p "Install ${SRC_NAME} version ${version}r${release} ? ('Y'/'N'): " yn
+  read -p "Install ${PKG_NAME} version ${version}r${release} ? ('Y'/'N'): " yn
   case $yn in
       [Yy]*)
           break
