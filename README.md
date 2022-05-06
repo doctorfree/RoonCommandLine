@@ -501,12 +501,16 @@ any of the following commands:
 - [man zone_command](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/zone_command.1.md)
 
 ## Screenshots
+Roon_List_Artist_Tracks.png: 1354 x 409
+Roon_Play_Artist_Track.png:  1349 x 488
+Roon_Set_Zone.png:           800 x 585
+Roon_UI.png:                 800 x 557
 
 <p float="left">
 List tracks containing "Satin" by Artists containing "Moody"<br/>
-  <img src="screenshots/Roon_List_Artist_Tracks.png" style="width:800px;height:600px;">
+  <img src="screenshots/Roon_List_Artist_Tracks.png" style="width:800px;height:350px;">
 Play first track containing "Satin" by Artists containing "Moody"<br/>
-  <img src="screenshots/Roon_Play_Artist_Track.png" style="width:800px;height:600px;">
+  <img src="screenshots/Roon_Play_Artist_Track.png" style="width:800px;height:350px;">
 </p>
 <p float="left">
 Interactive menus when invoked with no arguments<br/>
