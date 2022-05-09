@@ -228,6 +228,10 @@ select_zone() {
                   else
                     ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone ${opt}\""
                   fi
+                  status=$?
+                  [ ${status} -eq 0 ] || {
+                    echo "Unable to set zone for zone = $opt"
+                  }
                   break 2
                 else
                   printf "\n\nInvalid option: ${opt}"
@@ -1050,6 +1054,12 @@ done
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone $zone\""
     fi
+    status=$?
+    [ ${status} -eq 0 ] || {
+      echo "Unable to set zone for zone = $zone"
+      echo "Exiting"
+      exit ${status}
+    }
 }
 
 # Zone Grouping
@@ -1061,6 +1071,12 @@ done
     else
         ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone_group $comm $zonegroup\""
     fi
+    status=$?
+    [ ${status} -eq 0 ] || {
+      echo "Unable to set zone group for zone group = $zonegroup"
+      echo "Exiting"
+      exit ${status}
+    }
 }
 
 [ "$info" ] && {

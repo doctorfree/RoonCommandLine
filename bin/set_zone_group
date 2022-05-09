@@ -57,3 +57,4 @@ else
     python $SCRIPT -c "$ZONE_COMMAND" -z "$ROON_ZONE_GROUP"
 fi
 
+exit 0
