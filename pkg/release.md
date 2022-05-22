@@ -1,4 +1,13 @@
-RoonCommandLine version 2.0.5 release 2 adds support for:
+RoonCommandLine version 2.0.5 release 3 adds support for:
+
+* Check status of return from set_zone and set_zone_group and exit on failures
+* Adjust display height of some screenshots
+* Do not assume project was cloned in HOME/src/RoonCommandLine
+* Update usage message with now playing examples
+* Add scripted Linux install note to release notes
+* Quote zone name with info options
+
+RoonCommandLine version 2.0.5 release 2 added support for:
 
 * A `now_playing` command and roon command `-n` option to retrieve now playing info for specified zone or all Roon zones
 * A `linInstall` script to perform scripted Linux install when no package available
@@ -60,12 +69,12 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./RoonCommandLine_2.0.5-2.deb
+sudo apt install ./RoonCommandLine_2.0.5-3.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.5-2.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.5-3.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:

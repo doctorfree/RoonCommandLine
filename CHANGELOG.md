@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+May 22, 2022 :
+    RoonCommandLine version 2.0.5 release 3 is a bugfix update
+
+    This release adds support for:
+        * Check status of return from set_zone and set_zone_group and exit on failures
+        * Adjust display height of some screenshots
+        * Do not assume project was cloned in HOME/src/RoonCommandLine
+        * Update usage message with now playing examples
+        * Add scripted Linux install note to release notes
+        * Quote zone name with info options
+
 Apr 24, 2022 :
     RoonCommandLine version 2.0.5 release 2 is a feature update
 
