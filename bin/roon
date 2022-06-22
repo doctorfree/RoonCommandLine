@@ -183,11 +183,56 @@ show_roon_menu=
 ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
+ROON_INI=${ROONETC}/roon_api.ini
 ROONCONF=${ROONETC}/pyroonconf
 LOCAL=false
 BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
-[ -f ${ROONCONF} ] && . ${ROONCONF}
+
+set_default_conf() {
+  if [ -w ${ROONETC} ]
+  then
+    echo "LOCAL=true" > ${ROONCONF}
+    DEFZONE=`grep ^DefaultZone ${ROON_INI} | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in DEFZONE
+    DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    echo "ROON_ZONE=\"$DEFZONE\"" >> ${ROONCONF}
+  else
+    echo "${ROONETC} is not writeable by this user."
+    echo "Correct permissions on ${ROONETC} and re-run this command."
+    echo "Exiting."
+    exit 1
+  fi
+}
+
+[ -f ${ROONCONF} ] || set_default_conf
+
+bash -n ${ROONCONF} > /dev/null 2>&1
+[ $? -eq 0 ] || {
+    echo "WARNING: Syntax errors in ${ROONCONF} have been detected."
+    echo "The following is the output of bash -n ${ROONCONF}"
+    echo ""
+    bash -n ${ROONCONF}
+    echo ""
+    while true
+    do
+      read -p "Revert to default settings and continue? (y/n) " answer
+      case ${answer} in
+        [Yy]* )
+          set_default_conf
+          break
+          ;;
+        [Nn]* )
+          echo "Correct syntax errors in ${ROONCONF} and re-run this command."
+          echo "Exiting."
+          exit 1
+          ;;
+        * ) echo "Please answer 'y' to select directory, or 'n' to skip."
+          ;;
+      esac
+    done
+}
+. ${ROONCONF}
 
 [[ ":$PATH:" == *":/usr/local/bin:"* ]] || export PATH=${PATH}:/usr/local/bin
 [[ ":$PATH:" == *":/usr/local/Roon/bin:"* ]] || export PATH=${PATH}:/usr/local/Roon/bin
@@ -297,7 +342,7 @@ select_default() {
   else
     media_options=( $(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\"") )
   fi
-  DEFAULT=`grep ^Default${medtype} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+  DEFAULT=`grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } '`
   # Remove leading and trailing spaces
   DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
   printf " Done\n\n"
@@ -388,7 +433,7 @@ select_media() {
   else
     media_options=( $(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\"") )
   fi
-  DEFAULT=`grep ^Default${medtype} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+  DEFAULT=`grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } '`
   # Remove leading and trailing spaces
   DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
   printf " Done\n\n"
@@ -505,7 +550,7 @@ list_defaults() {
   do
     for media in Album Artist Composer Genre Playlist Radio Tag
     do
-      DEFAULT=`grep ^Default${media} ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+      DEFAULT=`grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } '`
       # Remove leading and trailing spaces
       DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
       printf "\nDefault ${media}: ${DEFAULT}"
