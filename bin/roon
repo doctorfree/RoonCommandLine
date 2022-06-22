@@ -227,7 +227,7 @@ bash -n ${ROONCONF} > /dev/null 2>&1
           echo "Exiting."
           exit 1
           ;;
-        * ) echo "Please answer 'y' to select directory, or 'n' to skip."
+        * ) echo "Please answer 'y' to repair configuration, or 'n' to exit."
           ;;
       esac
     done

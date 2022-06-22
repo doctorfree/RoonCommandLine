@@ -1,4 +1,14 @@
-RoonCommandLine version 2.0.5 release 3 adds support for:
+RoonCommandLine version 2.0.5 release 4 adds support for:
+
+* Verify syntax of `pyroonconf` before sourcing
+* Restore corrupted `pyroonconf` to sensible defaults
+
+  The syntax verification and correction of `/usr/local/Roon/etc/pyroonconf`
+  is currently only performed when the `roon` front-end is executed. If the
+  backend RoonCommandLine utilities are invoked directly then the integrity
+  of the `pyroonconf` configuration file is the responsibility of the user.
+
+RoonCommandLine version 2.0.5 release 3 added support for:
 
 * Check status of return from set_zone and set_zone_group and exit on failures
 * Adjust display height of some screenshots
@@ -69,12 +79,12 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./RoonCommandLine_2.0.5-3.deb
+sudo apt install ./RoonCommandLine_2.0.5-4.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.5-3.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.5-4.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
