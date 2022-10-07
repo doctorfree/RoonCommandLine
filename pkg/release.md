@@ -1,12 +1,11 @@
+RoonCommandLine version 2.0.5 release 5 is a simple repackaging for Debian based systems. This release is functionally equivalent to version 2.0.5 release 4. Repackaging for Debian based systems was necessary to avoid an incompatibility with `dpkg` compression format support across Debian based distributions. Install only if you are deploying on a Debian based distribution that does not support `zstd` compression (e.g. Raspberry Pi OS). Otherwise, 2.0.5 release 4 is sufficient. Welcome to Linux!
+
 RoonCommandLine version 2.0.5 release 4 adds support for:
 
 * Verify syntax of `pyroonconf` before sourcing
 * Restore corrupted `pyroonconf` to sensible defaults
 
-  The syntax verification and correction of `/usr/local/Roon/etc/pyroonconf`
-  is currently only performed when the `roon` front-end is executed. If the
-  backend RoonCommandLine utilities are invoked directly then the integrity
-  of the `pyroonconf` configuration file is the responsibility of the user.
+The syntax verification and correction of `/usr/local/Roon/etc/pyroonconf` is currently only performed when the `roon` front-end is executed. If the backend RoonCommandLine utilities are invoked directly then the integrity of the `pyroonconf` configuration file is the responsibility of the user.
 
 RoonCommandLine version 2.0.5 release 3 added support for:
 
@@ -79,12 +78,12 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./RoonCommandLine_2.0.5-4.deb
+sudo apt install ./RoonCommandLine_2.0.5-5.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.5-4.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.5-5.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:

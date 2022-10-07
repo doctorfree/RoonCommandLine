@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+October 07, 2022 :
+    RoonCommandLine version 2.0.5 release 5 is a minor packaging update
+
+    RoonCommandLine version 2.0.5 release 5 is a simple repackaging for Debian
+    based systems. This release is functionally equivalent to version 2.0.5
+    release 4. Repackaging for Debian based systems was necessary to avoid an
+    incompatibility with `dpkg` compression format support across Debian based
+    distributions. Install only if you are deploying on a Debian based
+    distribution that does not support `zstd` compression (e.g. Raspberry
+    Pi OS). Otherwise, 2.0.5 release 4 is sufficient. Welcome to Linux!
+
 June 22, 2022 :
     RoonCommandLine version 2.0.5 release 4 is a minor feature update
 
