@@ -997,3 +997,8 @@ executing the following commands directly.
 [<img align="left" alt="doctorfree | Instagram" width="22px" src="icons/instagram.png" />][instagram]
 <a rel="me" href="https://fosstodon.org/@doctorfree"><img align="left" alt="doctorfree | Mastodon" width="22px" src="icons/mastodon.png" /></a>
 
+[website]: https://ronrecord.com
+[twitter]: https://twitter.com/ronrecord
+[youtube]: https://youtube.com/c/doctorfree
+[instagram]: https://instagram.com/doctorfree
+[linkedin]: https://linkedin.com/in/ronrecord
