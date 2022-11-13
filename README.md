@@ -987,3 +987,13 @@ executing the following commands directly.
 [**api/**](api/README.md) - Python scripts to call the Roon API with appropriate arguments
 
 [**patches/**](patches/README.md) - Patches to the Python Roon API to extend its capabilities
+
+## Connect
+
+[<img align="left" alt="ronrecord.com" width="22px" src="icons/globe.png" />][website]
+[<img align="left" alt="doctorfree | YouTube" width="22px" src="icons/youtube.png" />][youtube]
+[<img align="left" alt="ronrecord | Twitter" width="22px" src="icons/twitter.png" />][twitter]
+[<img align="left" alt="ronrecord | LinkedIn" width="22px" src="icons/linkedin.png" />][linkedin]
+[<img align="left" alt="doctorfree | Instagram" width="22px" src="icons/instagram.png" />][instagram]
+<a rel="me" href="https://fosstodon.org/@doctorfree"><img align="left" alt="doctorfree | Mastodon" width="22px" src="icons/mastodon.png" /></a>
+
