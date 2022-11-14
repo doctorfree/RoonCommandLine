@@ -1,4 +1,46 @@
-RoonCommandLine version 2.0.5 release 5 is a simple repackaging for Debian based systems. This release is functionally equivalent to version 2.0.5 release 4. Repackaging for Debian based systems was necessary to avoid an incompatibility with `dpkg` compression format support across Debian based distributions. Install only if you are deploying on a Debian based distribution that does not support `zstd` compression (e.g. Raspberry Pi OS). Otherwise, 2.0.5 release 4 is sufficient. Welcome to Linux!
+# RoonCommandLine Release Notes
+
+RoonCommandLine version 2.0.6 release 1 is a minor feature update. This release adds support for listing a playlist's tracks.
+
+## Installation
+
+The installation automatically detects and stores the Roon Core IP and port. There is no need for any manual configuration. 
+
+**IMPORTANT NOTE** Older versions of RoonCommandLine will no longer function properly. In order to use RoonCommandLine you must install version 2.0.2 release 1 or later.
+
+[Download the latest Debian or RPM package format release](https://gitlab.com/doctorfree/RoonCommandLine/-/releases)
+
+Install the package on Debian based systems by executing the command
+```bash
+sudo apt install ./RoonCommandLine_2.0.6-1.deb
+```
+
+Install the package on RPM based systems by executing the command
+```bash
+sudo yum localinstall ./RoonCommandLine-2.0.6-1.rpm
+```
+
+Removal of the package on Debian based systems can be accomplished by issuing the command:
+
+```bash
+sudo apt remove rooncommandline
+```
+
+Removal of the package on RPM based systems can be accomplished by issuing the command:
+
+```bash
+sudo yum remove RoonCommandLine
+```
+
+To install on Mac OS X or a Linux system without support for Debian or Red Hat installation packages, clone the repository and execute the `Install` command:
+
+```bash
+git clone https://gitlab.com/doctorfree/RoonCommandLine.git
+cd RoonCommandLine
+./Install
+```
+
+## Release History
 
 RoonCommandLine version 2.0.5 release 4 adds support for:
 
@@ -69,39 +111,3 @@ RoonCommandLine version 2.0.3 release 2 adds several new commands including supp
 Checks for Python 3 and Pip have been added to pre-installation scripts, MacOS installation has been significantly improved, installation of the roonapi Pip module is handled more gracefully.
 
 RoonCommandLine version 2.0.x releases add support for detection of the Roon Core port as well as its IP address. The port number is stored in `roon_api.ini` and used in all subsequent calls to the Python Roon API. This was necessary as Roon Labs changed the port number in the most recent update. Extensions shouldn't be assuming a hard coded port number anyway so this change prompted a good improvement although it was irritating at first. A bug introduced by the change to return status of the Bash builtin type command was addressed. RoonCommandLine commands' location are added to PATH or full path used in SSH invocations. The installation script has been revised to work with the updated Python roonapi module version numbering. SSH invocations should work in a wider range of environments with this release.
-
-The installation automatically detects and stores the Roon Core IP and port. There is no need for any manual configuration. 
-
-**IMPORTANT NOTE** Older versions of RoonCommandLine will no longer function properly. In order to use RoonCommandLine you must install version 2.0.2 release 1 or later.
-
-[Download the latest Debian or RPM package format release](https://gitlab.com/doctorfree/RoonCommandLine/-/releases)
-
-Install the package on Debian based systems by executing the command
-```bash
-sudo apt install ./RoonCommandLine_2.0.5-5.deb
-```
-
-Install the package on RPM based systems by executing the command
-```bash
-sudo yum localinstall ./RoonCommandLine-2.0.5-5.rpm
-```
-
-Removal of the package on Debian based systems can be accomplished by issuing the command:
-
-```bash
-sudo apt remove rooncommandline
-```
-
-Removal of the package on RPM based systems can be accomplished by issuing the command:
-
-```bash
-sudo yum remove RoonCommandLine
-```
-
-To install on Mac OS X or a Linux system without support for Debian or Red Hat installation packages, clone the repository and execute the `Install` command:
-
-```bash
-git clone https://gitlab.com/doctorfree/RoonCommandLine.git
-cd RoonCommandLine
-./Install
-```
