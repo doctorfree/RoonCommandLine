@@ -1,0 +1,57 @@
+#!/bin/bash
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+LIST=list_playlist_tracks.py
+PLAYLIST=
+TRACK=
+EXPLAYLIST=
+EXTRACK=
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI}
+
+[ -f $LIST ] || exit 2
+
+# First argument is playlist, second is track
+# Third optional argument is playlist exclusion string (optional)
+# Fourth optional argument is track exclusion string (optional)
+[ "$1" ] && PLAYLIST="$1"
+[ "$2" ] && TRACK="$2"
+[ "$3" ] && EXPLAYLIST="$3"
+[ "$4" ] && EXTRACK="$4"
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    ${ROON}/bin/set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+
+# Get the default playlist if one is not provided
+[ "${PLAYLIST}" ] || {
+    PLAYLIST=`grep ^DefaultPlaylist ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    # Remove leading and trailing spaces in PLAYLIST
+    PLAYLIST="$(echo -e "${PLAYLIST}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
+
+[ "${TRACK}" ] || TRACK="__all__"
+
+# Construct the exclusion args if passed
+EXARGS=
+[ "${EXTRACK}" ] && EXARGS="-X ${EXTRACK}"
+[ "${EXPLAYLIST}" ] && EXARGS="-x ${EXPLAYLIST} ${EXARGS}"
+
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+    python3 $LIST -t "$TRACK" -p "$PLAYLIST" -z "$ROON_ZONE" $EXARGS
+else
+    python $LIST -t "$TRACK" -p "$PLAYLIST" -z "$ROON_ZONE" $EXARGS
+fi

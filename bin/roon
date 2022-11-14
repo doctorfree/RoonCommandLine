@@ -67,7 +67,7 @@ zonelist=
 usage() {
   [ "${showusage}" ] && {
     printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -i"
-    printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]"
+    printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|playtracks|tags|zones]"
     printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]"
     printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
     printf "\n\t-X ex_album -x ex_artist [-EuU]"
@@ -83,7 +83,7 @@ usage() {
     printf "\n\t-G zone_group specifies a zone grouping specified in roon_api.ini"
     printf "\n\t-L setup roon to execute local commands rather than remote via SSH"
     printf "\n\t-S Set Roon defaults in roon_api.ini"
-    printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]"
+    printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|playtracks|tags|zones]"
     printf "\n\t\tindicates list albums, artists, albums by artist, composers, albums by composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
     printf "\n\t-r radio selects a live radio stream to play"
     printf "\n\t-s search specifies a term to search for in the lists retrieved with -l"
@@ -971,6 +971,9 @@ while getopts A:a:c:C:g:G:inp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
             elif [ "$listname" == "arttracks" ] || [ "$listname" == "arttrack" ]
             then
                 arttracklist=1
+            elif [ "$listname" == "playtracks" ] || [ "$listname" == "playtrack" ]
+            then
+                playtracklist=1
             elif [ "$listname" == "composers" ] || [ "$listname" == "composer" ]
             then
                 composerlist=1
@@ -1221,6 +1224,23 @@ done
     fi
     track=
     artist=
+}
+[ "$playtracklist" ] && {
+    [ "$playlist" ] || {
+        [ "$search" ] && playlist=$search
+    }
+    [ "$track" ] || track="__all__"
+    [ "${extrack}" ] && {
+      [ "${explaylist}" ] || explaylist="None"
+    }
+    if [ "${LOCAL}" = true ]
+    then
+        list_playlist_tracks "$playlist" "$track" "$explaylist" "$extrack"
+    else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlist_tracks $playlist $track $explaylist $extrack\""
+    fi
+    track=
+    playlist=
 }
 [ "$comalbumlist" ] && {
     [ "$composer" ] || {
