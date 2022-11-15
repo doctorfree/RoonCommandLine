@@ -7,8 +7,6 @@
 
 set -e
 
-BOLD=$(tput bold)
-NORMAL=$(tput sgr0)
 # update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 PYTHON=
 python3_inst=`type -p python3`
@@ -115,7 +113,7 @@ do
 done
 [ $numusers -gt 1 ] && {
     # Create a selection dialog to allow user to select USER
-    PS3="${BOLD}Please enter SSH user (numeric or text): ${NORMAL}"
+    PS3="Please enter SSH user (numeric or text): "
     options=(${users} "None")
     select opt in "${options[@]}"
     do
