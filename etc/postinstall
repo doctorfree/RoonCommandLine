@@ -264,7 +264,7 @@ CORE_PORT="$(echo -e "${CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:
 # But for now we use sed
 cat ${ROON_INI} | sed -e "s/${EX_CORE_IP}/${CORE_IP}/" -e "s/${EX_CORE_PORT}/${CORE_PORT}/" > /tmp/core$$
 cp /tmp/core$$ ${ROON_INI}
-rm -f /tmp/core$$ /tmp/discover$$
+rm -f /tmp/core$$ /tmp/discover$$ /tmp/roonapi.log
 
 # Get and set the default zone and initial zone groupings
 # Attempting to avoid grouping incompatible zones is somewhat convoluted
