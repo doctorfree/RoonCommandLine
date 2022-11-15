@@ -254,7 +254,12 @@ echo "to authorize discovery"
 echo ""
 
 # Get and set the Roon Core IP address
-${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+if [ "${USER}" ]
+then
+  sudo -u ${USER} ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+else
+  ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+fi
 CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } '`
 CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 CORE_PORT=`cat /tmp/discover$$ | grep RoonCorePort | awk -F '=' ' { print $2 } '`
@@ -273,12 +278,22 @@ groupOne=
 groupTwo=
 groupRee=
 groupFor=
-zones=`${ROON}/bin/get_zones`
+if [ "${USER}" ]
+then
+  zones=`sudo -u ${USER} ${ROON}/bin/get_zones`
+else
+  zones=`${ROON}/bin/get_zones`
+fi
 numZones=`echo "${zones}" | awk -F ',' ' { print NF } '`
 numWith=0
 [ ${numZones} -gt 0 ] && {
   defaultZone=`echo "${zones}" | awk -F ',' ' { print $1 } '`
-  withDefaultZone=`${ROON}/bin/get_zone_info -l -z "${defaultZone}"`
+  if [ "${USER}" ]
+  then
+    withDefaultZone=`sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${defaultZone}"`
+  else
+    withDefaultZone=`${ROON}/bin/get_zone_info -l -z "${defaultZone}"`
+  fi
   numWith=`echo "${withDefaultZone}" | awk -F ',' ' { print NF } '`
 }
 [ ${numZones} -gt 2 ] && {
@@ -315,7 +330,12 @@ numWith=0
 
     zoneTwo=${Array3[0]}
     [ "${zoneTwo}" ] || zoneTwo=${arrayone[1]}
-    withZoneTwo=`${ROON}/bin/get_zone_info -l -z "${zoneTwo}"`
+    if [ "${USER}" ]
+    then
+      withZoneTwo=`sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${zoneTwo}"`
+    else
+      withZoneTwo=`${ROON}/bin/get_zone_info -l -z "${zoneTwo}"`
+    fi
     numWithTwo=`echo "${withZoneTwo}" | awk -F ',' ' { print NF } '`
     [ ${numWithTwo} -gt 0 ] && {
       groupTwo=`echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/"`
@@ -326,7 +346,12 @@ numWith=0
 }
 [ ${numZones} -gt 3 ] && {
   secondZone=`echo "${zones}" | awk -F ',' ' { print $2 } ' | sed -e "s/^ //"`
-  withSecondZone=`${ROON}/bin/get_zone_info -l -z "${secondZone}"`
+  if [ "${USER}" ]
+  then
+    withSecondZone=`sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${secondZone}"`
+  else
+    withSecondZone=`${ROON}/bin/get_zone_info -l -z "${secondZone}"`
+  fi
   withSecondZone=`echo ${withSecondZone} | sed -e "s/${defaultZone},//"`
   numWith=`echo "${withSecondZone}" | awk -F ',' ' { print NF } '`
   if [ ${numWith} -gt 1 ]
@@ -342,7 +367,12 @@ numWith=0
 }
 [ ${numZones} -gt 4 ] && {
   lastZone=`echo "${zones}" | awk -F ',' ' { print $(NF) } ' | sed -e "s/^ //"`
-  withLastZone=`${ROON}/bin/get_zone_info -l -z "${lastZone}"`
+  if [ "${USER}" ]
+  then
+    withLastZone=`sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${lastZone}"`
+  else
+    withLastZone=`${ROON}/bin/get_zone_info -l -z "${lastZone}"`
+  fi
   withLastZone=`echo ${withLastZone} | sed -e "s/${defaultZone},//"`
   withLastZone=`echo ${withLastZone} | sed -e "s/${secondZone},//"`
   numWith=`echo "${withLastZone}" | awk -F ',' ' { print NF } '`
