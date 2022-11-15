@@ -3,10 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 November 15, 2022 :
-    RoonCommandLine version 2.0.6 release 1 is a minor feature update
+    RoonCommandLine version 2.0.6 release 2 is a minor feature update
 
     This release adds support for:
         * Add list_playlist_tracks to list a playlist's tracks
+        * Run roonapi commands in postinstall as user if provided
+        * Don't use tput in postinstall (can trip up Kitty)
 
 October 07, 2022 :
     RoonCommandLine version 2.0.5 release 5 is a minor packaging update

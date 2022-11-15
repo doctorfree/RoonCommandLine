@@ -1,6 +1,6 @@
 # RoonCommandLine Release Notes
 
-RoonCommandLine version 2.0.6 release 1 is a minor feature update. This release adds support for listing a playlist's tracks.
+RoonCommandLine version 2.0.6 release 2 is a minor feature update. This release adds support for listing a playlist's tracks.
 
 ## Installation
 
@@ -12,12 +12,12 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./RoonCommandLine_2.0.6-1.deb
+sudo apt install ./RoonCommandLine_2.0.6-2.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.6-1.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.6-2.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
