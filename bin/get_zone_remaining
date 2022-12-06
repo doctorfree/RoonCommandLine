@@ -1,0 +1,41 @@
+#!/bin/bash
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+SCRIPT=get_zone_remaining.py
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI}
+
+[ -f $SCRIPT ] || exit 2
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    ${ROON}/bin/set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+
+# Parse the arguments to get the command and zone
+while getopts "z:" flag; do
+    case $flag in
+        z)
+            ROON_ZONE="$OPTARG"
+            ;;
+    esac
+done
+
+have_python3=`type -p python3`
+if [ "${have_python3}" ]
+then
+  python3 $SCRIPT -z "$ROON_ZONE"
+else
+  python $SCRIPT -z "$ROON_ZONE"
+fi
+
