@@ -33,7 +33,7 @@ fi
     exit 1
 }
 
-# ${SUDO} ${PYTHON} -m ensurepip --upgrade
+${SUDO} ${PYTHON} -m ensurepip --upgrade
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
