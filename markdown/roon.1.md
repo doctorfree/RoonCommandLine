@@ -10,7 +10,7 @@ roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
 
-**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | play_all | pause | pause_all | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ]
+**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | play_all | pause | pause_all | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ] [ **-f** on|onlog|off|status ]
 
 # DESCRIPTION
 The *roon* command acts as a front-end for executing the RoonCommandLine
@@ -89,6 +89,15 @@ Additional detail and info can be found in the
 
 **-g** genre
 : Selects a genre to play
+
+**-f** on|onlog|off|status
+: enables/disables fading/logging in specified zone. 'on' enables fading, 'onlog' fading and logging, 'off' disables fading (combine with '-z zone' for 'fading' in that zone)
+
+**-n**
+: displays 'now playing' information for zones actively playing
+
+**-N**
+: displays 'now playing' information for all zones regardless of state
 
 **-p** playlist
 : Selects a playlist to play
@@ -230,6 +239,21 @@ tools to the system on which they are installed.
 **roon -c stop_all**
 : Stop play in all zones and release devices
 
+**roon -N**
+: Get now playing info on all zones regardless of state
+
+**roon -n**
+: Get now playing info on all zones actively playing
+
+**roon -n -z 'Mac Pro DAC'**
+: Get now playing info on Roon zone named 'Mac Pro DAC'
+
+**roon -f on**
+: Enable volume fading in default Roon zone
+
+**roon -f off**
+: Disable volume fading in default Roon zone
+
 **NOTE:** Use quotes to specify media names which contain spaces.
 For example, to play the album 'Love Bomb':
 **roon -A "Love Bomb"**
@@ -247,7 +271,7 @@ otherwise using RoonCommandLine.
 Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
 
 # SEE ALSO
-**clone_pyroon**(1), **get_core_ip**(1), **get_zone_info**(1), **get_zones**(1), **list_albums**(1), **list_artist_albums**(1), **list_artists**(1), **list_composers**(1), **list_genre_albums**(1), **list_genre_artists**(1), **list_genres**(1), **list_playlists**(1), **list_radio**(1), **list_tags**(1), **list_zones**(1), **play_album**(1), **play_artist**(1), **play_artist_album**(1), **play_artist_track**(1), **play_composer**(1), **play_genre**(1), **play_genre_album**(1), **play_genre_artist**(1), **play_playlist**(1), **play_radio**(1), **play_tag**(1), **roon**(1), **set_volume**(1), **set_zone**(1), **set_zone_group**(1), **zone_command**(1)
+**clone_pyroon**(1), **get_core_ip**(1), **get_zone_info**(1), **get_zones**(1), **list_albums**(1), **list_artist_albums**(1), **list_artists**(1), **list_composers**(1), **list_genre_albums**(1), **list_genre_artists**(1), **list_genres**(1), **list_playlists**(1), **list_radio**(1), **list_tags**(1), **list_zones**(1), **play_album**(1), **play_artist**(1), **play_artist_album**(1), **play_artist_track**(1), **play_composer**(1), **play_genre**(1), **play_genre_album**(1), **play_genre_artist**(1), **play_playlist**(1), **play_radio**(1), **play_tag**(1), **roon**(1), **set_volume**(1), **set_zone**(1), **set_zone_group**(1), **zone_command**(1), **roon_fade**(1), **roon_faded**(5)
 
 Full documentation, installation packages, and sources at: https://gitlab.com/doctorfree/RoonCommandLine
 

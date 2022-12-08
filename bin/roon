@@ -66,7 +66,7 @@ zonelist=
 
 usage() {
   [ "${showusage}" ] && {
-    printf "\nUsage: roon -A album -a artist -C composer -g genre -G zone_group -i"
+    printf "\nUsage: roon -A album -a artist -C composer -f [on|onlog|off|status] -g genre -G zone_group -i"
     printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|playtracks|tags|zones]"
     printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]"
     printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
@@ -77,7 +77,11 @@ usage() {
     printf "\n\t-g genre selects a genre to list/play"
     printf "\n\t-i displays zone information (combine with '-z zone' for extended"
     printf "\n\t\tinfo on a specified zone, otherwise display info on all zones)"
-    printf "\n\t-n displays 'now playing' information for all zones"
+    printf "\n\t-f [on|onlog|off|status] enables/disables fading/logging in specified zone"
+    printf "\n\t\t'on' enables fading, 'onlog' fading and logging, 'off' disables fading"
+    printf "\n\t\t(combine with '-z zone' for 'fading' in that zone)"
+    printf "\n\t-n displays 'now playing' information for zones actively playing"
+    printf "\n\t-N displays 'now playing' information for all zones"
     printf "\n\t\t(combine with '-z zone' for 'now playing' in only that zone)"
     printf "\n\t-p playlist selects a playlist to play"
     printf "\n\t-G zone_group specifies a zone grouping specified in roon_api.ini"
@@ -166,10 +170,16 @@ usage() {
     printf "\n\t\troon -i"
     printf "\n\tGet extended info on Roon zone named 'Mac Pro DAC'"
     printf "\n\t\troon -i -z 'Mac Pro DAC'"
-    printf "\n\tGet now playing info on all Roon zones"
+    printf "\n\tGet now playing info on all zones regardless of state"
+    printf "\n\t\troon -N"
+    printf "\n\tGet now playing info on all zones actively playing"
     printf "\n\t\troon -n"
     printf "\n\tGet now playing info on Roon zone named 'Mac Pro DAC'"
     printf "\n\t\troon -n -z 'Mac Pro DAC'"
+    printf "\n\tEnable volume fading in default Roon zone"
+    printf "\n\t\troon -f on"
+    printf "\n\tDisable volume fading in default Roon zone"
+    printf "\n\t\troon -f off"
     printf "\n\tNOTE: Use quotes to specify media names which contain spaces."
     printf "\n\tFor example, to play the album 'Love Bomb':"
     printf "\n\t\troon -A \"Love Bomb\"\n"
@@ -922,7 +932,10 @@ main_menu() {
 exact=
 info=
 now_playing=
-while getopts A:a:c:C:g:G:inp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
+now_arg=
+fading=
+logfade=
+while getopts A:a:c:C:f:g:G:inNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
     case $flag in
         A)
             album="$OPTARG"
@@ -936,14 +949,42 @@ while getopts A:a:c:C:g:G:inp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
         C)
             composer="$OPTARG"
             ;;
+        f)
+            fading="$OPTARG"
+            case ${fading} in
+              On|ON|on)
+                fading="on"
+                ;;
+              Onlog|ONLOG|OnLog|onlog)
+                fading="on"
+                logfade="-l"
+                ;;
+              Off|OFF|off)
+                fading="off"
+                ;;
+              Stat*|stat*)
+                fading="status"
+                ;;
+              *)
+                echo "Unsupported -f argument: ${fading}"
+                echo "No fading will be enabled or disabled"
+                fading=
+                ;;
+            esac
+            ;;
         g)
             genre="$OPTARG"
             ;;
         i)
             info=1
             ;;
+        N)
+            now_playing=1
+            nowarg="-a"
+            ;;
         n)
             now_playing=1
+            nowarg=
             ;;
         p)
             playlist="$OPTARG"
@@ -1146,21 +1187,43 @@ done
     fi
 }
 
+[ "${fading}" ] && {
+    [ "${fading}" == "status" ] && fading=
+    if [ "${LOCAL}" = true ]
+    then
+      if [ "$zone" ]
+      then
+        ${ROON}/bin/roon_fade ${logfade} -z "$zone" ${fading}
+      else
+        ${ROON}/bin/roon_fade ${logfade} ${fading}
+      fi
+    else
+      if [ "$zone" ]
+      then
+        ssh $user@$server \
+          "bash -l -c \"${ROON}/bin/roon_fade ${logfade} -z $zone ${fading}\""
+      else
+        ssh $user@$server \
+          "bash -l -c \"${ROON}/bin/roon_fade ${logfade} ${fading}\""
+      fi
+    fi
+}
+
 [ "$now_playing" ] && {
     if [ "${LOCAL}" = true ]
     then
       if [ "$zone" ]
       then
-        ${ROON}/bin/now_playing -z "$zone"
+        ${ROON}/bin/now_playing ${nowarg} -z "$zone"
       else
-        ${ROON}/bin/now_playing
+        ${ROON}/bin/now_playing ${nowarg}
       fi
     else
       if [ "$zone" ]
       then
-        ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing -z $zone\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing ${nowarg} -z $zone\""
       else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing\""
+        ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing ${nowarg}\""
       fi
     fi
 }

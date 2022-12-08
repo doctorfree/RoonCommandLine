@@ -29,7 +29,7 @@ genalbums | genartists | playlists | tags | zones ] [ \f[B]-A\f[R] album
 [ \f[B]-s\f[R] search ] [-v volume] [ \f[B]-z\f[R] zone ] [ \f[B]-G\f[R]
 zone_group ] [ \f[B]-c\f[R] group | ungroup | play | play_all | pause |
 pause_all | stop | stop_all | next | previous | shuffle | repeat | mute
-| mute_all ] [ \f[B]-T\f[R] track ]
+| mute_all ] [ \f[B]-T\f[R] track ] [ \f[B]-f\f[R] on|onlog|off|status ]
 .SH DESCRIPTION
 .PP
 The \f[I]roon\f[R] command acts as a front-end for executing the
@@ -144,6 +144,19 @@ Selects a composer to play
 .TP
 \f[B]-g\f[R] genre
 Selects a genre to play
+.TP
+\f[B]-f\f[R] on|onlog|off|status
+enables/disables fading/logging in specified zone.
+\[aq]on\[aq] enables fading, \[aq]onlog\[aq] fading and logging,
+\[aq]off\[aq] disables fading (combine with \[aq]-z zone\[aq] for
+\[aq]fading\[aq] in that zone)
+.TP
+\f[B]-n\f[R]
+displays \[aq]now playing\[aq] information for zones actively playing
+.TP
+\f[B]-N\f[R]
+displays \[aq]now playing\[aq] information for all zones regardless of
+state
 .TP
 \f[B]-p\f[R] playlist
 Selects a playlist to play
@@ -304,6 +317,21 @@ Increase the volume level by 20 in all zones grouped with the zone named
 .TP
 \f[B]roon -c stop_all\f[R]
 Stop play in all zones and release devices
+.TP
+\f[B]roon -N\f[R]
+Get now playing info on all zones regardless of state
+.TP
+\f[B]roon -n\f[R]
+Get now playing info on all zones actively playing
+.TP
+\f[B]roon -n -z \[aq]Mac Pro DAC\[aq]\f[R]
+Get now playing info on Roon zone named \[aq]Mac Pro DAC\[aq]
+.TP
+\f[B]roon -f on\f[R]
+Enable volume fading in default Roon zone
+.TP
+\f[B]roon -f off\f[R]
+Disable volume fading in default Roon zone
 .PP
 \f[B]NOTE:\f[R] Use quotes to specify media names which contain spaces.
 For example, to play the album \[aq]Love Bomb\[aq]: \f[B]roon -A
@@ -337,7 +365,8 @@ Submit bug reports online at:
 \f[B]play_genre_artist\f[R](1), \f[B]play_playlist\f[R](1),
 \f[B]play_radio\f[R](1), \f[B]play_tag\f[R](1), \f[B]roon\f[R](1),
 \f[B]set_volume\f[R](1), \f[B]set_zone\f[R](1),
-\f[B]set_zone_group\f[R](1), \f[B]zone_command\f[R](1)
+\f[B]set_zone_group\f[R](1), \f[B]zone_command\f[R](1),
+\f[B]roon_fade\f[R](1), \f[B]roon_faded\f[R](5)
 .PP
 Full documentation, installation packages, and sources at:
 <https://gitlab.com/doctorfree/RoonCommandLine>

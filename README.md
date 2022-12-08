@@ -610,8 +610,8 @@ is presented from which the user can select commands and queries.
 Here is the current output of "roon -u" which displays a usage message.
 
 ```
-Usage: roon -A album -a artist -C composer -g genre -G zone_group -i
-	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
+Usage: roon -A album -a artist -C composer -f [on|onlog|off|status] -g genre -G zone_group -i
+	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|playtracks|tags|zones]
 	-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]
 	-s search -p playlist -T track -t tag -z zone -L -S -r radio
 	-X ex_album -x ex_artist [-EuU]
@@ -622,13 +622,17 @@ Where:
 	-g genre selects a genre to list/play
 	-i displays zone information (combine with '-z zone' for extended
 		info on a specified zone, otherwise display info on all zones)
-	-n displays 'now playing' information for all zones
+	-f [on|onlog|off|status] enables/disables fading/logging in specified zone
+		'on' enables fading, 'onlog' fading and logging, 'off' disables fading
+		(combine with '-z zone' for 'fading' in that zone)
+	-n displays 'now playing' information for zones actively playing
+	-N displays 'now playing' information for all zones
 		(combine with '-z zone' for 'now playing' in only that zone)
 	-p playlist selects a playlist to play
 	-G zone_group specifies a zone grouping specified in roon_api.ini
 	-L setup roon to execute local commands rather than remote via SSH
 	-S Set Roon defaults in roon_api.ini
-	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|tags|zones]
+	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|playtracks|tags|zones]
 		indicates list albums, artists, albums by artist, composers, albums by composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones
 	-r radio selects a live radio stream to play
 	-s search specifies a term to search for in the lists retrieved with -l
@@ -711,10 +715,16 @@ Example invocations
 		roon -i
 	Get extended info on Roon zone named 'Mac Pro DAC'
 		roon -i -z 'Mac Pro DAC'
-	Get now playing info on all Roon zones
+	Get now playing info on all zones regardless of state
+		roon -N
+	Get now playing info on all zones actively playing
 		roon -n
 	Get now playing info on Roon zone named 'Mac Pro DAC'
 		roon -n -z 'Mac Pro DAC'
+	Enable volume fading in default Roon zone
+		roon -f on
+	Disable volume fading in default Roon zone
+		roon -f off
 	NOTE: Use quotes to specify media names which contain spaces.
 	For example, to play the album 'Love Bomb':
 		roon -A "Love Bomb"
