@@ -18,6 +18,7 @@ port = config['DEFAULT']['RoonCorePort']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-g", "--grouped", default=False, action='store_true', help="return attributes for all zones in a grouped zone")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -25,6 +26,10 @@ if args.zone:
     target_zone = args.zone
 else:
     target_zone = config['DEFAULT']['DefaultZone']
+if args.grouped:
+    group = "true"
+else:
+    group = None
 
 zone_name = target_zone
 
@@ -64,7 +69,9 @@ if output_id is None:
     sys.exit(err)
 else:
     result = []
-    is_grouped = roonapi.is_grouped(output_id)
+    is_grouped = False
+    if group is not None:
+      is_grouped = roonapi.is_grouped(output_id)
     if is_grouped:
       # Get the attributes for all zones in a zone grouping
       grouped_zone_names = roonapi.grouped_zone_names(output_id)

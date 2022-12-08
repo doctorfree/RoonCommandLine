@@ -24,10 +24,14 @@ else
     . ${ROONCONF}
 fi
 
-while getopts "z:" flag; do
+aflag=
+while getopts "az:" flag; do
     case $flag in
         z)
             ZONE="$OPTARG"
+            ;;
+        a)
+            aflag="-a"
             ;;
     esac
 done
@@ -38,7 +42,7 @@ done
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    python3 $NOWP -z "${ZONE}"
+    python3 $NOWP ${aflag} -z "${ZONE}"
 else
-    python $NOWP -z "${ZONE}"
+    python $NOWP ${aflag} -z "${ZONE}"
 fi

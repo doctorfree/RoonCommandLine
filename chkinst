@@ -1,0 +1,86 @@
+#!/bin/bash
+
+ROON="/usr/local/Roon"
+
+install=
+uptodate=1
+verbose=
+
+[ "$1" == "-i" ] && install=1
+[ "$1" == "-v" ] && verbose=1
+
+for dir in api bin etc
+do
+    [ -d $dir ] || {
+        echo "$dir does not exist or is not a directory. Skipping."
+        continue
+    }
+    cd $dir
+    HERE=`pwd`
+    for i in *
+    do
+        [ -f ${ROON}/$dir/$i ] || {
+          if [ "${install}" ]
+          then
+            echo "Installing $dir/$i"
+            sudo cp $i ${ROON}/$dir/$i
+            [ "${dir}" == "bin" ] && {
+                cd /usr/local/bin
+                sudo ln -s ${ROON}/bin/$i $i
+                cd ${HERE}
+            }
+          else
+            echo "$dir/$i not installed."
+          fi
+          uptodate=
+          continue
+        }
+        if [ "$dir/$i" == "bin/roon" ]
+        then
+          delta=`diff $i ${ROON}/$dir/$i | wc -l`
+          [ ${delta} -gt 8 ] && {
+            if [ "${install}" ]
+            then
+              echo "$dir/$i differs from installed version."
+              echo "$dir/$i must be installed manually in order"
+              echo "to set 'server' and 'user' appropriately."
+            else
+              if [ "${verbose}" ]
+              then
+                echo "$dir/$i differs from installed version:"
+                echo ""
+                diff $i ${ROON}/$dir/$i
+                echo ""
+              else
+                echo "$dir/$i differs from installed version."
+              fi
+            fi
+            uptodate=
+            continue
+          }
+        else
+          diff $i ${ROON}/$dir/$i > /dev/null || {
+            if [ "${install}" ]
+            then
+              echo "Installing $dir/$i"
+              sudo cp $i ${ROON}/$dir/$i
+            else
+              if [ "${verbose}" ]
+              then
+                echo "$dir/$i differs from installed version:"
+                echo ""
+                diff $i ${ROON}/$dir/$i
+                echo ""
+              else
+                echo "$dir/$i differs from installed version."
+              fi
+            fi
+            uptodate=
+            continue
+          }
+        fi
+    done
+    cd ..
+done
+
+[ "${uptodate}" ] && echo "Roon installation up to date!"

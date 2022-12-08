@@ -47,13 +47,6 @@ while getopts "grsv:z:" flag; do
     esac
 done
 
-# This check is now performed in set_volume.py
-#[ "${RELATIVE}" ] || [ "${STEP}" ] || {
-#    # If using absolute volume level, force between 0 and 100
-#    [[ $(bc <<< "${VOLUME} > 100.0") == 1 ]] && VOLUME=100
-#    [[ $(bc <<< "${VOLUME} < 0.0") == 1 ]] && VOLUME=0
-#}
-
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then

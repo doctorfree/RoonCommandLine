@@ -55,7 +55,7 @@ Version: ${PKG_VER}-${PKG_REL}
 Section: misc
 Priority: optional
 Architecture: all
-Depends: qterminal (>= 0.14.1), git (>= 2.20.1), python3-pip
+Depends: git (>= 2.20.1), python3-pip, jq
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Installed-Size: 11000
 Build-Depends: debhelper (>= 11)
@@ -113,6 +113,7 @@ ${SUDO} chmod 755 ${OUT_DIR}/${ROON}/bin/* \
                   ${OUT_DIR}/${ROON}/etc \
                   ${OUT_DIR}/${ROON}/etc/postinstall \
                   ${OUT_DIR}/${ROON}/etc/preremove \
+                  ${OUT_DIR}/${ROON}/etc/roon_faded \
                   ${OUT_DIR}/${ROON}/api \
                   ${OUT_DIR}/${ROON}/patches \
                   ${OUT_DIR}/${ROON}/patches/mk* \

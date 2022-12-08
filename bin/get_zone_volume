@@ -22,9 +22,17 @@ else
     . ${ROONCONF}
 fi
 
+grparg=
+number=
 # Parse the arguments to get the command and zone
-while getopts "z:" flag; do
+while getopts "gnz:" flag; do
     case $flag in
+        g)
+            grparg="-g"
+            ;;
+        n)
+            number=1
+            ;;
         z)
             ROON_ZONE="$OPTARG"
             ;;
@@ -37,20 +45,30 @@ if [ "${have_python3}" ]
 then
   if [ "${have_jq}" ]
   then
-    python3 $SCRIPT -z "$ROON_ZONE" | \
-      jq -r '.[]? | "\(.display_name): Volume = \(.volume.value), Min = \(.volume.min), Max = \(.volume.max)"'
+    if [ "${number}" ]
+    then
+      python3 $SCRIPT ${grparg} -z "$ROON_ZONE" | jq -r '.[].volume.value?'
+    else
+      python3 $SCRIPT ${grparg} -z "$ROON_ZONE" | \
+        jq -r '.[]? | "\(.display_name): Volume = \(.volume.value), Min = \(.volume.min), Max = \(.volume.max)"'
+    fi
   else
     # TODO: Parse returned JSON without jq
-    python3 $SCRIPT -z "$ROON_ZONE"
+    python3 $SCRIPT ${grparg} -z "$ROON_ZONE"
   fi
 else
   if [ "${have_jq}" ]
   then
-    python $SCRIPT -z "$ROON_ZONE" | \
-      jq -r '.[]? | "\(.display_name): Volume = \(.volume.value), Min = \(.volume.min), Max = \(.volume.max)"'
+    if [ "${number}" ]
+    then
+      python $SCRIPT ${grparg} -z "$ROON_ZONE" | jq -r '.[].volume.value?'
+    else
+      python $SCRIPT ${grparg} -z "$ROON_ZONE" | \
+        jq -r '.[]? | "\(.display_name): Volume = \(.volume.value), Min = \(.volume.min), Max = \(.volume.max)"'
+    fi
   else
     # TODO: Parse returned JSON without jq
-    python $SCRIPT -z "$ROON_ZONE"
+    python $SCRIPT ${grparg} -z "$ROON_ZONE"
   fi
 fi
 

@@ -1,0 +1,243 @@
+#!/bin/bash
+#
+# roon_faded - Run in the background checking if the zone state is playing and
+#              if so, fade volume at end of song then restore volume level.
+#              Launched by 'roon_fade on', stopped by 'roon_fade off'
+#
+# Usage: roon_faded [-l] [-z zone]
+# Where: '-l' indicates logging, '-z zone' specifies zone in which to fade
+#        If no zone is specified the default zone is used
+#
+# This is tricky in Roon due to the fact that multiple songs can be playing in
+# multiple zones, zones can be grouped with the same audio in all zones, each
+# zone in a zone grouping has separate volume controls and ranges, and multiple
+# devices can be used to adjust volume by zone or output. It becomes fairly
+# complex trying to cover all use cases. This is a beginning.
+
+# TODO: Run separate roon_faded daemons for each zone or grouped zones to
+#       support fading on some zones but not on others or multiple fading zones.
+#       Right now you're either always fading or always not and multiple
+#       ungrouped zones are not covered.
+
+ROON=/usr/local/Roon
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+LOG=
+FADE_TIME=30
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    ${ROON}/bin/set_zone $DEFZONE
+    . ${ROONCONF}
+fi
+
+get_state_remain() {
+    # Returned lines look like:
+    #   HomePod Max: Time remaining = 674 seconds, State = paused
+    remline=`get_zone_remaining -z "$1"`
+    state=`echo "${remline}" | awk -F ',' ' { print $2 } ' | \
+                               awk -F '=' ' { print $2 } ' | \
+                               sed -e 's/^ *//' -e 's/ *$//'`
+    remain=`echo "${remline}" | awk -F ',' ' { print $1 } ' | \
+                                awk -F ':' ' { print $2 } ' | \
+                                awk -F '=' ' { print $2 } ' | \
+                                sed -e 's/^ *//' -e 's/ *$//' | \
+                                awk ' { print $1 } '`
+}
+
+# Parse the arguments to get the command and zone
+while getopts "lz:" flag; do
+    case $flag in
+        l)
+            LOG="${ROONETC}/faded_log.txt"
+            [ -f "${LOG}" ] || touch "${LOG}"
+            ;;
+        z)
+            ROON_ZONE="$OPTARG"
+            ;;
+    esac
+done
+
+[ "${LOG}" ] && {
+    echo "Logging roon_faded in ${LOG} for zone ${ROON_ZONE}" >> "${LOG}"
+}
+
+# get_zone_volume returns an ungrouped zone like this:
+#
+# get_zone_volume -z Kitchen
+#   Kitchen: Volume = -26, Min = -80, Max = 0
+#
+# A grouped zone returns all zones in a grouped zone:
+#
+# get_zone_volume -g -z "HomePod Max"
+#   HomePod Max: Volume = 62, Min = 1, Max = 100
+#   HomePod Mini Left: Volume = 72, Min = 1, Max = 100
+#   HomePod Mini Right: Volume = 72, Min = 1, Max = 100
+
+zoninf=()
+zones=()
+curvol=()
+minvol=()
+maxvol=()
+outstepsz=()
+instepsz=()
+finish=()
+outdiv=$((FADE_TIME / 3))
+indiv=$((FADE_TIME / 4))
+while read voline
+do
+    zoninf+=( ${voline} )
+    finish+=( 0 )
+    zone=`echo "${voline}" | awk -F ':' ' { print $1 } ' | \
+                             sed -e 's/^ *//' -e 's/ *$//'`
+    zones+=( "${zone}" )
+    volume=`echo "${voline}" | awk -F ':' ' { print $2 } ' | \
+                               awk -F ',' ' { print $1 } ' | \
+                               awk -F '=' ' { print $2 } ' | \
+                               sed -e 's/^ *//' -e 's/ *$//'`
+    curvol+=( ${volume} )
+    minimum=`echo "${voline}" | awk -F ':' ' { print $2 } ' | \
+                                awk -F ',' ' { print $2 } ' | \
+                                awk -F '=' ' { print $2 } ' | \
+                                sed -e 's/^ *//' -e 's/ *$//'`
+    minvol+=( ${minimum} )
+    diff=$((volume - minimum))
+    outstep=$((diff / outdiv))
+    outstepsz+=( ${outstep} )
+    instep=$((diff / indiv))
+    instepsz+=( ${instep} )
+    maximum=`echo "${voline}" | awk -F ':' ' { print $2 } ' | \
+                                awk -F ',' ' { print $3 } ' | \
+                                awk -F '=' ' { print $2 } ' | \
+                                sed -e 's/^ *//' -e 's/ *$//'`
+    maxvol+=( ${maximum} )
+done < <(get_zone_volume -g -z "${ROON_ZONE}")
+
+fading=
+state=
+remain=
+while true
+do
+    . ${ROONCONF}
+    [ "${ROON_FADE}" ] || exit 0
+    # Get remaining time and state of zone
+    get_state_remain "${zones[0]}"
+    [ "${state}" == "playing" ] || {
+        [ "${LOG}" ] && {
+            echo "Sleeping ${FADE_TIME} seconds waiting for playing state" >> "${LOG}"
+        }
+        sleep ${FADE_TIME}
+        continue
+    }
+    [ "${remain}" == "null" ] && {
+        [ "${LOG}" ] && {
+            echo "Sleeping ${FADE_TIME} seconds waiting for remaining time not null" >> "${LOG}"
+        }
+        sleep ${FADE_TIME}
+        continue
+    }
+    if [ ${remain} -lt ${FADE_TIME} ] && [ ${remain} -ge 5 ]
+    then
+        [ "${LOG}" ] && {
+            echo "Remaining time less than ${FADE_TIME} seconds, starting fade" >> "${LOG}"
+        }
+        fading=1
+        while true
+        do
+            for z in ${!zones[@]}
+            do
+              step=${outstepsz[$z]}
+              zone=${zones[$z]}
+              mvol=${minvol[$z]}
+              zvol=`get_zone_volume -n -z "${zone}"`
+              if [ ${zvol} -le ${mvol} ]
+              then
+                [ ${finish[$z]} -eq 1 ] || {
+                  [ "${LOG}" ] && {
+                    echo "Finished fading ${zone} to ${mvol}" >> "${LOG}"
+                  }
+                  finish[$z]=1
+                }
+              else
+                set_volume -r -v "-${step}" -z "${zone}"
+              fi
+            done
+            faded=1
+            for fin in ${finish[@]}
+            do
+                [ ${fin} -eq 0 ] && {
+                    faded=
+                    break
+                }
+            done
+            # Get remaining time and state of zone
+            get_state_remain "${zones[0]}"
+            [ ${remain} -lt 5 ] && {
+              for f in ${!finish[@]}
+              do
+                set_volume -v "${mvol}" -z "${zones[$f]}"
+                finish[$f]=0
+              done
+              [ "${LOG}" ] && {
+                echo "Faded to minimum in all zones" >> "${LOG}"
+              }
+              break
+            }
+        done
+    else
+        [ "${fading}" ] && {
+            while true
+            do
+              for z in ${!zones[@]}
+              do
+                step=${instepsz[$z]}
+                cvol=${curvol[$z]}
+                zone=${zones[$z]}
+                zvol=`get_zone_volume -n -z "${zone}"`
+                boom=$((cvol - zvol))
+                if [ ${boom} -le ${step} ]
+                then
+                  [ ${finish[$z]} -eq 1 ] || {
+                    [ "${LOG}" ] && {
+                      echo "Restoring ${zone} to previous volume" >> "${LOG}"
+                    }
+                    set_volume -v "${cvol}" -z "${zone}"
+                    finish[$z]=1
+                  }
+                else
+                  set_volume -r -v "${step}" -z "${zone}"
+                fi
+              done
+              faded=1
+              for fin in ${finish[@]}
+              do
+                  [ ${fin} -eq 0 ] && {
+                      faded=
+                      break
+                  }
+              done
+              [ "${faded}" ] && {
+                for f in ${!finish[@]}
+                do
+                  finish[$f]=0
+                done
+                fading=
+                break
+              }
+            done
+            [ "${faded}" ] && {
+              [ "${LOG}" ] && {
+                echo "Stopping fade in" >> "${LOG}"
+              }
+              fading=
+            }
+        }
+        sleep 10
+        continue
+    fi
+done
+exit 0

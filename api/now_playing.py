@@ -20,6 +20,7 @@ fullver = version + "-" + release
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-z", "--zone", help="zone selection")
+parser.add_argument("-a", "--all", default=False, action='store_true', help="display all zones regardless of state")
 args = parser.parse_args()
 
 if args.zone:
@@ -28,6 +29,10 @@ if args.zone:
     target_zone = None
 else:
   target_zone = None
+if args.all:
+  filterplaying = None
+else:
+  filterplaying = 1
 
 appinfo = {
   "extension_id": "roon_command_line",
@@ -51,28 +56,42 @@ with RoonApi(appinfo, token, server, port) as roonapi:
   output_id = None
   if target_zone is None:
     for zone in roonapi.zones.values():
-      zone_name = zone["display_name"]
-      print("\nNow playing in zone: %s" % zone_name)
-      track = json.dumps(zone["now_playing"]["three_line"]["line1"], ensure_ascii=False).encode('utf8')
-      print("\tTrack:\t %s" % track.decode())
-      artist = json.dumps(zone["now_playing"]["three_line"]["line2"], ensure_ascii=False).encode('utf8')
-      print("\tArtist:\t %s" % artist.decode())
-      album = json.dumps(zone["now_playing"]["three_line"]["line3"], ensure_ascii=False).encode('utf8')
-      print("\tAlbum:\t %s" % album.decode())
+      state = "Unknown"
+      if zone["state"] is not None:
+        state = zone["state"]
+      if filterplaying is not None and state != "playing":
+        continue
+      else:
+        zone_name = zone["display_name"]
+        print("\nNow playing in zone: %s" % zone_name)
+        track = json.dumps(zone["now_playing"]["three_line"]["line1"], ensure_ascii=False).encode('utf8')
+        print("\tTrack:\t %s" % track.decode())
+        artist = json.dumps(zone["now_playing"]["three_line"]["line2"], ensure_ascii=False).encode('utf8')
+        print("\tArtist:\t %s" % artist.decode())
+        album = json.dumps(zone["now_playing"]["three_line"]["line3"], ensure_ascii=False).encode('utf8')
+        print("\tAlbum:\t %s" % album.decode())
+        print("\tState:\t %s" % state)
   else:
     for (k, v) in outputs.items():
       if target_zone in v["display_name"]:
+        state = "Unknown"
         zone_name = v["display_name"]
         output_id = k
         zone = roonapi.zone_by_output_id(output_id)
         if zone is not None:
-          print("\nNow playing in zone: %s" % zone_name)
-          track = json.dumps(zone["now_playing"]["three_line"]["line1"], ensure_ascii=False).encode('utf8')
-          print("\tTrack:\t %s" % track.decode())
-          artist = json.dumps(zone["now_playing"]["three_line"]["line2"], ensure_ascii=False).encode('utf8')
-          print("\tArtist:\t %s" % artist.decode())
-          album = json.dumps(zone["now_playing"]["three_line"]["line3"], ensure_ascii=False).encode('utf8')
-          print("\tAlbum:\t %s" % album.decode())
+          if zone["state"] is not None:
+            state = zone["state"]
+          if filterplaying is not None and state != "playing":
+            continue
+          else:
+            print("\nNow playing in zone: %s" % zone_name)
+            track = json.dumps(zone["now_playing"]["three_line"]["line1"], ensure_ascii=False).encode('utf8')
+            print("\tTrack:\t %s" % track.decode())
+            artist = json.dumps(zone["now_playing"]["three_line"]["line2"], ensure_ascii=False).encode('utf8')
+            print("\tArtist:\t %s" % artist.decode())
+            album = json.dumps(zone["now_playing"]["three_line"]["line3"], ensure_ascii=False).encode('utf8')
+            print("\tAlbum:\t %s" % album.decode())
+            print("\tState:\t %s" % state)
 
 # save the token for next time
 with open(tokenfile, "w") as f:
