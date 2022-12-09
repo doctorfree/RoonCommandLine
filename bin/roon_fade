@@ -4,6 +4,7 @@ ROON=/usr/local/Roon
 ROONETC=${ROON}/etc
 ROONFADE=${ROONETC}/roon_faded
 ROONCONF=${ROONETC}/pyroonconf
+POS_INT='^[1-9][0-9]*(,[1-9][0-9]*)*$'
 LOG=
 
 # Get the zone if it is set
@@ -11,16 +12,48 @@ if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | \
+        awk -F '=' ' { print $2 } '`
     ${ROON}/bin/set_zone $DEFZONE
     . ${ROONCONF}
 fi
 
+set_roon_fade() {
+    grep -v ROON_FADE ${ROONCONF} > /tmp/pyroon$$
+    if [ "$1" == "on" ]
+    then
+      echo "ROON_FADE=true" >> /tmp/pyroon$$
+    else
+      echo "ROON_FADE=" >> /tmp/pyroon$$
+    fi
+    cp /tmp/pyroon$$ ${ROONCONF}
+    rm -f /tmp/pyroon$$
+}
+
+set_fade_time() {
+    grep -v FADE_TIME ${ROONCONF} > /tmp/pyroon$$
+    echo "FADE_TIME=$1" >> /tmp/pyroon$$
+    cp /tmp/pyroon$$ ${ROONCONF}
+    rm -f /tmp/pyroon$$
+}
+
 # Parse the arguments to get the command and zone
-while getopts "lz:" flag; do
+while getopts "lt:z:" flag; do
     case $flag in
         l)
             LOG="-l"
+            ;;
+        t)
+            fadetime="$OPTARG"
+            [ "${fadetime}" == "default" ] && fadetime=30
+            if [[ ${fadetime} =~ ${POS_INT} ]]
+            then
+                [ ${fadetime} -eq ${FADE_TIME} ] || {
+                    set_fade_time ${fadetime}
+                }
+            else
+                echo "${fadetime} is not a positive integer. Ignoring."
+            fi
             ;;
         z)
             ROON_ZONE="$OPTARG"
@@ -34,20 +67,16 @@ then
     argument=`echo "$1" | tr '[:upper:]' '[:lower:]'`
     if [ "${argument}" == "on" ]
     then
+        ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
+            echo "${ROONFADE} appears to be running."
+            echo "Disable and re-enable to start a new process."
+            echo "Exiting"
+            exit 1
+        }
         if [ -x ${ROONFADE} ]
         then
-            [ "${ROON_FADE}" ] || {
-                grep -v ROON_FADE ${ROONCONF} > /tmp/pyroon$$
-                echo "ROON_FADE=true" >> /tmp/pyroon$$
-                cp /tmp/pyroon$$ ${ROONCONF}
-                rm -f /tmp/pyroon$$
-            }
-            [ "${FADE_TIME}" ] || {
-                grep -v FADE_TIME ${ROONCONF} > /tmp/pyroon$$
-                echo "FADE_TIME=30" >> /tmp/pyroon$$
-                cp /tmp/pyroon$$ ${ROONCONF}
-                rm -f /tmp/pyroon$$
-            }
+            [ "${ROON_FADE}" ] || set_roon_fade on
+            [ "${FADE_TIME}" ] || set_fade_time 30
             echo "Starting Roon fade daemon ${ROONFADE}"
             ${ROONFADE} ${LOG} -z "${ROON_ZONE}" > /dev/null 2>&1 &
         else
@@ -57,14 +86,11 @@ then
         if [ "${argument}" == "off" ]
         then
             [ "${ROON_FADE}" ] && {
-                grep -v ROON_FADE ${ROONCONF} > /tmp/pyroon$$
-                echo "ROON_FADE=" >> /tmp/pyroon$$
-                cp /tmp/pyroon$$ ${ROONCONF}
-                rm -f /tmp/pyroon$$
+                [ "${ROON_FADE}" ] || set_roon_fade off
                 echo "Roon fade disabled in ${ROONCONF}"
             }
         else
-            echo "Usage: roon_fade [-l] [on|off]"
+            echo "Usage: roon_fade [-l] [-t seconds] [-z zone] on|off"
             exit 1
         fi
     fi

@@ -120,10 +120,16 @@ done < <(get_zone_volume -g -z "${ROON_ZONE}")
 fading=
 state=
 remain=
+restored=1
 while true
 do
     . ${ROONCONF}
-    [ "${ROON_FADE}" ] || exit 0
+    [ "${ROON_FADE}" ] || {
+        [ "${LOG}" ] && {
+            echo "ROON_FADE disabled, roon_faded exiting" >> "${LOG}"
+        }
+        exit 0
+    }
     # Get remaining time and state of zone
     get_state_remain "${zones[0]}"
     [ "${state}" == "playing" ] || {
@@ -140,12 +146,13 @@ do
         sleep ${FADE_TIME}
         continue
     }
-    if [ ${remain} -lt ${FADE_TIME} ] && [ ${remain} -ge 5 ]
+    if [ ${remain} -lt ${FADE_TIME} ] && [ "${restored}" ]
     then
         [ "${LOG}" ] && {
             echo "Remaining time less than ${FADE_TIME} seconds, starting fade" >> "${LOG}"
         }
         fading=1
+        restored=
         while true
         do
             for z in ${!zones[@]}
@@ -189,7 +196,7 @@ do
             }
         done
     else
-        [ "${fading}" ] && {
+        [ ! "${restored}" ] || [ "${fading}" ] && {
             while true
             do
               for z in ${!zones[@]}
@@ -226,6 +233,7 @@ do
                   finish[$f]=0
                 done
                 fading=
+                restored=1
                 break
               }
             done
@@ -234,10 +242,15 @@ do
                 echo "Stopping fade in" >> "${LOG}"
               }
               fading=
+              restored=1
             }
         }
         sleep 10
         continue
     fi
 done
+
+[ "${LOG}" ] && {
+    echo "Unexpectedly, roon_faded exiting" >> "${LOG}"
+}
 exit 0

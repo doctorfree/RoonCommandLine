@@ -3,10 +3,15 @@
 ROON="/usr/local/Roon"
 
 install=
+rooninst=
 uptodate=1
 verbose=
 
 [ "$1" == "-i" ] && install=1
+[ "$1" == "-I" ] && {
+    install=1
+    rooninst=1
+}
 [ "$1" == "-v" ] && verbose=1
 
 for dir in api bin etc
@@ -41,9 +46,16 @@ do
           [ ${delta} -gt 8 ] && {
             if [ "${install}" ]
             then
-              echo "$dir/$i differs from installed version."
-              echo "$dir/$i must be installed manually in order"
-              echo "to set 'server' and 'user' appropriately."
+              if [ "${rooninst}" ]
+              then
+                echo "Installing $dir/$i"
+                echo "Edit ${ROON}/$dir/$i with 'server' and 'user'"
+                sudo cp $i ${ROON}/$dir/$i
+              else
+                echo "$dir/$i differs from installed version."
+                echo "$dir/$i must be installed manually in order"
+                echo "to set 'server' and 'user' appropriately."
+              fi
             else
               if [ "${verbose}" ]
               then
