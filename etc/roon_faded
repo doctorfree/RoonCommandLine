@@ -17,7 +17,9 @@
 # TODO: Run separate roon_faded daemons for each zone or grouped zones to
 #       support fading on some zones but not on others or multiple fading zones.
 #       Right now you're either always fading or always not and multiple
-#       ungrouped zones are not covered.
+#       grouped or ungrouped zones are not supported.
+# TODO: This should be a Python script using the Python Roon API to register
+#       for callbacks to monitor track end/start and volume adjustments.
 
 ROON=/usr/local/Roon
 ROONETC=${ROON}/etc
@@ -87,7 +89,7 @@ outstepsz=()
 instepsz=()
 finish=()
 outdiv=$((FADE_TIME / 3))
-indiv=$((FADE_TIME / 4))
+indiv=$((FADE_TIME / 5))
 while read voline
 do
     zoninf+=( ${voline} )
@@ -124,6 +126,17 @@ restored=1
 while true
 do
     . ${ROONCONF}
+    [ "${RESTORE_VOLUME}" ] && {
+        for z in ${!zones[@]}
+        do
+          cvol=${curvol[$z]}
+          zone=${zones[$z]}
+          set_volume -v "${cvol}" -z "${zone}"
+        done
+        grep -v RESTORE_VOLUME ${ROONCONF} > /tmp/pyroon$$
+        cp /tmp/pyroon$$ ${ROONCONF}
+        rm -f /tmp/pyroon$$
+    }
     [ "${ROON_FADE}" ] || {
         [ "${LOG}" ] && {
             echo "ROON_FADE disabled, roon_faded exiting" >> "${LOG}"
@@ -245,7 +258,7 @@ do
               restored=1
             }
         }
-        sleep 10
+        sleep 5
         continue
     fi
 done

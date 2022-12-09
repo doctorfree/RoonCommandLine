@@ -22,7 +22,12 @@ roon_fade - Enable/Disable volume fading in a Roon zone
 .SH SYNOPSIS
 .PP
 \f[B]roon_fade\f[R] [ \f[B]-l\f[R] ] [ \f[B]-t\f[R] seconds ] [
-\f[B]-z\f[R] ZONE ] [on|off]
+\f[B]-uh\f[R] ] [ \f[B]-z\f[R] zone ] \f[B]on|off\f[R]
+.PP
+An argument of \f[I]on\f[R] enables fading, \f[I]off\f[R] disables
+fading.
+Without arguments or with \f[I]-u\f[R] or \f[I]-h\f[R], a usage message
+with current status is displayed
 .SH DESCRIPTION
 .PP
 Enables or disables volume fading on specified zone or default zone if
@@ -38,6 +43,9 @@ seconds.
 An argument of \f[I]-t default\f[R] restores the default fade delay.
 Default is 30 seconds.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-u|-h\f[R]
+Display a usage message with current status and exit
 .TP
 \f[B]-l\f[R]
 Enable logging

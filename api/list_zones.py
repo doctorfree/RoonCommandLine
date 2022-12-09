@@ -44,6 +44,11 @@ else:
     token = "None"
 
 roonapi = RoonApi(appinfo, token, server, port)
+
+# save the token for next time
+with open(tokenfile, "w") as f:
+    f.write(str(roonapi.token))
+
 zones = roonapi.zones
 outputs = roonapi.outputs
 
@@ -109,7 +114,3 @@ if args.get:
     if not(args.info):
         zonelist = "".join(zonelist.rsplit(", ", 1))
         print(zonelist)
-
-# save the token for next time
-with open(tokenfile, "w") as f:
-    f.write(str(roonapi.token))

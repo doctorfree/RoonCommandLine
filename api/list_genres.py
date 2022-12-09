@@ -54,6 +54,10 @@ else:
 
 roonapi = RoonApi(appinfo, token, server, port)
 
+# save the token for next time
+with open(tokenfile, "w") as f:
+    f.write(str(roonapi.token))
+
 # get target zone output_id
 outputs = roonapi.outputs
 
@@ -78,7 +82,3 @@ if genres:
     print(*genres, sep = "\n")
 else:
     print("No genres found matching", genresearch)
-
-# save the token for next time
-with open(tokenfile, "w") as f:
-    f.write(str(roonapi.token))

@@ -16,7 +16,7 @@ then
 else
     PYTHON="python"
 fi
-${PYTHON} -m ensurepip --upgrade
+# ${PYTHON} -m ensurepip --upgrade
 ${PYTHON} -m pip install roonapi
 export PATH=/usr/local/bin:/usr/bin:$PATH
 [ -d /usr/local ] || mkdir /usr/local

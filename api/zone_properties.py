@@ -44,6 +44,10 @@ else:
 
 with RoonApi(appinfo, token, server, port) as roonapi:
 
+    # save the token for next time
+    with open(tokenfile, "w") as f:
+        f.write(str(roonapi.token))
+
     outputs = roonapi.outputs
 
     output_id = None
@@ -76,7 +80,3 @@ with RoonApi(appinfo, token, server, port) as roonapi:
               print("\t\"artist\": %s," % artist.decode())
               album = json.dumps(zone["now_playing"]["three_line"]["line3"], ensure_ascii=False).encode('utf8')
               print("\t\"album\": %s\n}" % album.decode())
-
-# save the token for next time
-with open(tokenfile, "w") as f:
-    f.write(str(roonapi.token))

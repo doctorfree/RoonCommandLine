@@ -18,6 +18,27 @@ else
     . ${ROONCONF}
 fi
 
+usage() {
+  printf "\nUsage: roon_fade [-l] [-R] [-t seconds] [-uh] [-z zone] on|off"
+  printf "\nWhere:"
+  printf "\n\t-l enables logging"
+  printf "\n\t-R restores faded or modified volume to original levels"
+  printf "\n\t-t 'seconds' sets the fade duration in seconds (default: 30)"
+  printf "\n\t-z 'zone' sets the Roon zone in which to fade"
+  printf "\n\t\tIf no zone is specified, the default zone is used\n"
+  printf "\nAn argument of 'on' enables fading, 'off' disables fading"
+  printf "\nWithout arguments or with '-u' or '-h' this usage message is displayed\n"
+  if [ "${ROON_FADE}" ]
+  then
+    printf "\nRoon volume fading is currently enabled, fading last ${FADE_TIME} seconds"
+    printf "\nExecute 'roon_fade off' to disable\n\n"
+  else
+    printf "\nRoon volume fading is currently disabled"
+    printf "\nExecute 'roon_fade on' to enable fading last ${FADE_TIME} seconds\n\n"
+  fi
+  exit 1
+}
+
 set_roon_fade() {
     grep -v ROON_FADE ${ROONCONF} > /tmp/pyroon$$
     if [ "$1" == "on" ]
@@ -37,26 +58,49 @@ set_fade_time() {
     rm -f /tmp/pyroon$$
 }
 
+fadetime=
+restore=
 # Parse the arguments to get the command and zone
-while getopts "lt:z:" flag; do
+while getopts "lRt:z:hu" flag; do
     case $flag in
         l)
             LOG="-l"
+            ;;
+        R)
+            ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
+              echo "Restoring volume levels"
+              grep -v RESTORE_VOLUME ${ROONCONF} > /tmp/pyroon$$
+              echo "RESTORE_VOLUME=1" >> /tmp/pyroon$$
+              cp /tmp/pyroon$$ ${ROONCONF}
+              rm -f /tmp/pyroon$$
+              restore=1
+            }
+            [ "${restore}" ] || {
+              echo "${ROONFADE} does not appear to be running"
+              echo "Volume levels must be restored manually"
+            }
             ;;
         t)
             fadetime="$OPTARG"
             [ "${fadetime}" == "default" ] && fadetime=30
             if [[ ${fadetime} =~ ${POS_INT} ]]
             then
-                [ ${fadetime} -eq ${FADE_TIME} ] || {
+                if [ ${fadetime} -eq ${FADE_TIME} ]
+                then
+                    echo "Fade duration already set to ${fadetime} seconds"
+                else
+                    echo "Setting fade duration to ${fadetime} seconds"
                     set_fade_time ${fadetime}
-                }
+                fi
             else
                 echo "${fadetime} is not a positive integer. Ignoring."
             fi
             ;;
         z)
             ROON_ZONE="$OPTARG"
+            ;;
+        h|u)
+            usage
             ;;
     esac
 done
@@ -90,18 +134,10 @@ then
                 echo "Roon fade disabled in ${ROONCONF}"
             }
         else
-            echo "Usage: roon_fade [-l] [-t seconds] [-z zone] on|off"
-            exit 1
+            usage
         fi
     fi
 else
-    if [ "${ROON_FADE}" ]
-    then
-        echo "Roon fade is enabled"
-        echo "Execute 'roon_fade off' to disable"
-    else
-        echo "Roon fade is disabled"
-        echo "Execute 'roon_fade on' to enable"
-    fi
+    [ "${restore}" ] || [ "${fadetime}" ] || usage
 fi
 exit 0

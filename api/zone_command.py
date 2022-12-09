@@ -34,7 +34,6 @@ release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
 from roonapi import RoonApi
-# import roonapi
 
 appinfo = {
     "extension_id": "roon_command_line",
@@ -52,6 +51,10 @@ else:
     token = "None"
 
 roonapi = RoonApi(appinfo, token, server, port)
+
+# save the token for next time
+with open(tokenfile, "w") as f:
+    f.write(str(roonapi.token))
 
 # get target zone output_id
 outputs = roonapi.outputs
@@ -166,7 +169,3 @@ else:
                 roonapi.mute(k, True)
           else:
             roonapi.playback_control(output_id, zone_command)
-
-# save the token for next time
-with open(tokenfile, "w") as f:
-    f.write(str(roonapi.token))

@@ -49,6 +49,10 @@ else:
 
 roonapi = RoonApi(appinfo, token, server, port)
 
+# save the token for next time
+with open(tokenfile, "w") as f:
+    f.write(str(roonapi.token))
+
 # get target zone output_id
 outputs = roonapi.outputs
 
@@ -76,7 +80,3 @@ else:
             print("or enough of a substring to provide a single match")
     else:
         print("\nNo tags matching", tag, "\n")
-
-# save the token for next time
-with open(tokenfile, "w") as f:
-    f.write(str(roonapi.token))
