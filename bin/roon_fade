@@ -86,7 +86,7 @@ then
         if [ "${argument}" == "off" ]
         then
             [ "${ROON_FADE}" ] && {
-                [ "${ROON_FADE}" ] || set_roon_fade off
+                set_roon_fade off
                 echo "Roon fade disabled in ${ROONCONF}"
             }
         else
