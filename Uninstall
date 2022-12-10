@@ -1,5 +1,8 @@
 #!/bin/bash
 
+have_fade=`type -p roon_fade`
+[ "${have_fade}" ] && roon_fade off
+
 plat=`uname -s`
 if [ "$plat" == "Darwin" ]
 then
