@@ -89,6 +89,7 @@ Currently the command line Roon control scripts provide support for:
 - Set the default Roon output zone
 - Set the volume level in a specified Roon zone or zone grouping
 - Select Roon audio zone or zone grouping
+- Enable/disable track fade out and fade in
 
 In addition, search capabilities have been added to the scripts
 with partial matching facilities. Thus a substring can be supplied to use as a
@@ -474,15 +475,23 @@ can be viewed by issueing the command:
 
 - `man roon`
 
-Manual pages for each RoonCommandLine backend command can be viewed by issueing
-any of the following commands:
+Manual pages for each RoonCommandLine backend command can be viewed by issueing any of the following commands:
 
 - [man clone_pyroon](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/clone_pyroon.1.md)
 - [man get_core_ip](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_core_ip.1.md)
 - [man get_zone_info](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zone_info.1.md)
 - [man get_zones](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zones.1.md)
+- [man get_zone_remaining](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zone_remaining.1.md)
+- [man get_zone_volume](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zone_volume.1.md)
 - [man list_albums](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_albums.1.md)
 - [man list_artists](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_artists.1.md)
+- [man list_artist_albums](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_artist_albums.1.md)
+- [man list_artist_tracks](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_artist_tracks.1.md)
+- [man list_composer_albums](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_composer_albums.1.md)
+- [man list_composers](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_composers.1.md)
+- [man list_genre_albums](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_genre_albums.1.md)
+- [man list_genre_artists](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_genre_artists.1.md)
+- [man list_playlist_tracks](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_playlist_tracks.1.md)
 - [man list_genres](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_genres.1.md)
 - [man list_playlists](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_playlists.1.md)
 - [man list_radio](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_radio.1.md)
@@ -491,10 +500,18 @@ any of the following commands:
 - [man now_playing](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/now_playing.1.md)
 - [man play_album](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_album.1.md)
 - [man play_artist](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist.1.md)
+- [man play_artist_album](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist_album.1.md)
+- [man play_artist_track](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist_track.1.md)
+- [man play_composer](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_composer.1.md)
+- [man play_composer_album](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_composer_album.1.md)
+- [man play_genre_album](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre_album.1.md)
+- [man play_genre_artist](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre_artist.1.md)
 - [man play_genre](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre.1.md)
 - [man play_playlist](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_playlist.1.md)
 - [man play_radio](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_radio.1.md)
 - [man play_tag](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_tag.1.md)
+- [man roon_fade](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/roon_fade.1.md)
+- [man roon_faded](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/roon_faded.5.md)
 - [man set_volume](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_volume.1.md)
 - [man set_zone](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_zone.1.md)
 - [man set_zone_group](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_zone_group.1.md)
@@ -937,30 +954,61 @@ of this package will require little to no manual configuration.
 
 ## Contents
 
-[**roon**](bin/roon) - Shell script frontend that provides the primary user
-interface to communicate commands via the Python Roon API. Recommended usage
-is to issue Roon commands and queries via the `roon` frontend rather than
-executing the following commands directly.
+[**roon**](bin/roon) - Frontend that provides the primary user interface to communicate commands via the Python Roon API. Recommended usage is to issue Roon commands and queries via the `roon` frontend rather than executing the following commands directly.
 
-[**clone_pyroon**](bin/clone_pyroon) - Shell script to retrieve the pyroon project source code from Github and apply my patches
+[**clone_pyroon**](bin/clone_pyroon) - Retrieve the pyroon project source code from Github and apply my patches
 
-[**get_core_ip**](bin/get_core_ip) - Shell script to retrieve the Roon Core IP address
+[**get_core_ip**](bin/get_core_ip) - Retrieve the Roon Core IP address
 
-[**play_album**](bin/play_album) - Shell script frontend for playing a specified album in my Roon library
+[**get_zone_info**](bin/get_zone_info) - Retrieve zone information
 
-[**play_artist**](bin/play_artist) - Shell script frontend for playing a specified artist in my Roon library
+[**get_zone_remaining**](bin/get_zone_remaining) - Get remaining play time in zone
 
-[**play_genre**](bin/play_genre) - Shell script frontend to play a specified genre
+[**get_zones**](bin/get_zones) - Get zones
 
-[**play_playlist**](bin/play_playlist) - Shell script frontend to play a specified playlist
+[**get_zone_volume**](bin/get_zone_volume) - Get volume in zone
 
-[**play_radio**](bin/play_radio) - Shell script frontend for playing Live Radio in a Roon zone
+[**play_album**](bin/play_album) - Frontend for playing a specified album in my Roon library
 
-[**play_tag**](bin/play_tag) - Shell script frontend to play a specified tag
+[**play_artist**](bin/play_artist) - Frontend for playing a specified artist in my Roon library
+
+[**play_artist_album**](bin/play_artist_album) - Play album by artist
+
+[**play_artist_track**](bin/play_artist_track) - Play track by artist
+
+[**play_composer**](bin/play_composer) - Play composer
+
+[**play_composer_album**](bin/play_composer_album) - Play album by composer
+
+[**play_genre_album**](bin/play_genre_album) - Play album in genre
+
+[**play_genre_artist**](bin/play_genre_artist) - Play artist in genre
+
+[**play_genre**](bin/play_genre) - Frontend to play a specified genre
+
+[**play_playlist**](bin/play_playlist) - Frontend to play a specified playlist
+
+[**play_radio**](bin/play_radio) - Frontend for playing Live Radio in a Roon zone
+
+[**play_tag**](bin/play_tag) - Frontend to play a specified tag
 
 [**list_albums**](bin/list_albums) - Search and list the available Albums in your Roon Library
 
 [**list_artists**](bin/list_artists) - Search and list the available Artists in your Roon Library
+
+[**list_artist_albums**](bin/list_artist_albums) - List albums by artist
+
+[**list_artist_tracks**](bin/list_artist_tracks) - List tracks by artist
+
+[**list_composer_albums**](bin/list_composer_albums) - List albums by composer
+
+[**list_composers**](bin/list_composers) - List composers
+
+[**list_genre_albums**](bin/list_genre_albums) - List albums in genre
+
+[**list_genre_artists**](bin/list_genre_artists) - List artists in genre
+
+[**list_playlist_tracks**](bin/list_playlist_tracks) - List tracks in playlist
 
 [**list_genres**](bin/list_genres) - Search and list the available Genres in your Roon Library
 
@@ -972,13 +1020,17 @@ executing the following commands directly.
 
 [**list_zones**](bin/list_zones) - List the available Roon Zones
 
+[**now_playing**](bin/now_playing) - Display currently playing track in zone or all zones
+
+[**roon_fade**](bin/roon_fade) - Enable/disable volume fade out and fade in for tracks in zone
+
 [**set_volume**](bin/set_volume) - Set the volume level of selected Roon Zone
 
 [**set_zone**](bin/set_zone) - Set the Roon Zone in which subsequent commands will run
 
 [**set_zone_group**](bin/set_zone_group) - Set one of the Roon Zone groupings specified in roon_api.ini
 
-[**zone_command**](bin/zone_command) - Shell script frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, pause_all, mute, mute_all, next track, previous track)
+[**zone_command**](bin/zone_command) - Frontend for commands to be issued in the selected Roon Zone (e.g. play, pause, pause_all, mute, mute_all, next track, previous track)
 
 [**LICENSE**](LICENSE) - Apache License version 2.0
 
