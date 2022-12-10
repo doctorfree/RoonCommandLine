@@ -5,6 +5,7 @@ ROONETC=${ROON}/etc
 ROONFADE=${ROONETC}/roon_faded
 ROONCONF=${ROONETC}/pyroonconf
 POS_INT='^[1-9][0-9]*(,[1-9][0-9]*)*$'
+FADE_ZONE=
 LOG=
 
 # Get the zone if it is set
@@ -46,6 +47,13 @@ usage() {
     printf "\nExecute 'roon_fade on' to enable fading last ${FADE_TIME} seconds\n\n"
   fi
   exit 1
+}
+
+set_fade_zone() {
+    grep -v FADE_ZONE ${ROONCONF} > /tmp/pyroon$$
+    echo "FADE_ZONE=\"${FADE_ZONE}\"" >> /tmp/pyroon$$
+    cp /tmp/pyroon$$ ${ROONCONF}
+    rm -f /tmp/pyroon$$
 }
 
 set_roon_fade() {
@@ -127,7 +135,7 @@ while getopts "iIlRt:z:hu" flag; do
             fi
             ;;
         z)
-            ROON_ZONE="$OPTARG"
+            FADE_ZONE="$OPTARG"
             ;;
         h|u)
             usage
@@ -135,6 +143,8 @@ while getopts "iIlRt:z:hu" flag; do
     esac
 done
 shift $(( OPTIND - 1 ))
+
+[ "${FADE_ZONE}" ] || FADE_ZONE="${ROON_ZONE}"
 
 if [ "$1" ]
 then
@@ -152,9 +162,10 @@ then
             [ "${ROON_FADE}" ] || set_roon_fade on
             [ "${FADE_IN}" ] || set_fade_in on
             [ "${FADE_TIME}" ] || set_fade_time 30
+            set_fade_zone
             echo "Starting Roon fade daemon ${ROONFADE}"
             [ "${LOG}" ] && echo "Logging in ${ROONETC}/faded_log.txt"
-            ${ROONFADE} ${LOG} -z "${ROON_ZONE}" > /dev/null 2>&1 &
+            ${ROONFADE} ${LOG} -z "${FADE_ZONE}" > /dev/null 2>&1 &
         else
             echo "Roon fade daemon ${ROONFADE} not found or not executable"
         fi

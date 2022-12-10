@@ -591,7 +591,7 @@ main_menu() {
   while true
   do
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Toggle Repeat" "Toggle Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Volume" "Quit")
+    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Fade" "Toggle Mute" "Toggle Mute All" "Toggle Repeat" "Toggle Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Volume" "Quit")
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
@@ -707,6 +707,20 @@ main_menu() {
                     ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop_all\""
                 fi
                 printf " Done\n\n"
+                break
+                ;;
+            "Toggle Fade",*|*,"Toggle Fade")
+                printf "\nExecuting Roon command to toggle fade audio ...\n"
+                [ "${FADE_ZONE}" ] || FADE_ZONE="${ROON_ZONE}"
+                if [ "${ROON_FADE}" = true ]
+                then
+                    roon_fade -z "${FADE_ZONE}" off
+                    ROON_FADE=
+                else
+                    roon_fade -z "${FADE_ZONE}" on
+                    ROON_FADE=true
+                fi
+                printf "\n"
                 break
                 ;;
             "Toggle Mute",*|*,"Toggle Mute")
