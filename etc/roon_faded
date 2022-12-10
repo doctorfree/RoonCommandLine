@@ -29,7 +29,6 @@ ROON=/usr/local/Roon
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 FADE_DRTN=30
-FADE_ENDS=3
 FADE_ZONE=
 LOG=
 
@@ -47,6 +46,16 @@ fi
 [ "${FADE_TIME}" ] && {
     FADE_DRTN=${FADE_TIME}
 }
+
+# TODO: Find a better way to determine if next track is about to play.
+#       For now, if last call to get remaining time is less than FADE_ENDS.
+#       Use slightly less value when not fading in.
+if [ "${FADE_IN}" = true ]
+then
+    FADE_ENDS=4
+else
+    FADE_ENDS=2
+fi
 
 get_remain() {
     # Returned lines look like:
@@ -184,6 +193,13 @@ do
             init_fade_vals
         }
     }
+
+    if [ "${FADE_IN}" = true ]
+    then
+        FADE_ENDS=4
+    else
+        FADE_ENDS=2
+    fi
 
     # Check if zone grouping has changed
     chkzones=()

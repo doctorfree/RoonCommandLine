@@ -8,16 +8,18 @@ POS_INT='^[1-9][0-9]*(,[1-9][0-9]*)*$'
 FADE_ZONE=
 LOG=
 
-# Get the zone if it is set
-if [ -f ${ROONCONF} ]
-then
+# Get the zone and fade settings
+init_pyroon() {
+  if [ -f ${ROONCONF} ]
+  then
     . ${ROONCONF}
-else
+  else
     DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | \
         awk -F '=' ' { print $2 } '`
     ${ROON}/bin/set_zone $DEFZONE
     . ${ROONCONF}
-fi
+  fi
+}
 
 usage() {
   printf "\nUsage: roon_fade [-iI] [-l] [-R] [-t seconds] [-uh] [-z zone] on|off"
@@ -33,7 +35,12 @@ usage() {
   printf "\nWithout arguments or with '-u' or '-h' this usage message is displayed\n"
   if [ "${ROON_FADE}" ]
   then
-    printf "\nRoon volume fading is currently enabled"
+    if [ "${FADE_ZONE}" ]
+    then
+      printf "\nRoon volume fading is currently enabled in zone ${FADE_ZONE}"
+    else
+      printf "\nRoon volume fading is currently enabled"
+    fi
     printf "\nFade duration set to ${FADE_TIME} seconds"
     if [ "${FADE_IN}" = true ]
     then
@@ -86,6 +93,8 @@ set_fade_time() {
     cp /tmp/pyroon$$ ${ROONCONF}
     rm -f /tmp/pyroon$$
 }
+
+init_pyroon
 
 fadein=
 fadetime=
@@ -152,10 +161,28 @@ then
     if [ "${argument}" == "on" ]
     then
         ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
-            echo "${ROONFADE} appears to be running."
-            echo "Disable and re-enable to start a new process."
-            echo "Exiting"
-            exit 1
+            printf "\n${ROONFADE} appears to be running."
+            printf "\nOnly one instance of 'roon_faded' is currently supported."
+            printf "\nThe current process can be exited with 'roon_fade off'"
+            printf "\nor by answering 'y' below.\n\n"
+            while true
+            do
+              read -p "Exit 'roon_faded' and start a new one ? (y/n) " yn
+              case $yn in
+                [Yy]* )
+                      roon_fade off
+                      init_pyroon
+                      break
+                      ;;
+                [Nn]* )
+                      printf "\nRoon fading daemon startup aborted."
+                      printf "\nExiting.\n\n"
+                      exit 1
+                      ;;
+                    * ) echo "Please answer yes or no."
+                      ;;
+              esac
+            done
         }
         if [ -x ${ROONFADE} ]
         then
