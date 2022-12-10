@@ -19,8 +19,10 @@ else
 fi
 
 usage() {
-  printf "\nUsage: roon_fade [-l] [-R] [-t seconds] [-uh] [-z zone] on|off"
+  printf "\nUsage: roon_fade [-iI] [-l] [-R] [-t seconds] [-uh] [-z zone] on|off"
   printf "\nWhere:"
+  printf "\n\t-i enables fade in next track after fading out"
+  printf "\n\t-I disables fade in, immediately restore volume after fading"
   printf "\n\t-l enables logging"
   printf "\n\t-R restores faded or modified volume to original levels"
   printf "\n\t-t 'seconds' sets the fade duration in seconds (default: 30)"
@@ -30,7 +32,14 @@ usage() {
   printf "\nWithout arguments or with '-u' or '-h' this usage message is displayed\n"
   if [ "${ROON_FADE}" ]
   then
-    printf "\nRoon volume fading is currently enabled, fading last ${FADE_TIME} seconds"
+    printf "\nRoon volume fading is currently enabled"
+    printf "\nFade duration set to ${FADE_TIME} seconds"
+    if [ "${FADE_IN}" = true ]
+    then
+      printf "\nFade back in is enabled"
+    else
+      printf "\nFade back in is disabled"
+    fi
     printf "\nExecute 'roon_fade off' to disable\n\n"
   else
     printf "\nRoon volume fading is currently disabled"
@@ -51,6 +60,18 @@ set_roon_fade() {
     rm -f /tmp/pyroon$$
 }
 
+set_fade_in() {
+    grep -v FADE_IN ${ROONCONF} > /tmp/pyroon$$
+    if [ "$1" == "on" ]
+    then
+      echo "FADE_IN=true" >> /tmp/pyroon$$
+    else
+      echo "FADE_IN=false" >> /tmp/pyroon$$
+    fi
+    cp /tmp/pyroon$$ ${ROONCONF}
+    rm -f /tmp/pyroon$$
+}
+
 set_fade_time() {
     grep -v FADE_TIME ${ROONCONF} > /tmp/pyroon$$
     echo "FADE_TIME=$1" >> /tmp/pyroon$$
@@ -58,11 +79,20 @@ set_fade_time() {
     rm -f /tmp/pyroon$$
 }
 
+fadein=
 fadetime=
 restore=
 # Parse the arguments to get the command and zone
-while getopts "lRt:z:hu" flag; do
+while getopts "iIlRt:z:hu" flag; do
     case $flag in
+        i)
+            [ "${FADE_IN}" = true ] || set_fade_in on
+            fadein=1
+            ;;
+        I)
+            [ "${FADE_IN}" = false ] || set_fade_in off
+            fadein=1
+            ;;
         l)
             LOG="-l"
             ;;
@@ -120,6 +150,7 @@ then
         if [ -x ${ROONFADE} ]
         then
             [ "${ROON_FADE}" ] || set_roon_fade on
+            [ "${FADE_IN}" ] || set_fade_in on
             [ "${FADE_TIME}" ] || set_fade_time 30
             echo "Starting Roon fade daemon ${ROONFADE}"
             [ "${LOG}" ] && echo "Logging in ${ROONETC}/faded_log.txt"
@@ -153,6 +184,6 @@ then
         fi
     fi
 else
-    [ "${restore}" ] || [ "${fadetime}" ] || usage
+    [ "${restore}" ] || [ "${fadetime}" ] || [ "${fadein}" ] || usage
 fi
 exit 0

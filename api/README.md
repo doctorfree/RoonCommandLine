@@ -4,38 +4,72 @@ Python scripts to access the Python Roon API
 
 ## Contents
 
-[**get_core_ip.py**](get_core_ip.py) - Python script backend to retrieve the Roon Core IP address
+[**get_core_ip.py**](get_core_ip.py) - retrieve the Roon Core IP address
 
-[**play_album.py**](play_album.py) - Python script backend for playing a specified album in my Roon library
+[**get_zone_attributes.py**](get_zone_attributes.py) - get zone attributes
 
-[**play_artist.py**](play_artist.py) - Python script backend for playing a specified artist in my Roon library
+[**get_zone_remaining.py**](get_zone_remaining.py) - get remaining play time in zone
 
-[**play_genre.py**](play_genre.py) - Python script backend for playing a specified genre in my Roon library
+[**now_playing.py**](now_playing.py) - display now playing track in zone or all zones
 
-[**play_playlist.py**](play_playlist.py) - Python script backend for playing a specified playlist in my Roon library
+[**play_album.py**](play_album.py) - play a specified album in my Roon library
 
-[**play_radio.py**](play_radio.py) - Python script backend for playing Live Radio in a Roon zone
+[**play_artist.py**](play_artist.py) - play a specified artist in my Roon library
 
-[**play_tag.py**](play_tag.py) - Python script backend for playing a specified tag in my Roon library (not yet working)
+[**play_artist_album.py**](play_artist_album.py) - play album by artist
 
-[**list_albums.py**](list_albums.py) - Python script backend for listing available Albums in your Roon Library
+[**play_artist_track.py**](play_artist_track.py) - play track by artist
 
-[**list_artists.py**](list_artists.py) - Python script backend for listing available Artists in your Roon Library
+[**play_composer_album.py**](play_composer_album.py) - play album by composer
 
-[**list_genres.py**](list_genres.py) - Python script backend for listing available Genres in your Roon Library
+[**play_composer.py**](play_composer.py) - play composer
 
-[**list_playlists.py**](list_playlists.py) - Python script backend for listing available Roon Playlists
+[**play_genre_album.py**](play_genre_album.py) - play album in genre
 
-[**list_radio.py**](list_radio.py) - Python script backend for listing available Roon Live Radio Stations
+[**play_genre_artist.py**](play_genre_artist.py) - play artist in genre
 
-[**list_tags.py**](list_tags.py) - Python script backend for listing available Roon Library tags
+[**play_genre.py**](play_genre.py) - play a specified genre in my Roon library
 
-[**list_zones.py**](list_zones.py) - Python script backend for listing available Roon Zones
+[**play_playlist.py**](play_playlist.py) - play a specified playlist in my Roon library
 
-[**set_volume.py**](set_volume.py) - Python script backend for setting the volume in the selected Roon Zone
+[**play_radio.py**](play_radio.py) - play Live Radio in a Roon zone
 
-[**zone_command.py**](zone_command.py) - Python script backend for sending commands to selected Roon Zone (play, pause, mute, next track, etc)
+[**play_tag.py**](play_tag.py) - play a specified tag in my Roon library (not yet working)
 
-[**zone_group.py**](zone_group.py) - Python script backend for grouping and ungrouping zones specified in roon_api.ini
+[**list_albums.py**](list_albums.py) - list available Albums in your Roon Library
 
-[**zone_properties.py**](zone_properties.py) - Python script backend for displaying information and properties of specified Roon zone
+[**list_artists.py**](list_artists.py) - list available Artists in your Roon Library
+
+[**list_artist_albums.py**](list_artist_albums.py) - list albums by artist
+
+[**list_artist_tracks.py**](list_artist_tracks.py) - list tracks by artist
+
+[**list_composer_albums.py**](list_composer_albums.py) - list albums by composer
+
+[**list_composers.py**](list_composers.py) - list composers
+
+[**list_genre_albums.py**](list_genre_albums.py) - list albums by genre
+
+[**list_genre_artists.py**](list_genre_artists.py) - list artists by genre
+
+[**list_playlist_tracks.py**](list_playlist_tracks.py) - list tracks in playlist
+
+[**list_genres.py**](list_genres.py) - list available Genres in your Roon Library
+
+[**list_playlists.py**](list_playlists.py) - list available Roon Playlists
+
+[**list_radio.py**](list_radio.py) - list available Roon Live Radio Stations
+
+[**list_tags.py**](list_tags.py) - list available Roon Library tags
+
+[**list_zones.py**](list_zones.py) - list available Roon Zones
+
+[**set_default.py**](set_default.py) - set RoonCommandLine defaults
+
+[**set_volume.py**](set_volume.py) - set the volume in the selected Roon Zone
+
+[**zone_command.py**](zone_command.py) - send commands to selected Roon Zone (play, pause, mute, next track, etc)
+
+[**zone_group.py**](zone_group.py) - group and ungroup zones specified in `roon_api.ini`
+
+[**zone_properties.py**](zone_properties.py) - display information and properties of specified Roon zone

@@ -28,9 +28,10 @@
 ROON=/usr/local/Roon
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
-LOG=
 FADE_DRTN=30
+FADE_ENDS=3
 FADE_ZONE=
+LOG=
 
 # Get the zone if it is set
 if [ -f ${ROONCONF} ]
@@ -113,7 +114,6 @@ init_fade_vals() {
   finish=()
   outdiv=$((FADE_DRTN / 3))
   indiv=$((FADE_DRTN / 5))
-  mintime=$((FADE_DRTN / 10))
   while read voline
   do
     zoninf+=( ${voline} )
@@ -281,7 +281,7 @@ do
             done
             # Get remaining time
             get_remain "${zones[0]}"
-            [ ${remain} -lt ${mintime} ] || [ ${remain} -ge ${FADE_DRTN} ] && {
+            [ ${remain} -lt ${FADE_ENDS} ] || [ ${remain} -ge ${FADE_DRTN} ] && {
               for f in ${!finish[@]}
               do
                 finish[$f]=0
@@ -298,22 +298,28 @@ do
             do
               for z in ${!zones[@]}
               do
-                step=${instepsz[$z]}
                 cvol=${curvol[$z]}
                 zone=${zones[$z]}
-                zvol=`get_zone_volume -n -z "${zone}"`
-                boom=$((cvol - zvol))
-                if [ ${boom} -le ${step} ]
+                if [ "${FADE_IN}" = true ]
                 then
-                  [ ${finish[$z]} -eq 1 ] || {
-                    [ "${LOG}" ] && {
-                      echo "Restoring ${zone} to previous volume" >> "${LOG}"
+                  step=${instepsz[$z]}
+                  zvol=`get_zone_volume -n -z "${zone}"`
+                  boom=$((cvol - zvol))
+                  if [ ${boom} -le ${step} ]
+                  then
+                    [ ${finish[$z]} -eq 1 ] || {
+                      [ "${LOG}" ] && {
+                        echo "Restoring ${zone} to previous volume" >> "${LOG}"
+                      }
+                      set_volume -v "${cvol}" -z "${zone}"
+                      finish[$z]=1
                     }
-                    set_volume -v "${cvol}" -z "${zone}"
-                    finish[$z]=1
-                  }
+                  else
+                    set_volume -r -v "${step}" -z "${zone}"
+                  fi
                 else
-                  set_volume -r -v "${step}" -z "${zone}"
+                  set_volume -v "${cvol}" -z "${zone}"
+                  finish[$z]=1
                 fi
               done
               faded=1
@@ -336,13 +342,13 @@ do
             done
             [ "${faded}" ] && {
               [ "${LOG}" ] && {
-                echo "Stopping fade in" >> "${LOG}"
+                echo "Volume levels restored" >> "${LOG}"
               }
               fading=
               restored=1
             }
         }
-        sleep ${mintime}
+        sleep ${FADE_ENDS}
         continue
     fi
 done

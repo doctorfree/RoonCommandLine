@@ -21,8 +21,8 @@
 roon_fade - Enable/Disable volume fading in a Roon zone
 .SH SYNOPSIS
 .PP
-\f[B]roon_fade\f[R] [ \f[B]-l\f[R] ] [ \f[B]-t\f[R] seconds ] [
-\f[B]-uh\f[R] ] [ \f[B]-z\f[R] zone ] \f[B]on|off\f[R]
+\f[B]roon_fade\f[R] [ \f[B]-i|-I\f[R] ] [ \f[B]-l\f[R] ] [ \f[B]-t\f[R]
+seconds ] [ \f[B]-uh\f[R] ] [ \f[B]-z\f[R] zone ] \f[B]on|off\f[R]
 .PP
 An argument of \f[I]on\f[R] enables fading, \f[I]off\f[R] disables
 fading.
@@ -42,10 +42,23 @@ The \f[I]-t seconds\f[R] argument can be used to set the fade delay in
 seconds.
 An argument of \f[I]-t default\f[R] restores the default fade delay.
 Default is 30 seconds.
+.PP
+The default fading behavior is to fade out at the end of tracks and fade
+back in at the beginning of the next track.
+To restore volume levels immediately after fading out use the
+\f[I]-I\f[R] command line switch \f[V]roon_fade -I ...\f[R].
+To restore the default fade back in behavior use the \f[I]-i\f[R]
+command line switch \f[V]roon_fade -i ...\f[R].
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]-u|-h\f[R]
 Display a usage message with current status and exit
+.TP
+\f[B]-i\f[R]
+enables fade in next track after fading out (default)
+.TP
+\f[B]-I\f[R]
+disables fade in, immediately restore volume after fading
 .TP
 \f[B]-l\f[R]
 Enable logging
