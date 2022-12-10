@@ -14,6 +14,8 @@ roon_faded - Roon zone volume fading daemon
 # DESCRIPTION
 Monitors zone playing state and time remaining for each track played in order to perform volume fading on specified zone or default zone if no zone is specified. If the `-l` flag is provided then logging is enabled. Launched by **roon_fade on**, exits with **roon_fade off**.
 
+Currently `roon_faded` will detect zone groupings and changes to zone groupings while running. Should the zone grouping or fade duration change while `roon_faded` is running it will adjust appropriately in order to fade audio in the currently playing zones and for the desired duration. However, `roon_faded` is limited in its ability to adapt to real-time changes during fade. For example, manual volume changes made in the Roon client will not be detected nor will zone transfers.
+
 # COMMAND LINE OPTIONS
 **-l**
 : Enable logging

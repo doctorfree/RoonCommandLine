@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# Written by Ron Record <rr@ronrecord.com> December, 2022
+#
 # roon_faded - Run in the background checking if the zone state is playing and
 #              if so, fade volume at end of song then restore volume level.
 #              Launched by 'roon_fade on', stopped by 'roon_fade off'
@@ -16,16 +18,19 @@
 
 # TODO: Run separate roon_faded daemons for each zone or grouped zones to
 #       support fading on some zones but not on others or multiple fading zones.
-#       Right now you're either always fading or always not and multiple
-#       grouped or ungrouped zones are not supported.
+#       Right now you're either always fading or always not in a single zone or
+#       grouped zone and multiple grouped or ungrouped zones are not supported.
 # TODO: This should be a Python script using the Python Roon API to register
 #       for callbacks to monitor track end/start and volume adjustments.
+#       But it would be difficult to code all the logic here in Python so
+#       figure out a way to surface the callback(s) up to this script.
 
 ROON=/usr/local/Roon
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 LOG=
-FADE_TIME=30
+FADE_DRTN=30
+FADE_ZONE=
 
 # Get the zone if it is set
 if [ -f ${ROONCONF} ]
@@ -36,6 +41,22 @@ else
     ${ROON}/bin/set_zone $DEFZONE
     . ${ROONCONF}
 fi
+
+# If fade duration is set in pyroonconf then use that value
+[ "${FADE_TIME}" ] && {
+    FADE_DRTN=${FADE_TIME}
+}
+
+get_remain() {
+    # Returned lines look like:
+    #   HomePod Max: Time remaining = 674 seconds, State = paused
+    remline=`get_zone_remaining -z "$1"`
+    remain=`echo "${remline}" | awk -F ',' ' { print $1 } ' | \
+                                awk -F ':' ' { print $2 } ' | \
+                                awk -F '=' ' { print $2 } ' | \
+                                sed -e 's/^ *//' -e 's/ *$//' | \
+                                awk ' { print $1 } '`
+}
 
 get_state_remain() {
     # Returned lines look like:
@@ -59,13 +80,15 @@ while getopts "lz:" flag; do
             [ -f "${LOG}" ] || touch "${LOG}"
             ;;
         z)
-            ROON_ZONE="$OPTARG"
+            FADE_ZONE="$OPTARG"
             ;;
     esac
 done
 
+[ "${FADE_ZONE}" ] || FADE_ZONE="${ROON_ZONE}"
+
 [ "${LOG}" ] && {
-    echo "Logging roon_faded in ${LOG} for zone ${ROON_ZONE}" >> "${LOG}"
+    echo "Logging roon_faded in ${LOG} for zone ${FADE_ZONE}" >> "${LOG}"
 }
 
 # get_zone_volume returns an ungrouped zone like this:
@@ -79,19 +102,20 @@ done
 #   HomePod Max: Volume = 62, Min = 1, Max = 100
 #   HomePod Mini Left: Volume = 72, Min = 1, Max = 100
 #   HomePod Mini Right: Volume = 72, Min = 1, Max = 100
-
-zoninf=()
-zones=()
-curvol=()
-minvol=()
-maxvol=()
-outstepsz=()
-instepsz=()
-finish=()
-outdiv=$((FADE_TIME / 3))
-indiv=$((FADE_TIME / 5))
-while read voline
-do
+init_fade_vals() {
+  zoninf=()
+  zones=()
+  curvol=()
+  minvol=()
+  maxvol=()
+  outstepsz=()
+  instepsz=()
+  finish=()
+  outdiv=$((FADE_DRTN / 3))
+  indiv=$((FADE_DRTN / 5))
+  mintime=$((FADE_DRTN / 10))
+  while read voline
+  do
     zoninf+=( ${voline} )
     finish+=( 0 )
     zone=`echo "${voline}" | awk -F ':' ' { print $1 } ' | \
@@ -117,12 +141,19 @@ do
                                 awk -F '=' ' { print $2 } ' | \
                                 sed -e 's/^ *//' -e 's/ *$//'`
     maxvol+=( ${maximum} )
-done < <(get_zone_volume -g -z "${ROON_ZONE}")
+  done < <(get_zone_volume -g -z "${FADE_ZONE}")
+}
+
+init_fade_vals
 
 fading=
+logsleep=
+lognull=
+notnull=
 state=
 remain=
 restored=1
+sleeping=
 while true
 do
     . ${ROONCONF}
@@ -143,26 +174,85 @@ do
         }
         exit 0
     }
+    [ "${FADE_TIME}" ] && {
+        [ "${FADE_TIME}" == "${FADE_DRTN}" ] || {
+            # Fade duration changed in pyroonconf
+            [ "${LOG}" ] && {
+              echo "Detected change to fade duration, re-initializing" >> "${LOG}"
+            }
+            FADE_DRTN=${FADE_TIME}
+            init_fade_vals
+        }
+    }
+
+    # Check if zone grouping has changed
+    chkzones=()
+    while read zoneline
+    do
+      chk_zone=`echo "${zoneline}" | awk -F ':' ' { print $1 } ' | \
+                                     sed -e 's/^ *//' -e 's/ *$//'`
+      chkzones+=( "${chk_zone}" )
+    done < <(get_zone_volume -g -z "${FADE_ZONE}")
+
+    numdiff=`echo ${zones[@]} ${chkzones[@]} | \
+             tr ' ' '\n' | sort | uniq -u | wc -l`
+    [ ${numdiff} -eq 0 ] || {
+        [ "${LOG}" ] && {
+          echo "Detected change to zone grouping, re-initializing" >> "${LOG}"
+        }
+        init_fade_vals
+    }
+
     # Get remaining time and state of zone
     get_state_remain "${zones[0]}"
-    [ "${state}" == "playing" ] || {
-        [ "${LOG}" ] && {
-            echo "Sleeping ${FADE_TIME} seconds waiting for playing state" >> "${LOG}"
-        }
-        sleep ${FADE_TIME}
-        continue
-    }
-    [ "${remain}" == "null" ] && {
-        [ "${LOG}" ] && {
-            echo "Sleeping ${FADE_TIME} seconds waiting for remaining time not null" >> "${LOG}"
-        }
-        sleep ${FADE_TIME}
-        continue
-    }
-    if [ ${remain} -lt ${FADE_TIME} ] && [ "${restored}" ]
+    if [ "${state}" == "playing" ]
     then
         [ "${LOG}" ] && {
-            echo "Remaining time less than ${FADE_TIME} seconds, starting fade" >> "${LOG}"
+          [ "${sleeping}" ] && {
+            echo "Found zone in playing state" >> "${LOG}"
+            logsleep=
+          }
+        }
+        sleeping=
+    else
+        [ "${LOG}" ] && {
+          [ "${sleeping}" ] || {
+            [ "${logsleep}" ] || {
+              echo "Sleeping waiting for playing state" >> "${LOG}"
+              logsleep=1
+            }
+          }
+        }
+        sleeping=1
+        sleep ${FADE_DRTN}
+        continue
+    fi
+    if [ "${remain}" == "null" ]
+    then
+        [ "${LOG}" ] && {
+          [ "${notnull}" ] || {
+            [ "${lognull}" ] || {
+              echo "Sleeping waiting for remaining time not null" >> "${LOG}"
+              lognull=1
+            }
+          }
+        }
+        notnull=1
+        sleep ${FADE_DRTN}
+        continue
+    else
+        [ "${LOG}" ] && {
+          [ "${notnull}" ] && {
+            echo "Found remaining time not null" >> "${LOG}"
+            lognull=
+          }
+        }
+        notnull=
+    fi
+    if [ ${remain} -lt ${FADE_DRTN} ] && [ "${restored}" ]
+    then
+        [ "${LOG}" ] && {
+            echo "Remaining time less than ${FADE_DRTN} seconds, starting fade" >> "${LOG}"
         }
         fading=1
         restored=
@@ -176,12 +266,7 @@ do
               zvol=`get_zone_volume -n -z "${zone}"`
               if [ ${zvol} -le ${mvol} ]
               then
-                [ ${finish[$z]} -eq 1 ] || {
-                  [ "${LOG}" ] && {
-                    echo "Finished fading ${zone} to ${mvol}" >> "${LOG}"
-                  }
-                  finish[$z]=1
-                }
+                [ ${finish[$z]} -eq 1 ] || finish[$z]=1
               else
                 set_volume -r -v "-${step}" -z "${zone}"
               fi
@@ -194,16 +279,15 @@ do
                     break
                 }
             done
-            # Get remaining time and state of zone
-            get_state_remain "${zones[0]}"
-            [ ${remain} -lt 5 ] && {
+            # Get remaining time
+            get_remain "${zones[0]}"
+            [ ${remain} -lt ${mintime} ] || [ ${remain} -ge ${FADE_DRTN} ] && {
               for f in ${!finish[@]}
               do
-                set_volume -v "${mvol}" -z "${zones[$f]}"
                 finish[$f]=0
               done
               [ "${LOG}" ] && {
-                echo "Faded to minimum in all zones" >> "${LOG}"
+                echo "Fade out complete in all zones" >> "${LOG}"
               }
               break
             }
@@ -258,7 +342,7 @@ do
               restored=1
             }
         }
-        sleep 5
+        sleep ${mintime}
         continue
     fi
 done

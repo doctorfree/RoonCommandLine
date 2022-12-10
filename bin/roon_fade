@@ -122,6 +122,7 @@ then
             [ "${ROON_FADE}" ] || set_roon_fade on
             [ "${FADE_TIME}" ] || set_fade_time 30
             echo "Starting Roon fade daemon ${ROONFADE}"
+            [ "${LOG}" ] && echo "Logging in ${ROONETC}/faded_log.txt"
             ${ROONFADE} ${LOG} -z "${ROON_ZONE}" > /dev/null 2>&1 &
         else
             echo "Roon fade daemon ${ROONFADE} not found or not executable"
@@ -131,7 +132,21 @@ then
         then
             [ "${ROON_FADE}" ] && {
                 set_roon_fade off
-                echo "Roon fade disabled in ${ROONCONF}"
+                printf "\nRoon fade disabled in ${ROONCONF}"
+                printf "\nWaiting for ${ROONFADE} to exit ..."
+                while true
+                do
+                  running=
+                  ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
+                    running=1
+                    printf "."
+                    sleep 2
+                  }
+                  [ "${running}" ] || {
+                    printf " done\n"
+                    break
+                  }
+                done
             }
         else
             usage

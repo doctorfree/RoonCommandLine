@@ -29,6 +29,16 @@ order to perform volume fading on specified zone or default zone if no
 zone is specified.
 If the \f[V]-l\f[R] flag is provided then logging is enabled.
 Launched by \f[B]roon_fade on\f[R], exits with \f[B]roon_fade off\f[R].
+.PP
+Currently \f[V]roon_faded\f[R] will detect zone groupings and changes to
+zone groupings while running.
+Should the zone grouping or fade duration change while
+\f[V]roon_faded\f[R] is running it will adjust appropriately in order to
+fade audio in the currently playing zones and for the desired duration.
+However, \f[V]roon_faded\f[R] is limited in its ability to adapt to
+real-time changes during fade.
+For example, manual volume changes made in the Roon client will not be
+detected nor will zone transfers.
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]-l\f[R]

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+December 15, 2022 :
+    RoonCommandLine version 2.0.7 release 1 is a minor feature and bugfix update
+
+    This release adds support for:
+        * Save authentication token right after we get a RoonApi handle (bug fix)
+        * Add options to `roon` command for controlling fading
+        * Add fade feature (`roon_fade` user command and `roon_faded` fade daemon)
+        * Man pages for fading and new commands
+        * Fixes for `now_playing`, `get_zone_volume`, and `get_zone_attributes`
+        * Add `get_zone_remaining` to get remaining time for now playing in zone
+        * Add `get_zone_volume` and `get_zone_attributes.py`
+
 November 15, 2022 :
     RoonCommandLine version 2.0.6 release 2 is a minor feature update
 
