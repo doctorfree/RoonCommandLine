@@ -166,7 +166,20 @@ sleeping=
 while true
 do
     . ${ROONCONF}
+    [ "${FADE_INIT}" ] && {
+        grep -v FADE_INIT ${ROONCONF} > /tmp/pyroon$$
+        cp /tmp/pyroon$$ ${ROONCONF}
+        rm -f /tmp/pyroon$$
+        FADE_INIT=
+        [ "${LOG}" ] && {
+            echo "FADE_INIT detected, re-initializing fade values" >> "${LOG}"
+        }
+        init_fade_vals
+    }
     [ "${RESTORE_VOLUME}" ] && {
+        [ "${LOG}" ] && {
+            echo "RESTORE_VOLUME detected, restoring volume levels" >> "${LOG}"
+        }
         for z in ${!zones[@]}
         do
           cvol=${curvol[$z]}
@@ -176,8 +189,9 @@ do
         grep -v RESTORE_VOLUME ${ROONCONF} > /tmp/pyroon$$
         cp /tmp/pyroon$$ ${ROONCONF}
         rm -f /tmp/pyroon$$
+        RESTORE_VOLUME=
     }
-    [ "${ROON_FADE}" ] || {
+    [ "${ROON_FADE}" = true ] || {
         [ "${LOG}" ] && {
             echo "ROON_FADE disabled, roon_faded exiting" >> "${LOG}"
         }
@@ -274,6 +288,21 @@ do
         restored=
         while true
         do
+            # Corner case where user disabled fading during a fade
+            grep "ROON_FADE=false" ${ROONCONF} > /dev/null && {
+              [ "${LOG}" ] && {
+                echo "ROON_FADE disabled during fade, roon_faded exiting" >> "${LOG}"
+              }
+              # Restore volume levels in all fading zones
+              for z in ${!zones[@]}
+              do
+                cvol=${curvol[$z]}
+                zone=${zones[$z]}
+                set_volume -v "${cvol}" -z "${zone}"
+              done
+              exit 0
+            }
+            # Fade volume in fading zone and grouped zones
             for z in ${!zones[@]}
             do
               step=${outstepsz[$z]}

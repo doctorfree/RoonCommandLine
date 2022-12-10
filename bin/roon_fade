@@ -22,18 +22,20 @@ init_pyroon() {
 }
 
 usage() {
-  printf "\nUsage: roon_fade [-iI] [-l] [-R] [-t seconds] [-uh] [-z zone] on|off"
+  printf "\nUsage: roon_fade [-iI] [-l] [-R] [-V] [-t seconds] [-uh] [-z zone] on|off"
   printf "\nWhere:"
   printf "\n\t-i enables fade in next track after fading out"
   printf "\n\t-I disables fade in, immediately restore volume after fading"
   printf "\n\t-l enables logging"
   printf "\n\t-R restores faded or modified volume to original levels"
+  printf "\n\t-V updates fading restore volume to current volume levels"
+  printf "\n\t\t(use 'roon_fade -V' after manually adjusting volume)"
   printf "\n\t-t 'seconds' sets the fade duration in seconds (default: 30)"
   printf "\n\t-z 'zone' sets the Roon zone in which to fade"
   printf "\n\t\tIf no zone is specified, the default zone is used\n"
   printf "\nAn argument of 'on' enables fading, 'off' disables fading"
   printf "\nWithout arguments or with '-u' or '-h' this usage message is displayed\n"
-  if [ "${ROON_FADE}" ]
+  if [ "${ROON_FADE}" = true ]
   then
     if [ "${FADE_ZONE}" ]
     then
@@ -69,7 +71,7 @@ set_roon_fade() {
     then
       echo "ROON_FADE=true" >> /tmp/pyroon$$
     else
-      echo "ROON_FADE=" >> /tmp/pyroon$$
+      echo "ROON_FADE=false" >> /tmp/pyroon$$
     fi
     cp /tmp/pyroon$$ ${ROONCONF}
     rm -f /tmp/pyroon$$
@@ -98,9 +100,10 @@ init_pyroon
 
 fadein=
 fadetime=
+fadeinit=
 restore=
 # Parse the arguments to get the command and zone
-while getopts "iIlRt:z:hu" flag; do
+while getopts "iIlRt:Vz:hu" flag; do
     case $flag in
         i)
             [ "${FADE_IN}" = true ] || set_fade_in on
@@ -142,6 +145,20 @@ while getopts "iIlRt:z:hu" flag; do
             else
                 echo "${fadetime} is not a positive integer. Ignoring."
             fi
+            ;;
+        V)
+            ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
+              echo "Updating restored volume levels for fading"
+              grep -v FADE_INIT ${ROONCONF} > /tmp/pyroon$$
+              echo "FADE_INIT=1" >> /tmp/pyroon$$
+              cp /tmp/pyroon$$ ${ROONCONF}
+              rm -f /tmp/pyroon$$
+              fadeinit=1
+            }
+            [ "${fadeinit}" ] || {
+              echo "${ROONFADE} does not appear to be running"
+              echo "Volume levels must be updated by stopping and restarting fade"
+            }
             ;;
         z)
             FADE_ZONE="$OPTARG"
@@ -186,7 +203,7 @@ then
         }
         if [ -x ${ROONFADE} ]
         then
-            [ "${ROON_FADE}" ] || set_roon_fade on
+            [ "${ROON_FADE}" = true ] || set_roon_fade on
             [ "${FADE_IN}" ] || set_fade_in on
             [ "${FADE_TIME}" ] || set_fade_time 30
             set_fade_zone
@@ -199,7 +216,7 @@ then
     else
         if [ "${argument}" == "off" ]
         then
-            [ "${ROON_FADE}" ] && {
+            [ "${ROON_FADE}" = true ] && {
                 set_roon_fade off
                 printf "\nRoon fade disabled in ${ROONCONF}"
                 printf "\nWaiting for ${ROONFADE} to exit ..."
@@ -222,6 +239,7 @@ then
         fi
     fi
 else
-    [ "${restore}" ] || [ "${fadetime}" ] || [ "${fadein}" ] || usage
+    [ "${fadeinit}" ] || [ "${restore}" ] || \
+    [ "${fadetime}" ] || [ "${fadein}" ] || usage
 fi
 exit 0

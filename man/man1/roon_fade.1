@@ -21,8 +21,9 @@
 roon_fade - Enable/Disable volume fading in a Roon zone
 .SH SYNOPSIS
 .PP
-\f[B]roon_fade\f[R] [ \f[B]-i|-I\f[R] ] [ \f[B]-l\f[R] ] [ \f[B]-t\f[R]
-seconds ] [ \f[B]-uh\f[R] ] [ \f[B]-z\f[R] zone ] \f[B]on|off\f[R]
+\f[B]roon_fade\f[R] [ \f[B]-i|-I\f[R] ] [ \f[B]-l\f[R] ] [ \f[B]-R\f[R]
+] [ \f[B]-V\f[R] ] [ \f[B]-t\f[R] seconds ] [ \f[B]-uh\f[R] ] [
+\f[B]-z\f[R] zone ] \f[B]on|off\f[R]
 .PP
 An argument of \f[I]on\f[R] enables fading, \f[I]off\f[R] disables
 fading.
@@ -37,6 +38,13 @@ Without arguments \f[B]roon_fade\f[R] reports whether fading is enabled
 or disabled.
 When the \f[B]on\f[R] argument is provided \f[B]roon_fade\f[R] launches
 the \f[B]roon_faded\f[R] daemon to monitor playback and perform fading.
+.PP
+The \f[I]-R\f[R] option can be used to restore faded or modified volume
+to original levels.
+.PP
+The \f[I]-V\f[R] option can be used to update fading restore volume to
+current volume levels.
+This can be useful after manually adjusting volume levels.
 .PP
 The \f[I]-t seconds\f[R] argument can be used to set the fade delay in
 seconds.
@@ -62,6 +70,13 @@ disables fade in, immediately restore volume after fading
 .TP
 \f[B]-l\f[R]
 Enable logging
+.TP
+\f[B]-R\f[R]
+Restores faded or modified volume to original levels
+.TP
+\f[B]-V\f[R]
+Updates fading restore volume to current volume levels (use
+\[aq]roon_fade -V\[aq] after manually adjusting volume)
 .TP
 \f[B]-t seconds\f[R]
 Specifies the number of seconds the fade should run (default: 30)

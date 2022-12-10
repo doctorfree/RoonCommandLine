@@ -9,12 +9,16 @@ date: December 05, 2022
 roon_fade - Enable/Disable volume fading in a Roon zone
 
 # SYNOPSIS
-**roon_fade** [ **-i|-I** ] [ **-l** ] [ **-t** seconds ] [ **-uh** ] [ **-z** zone ] **on|off**
+**roon_fade** [ **-i|-I** ] [ **-l** ] [ **-R** ] [ **-V** ] [ **-t** seconds ] [ **-uh** ] [ **-z** zone ] **on|off**
 
 An argument of *on* enables fading, *off* disables fading. Without arguments or with *-u* or *-h*, a usage message with current status is displayed
 
 # DESCRIPTION
 Enables or disables volume fading on specified zone or default zone if no zone is specified. If the `-l` flag is provided then logging is enabled. Without arguments **roon_fade** reports whether fading is enabled or disabled. When the **on** argument is provided **roon_fade** launches the **roon_faded** daemon to monitor playback and perform fading.
+
+The *-R* option can be used to restore faded or modified volume to original levels.
+
+The *-V* option can be used to update fading restore volume to current volume levels. This can be useful after manually adjusting volume levels.
 
 The *-t seconds* argument can be used to set the fade delay in seconds. An argument of *-t default* restores the default fade delay. Default is 30 seconds.
 
@@ -32,6 +36,12 @@ The default fading behavior is to fade out at the end of tracks and fade back in
 
 **-l**
 : Enable logging
+
+**-R**
+: Restores faded or modified volume to original levels
+
+**-V**
+: Updates fading restore volume to current volume levels (use 'roon_fade -V' after manually adjusting volume)
 
 **-t seconds**
 : Specifies the number of seconds the fade should run (default: 30) 
