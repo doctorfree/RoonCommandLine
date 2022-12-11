@@ -220,6 +220,7 @@ then
                 set_roon_fade off
                 printf "\nRoon fade disabled in ${ROONCONF}"
                 printf "\nWaiting for ${ROONFADE} to exit ..."
+                elapsed=0
                 while true
                 do
                   running=
@@ -227,10 +228,17 @@ then
                     running=1
                     printf "."
                     sleep 2
+                    elapsed=$((elapsed + 2))
                   }
                   [ "${running}" ] || {
                     printf " done\n"
                     break
+                  }
+                  [ ${elapsed} -gt 10 ] && {
+                    faded_pid=`ps -ef | grep roon_faded | \
+                                        grep -v grep | awk ' { print $2 } '`
+                    kill ${faded_pid}
+                    elapsed=0
                   }
                 done
             }

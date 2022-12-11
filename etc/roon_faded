@@ -52,9 +52,19 @@ fi
 #       Use slightly less value when not fading in.
 if [ "${FADE_IN}" = true ]
 then
-    FADE_ENDS=4
+  if [ "${FADE_IN_ENDS}" ]
+  then
+    FADE_ENDS=${FADE_IN_ENDS}
+  else
+    FADE_ENDS=5
+  fi
 else
-    FADE_ENDS=2
+  if [ "${FADE_NO_ENDS}" ]
+  then
+    FADE_ENDS=${FADE_NO_ENDS}
+  else
+    FADE_ENDS=3
+  fi
 fi
 
 get_remain() {
@@ -99,6 +109,17 @@ done
 
 [ "${LOG}" ] && {
     echo "Logging roon_faded in ${LOG} for zone ${FADE_ZONE}" >> "${LOG}"
+    echo "FADE_ENDS = ${FADE_ENDS}, FADE_DRTN=${FADE_DRTN}, FADE_IN=${FADE_IN}" >> "${LOG}"
+}
+
+# Restore volume levels in all fading zones
+restore_volume() {
+    for z in ${!zones[@]}
+    do
+        cvol=${curvol[$z]}
+        zone=${zones[$z]}
+        set_volume -v "${cvol}" -z "${zone}"
+    done
 }
 
 # get_zone_volume returns an ungrouped zone like this:
@@ -113,20 +134,15 @@ done
 #   HomePod Mini Left: Volume = 72, Min = 1, Max = 100
 #   HomePod Mini Right: Volume = 72, Min = 1, Max = 100
 init_fade_vals() {
-  zoninf=()
   zones=()
   curvol=()
   minvol=()
-  maxvol=()
   outstepsz=()
   instepsz=()
-  finish=()
-  outdiv=$((FADE_DRTN / 3))
-  indiv=$((FADE_DRTN / 5))
+  outdiv=$((FADE_DRTN / 4))
+  indiv=$((FADE_DRTN / 6))
   while read voline
   do
-    zoninf+=( ${voline} )
-    finish+=( 0 )
     zone=`echo "${voline}" | awk -F ':' ' { print $1 } ' | \
                              sed -e 's/^ *//' -e 's/ *$//'`
     zones+=( "${zone}" )
@@ -145,15 +161,23 @@ init_fade_vals() {
     outstepsz+=( ${outstep} )
     instep=$((diff / indiv))
     instepsz+=( ${instep} )
-    maximum=`echo "${voline}" | awk -F ':' ' { print $2 } ' | \
-                                awk -F ',' ' { print $3 } ' | \
-                                awk -F '=' ' { print $2 } ' | \
-                                sed -e 's/^ *//' -e 's/ *$//'`
-    maxvol+=( ${maximum} )
   done < <(get_zone_volume -g -z "${FADE_ZONE}")
 }
 
 init_fade_vals
+
+finish=()
+for z in ${!zones[@]}
+do
+  finish+=( 0 )
+  [ "${LOG}" ] && {
+    outstep=${outstepsz[$z]}
+    instep=${instepsz[$z]}
+    zone=${zones[$z]}
+    mvol=${minvol[$z]}
+    echo "Zone: ${zone}, outstep=${outstep}, instep=${instep}, minvol=${mvol}" >> "${LOG}"
+  }
+done
 
 fading=
 logsleep=
@@ -180,12 +204,7 @@ do
         [ "${LOG}" ] && {
             echo "RESTORE_VOLUME detected, restoring volume levels" >> "${LOG}"
         }
-        for z in ${!zones[@]}
-        do
-          cvol=${curvol[$z]}
-          zone=${zones[$z]}
-          set_volume -v "${cvol}" -z "${zone}"
-        done
+        restore_volume
         grep -v RESTORE_VOLUME ${ROONCONF} > /tmp/pyroon$$
         cp /tmp/pyroon$$ ${ROONCONF}
         rm -f /tmp/pyroon$$
@@ -195,6 +214,7 @@ do
         [ "${LOG}" ] && {
             echo "ROON_FADE disabled, roon_faded exiting" >> "${LOG}"
         }
+        restore_volume
         exit 0
     }
     [ "${FADE_TIME}" ] && {
@@ -293,13 +313,7 @@ do
               [ "${LOG}" ] && {
                 echo "ROON_FADE disabled during fade, roon_faded exiting" >> "${LOG}"
               }
-              # Restore volume levels in all fading zones
-              for z in ${!zones[@]}
-              do
-                cvol=${curvol[$z]}
-                zone=${zones[$z]}
-                set_volume -v "${cvol}" -z "${zone}"
-              done
+              restore_volume
               exit 0
             }
             # Fade volume in fading zone and grouped zones
