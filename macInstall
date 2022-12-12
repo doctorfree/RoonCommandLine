@@ -98,7 +98,16 @@ ${SUDO} cp README.md ${DESTDIR}/share/doc/${PKG}/README
 ${SUDO} cp VERSION ${DESTDIR}/share/doc/${PKG}/VERSION
 ${SUDO} gzip -9 ${DESTDIR}/share/doc/${PKG}/changelog
 
-${SUDO} cp -a man ${DESTDIR}/share/man
+${SUDO} chmod 644 man/*/*
+${SUDO} chmod 755 man man/man*
+for mandir in man/man*
+do
+    [ "${mandir}" == "man/man*" ] && continue
+    [ -d ${DESTDIR}/share/${mandir} ] || {
+        ${SUDO} mkdir -p ${DESTDIR}/share/${mandir}
+    }
+    ${SUDO} cp -p ${mandir}/* ${DESTDIR}/share/${mandir}
+done
 
 [ -f .gitignore ] && {
     while read ignore
@@ -111,8 +120,7 @@ ${SUDO} chmod 644 ${ROON}/etc/* \
                   ${ROON}/api/* \
                   ${ROON}/patches/*.md ${ROON}/patches/*.patch \
                   ${ROON}/patches/roonapi/* \
-                  ${ROON}/patches/roon-web-controller/* \
-                  ${DESTDIR}/share/man/*/*
+                  ${ROON}/patches/roon-web-controller/*
 ${SUDO} chmod 755 ${ROON}/bin/* \
                   ${ROON}/bin \
                   ${ROON}/etc/roon_faded \
@@ -121,9 +129,7 @@ ${SUDO} chmod 755 ${ROON}/bin/* \
                   ${ROON}/patches \
                   ${ROON}/patches/mk* \
                   ${ROON}/patches/roonapi \
-                  ${ROON}/patches/roon-web-controller \
-                  ${DESTDIR}/share/man \
-                  ${DESTDIR}/share/man/*
+                  ${ROON}/patches/roon-web-controller
 ${SUDO} chown -R root:wheel ${ROON}
 # ${SUDO} chown -R root:wheel ${DESTDIR}
 
