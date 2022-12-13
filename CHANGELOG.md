@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-December 15, 2022 :
+December 13, 2022 :
+    RoonCommandLine version 2.0.7 release 2 is a minor feature and bugfix update
+
+    This release adds support for:
+        * Add immediate mode to roon_fade with 'now' argument
+        * Set man permissions correctly in manual install scripts
+
+December 11, 2022 :
     RoonCommandLine version 2.0.7 release 1 is a minor feature and bugfix update
 
     This release adds support for:
