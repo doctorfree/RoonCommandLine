@@ -23,21 +23,52 @@ roon_fade - Enable/Disable volume fading in a Roon zone
 .PP
 \f[B]roon_fade\f[R] [ \f[B]-i|-I\f[R] ] [ \f[B]-l\f[R] ] [ \f[B]-R\f[R]
 ] [ \f[B]-V\f[R] ] [ \f[B]-t\f[R] seconds ] [ \f[B]-uh\f[R] ] [
-\f[B]-z\f[R] zone ] \f[B]on|off\f[R]
+\f[B]-y\f[R] ] [ \f[B]-z\f[R] zone ] \f[B]on|off|now\f[R]
 .PP
 An argument of \f[I]on\f[R] enables fading, \f[I]off\f[R] disables
 fading.
+An argument of \f[I]now\f[R] fades volume immediately followed by a
+prompt to restore volume levels.
 Without arguments or with \f[I]-u\f[R] or \f[I]-h\f[R], a usage message
 with current status is displayed
 .SH DESCRIPTION
 .PP
-Enables or disables volume fading on specified zone or default zone if
-no zone is specified.
-If the \f[V]-l\f[R] flag is provided then logging is enabled.
-Without arguments \f[B]roon_fade\f[R] reports whether fading is enabled
-or disabled.
+The \f[V]roon_fade\f[R] command can be used to enable or disable volume
+fading on a specified zone or default zone if no zone is specified.
+All zones in a grouped zone are effected.
+.PP
+Volume level fading can be initiated in two ways with
+\f[V]roon_fade\f[R].
+If enabled with the \f[V]roon_fade on\f[R] then volume fading will occur
+automatically at the end of every track.
+In this mode volume levels are restored automatically at the beginning
+of next track play.
+To disable automatic volume fading, run \f[V]roon_fade off\f[R].
+.PP
+The second mode, immediate fading, can be triggered with the
+\f[V]roon_fade now\f[R] command.
+In immediate mode volume levels are faded immediately followed by a
+prompt to restore volume levels.
+.PP
+Currently only one Roon zone or zone grouping can be addressed by
+\f[V]roon_fade\f[R].
+It is possible to enable fading in one zone or grouped zone while not
+fading in others but it is not possible to enable fading in multiple
+zones unless they are grouped.
+.PP
 When the \f[B]on\f[R] argument is provided \f[B]roon_fade\f[R] launches
 the \f[B]roon_faded\f[R] daemon to monitor playback and perform fading.
+The \f[B]off\f[R] argument disables fading and causes the fade daemon to
+exit.
+An argument of \f[I]now\f[R] fades volume immediately followed by a
+prompt to restore volume levels and temporarily disables the fade daemon
+if running.
+.PP
+Without arguments \f[B]roon_fade\f[R] reports whether fading is enabled
+or disabled.
+.PP
+If the \f[V]-l\f[R] flag is provided then logging is enabled in log file
+\f[V]/usr/local/Roon/etc/faded_log.txt\f[R].
 .PP
 The \f[I]-R\f[R] option can be used to restore faded or modified volume
 to original levels.
@@ -81,14 +112,17 @@ Updates fading restore volume to current volume levels (use
 \f[B]-t seconds\f[R]
 Specifies the number of seconds the fade should run (default: 30)
 .TP
+\f[B]-y\f[R]
+Indicates do not prompt, assume a \[aq]yes\[aq] answer to any prompt
+.TP
 \f[B]-z ZONE\f[R]
 If a \f[I]ZONE\f[R] is specified then perform fading for that zone.
 If no \f[I]ZONE\f[R] is provided on the command line then perform fading
 on the default zone.
 .TP
-\f[B]on|off\f[R]
+\f[B]on|off|now\f[R]
 An argument of \f[I]on\f[R] indicates enable fading, \f[I]off\f[R]
-disables fading.
+disables fading, \f[I]now\f[R] fades volume immediately
 .SH EXAMPLES
 .TP
 \f[B]roon_fade\f[R]
@@ -102,6 +136,10 @@ Disables fading in the default zone
 .TP
 \f[B]roon_fade -z Kitchen on\f[R]
 Enables fading in the Roon zone named \f[I]Kitchen\f[R]
+.TP
+\f[B]roon_fade now\f[R]
+Immediately fades volume in the default Roon zone followed by a prompt
+to restore volume levels
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

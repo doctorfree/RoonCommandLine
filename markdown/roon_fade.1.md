@@ -9,12 +9,24 @@ date: December 05, 2022
 roon_fade - Enable/Disable volume fading in a Roon zone
 
 # SYNOPSIS
-**roon_fade** [ **-i|-I** ] [ **-l** ] [ **-R** ] [ **-V** ] [ **-t** seconds ] [ **-uh** ] [ **-z** zone ] **on|off**
+**roon_fade** [ **-i|-I** ] [ **-l** ] [ **-R** ] [ **-V** ] [ **-t** seconds ] [ **-uh** ] [ **-y** ] [ **-z** zone ] **on|off|now**
 
-An argument of *on* enables fading, *off* disables fading. Without arguments or with *-u* or *-h*, a usage message with current status is displayed
+An argument of *on* enables fading, *off* disables fading. An argument of *now* fades volume immediately followed by a prompt to restore volume levels. Without arguments or with *-u* or *-h*, a usage message with current status is displayed
 
 # DESCRIPTION
-Enables or disables volume fading on specified zone or default zone if no zone is specified. If the `-l` flag is provided then logging is enabled. Without arguments **roon_fade** reports whether fading is enabled or disabled. When the **on** argument is provided **roon_fade** launches the **roon_faded** daemon to monitor playback and perform fading.
+The `roon_fade` command can be used to enable or disable volume fading on a specified zone or default zone if no zone is specified. All zones in a grouped zone are effected.
+
+Volume level fading can be initiated in two ways with `roon_fade`. If enabled with the `roon_fade on` then volume fading will occur automatically at the end of every track. In this mode volume levels are restored automatically at the beginning of next track play. To disable automatic volume fading, run `roon_fade off`.
+
+The second mode, immediate fading, can be triggered with the `roon_fade now` command. In immediate mode volume levels are faded immediately followed by a prompt to restore volume levels.
+
+Currently only one Roon zone or zone grouping can be addressed by `roon_fade`. It is possible to enable fading in one zone or grouped zone while not fading in others but it is not possible to enable fading in multiple zones unless they are grouped.
+
+When the **on** argument is provided **roon_fade** launches the **roon_faded** daemon to monitor playback and perform fading. The **off** argument disables fading and causes the fade daemon to exit. An argument of *now* fades volume immediately followed by a prompt to restore volume levels and temporarily disables the fade daemon if running.
+
+Without arguments **roon_fade** reports whether fading is enabled or disabled.
+
+If the `-l` flag is provided then logging is enabled in log file `/usr/local/Roon/etc/faded_log.txt`.
 
 The *-R* option can be used to restore faded or modified volume to original levels.
 
@@ -46,11 +58,14 @@ The default fading behavior is to fade out at the end of tracks and fade back in
 **-t seconds**
 : Specifies the number of seconds the fade should run (default: 30) 
 
+**-y**
+: Indicates do not prompt, assume a 'yes' answer to any prompt
+
 **-z ZONE**
 : If a *ZONE* is specified then perform fading for that zone. If no *ZONE* is provided on the command line then perform fading on the default zone.
 
-**on|off**
-: An argument of *on* indicates enable fading, *off* disables fading.
+**on|off|now**
+: An argument of *on* indicates enable fading, *off* disables fading, *now* fades volume immediately
 
 # EXAMPLES
 **roon_fade**
@@ -64,6 +79,9 @@ The default fading behavior is to fade out at the end of tracks and fade back in
 
 **roon_fade -z Kitchen on**
 : Enables fading in the Roon zone named *Kitchen*
+
+**roon_fade now**
+: Immediately fades volume in the default Roon zone followed by a prompt to restore volume levels
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
