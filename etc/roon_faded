@@ -28,43 +28,45 @@
 ROON=/usr/local/Roon
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
+FADECONF=${ROONETC}/fadeconf
 FADE_DRTN=30
 FADE_ZONE=
 LOG=
 
-# Get the zone if it is set
-if [ -f ${ROONCONF} ]
-then
+init_conf() {
+  # Get the zone if it is set
+  if [ -f ${ROONCONF} ]
+  then
     . ${ROONCONF}
-else
+  else
     DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
     ${ROON}/bin/set_zone $DEFZONE
     . ${ROONCONF}
-fi
+  fi
+  if [ -f ${FADECONF} ]
+  then
+    . ${FADECONF}
+  else
+    echo "FADE_ZONE=\"${ROON_ZONE}\"" > ${FADECONF}
+    . ${FADECONF}
+  fi
+}
+
+init_conf
 
 # If fade duration is set in pyroonconf then use that value
-[ "${FADE_TIME}" ] && {
-    FADE_DRTN=${FADE_TIME}
+[ "${FADE_DURATION}" ] && {
+    FADE_DRTN=${FADE_DURATION}
 }
 
 # TODO: Find a better way to determine if next track is about to play.
 #       For now, if last call to get remaining time is less than FADE_ENDS.
 #       Use slightly less value when not fading in.
-if [ "${FADE_IN}" = true ]
+if [ "${FADE_IN_ENDS}" ]
 then
-  if [ "${FADE_IN_ENDS}" ]
-  then
     FADE_ENDS=${FADE_IN_ENDS}
-  else
-    FADE_ENDS=5
-  fi
 else
-  if [ "${FADE_NO_ENDS}" ]
-  then
-    FADE_ENDS=${FADE_NO_ENDS}
-  else
-    FADE_ENDS=3
-  fi
+    FADE_ENDS=5
 fi
 
 get_remain() {
@@ -109,7 +111,7 @@ done
 
 [ "${LOG}" ] && {
     echo "Logging roon_faded in ${LOG} for zone ${FADE_ZONE}" >> "${LOG}"
-    echo "FADE_ENDS = ${FADE_ENDS}, FADE_DRTN=${FADE_DRTN}, FADE_IN=${FADE_IN}" >> "${LOG}"
+    echo "FADE_ENDS = ${FADE_ENDS}, FADE_DRTN=${FADE_DRTN}" >> "${LOG}"
 }
 
 # Restore volume levels in all fading zones
@@ -189,11 +191,11 @@ restored=1
 sleeping=
 while true
 do
-    . ${ROONCONF}
+    init_conf
     [ "${FADE_INIT}" ] && {
-        grep -v FADE_INIT ${ROONCONF} > /tmp/pyroon$$
-        cp /tmp/pyroon$$ ${ROONCONF}
-        rm -f /tmp/pyroon$$
+        grep -v FADE_INIT ${FADECONF} > /tmp/fade$$
+        cp /tmp/fade$$ ${FADECONF}
+        rm -f /tmp/fade$$
         FADE_INIT=
         [ "${LOG}" ] && {
             echo "FADE_INIT detected, re-initializing fade values" >> "${LOG}"
@@ -205,9 +207,9 @@ do
             echo "RESTORE_VOLUME detected, restoring volume levels" >> "${LOG}"
         }
         restore_volume
-        grep -v RESTORE_VOLUME ${ROONCONF} > /tmp/pyroon$$
-        cp /tmp/pyroon$$ ${ROONCONF}
-        rm -f /tmp/pyroon$$
+        grep -v RESTORE_VOLUME ${FADECONF} > /tmp/fade$$
+        cp /tmp/fade$$ ${FADECONF}
+        rm -f /tmp/fade$$
         RESTORE_VOLUME=
     }
     [ "${ROON_FADE}" = true ] || {
@@ -217,23 +219,18 @@ do
         restore_volume
         exit 0
     }
-    [ "${FADE_TIME}" ] && {
-        [ "${FADE_TIME}" == "${FADE_DRTN}" ] || {
+    [ "${FADE_DURATION}" ] && {
+        [ "${FADE_DURATION}" == "${FADE_DRTN}" ] || {
             # Fade duration changed in pyroonconf
             [ "${LOG}" ] && {
               echo "Detected change to fade duration, re-initializing" >> "${LOG}"
             }
-            FADE_DRTN=${FADE_TIME}
+            FADE_DRTN=${FADE_DURATION}
             init_fade_vals
         }
     }
 
-    if [ "${FADE_IN}" = true ]
-    then
-        FADE_ENDS=4
-    else
-        FADE_ENDS=2
-    fi
+    FADE_ENDS=4
 
     # Check if zone grouping has changed
     chkzones=()
@@ -309,7 +306,7 @@ do
         while true
         do
             # Corner case where user disabled fading during a fade
-            grep "ROON_FADE=false" ${ROONCONF} > /dev/null && {
+            grep "ROON_FADE=false" ${FADECONF} > /dev/null && {
               [ "${LOG}" ] && {
                 echo "ROON_FADE disabled during fade, roon_faded exiting" >> "${LOG}"
               }
@@ -359,26 +356,20 @@ do
               do
                 cvol=${curvol[$z]}
                 zone=${zones[$z]}
-                if [ "${FADE_IN}" = true ]
+                step=${instepsz[$z]}
+                zvol=`get_zone_volume -n -z "${zone}"`
+                boom=$((cvol - zvol))
+                if [ ${boom} -le ${step} ]
                 then
-                  step=${instepsz[$z]}
-                  zvol=`get_zone_volume -n -z "${zone}"`
-                  boom=$((cvol - zvol))
-                  if [ ${boom} -le ${step} ]
-                  then
-                    [ ${finish[$z]} -eq 1 ] || {
-                      [ "${LOG}" ] && {
-                        echo "Restoring ${zone} to previous volume" >> "${LOG}"
-                      }
-                      set_volume -v "${cvol}" -z "${zone}"
-                      finish[$z]=1
+                  [ ${finish[$z]} -eq 1 ] || {
+                    [ "${LOG}" ] && {
+                      echo "Restoring ${zone} to previous volume" >> "${LOG}"
                     }
-                  else
-                    set_volume -r -v "${step}" -z "${zone}"
-                  fi
+                    set_volume -v "${cvol}" -z "${zone}"
+                    finish[$z]=1
+                  }
                 else
-                  set_volume -v "${cvol}" -z "${zone}"
-                  finish[$z]=1
+                  set_volume -r -v "${step}" -z "${zone}"
                 fi
               done
               faded=1
