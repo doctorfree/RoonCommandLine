@@ -1,4 +1,11 @@
 #!/bin/bash
+#
+# Written by Ron Record <rr@ronrecord.com> December, 2022
+#
+# roon_fade - control Roon fading in specified zone or zone grouping
+#
+# Usage: roon_fade [-i] [-l] [-R] [-V] [-t duration] [-uh]
+#                  [-y] [-z zone] on|off|now"
 
 ROON=/usr/local/Roon
 ROONETC=${ROON}/etc
@@ -60,6 +67,81 @@ init_conf() {
   fi
 }
 
+start_daemon() {
+    ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
+      if [ "${proceed}" ] || [ "$1" == "-y" ]
+      then
+        stop_daemon
+        init_conf
+      else
+        printf "\n${ROONFADE} appears to be running."
+        printf "\nOnly one instance of 'roon_faded' is currently supported."
+        printf "\nThe current process can be exited with 'roon_fade off'"
+        printf "\nor by answering 'y' below.\n\n"
+        while true
+        do
+          read -p "Exit 'roon_faded' and start a new one ? (y/n) " yn
+          case $yn in
+            [Yy]* )
+                  stop_daemon
+                  init_conf
+                  break
+                  ;;
+            [Nn]* )
+                  printf "\nRoon fading daemon startup aborted."
+                  printf "\nExiting.\n\n"
+                  exit 1
+                  ;;
+                * ) echo "Please answer yes or no."
+                  ;;
+          esac
+        done
+      fi
+    }
+    if [ -x ${ROONFADE} ]
+    then
+        [ "${ROON_FADE}" = true ] || set_roon_fade on
+        [ "${FADE_DURATION}" ] || set_fade_time 30
+        set_fade_zone
+        echo "Starting Roon fade daemon ${ROONFADE}"
+        [ "${LOG}" ] && echo "Logging in ${ROONETC}/faded_log.txt"
+        ${ROONFADE} ${LOG} -z "${FADE_ZONE}" > /dev/null 2>&1 &
+    else
+        echo "Roon fade daemon ${ROONFADE} not found or not executable"
+    fi
+}
+
+stop_daemon() {
+    set_roon_fade off
+    printf "\nRoon fade disabled in ${FADECONF}"
+    printf "\nWaiting for ${ROONFADE} to exit ..."
+    if [ "${proceed}" ]
+    then
+      elapsed=10
+    else
+      elapsed=0
+    fi
+    while true
+    do
+      running=
+      ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
+        running=1
+        printf "."
+        sleep 2
+        elapsed=$((elapsed + 2))
+      }
+      [ "${running}" ] || {
+        printf " done\n"
+        break
+      }
+      [ ${elapsed} -gt 10 ] && {
+        faded_pid=`ps -ef | grep roon_faded | \
+                            grep -v grep | awk ' { print $2 } '`
+        [ "${faded_pid}" ] && kill ${faded_pid}
+      }
+    done
+}
+
 save_vols() {
     grep -v ZONES= ${FADECONF} > /tmp/ftmp$$
     grep -v OUTSTEP= /tmp/ftmp$$ > /tmp/otmp$$
@@ -100,12 +182,12 @@ show_status() {
   then
     if [ "${FADE_ZONE}" ]
     then
-      printf "\nRoon volume fading is: ${BOLD}currently enabled in zone ${FADE_ZONE}${NORM}"
+      printf "\nRoon volume fading is: ${BOLD}Currently enabled in zone ${FADE_ZONE}${NORM}"
     else
-      printf "\nRoon volume fading is: ${BOLD}currently enabled${NORM}"
+      printf "\nRoon volume fading is: ${BOLD}Currently enabled${NORM}"
     fi
   else
-    printf "\nRoon volume fading is: ${BOLD}currently disabled${NORM}"
+    printf "\nRoon volume fading is: ${BOLD}Currently disabled${NORM}"
   fi
   if [ "${FADE_DURATION}" ]
   then
@@ -115,9 +197,9 @@ show_status() {
   fi
   if [ "${FADE_NOW}" = true ]
   then
-    printf "\nVolume levels are: ${BOLD}currently faded${NORM}\n\n"
+    printf "\nVolume levels are: ${BOLD}Currently faded${NORM}\n\n"
   else
-    printf "\nVolume levels are: ${BOLD}not currently faded${NORM}\n\n"
+    printf "\nVolume levels are: ${BOLD}Not currently faded${NORM}\n\n"
   fi
 }
 
@@ -141,6 +223,40 @@ usage() {
   exit 1
 }
 
+init_vols() {
+    FADE_DRTN=30
+    [ "${FADE_DURATION}" ] && {
+      FADE_DRTN=${FADE_DURATION}
+    }
+    ZONES=()
+    CURVOL=()
+    OUTSTEP=()
+    finish=()
+    minvol=()
+    outdiv=$((FADE_DRTN / 4))
+    while read voline
+    do
+      zone=`echo "${voline}" | awk -F ':' ' { print $1 } ' | \
+                               sed -e 's/^ *//' -e 's/ *$//'`
+      ZONES+=( "${zone}" )
+      volume=`echo "${voline}" | awk -F ':' ' { print $2 } ' | \
+                                 awk -F ',' ' { print $1 } ' | \
+                                 awk -F '=' ' { print $2 } ' | \
+                                 sed -e 's/^ *//' -e 's/ *$//'`
+      CURVOL+=( ${volume} )
+      finish+=( 0 )
+      minimum=`echo "${voline}" | awk -F ':' ' { print $2 } ' | \
+                                  awk -F ',' ' { print $2 } ' | \
+                                  awk -F '=' ' { print $2 } ' | \
+                                  sed -e 's/^ *//' -e 's/ *$//'`
+      minvol+=( ${minimum} )
+      diff=$((volume - minimum))
+      outstep=$((diff / outdiv))
+      OUTSTEP+=( ${outstep} )
+    done < <(get_zone_volume -g -z "${FADE_ZONE}")
+    save_vols
+}
+
 set_disabled() {
     grep -v FADE_DISABLED ${FADECONF} > /tmp/fade$$
     if [ "$1" == "on" ]
@@ -161,6 +277,13 @@ set_now() {
     else
       echo "FADE_NOW=false" >> /tmp/fade$$
     fi
+    cp /tmp/fade$$ ${FADECONF}
+    rm -f /tmp/fade$$
+}
+
+set_fade_init() {
+    grep -v FADE_INIT ${FADECONF} > /tmp/fade$$
+    echo "FADE_INIT=1" >> /tmp/fade$$
     cp /tmp/fade$$ ${FADECONF}
     rm -f /tmp/fade$$
 }
@@ -230,37 +353,7 @@ fade_in() {
 }
 
 fade_out() {
-    FADE_DRTN=30
-    [ "${FADE_DURATION}" ] && {
-      FADE_DRTN=${FADE_DURATION}
-    }
-    ZONES=()
-    CURVOL=()
-    OUTSTEP=()
-    finish=()
-    minvol=()
-    outdiv=$((FADE_DRTN / 4))
-    while read voline
-    do
-      zone=`echo "${voline}" | awk -F ':' ' { print $1 } ' | \
-                               sed -e 's/^ *//' -e 's/ *$//'`
-      ZONES+=( "${zone}" )
-      volume=`echo "${voline}" | awk -F ':' ' { print $2 } ' | \
-                                 awk -F ',' ' { print $1 } ' | \
-                                 awk -F '=' ' { print $2 } ' | \
-                                 sed -e 's/^ *//' -e 's/ *$//'`
-      CURVOL+=( ${volume} )
-      finish+=( 0 )
-      minimum=`echo "${voline}" | awk -F ':' ' { print $2 } ' | \
-                                  awk -F ',' ' { print $2 } ' | \
-                                  awk -F '=' ' { print $2 } ' | \
-                                  sed -e 's/^ *//' -e 's/ *$//'`
-      minvol+=( ${minimum} )
-      diff=$((volume - minimum))
-      outstep=$((diff / outdiv))
-      OUTSTEP+=( ${outstep} )
-    done < <(get_zone_volume -g -z "${FADE_ZONE}")
-    save_vols
+    init_vols
     echo "Fading volume levels in ${FADE_ZONE} zone"
     while true
     do
@@ -296,16 +389,17 @@ fade_now() {
     if [ "${FADE_NOW}" = true ]
     then
         roon -c "play" -z "${FADE_ZONE}"
+        sleep 1
         set_now off
         fade_in
         [ "${FADE_DISABLED}" = true ] && {
-            roon_fade -y -z "${FADE_ZONE}" on
+            start_daemon -y
             set_disabled off
         }
     else
         ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
             # Disable the fading daemon in this zone
-            roon_fade -y -z "${FADE_ZONE}" off
+            stop_daemon
             set_disabled on
         }
         set_now on
@@ -363,7 +457,8 @@ select_fade_zone() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
   zones=`${ROON}/bin/get_zones | sed -e 's/\, /\,/g'`
-  zone_options=( $( echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }' ) )
+  zone_options=( $( echo "${zones}" | \
+    awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }' ) )
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   zone_options+=("Main Menu" "Quit")
   while true
@@ -383,13 +478,30 @@ select_fade_zone() {
             *,*)
                 if [[ " ${zone_options[*]} " =~ " ${opt} " ]]
                 then
-                  echo "${BOLD}Setting fading zone to: ${opt}${NORM}"
-                  FADE_ZONE="${opt}"
-                  set_fade_zone
-                  status=$?
-                  [ ${status} -eq 0 ] || {
-                    echo "Unable to set fade zone for zone = $opt"
-                  }
+                  if [ "${FADE_ZONE}" == "${opt}" ]
+                  then
+                    echo "Fade zone already set to: ${BOLD}${opt}${NORM}"
+                  else
+                    [ "${FADE_NOW}" = true ] && {
+                      # Unfade the current zone before switching fade zones
+                      set_now off
+                      fade_in
+                      [ "${FADE_DISABLED}" = true ] && {
+                          start_daemon -y
+                          set_disabled off
+                      }
+                    }
+                    echo "Setting fading zone to: ${BOLD}${opt}${NORM}"
+                    FADE_ZONE="${opt}"
+                    set_fade_zone
+                    status=$?
+                    [ ${status} -eq 0 ] || {
+                      echo "Unable to set fade zone for zone = $opt"
+                    }
+                    init_vols
+                    # Tell roon_faded, if running, to re-initialize zone values
+                    [ "${ROON_FADE}" = true ] && set_fade_init
+                  fi
                   break 2
                 else
                   printf "\n\nInvalid option: ${opt}"
@@ -407,6 +519,17 @@ show_menu() {
   while true
   do
     init_conf
+    remline=`get_zone_remaining -z "${FADE_ZONE}"`
+    state=`echo "${remline}" | awk -F ',' ' { print $2 } ' | \
+                               awk -F '=' ' { print $2 } ' | \
+                               sed -e 's/^ *//' -e 's/ *$//'`
+    echo ""
+    if [ "${state}" == "playing" ]
+    then
+      echo "Audio in zone ${FADE_ZONE} is: ${BOLD}Playing${NORM}"
+    else
+      echo "Audio in zone ${FADE_ZONE} is: ${BOLD}Not playing${NORM}"
+    fi
     show_status
     PS3="${BOLD}Please enter your Roon fading choice (numeric or text): ${NORM}"
     options=()
@@ -422,6 +545,12 @@ show_menu() {
     else
       options+=("Enable Fade Daemon")
     fi
+    if [ "${state}" == "playing" ]
+    then
+      options+=("Pause in ${FADE_ZONE}")
+    else
+      options+=("Play in ${FADE_ZONE}")
+    fi
     options+=("Set Fade Duration" "Select Fade Zone" "Main Roon Menu" "Quit")
     select opt in "${options[@]}"
     do
@@ -431,11 +560,28 @@ show_menu() {
                 break
                 ;;
             "Disable Fade Daemon",*|*,"Disable Fade Daemon")
-                roon_fade -y -z "${FADE_ZONE}" off
+                stop_daemon
                 break
                 ;;
             "Enable Fade Daemon",*|*,"Enable Fade Daemon")
-                roon_fade -y -z "${FADE_ZONE}" on
+                start_daemon -y
+                sleep 2
+                break
+                ;;
+            "Pause"*,*|*,"Pause"*)
+                roon -c pause -z "${FADE_ZONE}"
+                sleep 2
+                break
+                ;;
+            "Play"*,*|*,"Play"*)
+                if [ "${FADE_NOW}" = true ]
+                then
+                  fade_now
+                  sleep 1
+                else
+                  roon -c play -z "${FADE_ZONE}"
+                  sleep 2
+                fi
                 break
                 ;;
             "Set Fade Duration",*|*,"Set Fade Duration")
@@ -522,10 +668,7 @@ while getopts "ilRt:Vyz:hu" flag; do
         V)
             ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
               echo "Updating restored volume levels for fading"
-              grep -v FADE_INIT ${FADECONF} > /tmp/fade$$
-              echo "FADE_INIT=1" >> /tmp/fade$$
-              cp /tmp/fade$$ ${FADECONF}
-              rm -f /tmp/fade$$
+              set_fade_init
               fadeinit=1
             }
             [ "${fadeinit}" ] || {
@@ -557,80 +700,11 @@ then
     argument=`echo "$1" | tr '[:upper:]' '[:lower:]'`
     if [ "${argument}" == "on" ]
     then
-        ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
-          if [ "${proceed}" ]
-          then
-            roon_fade -y off
-            init_conf
-          else
-            printf "\n${ROONFADE} appears to be running."
-            printf "\nOnly one instance of 'roon_faded' is currently supported."
-            printf "\nThe current process can be exited with 'roon_fade off'"
-            printf "\nor by answering 'y' below.\n\n"
-            while true
-            do
-              read -p "Exit 'roon_faded' and start a new one ? (y/n) " yn
-              case $yn in
-                [Yy]* )
-                      roon_fade off
-                      init_conf
-                      break
-                      ;;
-                [Nn]* )
-                      printf "\nRoon fading daemon startup aborted."
-                      printf "\nExiting.\n\n"
-                      exit 1
-                      ;;
-                    * ) echo "Please answer yes or no."
-                      ;;
-              esac
-            done
-          fi
-        }
-        if [ -x ${ROONFADE} ]
-        then
-            [ "${ROON_FADE}" = true ] || set_roon_fade on
-            [ "${FADE_DURATION}" ] || set_fade_time 30
-            set_fade_zone
-            echo "Starting Roon fade daemon ${ROONFADE}"
-            [ "${LOG}" ] && echo "Logging in ${ROONETC}/faded_log.txt"
-            ${ROONFADE} ${LOG} -z "${FADE_ZONE}" > /dev/null 2>&1 &
-        else
-            echo "Roon fade daemon ${ROONFADE} not found or not executable"
-        fi
+        start_daemon
     else
         if [ "${argument}" == "off" ]
         then
-            [ "${ROON_FADE}" = true ] && {
-                set_roon_fade off
-                printf "\nRoon fade disabled in ${FADECONF}"
-                printf "\nWaiting for ${ROONFADE} to exit ..."
-                if [ "${proceed}" ]
-                then
-                  elapsed=10
-                else
-                  elapsed=0
-                fi
-                while true
-                do
-                  running=
-                  ps -ef | grep ${ROONFADE} | grep -v grep > /dev/null && {
-                    running=1
-                    printf "."
-                    sleep 2
-                    elapsed=$((elapsed + 2))
-                  }
-                  [ "${running}" ] || {
-                    printf " done\n"
-                    break
-                  }
-                  [ ${elapsed} -gt 10 ] && {
-                    faded_pid=`ps -ef | grep roon_faded | \
-                                        grep -v grep | awk ' { print $2 } '`
-                    [ "${faded_pid}" ] && kill ${faded_pid}
-                  }
-                done
-            }
+            [ "${ROON_FADE}" = true ] && stop_daemon
         else
             # For immediate fade we toggle the fade here
             if [ "${argument}" == "now" ]
