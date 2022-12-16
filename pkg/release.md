@@ -47,6 +47,8 @@ cd RoonCommandLine
 This release adds support for:
 
 * Add immediate mode to roon_fade with 'now' argument
+* Implement non-interactive immediate fading
+* Add interactive menu system (`roon_fade -i`)
 * Set man permissions correctly in manual install scripts
 
 Version 2.0.7 release 1 added support for:

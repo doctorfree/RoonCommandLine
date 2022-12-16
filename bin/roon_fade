@@ -551,7 +551,8 @@ show_menu() {
     else
       options+=("Play in ${FADE_ZONE}")
     fi
-    options+=("Set Fade Duration" "Select Fade Zone" "Main Roon Menu" "Quit")
+    options+=("Set Fade Duration" "Select Fade Zone" "Toggle Mute")
+    options+=("Main Roon Menu" "Quit")
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
@@ -582,6 +583,10 @@ show_menu() {
                   roon -c play -z "${FADE_ZONE}"
                   sleep 2
                 fi
+                break
+                ;;
+            "Toggle Mute"*,*|*,"Toggle Mute"*)
+                roon -c mute -z "${FADE_ZONE}"
                 break
                 ;;
             "Set Fade Duration",*|*,"Set Fade Duration")
