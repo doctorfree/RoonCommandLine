@@ -63,126 +63,269 @@ volume=
 zone=
 zonegroup=
 zonelist=
+have_rich=`type -p rich`
 
 usage() {
   [ "${showusage}" ] && {
-    printf "\nUsage: roon -A album -a artist -C composer -f [on|onlog|off|status] -g genre -G zone_group -i"
-    printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|playtracks|tags|zones]"
-    printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]"
-    printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
-    printf "\n\t-X ex_album -x ex_artist [-EuU]"
-    printf "\nWhere:\n\t-A album selects an album to play"
-    printf "\n\t-a artist selects an artist to list/play"
-    printf "\n\t-C composer selects a composer to play"
-    printf "\n\t-g genre selects a genre to list/play"
-    printf "\n\t-i displays zone information (combine with '-z zone' for extended"
-    printf "\n\t\tinfo on a specified zone, otherwise display info on all zones)"
-    printf "\n\t-f [on|onlog|off|status] enables/disables fading/logging in specified zone"
-    printf "\n\t\t'on' enables fading, 'onlog' fading and logging, 'off' disables fading"
-    printf "\n\t\t(combine with '-z zone' for 'fading' in that zone)"
-    printf "\n\t-n displays 'now playing' information for zones actively playing"
-    printf "\n\t-N displays 'now playing' information for all zones"
-    printf "\n\t\t(combine with '-z zone' for 'now playing' in only that zone)"
-    printf "\n\t-p playlist selects a playlist to play"
-    printf "\n\t-G zone_group specifies a zone grouping specified in roon_api.ini"
-    printf "\n\t-L setup roon to execute local commands rather than remote via SSH"
-    printf "\n\t-S Set Roon defaults in roon_api.ini"
-    printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|playtracks|tags|zones]"
-    printf "\n\t\tindicates list albums, artists, albums by artist, composers, albums by composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones"
-    printf "\n\t-r radio selects a live radio stream to play"
-    printf "\n\t-s search specifies a term to search for in the lists retrieved with -l"
-    printf "\n\t-T track specifies a track to play"
-    printf "\n\t-t tag selects an tag to play"
-    printf "\n\t-z zone selects the Roon Zone in which to play"
-    printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]"
-    printf "\n\t\tissues the command in the selected zone"
-    printf "\n\t\t'mute' toggles the zone's muted or unmuted state"
-    printf "\n\t\t'mute_all' toggles all zones' muted or unmuted state"
-    printf "\n\t\t'pause_all' pauses playback in all zones"
-    printf "\n\t\t'play_all' begins playback in all zones"
-    printf "\n\t\t'stop_all' stops playback in all zones and releases devices"
-    printf "\n\t\t'shuffle' toggles the zone's shuffled or unshuffled setting"
-    printf "\n\t\t'repeat' toggles the zone's looping or non-looping setting"
-    printf "\n\t-v volume sets the volume level in the selected zone"
-    printf "\n\t\tThe volume argument has the format [g:][r:][s:]num"
-    printf "\n\t\tWhere 'g' indicates set volume for all zones in the group"
-    printf "\n\t\t'r' specifies use relative method volume setting"
-    printf "\n\t\t's' specifies use relative_step method volume setting"
-    printf "\n\t\t'num' can be absolute, relative, and negative or positive"
-    printf "\n\t-X ex_album specifies a string to exclude from album/genre names"
-    printf "\n\t-x ex_artist specifies a string to exclude from artist/composer/playlist names"
-    printf "\n\t-u displays a full usage message with examples"
-    printf "\n\t-U displays a usage message without examples"
-    printf "\n\t-E displays examples with no usage message"
-    printf "\nCombine '-a artist' and '-A album' to play an album by a specified artist"
-    printf "\nCombine '-a artist' and '-T track' to play a track by a specified artist"
-    printf "\nCombine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre\n"
-    printf "\nSpecial search term "__all__" matches all entries"
-    printf "\nSpecial name "default" plays the default setting in roon_api.ini\n"
+    if [ "${have_rich}" ]
+    then
+      rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-C[/] [yellow]composer[/]" --print
+      rich "    [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i[/]" --print
+      rich "    [cyan]-l[/] [yellow]\[albums|artists|artalbums|arttracks|composers|comalbums|[/]" --print
+      rich "        [yellow]genres|genalbums|genartists|playlists|playtracks|tags|zones][/]" --print
+      rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|stop|stop_all|[/]" --print
+      rich "        [yellow]next|previous|shuffle|repeat|mute|mute_all][/]" --print
+      rich "    [cyan]-s[/] [yellow]search[/] [cyan]-p[/] [yellow]playlist[/] [cyan]-T[/] [yellow]track[/] [cyan]-t[/] [yellow]tag[/] [cyan]-z[/] [yellow]zone[/] [cyan]-L[/] [cyan]-S[/] [cyan]-r[/] [yellow]radio[/]" --print
+      rich "    [cyan]-X[/] [yellow]ex_album[/] [cyan]-x[/] [yellow]ex_artist[/] [cyan]\[-EuU][/]" --print
+      rich "[bold]Where:[/]" --print
+      printf "\n"
+      rich "    [cyan]-A[/] [yellow]album[/] selects an album to play" --print
+      rich "    [cyan]-a[/] [yellow]artist[/] selects an artist to list/play" --print
+      rich "    [cyan]-C[/] [yellow]composer[/] selects a composer to play" --print
+      rich "    [cyan]-g[/] [yellow]genre[/] selects a genre to list/play" --print
+      rich "    [cyan]-i[/] displays zone information (combine with '[cyan]-z[/] [yellow]zone[/]' for extended" --print
+      rich "        info on a specified zone, otherwise display info on all zones)" --print
+      rich "    [cyan]-f[/] [yellow]\[on|onlog|off|status][/] enables/disables fading/logging in specified zone" --print
+      rich "        '[yellow]on[/]' enables fading, '[yellow]onlog[/]' fading and logging, '[yellow]off[/]' disables fading" --print
+      rich "        (combine with '[cyan]-z[/] [yellow]zone[/]' for 'fading' in that zone)" --print
+      rich "    [cyan]-n[/] displays 'now playing' information for zones actively playing" --print
+      rich "    [cyan]-N[/] displays 'now playing' information for all zones" --print
+      rich "        (combine with '[cyan]-z[/] [yellow]zone[/]' for 'now playing' in only that zone)" --print
+      rich "    [cyan]-p[/] [yellow]playlist[/] selects a playlist to play" --print
+      rich "    [cyan]-G[/] [yellow]zone_group[/] specifies a zone grouping specified in roon_api.ini" --print
+      rich "    [cyan]-L[/] setup roon to execute local commands rather than remote via SSH" --print
+      rich "    [cyan]-S[/] Set Roon defaults in roon_api.ini" --print
+      rich "    [cyan]-l[/] [yellow]\[albums|artists|artalbums|arttracks|composers|comalbums|[/]" --print
+      rich "        [yellow]genres|genalbums|genartists|playlists|playtracks|tags|zones][/]" --print
+      rich "            indicates list [italic]albums, artists, albums by artist,[/]" --print
+      rich "            [italic]composers, albums by composers, genres, albums in genre,[/]" --print
+      rich "            [italic]artists in genre, playlists, tags,[/] or Roon [italic]zones[/]" --print
+      rich "    [cyan]-r[/] [yellow]radio[/] selects a live radio stream to play" --print
+      rich "    [cyan]-s[/] [yellow]search[/] specifies a term to search for in the lists retrieved with [cyan]-l[/]" --print
+      rich "    [cyan]-T[/] [yellow]track[/] specifies a track to play" --print
+      rich "    [cyan]-t[/] [yellow]tag[/] selects an tag to play" --print
+      rich "    [cyan]-z[/] [yellow]zone[/] selects the Roon Zone in which to play" --print
+      rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|playpause|[/]" --print
+      rich "        [yellow]stop|stop_all|next|previous|shuffle|repeat|mute|mute_all][/]" --print
+      rich "            issues the command in the selected zone" --print
+      rich "            '[italic green]roon -c mute[/]' toggles the zone's muted or unmuted state" --print
+      rich "            '[italic green]roon -c mute_all[/]' toggles all zones' muted or unmuted state" --print
+      rich "            '[italic green]roon -c pause_all[/]' pauses playback in all zones" --print
+      rich "            '[italic green]roon -c play_all[/]' begins playback in all zones" --print
+      rich "            '[italic green]roon -c stop_all[/]' stops playback in all zones and releases devices" --print
+      rich "            '[italic green]roon -c shuffle[/]' toggles the zone's shuffled or unshuffled setting" --print
+      rich "            '[italic green]roon -c repeat[/]' toggles the zone's looping or non-looping setting" --print
+      rich "    [cyan]-v[/] [yellow]volume[/] sets the volume level in the selected zone" --print
+      rich "        The volume argument has the format [yellow]\[g:]\[r:]\[s:]num[/]" --print
+      rich "        Where '[yellow]g[/]' indicates set volume for all zones in the group" --print
+      rich "        '[yellow]r[/]' specifies use relative method volume setting" --print
+      rich "        '[yellow]s[/]' specifies use relative_step method volume setting" --print
+      rich "        '[yellow]num[/]' can be absolute, relative, and negative or positive" --print
+      rich "    [cyan]-X[/] [yellow]ex_album[/] specifies a string to exclude from album/genre names" --print
+      rich "    [cyan]-x[/] [yellow]ex_artist[/] specifies a string to exclude from artist/composer/playlist names" --print
+      rich "    [cyan]-u[/] displays a full usage message with examples" --print
+      rich "    [cyan]-U[/] displays a usage message without examples" --print
+      rich "    [cyan]-E[/] displays examples with no usage message" --print
+      rich "Combine '[cyan]-a[/] [yellow]artist[/]' and '[cyan]-A[/] [yellow]album[/]' to play an album by a specified artist" --print
+      rich "Combine '[cyan]-a[/] [yellow]artist[/]' and '[cyan]-T[/] [yellow]track[/]' to play a track by a specified artist" --print
+      rich "Combine '[cyan]-a[/] [yellow]artist[/]' or '[cyan]-A[/] [yellow]album[/]' with '[cyan]-g[/] [yellow]genre[/]' to play an artist or album in a specified genre" --print
+      printf "\n"
+      rich "Special search term [bold italic magenta]__all__[/] matches all entries" --print
+      rich "Special name [bold italic green]default[/] plays the default setting in roon_api.ini" --print
+      printf "\n"
+    else
+      printf "\nUsage: roon -A album -a artist -C composer"
+      printf "\n\t-f [on|onlog|off|status] -g genre -G zone_group -i"
+      printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|"
+      printf "\n\t    genres|genalbums|genartists|playlists|playtracks|tags|zones]"
+      printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|"
+      printf "\n\t    next|previous|shuffle|repeat|mute|mute_all]"
+      printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
+      printf "\n\t-X ex_album -x ex_artist [-EuU]"
+      printf "\nWhere:\n\t-A album selects an album to play"
+      printf "\n\t-a artist selects an artist to list/play"
+      printf "\n\t-C composer selects a composer to play"
+      printf "\n\t-g genre selects a genre to list/play"
+      printf "\n\t-i displays zone information (combine with '-z zone' for extended"
+      printf "\n\t\tinfo on a specified zone, otherwise display info on all zones)"
+      printf "\n\t-f [on|onlog|off|status] enables/disables fading/logging in specified zone"
+      printf "\n\t\t'on' enables fading, 'onlog' fading and logging, 'off' disables fading"
+      printf "\n\t\t(combine with '-z zone' for 'fading' in that zone)"
+      printf "\n\t-n displays 'now playing' information for zones actively playing"
+      printf "\n\t-N displays 'now playing' information for all zones"
+      printf "\n\t\t(combine with '-z zone' for 'now playing' in only that zone)"
+      printf "\n\t-p playlist selects a playlist to play"
+      printf "\n\t-G zone_group specifies a zone grouping specified in roon_api.ini"
+      printf "\n\t-L setup roon to execute local commands rather than remote via SSH"
+      printf "\n\t-S Set Roon defaults in roon_api.ini"
+      printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|"
+      printf "\n\t    genres|genalbums|genartists|playlists|playtracks|tags|zones]"
+      printf "\n\t        indicates list albums, artists, albums by artist,"
+      printf "\n\t        composers, albums by composers, genres, albums in genre,"
+      printf "\n\t        artists in genre, playlists, tags, or Roon zones"
+      printf "\n\t-r radio selects a live radio stream to play"
+      printf "\n\t-s search specifies a term to search for in the lists retrieved with -l"
+      printf "\n\t-T track specifies a track to play"
+      printf "\n\t-t tag selects an tag to play"
+      printf "\n\t-z zone selects the Roon Zone in which to play"
+      printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|playpause|"
+      printf "\n\t    stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]"
+      printf "\n\t        issues the command in the selected zone"
+      printf "\n\t        'mute' toggles the zone's muted or unmuted state"
+      printf "\n\t        'mute_all' toggles all zones' muted or unmuted state"
+      printf "\n\t        'pause_all' pauses playback in all zones"
+      printf "\n\t        'play_all' begins playback in all zones"
+      printf "\n\t        'stop_all' stops playback in all zones and releases devices"
+      printf "\n\t        'shuffle' toggles the zone's shuffled or unshuffled setting"
+      printf "\n\t        'repeat' toggles the zone's looping or non-looping setting"
+      printf "\n\t-v volume sets the volume level in the selected zone"
+      printf "\n\t\tThe volume argument has the format [g:][r:][s:]num"
+      printf "\n\t\tWhere 'g' indicates set volume for all zones in the group"
+      printf "\n\t\t'r' specifies use relative method volume setting"
+      printf "\n\t\t's' specifies use relative_step method volume setting"
+      printf "\n\t\t'num' can be absolute, relative, and negative or positive"
+      printf "\n\t-X ex_album specifies a string to exclude from album/genre names"
+      printf "\n\t-x ex_artist specifies a string to exclude from artist/composer/playlist names"
+      printf "\n\t-u displays a full usage message with examples"
+      printf "\n\t-U displays a usage message without examples"
+      printf "\n\t-E displays examples with no usage message"
+      printf "\nCombine '-a artist' and '-A album' to play an album by a specified artist"
+      printf "\nCombine '-a artist' and '-T track' to play a track by a specified artist"
+      printf "\nCombine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre\n"
+      printf "\nSpecial search term '__all__' matches all entries"
+      printf "\nSpecial name 'default' plays the default setting in roon_api.ini\n"
+    fi
   }
   [ "${showexamples}" ] && {
-    printf "\nExample invocations"
-    printf "\n\tPlay artist:"
-    printf "\n\t\troon -a \"Deep Purple\""
-    printf "\n\tPlay album by artist:"
-    printf "\n\t\troon -a \"Deep Purple\" -A Burn"
-    printf "\n\tPlay track by artist:"
-    printf "\n\t\troon -a \"Aretha Franklin\" -T Think"
-    printf "\n\tPlay artist in specified zone:"
-    printf "\n\t\troon -a \"Jethro Tull\" -z \"Mac Pro DAC\""
-    printf "\n\tPlay genre:"
-    printf "\n\t\troon -g Classical"
-    printf "\n\tPlay default live radio:"
-    printf "\n\t\troon -r default"
-    printf "\n\tPlay playlist:"
-    printf "\n\t\troon -p \"Bowie Favs\""
-    printf "\n\tPlay next track:"
-    printf "\n\t\troon -c next"
-    printf "\n\tStop play in specified zone:"
-    printf "\n\t\troon -c stop -z Kitchen"
-    printf "\n\tMute/Unmute a specified zone:"
-    printf "\n\t\troon -c mute -z \"Mac Pro DAC\""
-    printf "\n\tMute/Unmute all zones:"
-    printf "\n\t\troon -c mute_all"
-    printf "\n\tList all playlists containing the string 'Best':"
-    printf "\n\t\troon -l playlists -s Best"
-    printf "\n\tList albums by artist:"
-    printf "\n\t\troon -l artalbums -a \"Deep Purple\""
-    printf "\n\tList artists containing the string 'Will' in the 'Country' genre:"
-    printf "\n\t\troon -l genartists -a Will -g Country"
-    printf "\n\tList albums containing the string 'Magic' in the 'Rock' genre:"
-    printf "\n\t\troon -l genalbums -A Magic -g Rock"
-    printf "\n\tPlay artist containing the string 'Willie' in the 'Country' genre:"
-    printf "\n\t\troon -a Willie -g Country"
-    printf "\n\tPlay album containing the string 'Magic' in the 'Rock' genre:"
-    printf "\n\t\troon -A Magic -g Rock"
-    printf "\n\tGroup the zones listed in roon_api.ini Group_foobar:"
-    printf "\n\t\troon -G foobar -c group"
-    printf "\n\tSet the volume level to 50 in the currently active zone"
-    printf "\n\t\troon -v 50"
-    printf "\n\tDecrease the volume level by 10 in the currently active zone"
-    printf "\n\t\troon -v r:-10"
-    printf "\n\tSet the volume level to 40 in all zones grouped with the zone named 'Mac Pro DAC'"
-    printf "\n\t\troon -v g:40 -z 'Mac Pro DAC'"
-    printf "\n\tIncrease the volume level by 20 in all zones grouped with the zone named 'Mac Pro DAC'"
-    printf "\n\t\troon -v g:r:20 -z 'Mac Pro DAC'"
-    printf "\n\tGet info on all Roon zones"
-    printf "\n\t\troon -i"
-    printf "\n\tGet extended info on Roon zone named 'Mac Pro DAC'"
-    printf "\n\t\troon -i -z 'Mac Pro DAC'"
-    printf "\n\tGet now playing info on all zones regardless of state"
-    printf "\n\t\troon -N"
-    printf "\n\tGet now playing info on all zones actively playing"
-    printf "\n\t\troon -n"
-    printf "\n\tGet now playing info on Roon zone named 'Mac Pro DAC'"
-    printf "\n\t\troon -n -z 'Mac Pro DAC'"
-    printf "\n\tEnable volume fading in default Roon zone"
-    printf "\n\t\troon -f on"
-    printf "\n\tDisable volume fading in default Roon zone"
-    printf "\n\t\troon -f off"
-    printf "\n\tNOTE: Use quotes to specify media names which contain spaces."
-    printf "\n\tFor example, to play the album 'Love Bomb':"
-    printf "\n\t\troon -A \"Love Bomb\"\n"
+    if [ "${have_rich}" ]
+    then
+      rich "[bold]Example invocations[/]" --print
+      rich "    [magenta]Play artist:[/]" --print
+      rich "        [bold italic green]roon -a \"Deep Purple\"[/]" --print
+      rich "    [magenta]Play album by artist:[/]" --print
+      rich "        [bold italic green]roon -a \"Deep Purple\" -A Burn[/]" --print
+      rich "    [magenta]Play track by artist:[/]" --print
+      rich "        [bold italic green]roon -a \"Aretha Franklin\" -T Think[/]" --print
+      rich "    [magenta]Play artist in specified zone:[/]" --print
+      rich "        [bold italic green]roon -a \"Jethro Tull\" -z \"Mac Pro DAC\"[/]" --print
+      rich "    [magenta]Play genre:[/]" --print
+      rich "        [bold italic green]roon -g Classical[/]" --print
+      rich "    [magenta]Play default live radio:[/]" --print
+      rich "        [bold italic green]roon -r default[/]" --print
+      rich "    [magenta]Play playlist:[/]" --print
+      rich "        [bold italic green]roon -p \"Bowie Favs\"[/]" --print
+      rich "    [magenta]Play next track:[/]" --print
+      rich "        [bold italic green]roon -c next[/]" --print
+      rich "    [magenta]Stop play in specified zone:[/]" --print
+      rich "        [bold italic green]roon -c stop -z Kitchen[/]" --print
+      rich "    [magenta]Mute/Unmute a specified zone:[/]" --print
+      rich "        [bold italic green]roon -c mute -z \"Mac Pro DAC\"[/]" --print
+      rich "    [magenta]Mute/Unmute all zones:[/]" --print
+      rich "        [bold italic green]roon -c mute_all[/]" --print
+      rich "    [magenta]List all playlists containing the string 'Best':[/]" --print
+      rich "        [bold italic green]roon -l playlists -s Best[/]" --print
+      rich "    [magenta]List albums by artist:[/]" --print
+      rich "        [bold italic green]roon -l artalbums -a \"Deep Purple\"[/]" --print
+      rich "    [magenta]List artists containing the string 'Will' in the 'Country' genre:[/]" --print
+      rich "        [bold italic green]roon -l genartists -a Will -g Country[/]" --print
+      rich "    [magenta]List albums containing the string 'Magic' in the 'Rock' genre:[/]" --print
+      rich "        [bold italic green]roon -l genalbums -A Magic -g Rock[/]" --print
+      rich "    [magenta]Play artist containing the string 'Willie' in the 'Country' genre:[/]" --print
+      rich "        [bold italic green]roon -a Willie -g Country[/]" --print
+      rich "    [magenta]Play album containing the string 'Magic' in the 'Rock' genre:[/]" --print
+      rich "        [bold italic green]roon -A Magic -g Rock[/]" --print
+      rich "    [magenta]Group the zones listed in roon_api.ini Group_foobar:[/]" --print
+      rich "        [bold italic green]roon -G foobar -c group[/]" --print
+      rich "    [magenta]Set the volume level to 50 in the currently active zone[/]" --print
+      rich "        [bold italic green]roon -v 50[/]" --print
+      rich "    [magenta]Decrease the volume level by 10 in the currently active zone[/]" --print
+      rich "        [bold italic green]roon -v r:-10[/]" --print
+      rich "    [magenta]Set the volume level to 40 in all zones grouped with the zone named 'Mac Pro DAC'[/]" --print
+      rich "        [bold italic green]roon -v g:40 -z 'Mac Pro DAC'[/]" --print
+      rich "    [magenta]Increase the volume level by 20 in all zones grouped with the zone named 'Mac Pro DAC'[/]" --print
+      rich "        [bold italic green]roon -v g:r:20 -z 'Mac Pro DAC'[/]" --print
+      rich "    [magenta]Get info on all Roon zones[/]" --print
+      rich "        [bold italic green]roon -i[/]" --print
+      rich "    [magenta]Get extended info on Roon zone named 'Mac Pro DAC'[/]" --print
+      rich "        [bold italic green]roon -i -z 'Mac Pro DAC'[/]" --print
+      rich "    [magenta]Get now playing info on all zones regardless of state[/]" --print
+      rich "        [bold italic green]roon -N[/]" --print
+      rich "    [magenta]Get now playing info on all zones actively playing[/]" --print
+      rich "        [bold italic green]roon -n[/]" --print
+      rich "    [magenta]Get now playing info on Roon zone named 'Mac Pro DAC'[/]" --print
+      rich "        [bold italic green]roon -n -z 'Mac Pro DAC'[/]" --print
+      rich "    [magenta]Enable volume fading in default Roon zone[/]" --print
+      rich "        [bold italic green]roon -f on[/]" --print
+      rich "    [magenta]Disable volume fading in default Roon zone[/]" --print
+      rich "        [bold italic green]roon -f off[/]" --print
+      rich "    [bold]NOTE:[/] [italic]Use quotes to specify media names which contain spaces.[/]" --print
+      rich "    For example, to [magenta]play the album 'Love Bomb':[/]" --print
+      rich "        [bold italic green]roon -A \"Love Bomb\"[/]" --print
+      printf "\n"
+    else
+      printf "\nExample invocations"
+      printf "\n\tPlay artist:"
+      printf "\n\t\troon -a \"Deep Purple\""
+      printf "\n\tPlay album by artist:"
+      printf "\n\t\troon -a \"Deep Purple\" -A Burn"
+      printf "\n\tPlay track by artist:"
+      printf "\n\t\troon -a \"Aretha Franklin\" -T Think"
+      printf "\n\tPlay artist in specified zone:"
+      printf "\n\t\troon -a \"Jethro Tull\" -z \"Mac Pro DAC\""
+      printf "\n\tPlay genre:"
+      printf "\n\t\troon -g Classical"
+      printf "\n\tPlay default live radio:"
+      printf "\n\t\troon -r default"
+      printf "\n\tPlay playlist:"
+      printf "\n\t\troon -p \"Bowie Favs\""
+      printf "\n\tPlay next track:"
+      printf "\n\t\troon -c next"
+      printf "\n\tStop play in specified zone:"
+      printf "\n\t\troon -c stop -z Kitchen"
+      printf "\n\tMute/Unmute a specified zone:"
+      printf "\n\t\troon -c mute -z \"Mac Pro DAC\""
+      printf "\n\tMute/Unmute all zones:"
+      printf "\n\t\troon -c mute_all"
+      printf "\n\tList all playlists containing the string 'Best':"
+      printf "\n\t\troon -l playlists -s Best"
+      printf "\n\tList albums by artist:"
+      printf "\n\t\troon -l artalbums -a \"Deep Purple\""
+      printf "\n\tList artists containing the string 'Will' in the 'Country' genre:"
+      printf "\n\t\troon -l genartists -a Will -g Country"
+      printf "\n\tList albums containing the string 'Magic' in the 'Rock' genre:"
+      printf "\n\t\troon -l genalbums -A Magic -g Rock"
+      printf "\n\tPlay artist containing the string 'Willie' in the 'Country' genre:"
+      printf "\n\t\troon -a Willie -g Country"
+      printf "\n\tPlay album containing the string 'Magic' in the 'Rock' genre:"
+      printf "\n\t\troon -A Magic -g Rock"
+      printf "\n\tGroup the zones listed in roon_api.ini Group_foobar:"
+      printf "\n\t\troon -G foobar -c group"
+      printf "\n\tSet the volume level to 50 in the currently active zone"
+      printf "\n\t\troon -v 50"
+      printf "\n\tDecrease the volume level by 10 in the currently active zone"
+      printf "\n\t\troon -v r:-10"
+      printf "\n\tSet the volume level to 40 in all zones grouped with the zone named 'Mac Pro DAC'"
+      printf "\n\t\troon -v g:40 -z 'Mac Pro DAC'"
+      printf "\n\tIncrease the volume level by 20 in all zones grouped with the zone named 'Mac Pro DAC'"
+      printf "\n\t\troon -v g:r:20 -z 'Mac Pro DAC'"
+      printf "\n\tGet info on all Roon zones"
+      printf "\n\t\troon -i"
+      printf "\n\tGet extended info on Roon zone named 'Mac Pro DAC'"
+      printf "\n\t\troon -i -z 'Mac Pro DAC'"
+      printf "\n\tGet now playing info on all zones regardless of state"
+      printf "\n\t\troon -N"
+      printf "\n\tGet now playing info on all zones actively playing"
+      printf "\n\t\troon -n"
+      printf "\n\tGet now playing info on Roon zone named 'Mac Pro DAC'"
+      printf "\n\t\troon -n -z 'Mac Pro DAC'"
+      printf "\n\tEnable volume fading in default Roon zone"
+      printf "\n\t\troon -f on"
+      printf "\n\tDisable volume fading in default Roon zone"
+      printf "\n\t\troon -f off"
+      printf "\n\tNOTE: Use quotes to specify media names which contain spaces."
+      printf "\n\tFor example, to play the album 'Love Bomb':"
+      printf "\n\t\troon -A \"Love Bomb\"\n"
+    fi
   }
   exit 1
 }

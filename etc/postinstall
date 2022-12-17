@@ -17,7 +17,8 @@ else
     PYTHON="python"
 fi
 # ${PYTHON} -m ensurepip --upgrade
-${PYTHON} -m pip install roonapi
+${PYTHON} -m pip install roonapi > /dev/null 2>&1
+${PYTHON} -m pip install rich-cli > /dev/null 2>&1
 export PATH=/usr/local/bin:/usr/bin:$PATH
 [ -d /usr/local ] || mkdir /usr/local
 [ -d /usr/local/bin ] || mkdir /usr/local/bin

@@ -174,51 +174,107 @@ save_vols() {
 show_status() {
   if [ "${FADE_ZONE}" ]
   then
-    printf "\nConfigured Roon fading zone: ${BOLD}${FADE_ZONE}${NORM}"
+    if [ "${have_rich}" ]
+    then
+      rich "Configured Roon fading zone: [bold magenta]${FADE_ZONE}[/]" --print
+    else
+      printf "\nConfigured Roon fading zone: ${BOLD}${FADE_ZONE}${NORM}"
+    fi
   else
     printf "\nNo Roon fading zone is configured"
+  fi
+  if [ "${FADE_DURATION}" ]
+  then
+    if [ "${have_rich}" ]
+    then
+      rich "Fade duration set to: [bold magenta]${FADE_DURATION}[/]" --print
+    else
+      printf "\nFade duration set to: ${BOLD}${FADE_DURATION}${NORM}"
+    fi
+  else
+    printf "\nNo Fade duration is configured"
   fi
   if [ "${ROON_FADE}" = true ]
   then
     if [ "${FADE_ZONE}" ]
     then
-      printf "\nRoon volume fading is: ${BOLD}Currently enabled in zone ${FADE_ZONE}${NORM}"
+      if [ "${have_rich}" ]
+      then
+        rich "Roon volume fading is: [bold italic]Currently [green]enabled[/] in zone[/] [bold magenta]${FADE_ZONE}[/]" --print
+      else
+        printf "\nRoon volume fading is: ${BOLD}Currently enabled in zone ${FADE_ZONE}${NORM}"
+      fi
     else
-      printf "\nRoon volume fading is: ${BOLD}Currently enabled${NORM}"
+      if [ "${have_rich}" ]
+      then
+        rich "Roon volume fading is: [bold italic]Currently [green]enabled[/][/]" --print
+      else
+        printf "\nRoon volume fading is: ${BOLD}Currently enabled${NORM}"
+      fi
     fi
   else
-    printf "\nRoon volume fading is: ${BOLD}Currently disabled${NORM}"
-  fi
-  if [ "${FADE_DURATION}" ]
-  then
-    printf "\nFade duration set to: ${BOLD}${FADE_DURATION}${NORM}"
-  else
-    printf "\nNo Fade duration is configured"
+    if [ "${have_rich}" ]
+    then
+      rich "Roon volume fading is: [bold italic]Currently [yellow]disabled[/][/]" --print
+    else
+      printf "\nRoon volume fading is: ${BOLD}Currently disabled${NORM}"
+    fi
   fi
   if [ "${FADE_NOW}" = true ]
   then
-    printf "\nVolume levels are: ${BOLD}Currently faded${NORM}\n\n"
+    if [ "${have_rich}" ]
+    then
+      rich "Volume levels are: [bold italic yellow]Currently faded[/]" --print
+    else
+      printf "\nVolume levels are: ${BOLD}Currently faded${NORM}\n\n"
+    fi
   else
-    printf "\nVolume levels are: ${BOLD}Not currently faded${NORM}\n\n"
+    if [ "${have_rich}" ]
+    then
+      rich "Volume levels are: [bold italic green]Not currently faded[/]" --print
+    else
+      printf "\nVolume levels are: ${BOLD}Not currently faded${NORM}\n\n"
+    fi
   fi
 }
 
 usage() {
-  printf "\nUsage: roon_fade [-i] [-l] [-R] [-V] [-t duration] [-uh] [-y] [-z zone] on|off|now"
-  printf "\nWhere:"
-  printf "\n\t-i indicates interactive mode and displays a menu of options"
-  printf "\n\t-l enables logging"
-  printf "\n\t-R restores faded or modified volume to original levels"
-  printf "\n\t-V updates fading restore volume to current volume levels"
-  printf "\n\t\t(use 'roon_fade -V' after manually adjusting volume)"
-  printf "\n\t-t 'duration' sets the fade duration (default: 30)"
-  printf "\n\t-y indicates do not prompt, assume the answer is 'yes' and proceed"
-  printf "\n\t-z 'zone' sets the Roon zone in which to fade"
-  printf "\n\t\tIf no zone is specified, the default zone is used\n"
-  printf "\nAn argument of 'on' enables end of track fading, 'off' disables track fading"
-  printf "\nAn argument of 'now' toggles immediate fading of volume"
-  printf "\nAn argument of '-u' or '-h' displays this usage message"
-  printf "\nWithout arguments status and a usage message is displayed\n"
+  if [ "${have_rich}" ]
+  then
+    rich "[bold]Usage:[/] [bold italic green]roon_fade[/] \[[cyan]-i[/]] \[[cyan]-l[/]] \[[cyan]-R[/]] \[[cyan]-V[/]] \[[cyan]-t[/] [yellow]duration[/]] \[[cyan]-uh[/]] \[[cyan]-y[/]] \[[cyan]-z[/] [yellow]zone[/]] [bold italic green]on|off|now[/]" --print
+    rich "[bold]Where:[/]" --print
+    rich "  [cyan]-i[/] indicates [italic]interactive mode[/] and displays a menu of options" --print
+    rich "  [cyan]-l[/] enables [italic]logging[/]" --print
+    rich "  [cyan]-R[/] [italic]restores[/] faded or modified volume to original levels" --print
+    rich "  [cyan]-V[/] updates fading restore volume to [italic]current volume levels[/]" --print
+    rich "      (use [bold italic green]roon_fade -V[/] after manually adjusting volume)" --print
+    rich "  [cyan]-t[/] [yellow]duration[/] sets the [italic]fade duration[/] (default: [yellow]30[/])" --print
+    rich "  [cyan]-y[/] indicates do not prompt, assume the answer is [italic]yes[/] and proceed" --print
+    rich "  [cyan]-z[/] [yellow]zone[/] sets the [italic]Roon zone[/] in which to fade" --print
+    rich "      (if no zone is specified, the default zone is used)" --print
+    printf "\n"
+    rich "An argument of [bold italic green]on[/] enables end of track fading, [bold italic green]off[/] disables track fading" --print
+    rich "An argument of [bold italic green]now[/] toggles immediate fading of volume" --print
+    rich "An argument of [cyan]-u[/] or [cyan]-h[/] displays this usage message" --print
+    rich "Without arguments, status and a usage message is displayed" --print
+    printf "\n"
+  else
+    printf "\nUsage: roon_fade [-i] [-l] [-R] [-V] [-t duration] [-uh] [-y] [-z zone] on|off|now"
+    printf "\nWhere:"
+    printf "\n\t-i indicates interactive mode and displays a menu of options"
+    printf "\n\t-l enables logging"
+    printf "\n\t-R restores faded or modified volume to original levels"
+    printf "\n\t-V updates fading restore volume to current volume levels"
+    printf "\n\t\t(use 'roon_fade -V' after manually adjusting volume)"
+    printf "\n\t-t 'duration' sets the fade duration (default: 30)"
+    printf "\n\t-y indicates do not prompt, assume the answer is 'yes' and proceed"
+    printf "\n\t-z 'zone' sets the Roon zone in which to fade"
+    printf "\n\t\tIf no zone is specified, the default zone is used\n"
+    printf "\nAn argument of 'on' enables end of track fading, 'off' disables track fading"
+    printf "\nAn argument of 'now' toggles immediate fading of volume"
+    printf "\nAn argument of '-u' or '-h' displays this usage message"
+    printf "\nWithout arguments, status and a usage message is displayed\n"
+  fi
   show_status
   exit 1
 }
@@ -628,6 +684,7 @@ init_conf
 
 fadetime=
 fadeinit=
+have_rich=`type -p rich`
 interact=
 proceed=
 restore=
