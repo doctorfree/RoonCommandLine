@@ -50,11 +50,11 @@ else:
     target_zone = config['DEFAULT']['DefaultZone']
 
 # If given an absolute volume level, force it in [0, 100]
-if not step and not relative:
-    if float(zone_volume) > 100.0:
-        zone_volume = 100
-    if float(zone_volume) < 0.0:
-        zone_volume = 0
+# if not step and not relative:
+#     if float(zone_volume) > 100.0:
+#         zone_volume = 100
+#     if float(zone_volume) < 0.0:
+#         zone_volume = 0
 
 zone_name = target_zone
 
@@ -107,16 +107,16 @@ else:
             if zone_name in v["display_name"]:
               output_id = k
               if step:
-                roonapi.change_volume(output_id, zone_volume, method="relative_step")
+                roonapi.change_volume_raw(output_id, zone_volume, method="relative_step")
               elif relative:
-                roonapi.change_volume(output_id, zone_volume, method="relative")
+                roonapi.change_volume_raw(output_id, zone_volume, method="relative")
               else:
-                roonapi.change_volume(output_id, zone_volume)
+                roonapi.change_volume_raw(output_id, zone_volume)
     else:
       # Send the volume to the specified zone with the specified method
       if step:
-        roonapi.change_volume(output_id, zone_volume, method="relative_step")
+        roonapi.change_volume_raw(output_id, zone_volume, method="relative_step")
       elif relative:
-        roonapi.change_volume(output_id, zone_volume, method="relative")
+        roonapi.change_volume_raw(output_id, zone_volume, method="relative")
       else:
-        roonapi.change_volume(output_id, zone_volume)
+        roonapi.change_volume_raw(output_id, zone_volume)
