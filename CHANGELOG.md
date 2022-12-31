@@ -7,6 +7,7 @@ December 31, 2022 :
 
     This release adds support for:
         * Compatibility with Python Roon API 0.1.3
+        * Support for percentage volume change/setting
         * Add immediate mode to roon_fade with 'now' argument
         * Implement non-interactive immediate fading
         * Add interactive menu system (`roon_fade -i`)

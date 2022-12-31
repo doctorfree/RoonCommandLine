@@ -1,6 +1,6 @@
 # RoonCommandLine Release Notes
 
-RoonCommandLine version 2.0.8 release 1 provides compatibility with volume handling changes in the Python Roon API. This release also adds support for fading track play volume immediately with the `roon_fade now` command.
+RoonCommandLine version 2.0.8 release 1 provides compatibility with volume handling changes in the Python Roon API. Volume change/setting can now be made using a percentage. This release also adds support for fading track play volume immediately with the `roon_fade now` command.
 
 RoonCommandLine version 2.0.7 release 1 was a minor feature and bugfix update. That release added support for fading track play volume and fixed possible stale authentication tokens.
 
@@ -46,6 +46,8 @@ cd RoonCommandLine
 
 This release adds support for:
 
+* Compatibility with latest `roonapi` volume methods
+* Support for percentage volume change/setting
 * Add immediate mode to roon_fade with 'now' argument
 * Implement non-interactive immediate fading
 * Add interactive menu system (`roon_fade -i`)

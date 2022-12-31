@@ -9,14 +9,19 @@ date: April 06, 2022
 set_volume - Set the volume level in a specified Roon Zone
 
 # SYNOPSIS
-**set_volume** [-g] [-r] [-s] [-v VOLUME] [-z ZONE]
+**set_volume** [-g] [-p PERCENT] [-r] [-s] [-v VOLUME] [-z ZONE]
 
 # DESCRIPTION
 Set the specified volume level in the selected Roon zone. Volume control methods can be specified as `relative` (`-r` option), `relative_step` (`-s` option), or `absolute` (default method). All zones in a grouped zone will be effected if the `-g` option is provided. If no zone is specified, the default RoonCommandLine zone will be used. Volume level for the `relative_step` method is a percentage. Volume level values can be negative or positive indicating decrease or increase the volume level. Outputs are queried to determine if their volume levels should be specified in decibels or 0-100 and the provided volume level is converted to decibels if necessary.
 
+Desired volume level can be provided either as a volume value (`-v volume`) or as a percentage (`-p percent`). When specified as a percent with `-p` the volume adjustment is either set to the specified percentage of the volume range or, if combined with the `-r` relative flag, adjusted by the given percentage relative to the current volume.
+
 # COMMAND LINE OPTIONS
 **-g**
   : apply volume level to all zones in a group
+
+**-p PERCENT**
+  : specifies desired volume level as a percentage
 
 **-r**
   : use relative volume level method
@@ -31,16 +36,22 @@ Set the specified volume level in the selected Roon zone. Volume control methods
   : specifies desired zone selection
 
 # EXAMPLES
-**set_volume -v 50 -z HomePod**
-: Set the volume to 50% in the Roon Zone named "HomePod"
+**set_volume -v 70 -z HomePod**
+: Set the volume level to 70 in the Roon Zone named "HomePod"
+
+**set_volume -p 70 -z Kitchen**
+: Set the volume to 70% in the Roon Zone named "Kitchen"
 
 **set_volume -r -v -10 -z HomePod**
 : Decrease the volume by 10 in the Roon Zone named "HomePod"
 
+**set_volume -r -p -10 -z Kitchen**
+: Decrease the volume by 10 percent in the Roon Zone named "Kitchen"
+
 **set_volume -s -v 10 -z HomePod**
 : Step the volume up 10% in the Roon Zone named "HomePod"
 
-**set_volume -g -v 75 -z Kitchen**
+**set_volume -g -p 75 -z Kitchen**
 : Set the volume to 75% in all Roon Zones in the zone grouping containing the "Kitchen" zone
 
 # AUTHORS
