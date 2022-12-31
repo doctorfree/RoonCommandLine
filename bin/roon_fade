@@ -164,7 +164,7 @@ save_vols() {
     printf "CURVOL=( " >> /tmp/fade$$
     for v in ${CURVOL[@]}
     do
-      printf "$v " >> /tmp/fade$$
+      printf "%d " $v >> /tmp/fade$$
     done
     printf ")\n" >> /tmp/fade$$
     cp /tmp/fade$$ ${FADECONF}
