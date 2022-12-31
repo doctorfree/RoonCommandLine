@@ -67,7 +67,12 @@ done
 export PATH=/usr/local/bin:/usr/bin:$PATH
 
 # Install the Python Roon API
-${SUDO} ${PYTHON} -m pip install roonapi > /dev/null 2>&1
+if pip list | grep roonapi > /dev/null
+then
+    ${SUDO} ${PYTHON} -m pip install --upgrade roonapi > /dev/null 2>&1
+else
+    ${SUDO} ${PYTHON} -m pip install roonapi > /dev/null 2>&1
+fi
 ${SUDO} ${PYTHON} -m pip install rich-cli > /dev/null 2>&1
 
 [ -d /usr/local ] || ${SUDO} mkdir /usr/local
