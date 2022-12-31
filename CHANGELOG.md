@@ -2,10 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-December 16, 2022 :
-    RoonCommandLine version 2.0.7 release 2 is a minor feature and bugfix update
+December 31, 2022 :
+    RoonCommandLine version 2.0.8 release 1 provides API compatibility and feature updates
 
     This release adds support for:
+        * Compatibility with Python Roon API 0.1.3
         * Add immediate mode to roon_fade with 'now' argument
         * Implement non-interactive immediate fading
         * Add interactive menu system (`roon_fade -i`)
