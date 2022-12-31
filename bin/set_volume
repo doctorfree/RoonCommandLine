@@ -5,7 +5,8 @@ ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 SCRIPT=set_volume.py
-VOLUME=50
+VOLUME="-v 50"
+PERCENT=
 GROUPED=
 RELATIVE=
 STEP=
@@ -27,10 +28,13 @@ else
 fi
 
 # Parse the arguments to get the command and zone
-while getopts "grsv:z:" flag; do
+while getopts "gp:rsv:z:" flag; do
     case $flag in
         g)
             GROUPED="-g"
+            ;;
+        p)
+            VOLUME="-p $OPTARG"
             ;;
         r)
             RELATIVE="-r"
@@ -39,7 +43,7 @@ while getopts "grsv:z:" flag; do
             STEP="-s"
             ;;
         v)
-            VOLUME="$OPTARG"
+            VOLUME="-v $OPTARG"
             ;;
         z)
             ROON_ZONE="$OPTARG"
@@ -50,8 +54,8 @@ done
 have_python3=`type -p python3`
 if [ "${have_python3}" ]
 then
-    python3 $SCRIPT ${GROUPED} ${RELATIVE} ${STEP} -v "$VOLUME" -z "$ROON_ZONE"
+    python3 $SCRIPT ${GROUPED} ${RELATIVE} ${STEP} $VOLUME -z "$ROON_ZONE"
 else
-    python $SCRIPT ${GROUPED} ${RELATIVE} ${STEP} -v "$VOLUME" -z "$ROON_ZONE"
+    python $SCRIPT ${GROUPED} ${RELATIVE} ${STEP} $VOLUME -z "$ROON_ZONE"
 fi
 

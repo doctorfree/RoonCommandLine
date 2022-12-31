@@ -22,12 +22,14 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-g", "--grouped", default=False, action='store_true', help="apply volume level to all zones in a group")
+parser.add_argument("-p", "--percentage", type=float, help="desired volume level percentage")
 parser.add_argument("-r", "--relative", default=False, action='store_true', help="relative volume level")
 parser.add_argument("-s", "--step", default=False, action='store_true', help="relative step volume level")
-parser.add_argument("-v", "--volume", help="desired volume level")
+parser.add_argument("-v", "--volume", type=int, help="desired volume level")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
+percent = False
 if args.grouped:
     grouped = True
 else:
@@ -43,7 +45,11 @@ else:
 if args.volume:
     zone_volume = args.volume
 else:
-    sys.exit("Volume argument required")
+    if args.percentage:
+        zone_volume = args.percentage
+        percent = True
+    else:
+        sys.exit("Volume argument required")
 if args.zone:
     target_zone = args.zone
 else:
@@ -100,16 +106,34 @@ else:
             if zone_name in v["display_name"]:
               output_id = k
               if step:
-                roonapi.change_volume_raw(output_id, zone_volume, method="relative_step")
+                if percent:
+                    roonapi.change_volume_percent(output_id, zone_volume)
+                else:
+                    roonapi.change_volume_raw(output_id, zone_volume, method="relative_step")
               elif relative:
-                roonapi.change_volume_raw(output_id, zone_volume, method="relative")
+                if percent:
+                    roonapi.change_volume_percent(output_id, zone_volume)
+                else:
+                    roonapi.change_volume_raw(output_id, zone_volume, method="relative")
               else:
-                roonapi.change_volume_raw(output_id, zone_volume)
+                if percent:
+                    roonapi.set_volume_percent(output_id, zone_volume)
+                else:
+                    roonapi.change_volume_raw(output_id, zone_volume)
     else:
       # Send the volume to the specified zone with the specified method
       if step:
-        roonapi.change_volume_raw(output_id, zone_volume, method="relative_step")
+          if percent:
+              roonapi.change_volume_percent(output_id, zone_volume)
+          else:
+              roonapi.change_volume_raw(output_id, zone_volume, method="relative_step")
       elif relative:
-        roonapi.change_volume_raw(output_id, zone_volume, method="relative")
+          if percent:
+              roonapi.change_volume_percent(output_id, zone_volume)
+          else:
+              roonapi.change_volume_raw(output_id, zone_volume, method="relative")
       else:
-        roonapi.change_volume_raw(output_id, zone_volume)
+          if percent:
+              roonapi.set_volume_percent(output_id, zone_volume)
+          else:
+              roonapi.change_volume_raw(output_id, zone_volume)
