@@ -14,8 +14,8 @@
 DIR_NAME="RoonCommandLine"
 PKG_NAMES="RoonCommandLine"
 APT_NAMES="rooncommandline"
-BOLD=$(tput bold)
-NORMAL=$(tput sgr0)
+BOLD=$(tput bold 2>/dev/null)
+NORMAL=$(tput sgr0 2>/dev/null)
 
 PKG_AVAILABLE=
 PKG_SELECTED=

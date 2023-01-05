@@ -11,8 +11,8 @@ ROON_INI=${ROONETC}/roon_api.ini
 ROONCONF=${ROONETC}/pyroonconf
 export SUDO=sudo
 
-BOLD=$(tput bold)
-NORMAL=$(tput sgr0)
+BOLD=$(tput bold 2>/dev/null)
+NORMAL=$(tput sgr0 2>/dev/null)
 PYTHON=
 python3_inst=`type -p python3`
 if [ "${python3_inst}" ]

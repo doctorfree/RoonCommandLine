@@ -339,8 +339,8 @@ ROONETC=${ROON}/etc
 ROON_INI=${ROONETC}/roon_api.ini
 ROONCONF=${ROONETC}/pyroonconf
 LOCAL=false
-BOLD=$(tput bold)
-NORMAL=$(tput sgr0)
+BOLD=$(tput bold 2>/dev/null)
+NORMAL=$(tput sgr0 2>/dev/null)
 
 set_default_conf() {
   if [ -w ${ROONETC} ]

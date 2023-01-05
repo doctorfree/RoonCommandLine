@@ -15,8 +15,8 @@ FADECONF=${ROONETC}/fadeconf
 POS_INT='^[1-9][0-9]*(,[1-9][0-9]*)*$'
 FADE_ZONE=
 LOG=
-BOLD=$(tput bold)
-NORM=$(tput sgr0)
+BOLD=$(tput bold 2>/dev/null)
+NORMAL=$(tput sgr0 2>/dev/null)
 
 # Get the zone and fade settings
 init_conf() {
