@@ -16,13 +16,8 @@ then
 else
     PYTHON="python"
 fi
-# ${PYTHON} -m ensurepip --upgrade
-if pip list | grep roonapi > /dev/null
-then
-    ${PYTHON} -m pip install --upgrade roonapi > /dev/null 2>&1
-else
-    ${PYTHON} -m pip install roonapi > /dev/null 2>&1
-fi
+#${PYTHON} -m ensurepip --upgrade > /dev/null 2>&1
+${PYTHON} -m pip install --upgrade roonapi > /dev/null 2>&1
 ${PYTHON} -m pip install rich-cli > /dev/null 2>&1
 export PATH=/usr/local/bin:/usr/bin:$PATH
 [ -d /usr/local ] || mkdir /usr/local
