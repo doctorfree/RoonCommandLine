@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+January 19, 2023 :
+    RoonCommandLine version 2.0.8 release 2 includes Mac installation fixes
+
 December 31, 2022 :
     RoonCommandLine version 2.0.8 release 1 provides API compatibility and feature updates
 

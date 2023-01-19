@@ -1,6 +1,6 @@
 # RoonCommandLine Release Notes
 
-RoonCommandLine version 2.0.8 release 1 provides compatibility with volume handling changes in the Python Roon API. Volume change/setting can now be made using a percentage. This release also adds support for fading track play volume immediately with the `roon_fade now` command.
+RoonCommandLine version 2.0.8 release 2 provides compatibility with volume handling changes in the Python Roon API. Volume change/setting can now be made using a percentage. This release also adds support for fading track play volume immediately with the `roon_fade now` command along with Mac installation fixes.
 
 RoonCommandLine version 2.0.7 release 1 was a minor feature and bugfix update. That release added support for fading track play volume and fixed possible stale authentication tokens.
 
@@ -14,12 +14,12 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./RoonCommandLine_2.0.8-1.deb
+sudo apt install ./RoonCommandLine_2.0.8-2.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.8-1.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.8-2.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:

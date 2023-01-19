@@ -39,7 +39,7 @@ do
   b=`basename ${command}`
   if [ -f ${b} ]
   then
-      diff ${command} ${b} > /dev/null && {
+      diff ${command} ${b} > /dev/null || {
           rm -f ${b}
           ln -s ${command} .
       }
