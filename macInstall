@@ -35,7 +35,7 @@ fi
     exit 1
 }
 
-# ${SUDO} ${PYTHON} -m ensurepip --upgrade
+${SUDO} ${PYTHON} -m ensurepip --upgrade > /dev/null 2>&1
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
@@ -67,7 +67,7 @@ done
 export PATH=/usr/local/bin:/usr/bin:$PATH
 
 # Install the Python Roon API
-if pip list | grep roonapi > /dev/null
+if ${SUDO} ${PYTHON} -m pip list | grep roonapi > /dev/null
 then
     ${SUDO} ${PYTHON} -m pip install --upgrade roonapi > /dev/null 2>&1
 else
@@ -83,9 +83,13 @@ ${SUDO} ${PYTHON} -m pip install rich-cli > /dev/null 2>&1
 [ -d ${DESTDIR}/share/doc ] || ${SUDO} mkdir ${DESTDIR}/share/doc
 [ -d ${DESTDIR}/share/doc/${PKG} ] || ${SUDO} mkdir ${DESTDIR}/share/doc/${PKG}
 
-[ -f /usr/local/Roon/etc/roon_api.ini ] && {
-    ${SUDO} cp /usr/local/Roon/etc/roon_api.ini /tmp/_roon_api_ini_.save
+[ -f ${ROON_INI} ] && {
+    ${SUDO} cp ${ROON_INI} /tmp/_roon_api_ini_.save
 }
+[ -f ${ROONCONF} ] && {
+    ${SUDO} cp ${ROONCONF} /tmp/_pyroonconf_.save
+}
+
 for dir in bin etc api patches
 do
     [ -d ${ROON}/${dir} ] && ${SUDO} rm -rf ${ROON}/${dir}
@@ -246,6 +250,17 @@ done
   done
 }
 
+# Copy in saved pyroonconf if it exists
+[ -f ${ROONCONF} ] || {
+  # Restore previously saved pyroonconf
+  if [ -f /tmp/_pyroonconf_.save ]
+  then
+    echo "Restoring saved ${ROONCONF}"
+    ${SUDO} cp /tmp/_pyroonconf_.save ${ROONCONF}
+    ${SUDO} rm -f /tmp/_pyroonconf_.save
+  fi
+}
+
 echo "Setting the Python Roon API server IP address to $IP"
 
 echo "Enabling local access in ${ROONCONF}"
@@ -366,7 +381,12 @@ echo "to authorize discovery"
 echo ""
 
 # Get and set the Roon Core IP address
-${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+if [ "${USER}" ]
+then
+  ${SUDO} -u ${USER} ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+else
+  ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+fi
 CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } '`
 CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 CORE_PORT=`cat /tmp/discover$$ | grep RoonCorePort | awk -F '=' ' { print $2 } '`
@@ -499,6 +519,8 @@ then
 else
     echo "ROON_ZONE=\"$DEFZONE\"" | ${SUDO} tee ${ROONCONF} > /dev/null
 fi
+
+[ "${USER}" ] && ${SUDO} chown -R ${USER}:${GROUP} ${ROONETC}
 
 echo ""
 echo "Verify the 'server' and 'user' settings in the roon script are correct"

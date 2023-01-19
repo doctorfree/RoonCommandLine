@@ -5,6 +5,19 @@ APPL=${LOCAL}/share/applications
 DOC=${LOCAL}/share/doc
 ROON=${LOCAL}/Roon
 ROONAPI=${ROON}/api
+ROONBIN=${ROON}/bin
+
+[ -d /usr/local/bin ] && {
+    cd /usr/local/bin
+    for command in ${ROONBIN}/*
+    do
+        [ "${command}" == "${ROONBIN}/*" ] && continue
+        b=`basename ${command}`
+        [ -L $b ] && {
+            /bin/ls -l $b | grep ${ROON} > /dev/null && sudo rm -f $b
+        }
+    done
+}
 
 sudo rm -rf ${ROON}
 sudo rm -rf ${DOC}/RoonCommandLine
