@@ -15,10 +15,40 @@ DIR_NAME="RoonCommandLine"
 PKG_NAMES="RoonCommandLine"
 APT_NAMES="rooncommandline"
 BOLD=$(tput bold 2>/dev/null)
-NORMAL=$(tput sgr0 2>/dev/null)
-
+NORM=$(tput sgr0 2>/dev/null)
 PKG_AVAILABLE=
 PKG_SELECTED=
+
+# User should not be root. Prompt to proceed if root user
+iamroot=
+if [ "${EUID}" ]
+then
+  [ ${EUID} -eq 0 ] && iamroot=1
+else
+  uid=`id -u`
+  [ ${uid} -eq 0 ] && iamroot=1
+fi
+
+[ "${iamroot}" ] && {
+  printf "\nThe ${BOLD}Install${NORM} command should be run as a normal user."
+  printf "\nIt appears it has been invoked with 'root' user privileges.\n\n"
+  while true
+  do
+    read -p "Do you intend to use RoonCommandLine as the 'root' user ? (y/n) " yn
+    case $yn in
+        [Yy]* )
+                break
+                ;;
+        [Nn]* )
+                printf "\nRe-run this command as a normal user."
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+            * ) echo "Please answer yes or no."
+                ;;
+    esac
+  done
+}
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
@@ -107,7 +137,7 @@ else
         }
         while true
         do
-          PS3="${BOLD}Please enter your desire (numeric or text): ${NORMAL}"
+          PS3="${BOLD}Please enter your desire (numeric or text): ${NORM}"
           options=("Install All" "Install Selected" "Quit")
           select opt in "${options[@]}"
           do
