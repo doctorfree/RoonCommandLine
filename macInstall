@@ -202,7 +202,7 @@ do
     [ "${homedir}" == "/Users/Shared" ] && continue
     [ -d ${homedir} ] && {
         username=`basename ${homedir}`
-        exists=`id -g -n ${username}`
+        exists=`id -g -n ${username} 2> /dev/null`
         [ "${exists}" ] && {
             users="${users} ${username}"
             numusers=`expr ${numusers} + 1`

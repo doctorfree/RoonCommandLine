@@ -104,7 +104,7 @@ do
     [ "${homedir}" == "/home/*" ] && continue
     [ -d ${homedir} ] && {
         username=`basename ${homedir}`
-        exists=`id -g -n ${username}`
+        exists=`id -g -n ${username} 2> /dev/null`
         [ "${exists}" ] && {
             USER="${username}"
             users="${users} ${username}"
