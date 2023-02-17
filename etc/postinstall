@@ -4,9 +4,6 @@
 #
 # Author: Ronald Joe Record <ronaldrecord@gmail.com>
 #
-
-set -e
-
 # update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 PYTHON=
 python3_inst=`type -p python3`
