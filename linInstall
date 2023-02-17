@@ -13,6 +13,15 @@ export SUDO=sudo
 
 BOLD=$(tput bold 2>/dev/null)
 NORMAL=$(tput sgr0 2>/dev/null)
+
+export PATH=$PATH:/usr/local/bin
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]
+then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+else
+    [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 PYTHON=
 python3_inst=`type -p python3`
 if [ "${python3_inst}" ]
@@ -61,8 +70,6 @@ do
           ;;
   esac
 done
-
-export PATH=/usr/local/bin:/usr/bin:$PATH
 
 # Install the Python Roon API
 if pip list | grep roonapi > /dev/null

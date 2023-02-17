@@ -13,6 +13,10 @@ export SUDO=sudo
 
 BOLD=$(tput bold 2>/dev/null)
 NORMAL=$(tput sgr0 2>/dev/null)
+
+[ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+export PATH=$PATH:/usr/local/bin
+
 PYTHON=
 python3_inst=`type -p python3`
 if [ "${python3_inst}" ]
@@ -63,8 +67,6 @@ do
           ;;
   esac
 done
-
-export PATH=/usr/local/bin:/usr/bin:$PATH
 
 # Install/upgrade the Python Roon API
 ${SUDO} ${PYTHON} -m pip install --upgrade roonapi > /dev/null 2>&1

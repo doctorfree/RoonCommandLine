@@ -385,10 +385,16 @@ bash -n ${ROONCONF} > /dev/null 2>&1
       esac
     done
 }
-. ${ROONCONF}
+[ -f ${ROONCONF} ] && . ${ROONCONF}
 
 [[ ":$PATH:" == *":/usr/local/bin:"* ]] || export PATH=${PATH}:/usr/local/bin
 [[ ":$PATH:" == *":/usr/local/Roon/bin:"* ]] || export PATH=${PATH}:/usr/local/Roon/bin
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]
+then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+else
+    [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+fi
 
 select_zone() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"

@@ -5,6 +5,15 @@
 # Author: Ronald Joe Record <ronaldrecord@gmail.com>
 #
 # update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+
+export PATH=$PATH:/usr/local/bin
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]
+then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+else
+    [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 PYTHON=
 python3_inst=`type -p python3`
 if [ "${python3_inst}" ]
@@ -16,7 +25,6 @@ fi
 #${PYTHON} -m ensurepip --upgrade > /dev/null 2>&1
 ${PYTHON} -m pip install --upgrade roonapi > /dev/null 2>&1
 ${PYTHON} -m pip install rich-cli > /dev/null 2>&1
-export PATH=/usr/local/bin:/usr/bin:$PATH
 [ -d /usr/local ] || mkdir /usr/local
 [ -d /usr/local/bin ] || mkdir /usr/local/bin
 cd /usr/local/bin

@@ -6,7 +6,13 @@ set -e
 
 case "$1" in
     install|upgrade)
-        export PATH=/usr/local/bin:$PATH
+        export PATH=$PATH:/usr/local/bin
+        if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]
+        then
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        else
+            [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+        fi
         have_python3=
         if type -p python3 > /dev/null
         then

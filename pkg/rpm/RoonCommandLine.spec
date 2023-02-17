@@ -24,7 +24,13 @@ cp -a %{_sourcedir}/usr %{buildroot}/usr
 %pre
 exec 1>/proc/${PPID}/fd/1
 exec 2>/proc/${PPID}/fd/2
-export PATH=/usr/local/bin:$PATH
+export PATH=$PATH:/usr/local/bin
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]
+then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+else
+    [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+fi
 have_python3=
 if type -p python3 > /dev/null
 then
