@@ -63,12 +63,11 @@ volume=
 zone=
 zonegroup=
 zonelist=
-have_rich=`type -p rich`
+have_rich=$(type -p rich)
 
 usage() {
   [ "${showusage}" ] && {
-    if [ "${have_rich}" ]
-    then
+    if [ "${have_rich}" ]; then
       rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-C[/] [yellow]composer[/]" --print
       rich "    [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i[/]" --print
       rich "    [cyan]-l[/] [yellow]\[albums|artists|artalbums|arttracks|composers|comalbums|[/]" --print
@@ -197,8 +196,7 @@ usage() {
     fi
   }
   [ "${showexamples}" ] && {
-    if [ "${have_rich}" ]
-    then
+    if [ "${have_rich}" ]; then
       rich "[bold]Example invocations[/]" --print
       rich "    [magenta]Play artist:[/]" --print
       rich "        [bold italic green]roon -a \"Deep Purple\"[/]" --print
@@ -343,13 +341,12 @@ BOLD=$(tput bold 2>/dev/null)
 NORMAL=$(tput sgr0 2>/dev/null)
 
 set_default_conf() {
-  if [ -w ${ROONETC} ]
-  then
-    echo "LOCAL=true" > ${ROONCONF}
-    DEFZONE=`grep ^DefaultZone ${ROON_INI} | awk -F '=' ' { print $2 } '`
+  if [ -w ${ROONETC} ]; then
+    echo "LOCAL=true" >${ROONCONF}
+    DEFZONE=$(grep ^DefaultZone ${ROON_INI} | awk -F '=' ' { print $2 } ')
     # Remove leading and trailing spaces in DEFZONE
     DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-    echo "ROON_ZONE=\"$DEFZONE\"" >> ${ROONCONF}
+    echo "ROON_ZONE=\"$DEFZONE\"" >>${ROONCONF}
   else
     echo "${ROONETC} is not writeable by this user."
     echo "Correct permissions on ${ROONETC} and re-run this command."
@@ -360,98 +357,97 @@ set_default_conf() {
 
 [ -f ${ROONCONF} ] || set_default_conf
 
-bash -n ${ROONCONF} > /dev/null 2>&1
+bash -n ${ROONCONF} >/dev/null 2>&1
 [ $? -eq 0 ] || {
-    echo "WARNING: Syntax errors in ${ROONCONF} have been detected."
-    echo "The following is the output of bash -n ${ROONCONF}"
-    echo ""
-    bash -n ${ROONCONF}
-    echo ""
-    while true
-    do
-      read -p "Revert to default settings and continue? (y/n) " answer
-      case ${answer} in
-        [Yy]* )
-          set_default_conf
-          break
-          ;;
-        [Nn]* )
-          echo "Correct syntax errors in ${ROONCONF} and re-run this command."
-          echo "Exiting."
-          exit 1
-          ;;
-        * ) echo "Please answer 'y' to repair configuration, or 'n' to exit."
-          ;;
-      esac
-    done
+  echo "WARNING: Syntax errors in ${ROONCONF} have been detected."
+  echo "The following is the output of bash -n ${ROONCONF}"
+  echo ""
+  bash -n ${ROONCONF}
+  echo ""
+  while true; do
+    read -p "Revert to default settings and continue? (y/n) " answer
+    case ${answer} in
+      [Yy]*)
+        set_default_conf
+        break
+        ;;
+      [Nn]*)
+        echo "Correct syntax errors in ${ROONCONF} and re-run this command."
+        echo "Exiting."
+        exit 1
+        ;;
+      *)
+        echo "Please answer 'y' to repair configuration, or 'n' to exit."
+        ;;
+    esac
+  done
 }
 [ -f ${ROONCONF} ] && . ${ROONCONF}
 
 [[ ":$PATH:" == *":/usr/local/bin:"* ]] || export PATH=${PATH}:/usr/local/bin
 [[ ":$PATH:" == *":/usr/local/Roon/bin:"* ]] || export PATH=${PATH}:/usr/local/Roon/bin
-if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]
-then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 else
-    [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+  [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
 fi
 
 select_zone() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
-  if [ "${LOCAL}" = true ]
-  then
-    zones=`${ROON}/bin/get_zones | sed -e 's/\, /\,/g'`
+  if [ "${LOCAL}" = true ]; then
+    zones=$(ROON}/bin/get_zones | sed -e 's/\, /\,/g')
   else
-    zones=`ssh $user@$server "bash -l -c \"${ROON}/bin/get_zones | sed -e 's/\, /\,/g'\""`
+    zones=$(ssh $user@$server "bash -l -c \"${ROON}/bin/get_zones | sed -e 's/\, /\,/g'\"")
   fi
-  zone_options=( $( echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }' ) )
+  zone_options=($(echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }'))
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   zone_options+=("Main Menu" "Quit")
-  while true
-  do
+  while true; do
     PS3="${BOLD}Please enter the Roon zone you wish to use (numeric or text): ${NORMAL}"
-    select opt in "${zone_options[@]}"
-    do
-        case "$opt,$REPLY" in
-            "Main Menu",*|*,"Main Menu")
-                main_menu
-                break 2
-                ;;
-            "Quit",*|*,"Quit"|"quit",*|*,"quit")
-                printf "\nExiting\n"
-                exit 0
-                ;;
-            *,*)
-                if [[ " ${zone_options[*]} " =~ " ${opt} " ]]
-                then
-                  echo "${BOLD}Executing Roon command to set default zone to: ${opt}${NORMAL}"
-                  if [ "${LOCAL}" = true ]
-                  then
-                    ${ROON}/bin/set_zone "${opt}"
-                  else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone ${opt}\""
-                  fi
-                  status=$?
-                  [ ${status} -eq 0 ] || {
-                    echo "Unable to set zone for zone = $opt"
-                  }
-                  break 2
-                else
-                  printf "\n\nInvalid option: ${opt}"
-                  printf "\n\tPlease enter either the exact text or numeric designation"
-                  printf "\n\tfor one of the listed options below.\n\n"
-                  break
-                fi
-                ;;
-        esac
+    select opt in "${zone_options[@]}"; do
+      case "$opt,$REPLY" in
+        "Main Menu",* | *,"Main Menu")
+          main_menu
+          break 2
+          ;;
+        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+          printf "\nExiting\n"
+          exit 0
+          ;;
+        *,*)
+          if [[ " ${zone_options[*]} " =~ " ${opt} " ]]; then
+            echo "${BOLD}Executing Roon command to set default zone to: ${opt}${NORMAL}"
+            if [ "${LOCAL}" = true ]; then
+              ${ROON}/bin/set_zone "${opt}"
+            else
+              ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone ${opt}\""
+            fi
+            status=$?
+            [ ${status} -eq 0 ] || {
+              echo "Unable to set zone for zone = $opt"
+            }
+            break 2
+          else
+            printf "\n\nInvalid option: ${opt}"
+            printf "\n\tPlease enter either the exact text or numeric designation"
+            printf "\n\tfor one of the listed options below.\n\n"
+            break
+          fi
+          ;;
+      esac
     done
   done
 }
 
 select_default() {
   media="$1"
-  pycom="python ${ROONAPI}/set_default.py"
+  have_python3=$(type -p python3)
+  if [ "${have_python3}" ]; then
+    pycom="python3 ${ROONAPI}/set_default.py"
+  else
+    pycom="python ${ROONAPI}/set_default.py"
+  fi
   case "${media}" in
     "Set Default Album")
       setdefcom="${pycom} -A"
@@ -495,13 +491,12 @@ select_default() {
   printf "\nRetrieving ${medtype}s in your Roon library ..."
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
-  if [ "${LOCAL}" = true ]
-  then
-    media_options=( $(${listcom} __all__) )
+  if [ "${LOCAL}" = true ]; then
+    media_options=($(${listcom} __all__))
   else
-    media_options=( $(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\"") )
+    media_options=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\""))
   fi
-  DEFAULT=`grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } '`
+  DEFAULT=$(grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } ')
   # Remove leading and trailing spaces
   DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
   printf " Done\n\n"
@@ -509,34 +504,31 @@ select_default() {
 
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   media_options+=("Set Defaults Menu" "Main Menu" "Quit")
-  while true
-  do
+  while true; do
     PS3="${BOLD}Please enter the ${medtype} you wish to set as default (numeric or text): ${NORMAL}"
-    select opt in "${media_options[@]}"
-    do
-        case "$opt,$REPLY" in
-            "Set Defaults Menu",*|*,"Set Defaults Menu")
-                break 2
-                ;;
-            "Main Menu",*|*,"Main Menu")
-                main_menu
-                break 3
-                ;;
-            "Quit",*|*,"Quit"|"quit",*|*,"quit")
-                printf "\nExiting\n"
-                exit 0
-                ;;
-            *,*)
-                echo "${BOLD}Setting Roon ${medtype} default to: ${opt}${NORMAL}"
-                if [ "${LOCAL}" = true ]
-                then
-                    ${setdefcom} "${opt}"
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/${setdefcom} ${opt}\""
-                fi
-                break 2
-                ;;
-        esac
+    select opt in "${media_options[@]}"; do
+      case "$opt,$REPLY" in
+        "Set Defaults Menu",* | *,"Set Defaults Menu")
+          break 2
+          ;;
+        "Main Menu",* | *,"Main Menu")
+          main_menu
+          break 3
+          ;;
+        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+          printf "\nExiting\n"
+          exit 0
+          ;;
+        *,*)
+          echo "${BOLD}Setting Roon ${medtype} default to: ${opt}${NORMAL}"
+          if [ "${LOCAL}" = true ]; then
+            ${setdefcom} "${opt}"
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/${setdefcom} ${opt}\""
+          fi
+          break 2
+          ;;
+      esac
     done
   done
 }
@@ -586,13 +578,12 @@ select_media() {
   printf "\nRetrieving ${media}s in your Roon library ..."
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
-  if [ "${LOCAL}" = true ]
-  then
-    media_options=( $(${listcom} __all__) )
+  if [ "${LOCAL}" = true ]; then
+    media_options=($(${listcom} __all__))
   else
-    media_options=( $(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\"") )
+    media_options=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\""))
   fi
-  DEFAULT=`grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } '`
+  DEFAULT=$(grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } ')
   # Remove leading and trailing spaces
   DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
   printf " Done\n\n"
@@ -600,78 +591,69 @@ select_media() {
 
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   media_options+=("Main Menu" "Quit")
-  while true
-  do
+  while true; do
     PS3="${BOLD}Please enter the ${media} you wish to play (numeric or text): ${NORMAL}"
-    select opt in "${media_options[@]}"
-    do
-        case "$opt,$REPLY" in
-            "Main Menu",*|*,"Main Menu")
-                main_menu
-                break 2
-                ;;
-            "Quit",*|*,"Quit"|"quit",*|*,"quit")
-                printf "\nExiting\n"
-                exit 0
-                ;;
-            *,*)
-                echo "${BOLD}Executing Roon command to play ${media}: ${opt}${NORMAL}"
-                if [ "${LOCAL}" = true ]
-                then
-                    ${playcom} "${opt}"
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/${playcom} ${opt}\""
-                fi
-                break 2
-                ;;
-        esac
+    select opt in "${media_options[@]}"; do
+      case "$opt,$REPLY" in
+        "Main Menu",* | *,"Main Menu")
+          main_menu
+          break 2
+          ;;
+        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+          printf "\nExiting\n"
+          exit 0
+          ;;
+        *,*)
+          echo "${BOLD}Executing Roon command to play ${media}: ${opt}${NORMAL}"
+          if [ "${LOCAL}" = true ]; then
+            ${playcom} "${opt}"
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/${playcom} ${opt}\""
+          fi
+          break 2
+          ;;
+      esac
     done
   done
 }
 
 select_set_volume() {
   volume_options=("Mute/Unmute Zone" "Mute/Unmute All Zones" "Set Volume to 10" "Set Volume to 20" "Set Volume to 30" "Set Volume to 40" "Set Volume to 50" "Set Volume to 60" "Set Volume to 70" "Set Volume to 80" "Set Volume to 90" "Set Volume to 100" "Increase Volume by 1" "Increase Volume by 5" "Increase Volume by 10" "Increase Volume by 20" "Increase Volume by 40" "Decrease Volume by 1" "Decrease Volume by 5" "Decrease Volume by 10" "Decrease Volume by 20" "Decrease Volume by 40" "Main Menu" "Quit")
-  while true
-  do
+  while true; do
     printf "\n"
     PS3="${BOLD}Please enter the volume adjustment you wish to make (numeric or text): ${NORMAL}"
-    select opt in "${volume_options[@]}"
-    do
+    select opt in "${volume_options[@]}"; do
       case "$opt,$REPLY" in
-        "Set Volume to "*,*|*,"Set Volume to "*)
-          volume=`echo $opt | awk ' { print $NF } '`
-          if [ "${LOCAL}" = true ]
-          then
+        "Set Volume to "*,* | *,"Set Volume to "*)
+          volume=$(echo $opt | awk ' { print $NF } ')
+          if [ "${LOCAL}" = true ]; then
             set_volume -v ${volume} -g
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -g\""
           fi
           break
           ;;
-        "Increase Volume by "*,*|*,"Increase Volume by "*)
-          volume=`echo $opt | awk ' { print $NF } '`
-          if [ "${LOCAL}" = true ]
-          then
+        "Increase Volume by "*,* | *,"Increase Volume by "*)
+          volume=$(echo $opt | awk ' { print $NF } ')
+          if [ "${LOCAL}" = true ]; then
             set_volume -v ${volume} -g -r
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -g -r\""
           fi
           break
           ;;
-        "Decrease Volume by "*,*|*,"Decrease Volume by "*)
-          volume=`echo $opt | awk ' { print $NF } '`
-          if [ "${LOCAL}" = true ]
-          then
+        "Decrease Volume by "*,* | *,"Decrease Volume by "*)
+          volume=$(echo $opt | awk ' { print $NF } ')
+          if [ "${LOCAL}" = true ]; then
             set_volume -v -${volume} -g -r
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v -${volume} -g -r\""
           fi
           break
           ;;
-        "Mute/Unmute Zone",*|*,"Mute/Unmute Zone")
+        "Mute/Unmute Zone",* | *,"Mute/Unmute Zone")
           printf "\nExecuting Roon command to toggle mute audio ..."
-          if [ "${LOCAL}" = true ]
-          then
+          if [ "${LOCAL}" = true ]; then
             zone_command -c mute
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute\""
@@ -679,10 +661,9 @@ select_set_volume() {
           printf " Done\n\n"
           break
           ;;
-        "Mute/Unmute All Zones",*|*,"Mute/Unmute All Zones")
+        "Mute/Unmute All Zones",* | *,"Mute/Unmute All Zones")
           printf "\nExecuting Roon command to toggle mute in all zones ..."
-          if [ "${LOCAL}" = true ]
-          then
+          if [ "${LOCAL}" = true ]; then
             zone_command -c mute_all
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute_all\""
@@ -690,11 +671,11 @@ select_set_volume() {
           printf " Done\n\n"
           break
           ;;
-        "Main Menu",*|*,"Main Menu")
+        "Main Menu",* | *,"Main Menu")
           main_menu
           break 2
           ;;
-        "Quit",*|*,"Quit"|"quit",*|*,"quit")
+        "Quit",* | *,"Quit" | "quit",* | *,"quit")
           printf "\nExiting\n"
           exit 0
           ;;
@@ -705,379 +686,344 @@ select_set_volume() {
 
 list_defaults() {
   defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Main Menu" "Quit")
-  while true
-  do
-    for media in Album Artist Composer Genre Playlist Radio Tag
-    do
-      DEFAULT=`grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } '`
+  while true; do
+    for media in Album Artist Composer Genre Playlist Radio Tag; do
+      DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
       # Remove leading and trailing spaces
       DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
       printf "\nDefault ${media}: ${DEFAULT}"
     done
     printf "\n\n"
     PS3="${BOLD}Please enter the default you wish to set (numeric or text): ${NORMAL}"
-    select opt in "${defaults_options[@]}"
-    do
-        case "$opt,$REPLY" in
-            "Main Menu",*|*,"Main Menu")
-                main_menu
-                break 2
-                ;;
-            "Quit",*|*,"Quit"|"quit",*|*,"quit")
-                printf "\nExiting\n"
-                exit 0
-                ;;
-            *,*)
-                select_default  "${opt}"
-                break
-                ;;
-        esac
+    select opt in "${defaults_options[@]}"; do
+      case "$opt,$REPLY" in
+        "Main Menu",* | *,"Main Menu")
+          main_menu
+          break 2
+          ;;
+        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+          printf "\nExiting\n"
+          exit 0
+          ;;
+        *,*)
+          select_default "${opt}"
+          break
+          ;;
+      esac
     done
   done
 }
 
 main_menu() {
-  while true
-  do
+  while true; do
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
     options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Toggle Repeat" "Toggle Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Fade Menu" "Volume" "Quit")
-    select opt in "${options[@]}"
-    do
-        case "$opt,$REPLY" in
-            "Get/Set Defaults",*|*,"Get/Set Defaults")
-                list_defaults
-                break
-                ;;
-            "Get/Set Zone",*|*,"Get/Set Zone")
-                [ -f ${ROONCONF} ] && . ${ROONCONF}
-                if [ "${LOCAL}" = true ]
-                then
-                    if [ "${ROON_ZONE}" ]
-                    then
-                        echo "Current Roon Zone is ${ROON_ZONE}"
-                    else
-                        echo "No default Roon Zone is set in ${ROONCONF}"
-                    fi
-                else
-                    roon_zone=`ssh $user@$server "bash -l -c \"grep ROON_ZONE ${ROONCONF}\""`
-                    if [ "${roon_zone}" ]
-                    then
-                        echo "Current Roon Zone is ${roon_zone}"
-                    else
-                        echo "No default Roon Zone is set in ${ROONCONF}"
-                    fi
-                fi
-                select_zone
-                break
-                ;;
-            "Play",*|*,"Play")
-                printf "\nExecuting Roon command to play ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c play
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Play All",*|*,"Play All")
-                printf "\nExecuting Roon command to play in all zones ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c play_all
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play_all\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Pause All",*|*,"Pause All")
-                printf "\nExecuting Roon command to pause play in all zones ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c pause_all
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c pause_all\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Pause",*|*,"Pause")
-                printf "\nExecuting Roon command to pause play ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c pause
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c pause\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Next Track",*|*,"Next Track")
-                printf "\nExecuting Roon command to play next track ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c next
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c next\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Previous Track",*|*,"Previous Track")
-                printf "\nExecuting Roon command to play previous track ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c previous
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c previous\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Stop",*|*,"Stop")
-                printf "\nExecuting Roon command to stop ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c stop
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Stop All",*|*,"Stop All")
-                printf "\nExecuting Roon command to stop in all zones ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c stop_all
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop_all\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Fade Menu",*|*,"Fade Menu")
-                roon_fade -i
-                break
-                ;;
-            "Toggle Mute",*|*,"Toggle Mute")
-                printf "\nExecuting Roon command to toggle mute audio ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c mute
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Toggle Mute All",*|*,"Toggle Mute All")
-                printf "\nExecuting Roon command to toggle mute in all zones ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c mute_all
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute_all\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Toggle Repeat",*|*,"Toggle Repeat")
-                printf "\nExecuting Roon command to toggle repeat ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c repeat
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c repeat\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "Toggle Shuffle",*|*,"Toggle Shuffle")
-                printf "\nExecuting Roon command to toggle shuffle ..."
-                if [ "${LOCAL}" = true ]
-                then
-                    zone_command -c shuffle
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c shuffle\""
-                fi
-                printf " Done\n\n"
-                break
-                ;;
-            "List Albums",*|*,"List Albums")
-                if [ "${LOCAL}" = true ]
-                then
-                    list_albums __all__ "${exalbum}"
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums __all__ ${exalbum}\""
-                fi
-                break
-                ;;
-            "List Artists",*|*,"List Artists")
-                if [ "${LOCAL}" = true ]
-                then
-                    list_artists __all__ "${exartist}"
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists __all__ ${exartist}\""
-                fi
-                break
-                ;;
-            "List Composers",*|*,"List Composers")
-                if [ "${LOCAL}" = true ]
-                then
-                    list_composers __all__ "$exartist"
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers __all__ $exartist\""
-                fi
-                break
-                ;;
-            "List Genres",*|*,"List Genres")
-                if [ "${LOCAL}" = true ]
-                then
-                    list_genres __all__ "$exalbum"
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres __all__ $exalbum\""
-                fi
-                break
-                ;;
-            "List Playlists",*|*,"List Playlists")
-                if [ "${LOCAL}" = true ]
-                then
-                    list_playlists __all__ "$exartist"
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists __all__ $exartist\""
-                fi
-                break
-                ;;
-            "List Live Radio",*|*,"List Live Radio")
-                if [ "${LOCAL}" = true ]
-                then
-                    list_radio __all__
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_radio __all__\""
-                fi
-                break
-                ;;
-            "List Tags",*|*,"List Tags")
-                if [ "${LOCAL}" = true ]
-                then
-                    list_tags __all__
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_tags __all__\""
-                fi
-                break
-                ;;
-            "List Zones",*|*,"List Zones")
-                if [ "${LOCAL}" = true ]
-                then
-                    list_zones
-                else
-                    ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones\""
-                fi
-                break
-                ;;
-            "Select Album",*|*,"Select Album")
-                select_media album
-                break
-                ;;
-            "Select Artist",*|*,"Select Artist")
-                select_media artist
-                break
-                ;;
-            "Select Composer",*|*,"Select Composer")
-                select_media composer
-                break
-                ;;
-            "Select Genre",*|*,"Select Genre")
-                select_media genre
-                break
-                ;;
-            "Select Playlist",*|*,"Select Playlist")
-                select_media playlist
-                break
-                ;;
-            "Select Live Radio",*|*,"Select Live Radio")
-                select_media station
-                break
-                ;;
-            "Select Tag",*|*,"Select Tag")
-                select_media tag
-                break
-                ;;
-            "Play Default Album",*|*,"Play Default Album")
-                if [ "${LOCAL}" = true ]
-                then
-                    play_album
-                else
-                    ssh $user@$server "bash -l -c ${ROON}/bin/play_album"
-                fi
-                break
-                ;;
-            "Play Default Artist",*|*,"Play Default Artist")
-                if [ "${LOCAL}" = true ]
-                then
-                    play_artist
-                else
-                    ssh $user@$server "bash -l -c ${ROON}/bin/play_artist"
-                fi
-                break
-                ;;
-            "Play Default Composer",*|*,"Play Default Composer")
-                if [ "${LOCAL}" = true ]
-                then
-                    play_composer
-                else
-                    ssh $user@$server "bash -l -c ${ROON}/bin/play_composer"
-                fi
-                break
-                ;;
-            "Play Default Genre",*|*,"Play Default Genre")
-                if [ "${LOCAL}" = true ]
-                then
-                    play_genre
-                else
-                    ssh $user@$server "bash -l -c ${ROON}/bin/play_genre"
-                fi
-                break
-                ;;
-            "Play Default Playlist",*|*,"Play Default Playlist")
-                if [ "${LOCAL}" = true ]
-                then
-                    play_playlist
-                else
-                    ssh $user@$server "bash -l -c ${ROON}/bin/play_playlist"
-                fi
-                break
-                ;;
-            "Play Default Radio",*|*,"Play Default Radio")
-                if [ "${LOCAL}" = true ]
-                then
-                    play_radio
-                else
-                    ssh $user@$server "bash -l -c ${ROON}/bin/play_radio"
-                fi
-                break
-                ;;
-            "Play Default Tag",*|*,"Play Default Tag")
-                if [ "${LOCAL}" = true ]
-                then
-                    play_tag
-                else
-                    ssh $user@$server "bash -l -c ${ROON}/bin/play_tag"
-                fi
-                break
-                ;;
-            "Volume",*|*,"Volume")
-                select_set_volume
-                break
-                ;;
-            "Quit",*|*,"Quit"|"quit",*|*,"quit")
-                printf "\nExiting\n"
-                exit 0
-                ;;
-        esac
+    select opt in "${options[@]}"; do
+      case "$opt,$REPLY" in
+        "Get/Set Defaults",* | *,"Get/Set Defaults")
+          list_defaults
+          break
+          ;;
+        "Get/Set Zone",* | *,"Get/Set Zone")
+          [ -f ${ROONCONF} ] && . ${ROONCONF}
+          if [ "${LOCAL}" = true ]; then
+            if [ "${ROON_ZONE}" ]; then
+              echo "Current Roon Zone is ${ROON_ZONE}"
+            else
+              echo "No default Roon Zone is set in ${ROONCONF}"
+            fi
+          else
+            roon_zone=$(ssh $user@$server "bash -l -c \"grep ROON_ZONE ${ROONCONF}\"")
+            if [ "${roon_zone}" ]; then
+              echo "Current Roon Zone is ${roon_zone}"
+            else
+              echo "No default Roon Zone is set in ${ROONCONF}"
+            fi
+          fi
+          select_zone
+          break
+          ;;
+        "Play",* | *,"Play")
+          printf "\nExecuting Roon command to play ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c play
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Play All",* | *,"Play All")
+          printf "\nExecuting Roon command to play in all zones ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c play_all
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play_all\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Pause All",* | *,"Pause All")
+          printf "\nExecuting Roon command to pause play in all zones ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c pause_all
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c pause_all\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Pause",* | *,"Pause")
+          printf "\nExecuting Roon command to pause play ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c pause
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c pause\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Next Track",* | *,"Next Track")
+          printf "\nExecuting Roon command to play next track ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c next
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c next\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Previous Track",* | *,"Previous Track")
+          printf "\nExecuting Roon command to play previous track ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c previous
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c previous\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Stop",* | *,"Stop")
+          printf "\nExecuting Roon command to stop ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c stop
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Stop All",* | *,"Stop All")
+          printf "\nExecuting Roon command to stop in all zones ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c stop_all
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop_all\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Fade Menu",* | *,"Fade Menu")
+          roon_fade -i
+          break
+          ;;
+        "Toggle Mute",* | *,"Toggle Mute")
+          printf "\nExecuting Roon command to toggle mute audio ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c mute
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Toggle Mute All",* | *,"Toggle Mute All")
+          printf "\nExecuting Roon command to toggle mute in all zones ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c mute_all
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute_all\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Toggle Repeat",* | *,"Toggle Repeat")
+          printf "\nExecuting Roon command to toggle repeat ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c repeat
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c repeat\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Toggle Shuffle",* | *,"Toggle Shuffle")
+          printf "\nExecuting Roon command to toggle shuffle ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c shuffle
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c shuffle\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "List Albums",* | *,"List Albums")
+          if [ "${LOCAL}" = true ]; then
+            list_albums __all__ "${exalbum}"
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums __all__ ${exalbum}\""
+          fi
+          break
+          ;;
+        "List Artists",* | *,"List Artists")
+          if [ "${LOCAL}" = true ]; then
+            list_artists __all__ "${exartist}"
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists __all__ ${exartist}\""
+          fi
+          break
+          ;;
+        "List Composers",* | *,"List Composers")
+          if [ "${LOCAL}" = true ]; then
+            list_composers __all__ "$exartist"
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers __all__ $exartist\""
+          fi
+          break
+          ;;
+        "List Genres",* | *,"List Genres")
+          if [ "${LOCAL}" = true ]; then
+            list_genres __all__ "$exalbum"
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres __all__ $exalbum\""
+          fi
+          break
+          ;;
+        "List Playlists",* | *,"List Playlists")
+          if [ "${LOCAL}" = true ]; then
+            list_playlists __all__ "$exartist"
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists __all__ $exartist\""
+          fi
+          break
+          ;;
+        "List Live Radio",* | *,"List Live Radio")
+          if [ "${LOCAL}" = true ]; then
+            list_radio __all__
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/list_radio __all__\""
+          fi
+          break
+          ;;
+        "List Tags",* | *,"List Tags")
+          if [ "${LOCAL}" = true ]; then
+            list_tags __all__
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/list_tags __all__\""
+          fi
+          break
+          ;;
+        "List Zones",* | *,"List Zones")
+          if [ "${LOCAL}" = true ]; then
+            list_zones
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones\""
+          fi
+          break
+          ;;
+        "Select Album",* | *,"Select Album")
+          select_media album
+          break
+          ;;
+        "Select Artist",* | *,"Select Artist")
+          select_media artist
+          break
+          ;;
+        "Select Composer",* | *,"Select Composer")
+          select_media composer
+          break
+          ;;
+        "Select Genre",* | *,"Select Genre")
+          select_media genre
+          break
+          ;;
+        "Select Playlist",* | *,"Select Playlist")
+          select_media playlist
+          break
+          ;;
+        "Select Live Radio",* | *,"Select Live Radio")
+          select_media station
+          break
+          ;;
+        "Select Tag",* | *,"Select Tag")
+          select_media tag
+          break
+          ;;
+        "Play Default Album",* | *,"Play Default Album")
+          if [ "${LOCAL}" = true ]; then
+            play_album
+          else
+            ssh $user@$server "bash -l -c ${ROON}/bin/play_album"
+          fi
+          break
+          ;;
+        "Play Default Artist",* | *,"Play Default Artist")
+          if [ "${LOCAL}" = true ]; then
+            play_artist
+          else
+            ssh $user@$server "bash -l -c ${ROON}/bin/play_artist"
+          fi
+          break
+          ;;
+        "Play Default Composer",* | *,"Play Default Composer")
+          if [ "${LOCAL}" = true ]; then
+            play_composer
+          else
+            ssh $user@$server "bash -l -c ${ROON}/bin/play_composer"
+          fi
+          break
+          ;;
+        "Play Default Genre",* | *,"Play Default Genre")
+          if [ "${LOCAL}" = true ]; then
+            play_genre
+          else
+            ssh $user@$server "bash -l -c ${ROON}/bin/play_genre"
+          fi
+          break
+          ;;
+        "Play Default Playlist",* | *,"Play Default Playlist")
+          if [ "${LOCAL}" = true ]; then
+            play_playlist
+          else
+            ssh $user@$server "bash -l -c ${ROON}/bin/play_playlist"
+          fi
+          break
+          ;;
+        "Play Default Radio",* | *,"Play Default Radio")
+          if [ "${LOCAL}" = true ]; then
+            play_radio
+          else
+            ssh $user@$server "bash -l -c ${ROON}/bin/play_radio"
+          fi
+          break
+          ;;
+        "Play Default Tag",* | *,"Play Default Tag")
+          if [ "${LOCAL}" = true ]; then
+            play_tag
+          else
+            ssh $user@$server "bash -l -c ${ROON}/bin/play_tag"
+          fi
+          break
+          ;;
+        "Volume",* | *,"Volume")
+          select_set_volume
+          break
+          ;;
+        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+          printf "\nExiting\n"
+          exit 0
+          ;;
+      esac
     done
   done
 }
@@ -1089,649 +1035,593 @@ now_arg=
 fading=
 logfade=
 while getopts A:a:c:C:f:g:G:inNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
-    case $flag in
-        A)
-            album="$OPTARG"
-            ;;
-        a)
-            artist="$OPTARG"
-            ;;
-        c)
-            comm="$OPTARG"
-            ;;
-        C)
-            composer="$OPTARG"
-            ;;
-        f)
-            fading="$OPTARG"
-            case ${fading} in
-              On|ON|on)
-                fading="on"
-                ;;
-              Onlog|ONLOG|OnLog|onlog)
-                fading="on"
-                logfade="-l"
-                ;;
-              Off|OFF|off)
-                fading="off"
-                ;;
-              Stat*|stat*)
-                fading="status"
-                ;;
-              *)
-                echo "Unsupported -f argument: ${fading}"
-                echo "No fading will be enabled or disabled"
-                fading=
-                ;;
-            esac
-            ;;
-        g)
-            genre="$OPTARG"
-            ;;
-        i)
-            info=1
-            ;;
-        N)
-            now_playing=1
-            nowarg="-a"
-            ;;
-        n)
-            now_playing=1
-            nowarg=
-            ;;
-        p)
-            playlist="$OPTARG"
-            ;;
-        T)
-            track="$OPTARG"
-            ;;
-        t)
-            tag="$OPTARG"
-            ;;
-        z)
-            zone="$OPTARG"
-            ;;
-        l)
-            listname="$OPTARG"
-            if [ "$listname" == "albums" ] || [ "$listname" == "album" ]
-            then
-                albumlist=1
-            elif [ "$listname" == "artists" ] || [ "$listname" == "artist" ]
-            then
-                artistlist=1
-            elif [ "$listname" == "artalbums" ] || [ "$listname" == "artalbum" ]
-            then
-                artalbumlist=1
-            elif [ "$listname" == "arttracks" ] || [ "$listname" == "arttrack" ]
-            then
-                arttracklist=1
-            elif [ "$listname" == "playtracks" ] || [ "$listname" == "playtrack" ]
-            then
-                playtracklist=1
-            elif [ "$listname" == "composers" ] || [ "$listname" == "composer" ]
-            then
-                composerlist=1
-            elif [ "$listname" == "comalbums" ] || [ "$listname" == "comalbum" ]
-            then
-                comalbumlist=1
-            elif [ "$listname" == "genres" ] || [ "$listname" == "genre" ]
-            then
-                genrelist=1
-            elif [ "$listname" == "genalbums" ] || [ "$listname" == "genalbum" ]
-            then
-                genalbumlist=1
-            elif [ "$listname" == "genartists" ] || [ "$listname" == "genartist" ]
-            then
-                genartistlist=1
-            elif [ "$listname" == "playlists" ] || [ "$listname" == "playlist" ]
-            then
-                playlistlist=1
-            elif [ "$listname" == "stations" ] || [ "$listname" == "radio" ]
-            then
-                radiolist=1
-            elif [ "$listname" == "tags" ] || [ "$listname" == "tag" ]
-            then
-                taglist=1
-            elif [ "$listname" == "zones" ] || [ "$listname" == "zone" ]
-            then
-                zonelist=1
-            else
-                echo "Unknown list type: $listname"
-                usage
-            fi
+  case $flag in
+    A)
+      album="$OPTARG"
+      ;;
+    a)
+      artist="$OPTARG"
+      ;;
+    c)
+      comm="$OPTARG"
+      ;;
+    C)
+      composer="$OPTARG"
+      ;;
+    f)
+      fading="$OPTARG"
+      case ${fading} in
+        On | ON | on)
+          fading="on"
+          ;;
+        Onlog | ONLOG | OnLog | onlog)
+          fading="on"
+          logfade="-l"
+          ;;
+        Off | OFF | off)
+          fading="off"
+          ;;
+        Stat* | stat*)
+          fading="status"
+          ;;
+        *)
+          echo "Unsupported -f argument: ${fading}"
+          echo "No fading will be enabled or disabled"
+          fading=
+          ;;
+      esac
+      ;;
+    g)
+      genre="$OPTARG"
+      ;;
+    i)
+      info=1
+      ;;
+    N)
+      now_playing=1
+      nowarg="-a"
+      ;;
+    n)
+      now_playing=1
+      nowarg=
+      ;;
+    p)
+      playlist="$OPTARG"
+      ;;
+    T)
+      track="$OPTARG"
+      ;;
+    t)
+      tag="$OPTARG"
+      ;;
+    z)
+      zone="$OPTARG"
+      ;;
+    l)
+      listname="$OPTARG"
+      if [ "$listname" == "albums" ] || [ "$listname" == "album" ]; then
+        albumlist=1
+      elif [ "$listname" == "artists" ] || [ "$listname" == "artist" ]; then
+        artistlist=1
+      elif [ "$listname" == "artalbums" ] || [ "$listname" == "artalbum" ]; then
+        artalbumlist=1
+      elif [ "$listname" == "arttracks" ] || [ "$listname" == "arttrack" ]; then
+        arttracklist=1
+      elif [ "$listname" == "playtracks" ] || [ "$listname" == "playtrack" ]; then
+        playtracklist=1
+      elif [ "$listname" == "composers" ] || [ "$listname" == "composer" ]; then
+        composerlist=1
+      elif [ "$listname" == "comalbums" ] || [ "$listname" == "comalbum" ]; then
+        comalbumlist=1
+      elif [ "$listname" == "genres" ] || [ "$listname" == "genre" ]; then
+        genrelist=1
+      elif [ "$listname" == "genalbums" ] || [ "$listname" == "genalbum" ]; then
+        genalbumlist=1
+      elif [ "$listname" == "genartists" ] || [ "$listname" == "genartist" ]; then
+        genartistlist=1
+      elif [ "$listname" == "playlists" ] || [ "$listname" == "playlist" ]; then
+        playlistlist=1
+      elif [ "$listname" == "stations" ] || [ "$listname" == "radio" ]; then
+        radiolist=1
+      elif [ "$listname" == "tags" ] || [ "$listname" == "tag" ]; then
+        taglist=1
+      elif [ "$listname" == "zones" ] || [ "$listname" == "zone" ]; then
+        zonelist=1
+      else
+        echo "Unknown list type: $listname"
+        usage
+      fi
 
+      ;;
+    G)
+      zonegroup="$OPTARG"
+      ;;
+    L)
+      if [ -f ${ROONCONF} ]; then
+        grep -v ^LOCAL= ${ROONCONF} >/tmp/roon$$
+        echo "LOCAL=true" >>/tmp/roon$$
+        cp /tmp/roon$$ ${ROONCONF}
+        rm -f /tmp/roon$$
+        . ${ROONCONF}
+      else
+        echo "${ROONCONF} does not exist"
+        echo "RoonCommandLine is not installed locally"
+      fi
+      ;;
+    r)
+      radio="$OPTARG"
+      ;;
+    s)
+      search="$OPTARG"
+      ;;
+    S)
+      setdefs=1
+      ;;
+    v)
+      # The volume argument has the format [g:][r:][s:]num
+      # Where 'g' indicates set volume for all zones in the group
+      # 'r' specifies use relative method volume setting
+      # 's' specifies use relative_step method volume setting
+      # 'num' can be absolute, relative, and negative or positive
+      volume=$OPTARG
+      grouped=
+      relative=
+      step=
+      need_num=1
+      while [ "${need_num}" ]; do
+        first_two=${volume:0:2}
+        case "${first_two}" in
+          g:)
+            grouped="-g"
+            volume=${volume:2}
             ;;
-        G)
-            zonegroup="$OPTARG"
+          r:)
+            relative="-r"
+            volume=${volume:2}
             ;;
-        L)
-            if [ -f ${ROONCONF} ]
-            then
-                grep -v ^LOCAL= ${ROONCONF} > /tmp/roon$$
-                echo "LOCAL=true" >> /tmp/roon$$
-                cp /tmp/roon$$ ${ROONCONF}
-                rm -f /tmp/roon$$
-                . ${ROONCONF}
-            else
-                echo "${ROONCONF} does not exist"
-                echo "RoonCommandLine is not installed locally"
-            fi
+          s:)
+            step="-s"
+            volume=${volume:2}
             ;;
-        r)
-            radio="$OPTARG"
+          *)
+            need_num=
             ;;
-        s)
-            search="$OPTARG"
-            ;;
-        S)
-            setdefs=1
-            ;;
-        v)
-            # The volume argument has the format [g:][r:][s:]num
-            # Where 'g' indicates set volume for all zones in the group
-            # 'r' specifies use relative method volume setting
-            # 's' specifies use relative_step method volume setting
-            # 'num' can be absolute, relative, and negative or positive
-            volume=$OPTARG
-            grouped=
-            relative=
-            step=
-            need_num=1
-            while [ "${need_num}" ]
-            do
-              first_two=${volume:0:2}
-              case "${first_two}" in
-                g:)
-                  grouped="-g"
-                  volume=${volume:2}
-                  ;;
-                r:)
-                  relative="-r"
-                  volume=${volume:2}
-                  ;;
-                s:)
-                  step="-s"
-                  volume=${volume:2}
-                  ;;
-                *)
-                  need_num=
-                  ;;
-              esac
-            done
-            ;;
-        X)
-            exalbum="$OPTARG"
-            ;;
-        x)
-            exartist="$OPTARG"
-            ;;
-        E)
-            showusage=
-            showexamples=1
-            usage
-            ;;
-        U)
-            showusage=1
-            showexamples=
-            usage
-            ;;
-        u)
-            usage
-            ;;
-    esac
+        esac
+      done
+      ;;
+    X)
+      exalbum="$OPTARG"
+      ;;
+    x)
+      exartist="$OPTARG"
+      ;;
+    E)
+      showusage=
+      showexamples=1
+      usage
+      ;;
+    U)
+      showusage=1
+      showexamples=
+      usage
+      ;;
+    u)
+      usage
+      ;;
+  esac
 done
 
 [ "$search" ] || search="__all__"
 
 # Set Defaults
 [ "$setdefs" ] && {
-    list_defaults
+  list_defaults
 }
 
 # Set Zone
 [ "$zone" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        ${ROON}/bin/set_zone $zone
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone $zone\""
-    fi
-    status=$?
-    [ ${status} -eq 0 ] || {
-      echo "Unable to set zone for zone = $zone"
-      echo "Exiting"
-      exit ${status}
-    }
+  if [ "${LOCAL}" = true ]; then
+    ${ROON}/bin/set_zone $zone
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone $zone\""
+  fi
+  status=$?
+  [ ${status} -eq 0 ] || {
+    echo "Unable to set zone for zone = $zone"
+    echo "Exiting"
+    exit ${status}
+  }
 }
 
 # Zone Grouping
 [ "$zonegroup" ] && {
-    [ "$comm" == "group" ] || [ "$comm" == "ungroup" ] || comm=group
-    if [ "${LOCAL}" = true ]
-    then
-        ${ROON}/bin/set_zone_group $comm $zonegroup
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone_group $comm $zonegroup\""
-    fi
-    status=$?
-    [ ${status} -eq 0 ] || {
-      echo "Unable to set zone group for zone group = $zonegroup"
-      echo "Exiting"
-      exit ${status}
-    }
+  [ "$comm" == "group" ] || [ "$comm" == "ungroup" ] || comm=group
+  if [ "${LOCAL}" = true ]; then
+    ${ROON}/bin/set_zone_group $comm $zonegroup
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone_group $comm $zonegroup\""
+  fi
+  status=$?
+  [ ${status} -eq 0 ] || {
+    echo "Unable to set zone group for zone group = $zonegroup"
+    echo "Exiting"
+    exit ${status}
+  }
 }
 
 [ "$info" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-      if [ "$zone" ]
-      then
-        ${ROON}/bin/get_zone_info -z "$zone"
-      else
-        ${ROON}/bin/get_zone_info
-      fi
+  if [ "${LOCAL}" = true ]; then
+    if [ "$zone" ]; then
+      ${ROON}/bin/get_zone_info -z "$zone"
     else
-      if [ "$zone" ]
-      then
-        ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info -z $zone\""
-      else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info\""
-      fi
+      ${ROON}/bin/get_zone_info
     fi
+  else
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info -z $zone\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info\""
+    fi
+  fi
 }
 
 [ "${fading}" ] && {
-    [ "${fading}" == "status" ] && fading=
-    if [ "${LOCAL}" = true ]
-    then
-      if [ "$zone" ]
-      then
-        ${ROON}/bin/roon_fade ${logfade} -z "$zone" ${fading}
-      else
-        ${ROON}/bin/roon_fade ${logfade} ${fading}
-      fi
+  [ "${fading}" == "status" ] && fading=
+  if [ "${LOCAL}" = true ]; then
+    if [ "$zone" ]; then
+      ${ROON}/bin/roon_fade ${logfade} -z "$zone" ${fading}
     else
-      if [ "$zone" ]
-      then
-        ssh $user@$server \
-          "bash -l -c \"${ROON}/bin/roon_fade ${logfade} -z $zone ${fading}\""
-      else
-        ssh $user@$server \
-          "bash -l -c \"${ROON}/bin/roon_fade ${logfade} ${fading}\""
-      fi
+      ${ROON}/bin/roon_fade ${logfade} ${fading}
     fi
+  else
+    if [ "$zone" ]; then
+      ssh $user@$server \
+        "bash -l -c \"${ROON}/bin/roon_fade ${logfade} -z $zone ${fading}\""
+    else
+      ssh $user@$server \
+        "bash -l -c \"${ROON}/bin/roon_fade ${logfade} ${fading}\""
+    fi
+  fi
 }
 
 [ "$now_playing" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-      if [ "$zone" ]
-      then
-        ${ROON}/bin/now_playing ${nowarg} -z "$zone"
-      else
-        ${ROON}/bin/now_playing ${nowarg}
-      fi
+  if [ "${LOCAL}" = true ]; then
+    if [ "$zone" ]; then
+      ${ROON}/bin/now_playing ${nowarg} -z "$zone"
     else
-      if [ "$zone" ]
-      then
-        ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing ${nowarg} -z $zone\""
-      else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing ${nowarg}\""
-      fi
+      ${ROON}/bin/now_playing ${nowarg}
     fi
+  else
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing ${nowarg} -z $zone\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing ${nowarg}\""
+    fi
+  fi
 }
 
 [ "$albumlist" ] && {
-    [ "$album" ] || {
-        [ "$search" ] && album="$search"
-    }
-    [ "$album" ] || album="__all__"
-    if [ "${LOCAL}" = true ]
-    then
-        list_albums "$album" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums $album $exalbum\""
-    fi
-    album=
+  [ "$album" ] || {
+    [ "$search" ] && album="$search"
+  }
+  [ "$album" ] || album="__all__"
+  if [ "${LOCAL}" = true ]; then
+    list_albums "$album" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums $album $exalbum\""
+  fi
+  album=
 }
 [ "$artistlist" ] && {
-    [ "$artist" ] || {
-        [ "$search" ] && artist="$search"
-    }
-    [ "$artist" ] || artist="__all__"
-    if [ "${LOCAL}" = true ]
-    then
-        list_artists "$artist" "$exartist"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists $artist $exartist\""
-    fi
-    artist=
+  [ "$artist" ] || {
+    [ "$search" ] && artist="$search"
+  }
+  [ "$artist" ] || artist="__all__"
+  if [ "${LOCAL}" = true ]; then
+    list_artists "$artist" "$exartist"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists $artist $exartist\""
+  fi
+  artist=
 }
 [ "$artalbumlist" ] && {
-    [ "$artist" ] || {
-        [ "$search" ] && artist=$search
-    }
-    [ "$album" ] || album="__all__"
-    [ "${exalbum}" ] && {
-      [ "${exartist}" ] || exartist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        list_artist_albums "$artist" "$album" "$exartist" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_artist_albums $artist $album $exartist $exalbum\""
-    fi
-    album=
-    artist=
+  [ "$artist" ] || {
+    [ "$search" ] && artist=$search
+  }
+  [ "$album" ] || album="__all__"
+  [ "${exalbum}" ] && {
+    [ "${exartist}" ] || exartist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    list_artist_albums "$artist" "$album" "$exartist" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_artist_albums $artist $album $exartist $exalbum\""
+  fi
+  album=
+  artist=
 }
 [ "$arttracklist" ] && {
-    [ "$artist" ] || {
-        [ "$search" ] && artist=$search
-    }
-    [ "$track" ] || track="__all__"
-    [ "${exalbum}" ] && {
-      [ "${exartist}" ] || exartist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        list_artist_tracks "$artist" "$track" "$exartist" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_artist_tracks $artist $track $exartist $exalbum\""
-    fi
-    track=
-    artist=
+  [ "$artist" ] || {
+    [ "$search" ] && artist=$search
+  }
+  [ "$track" ] || track="__all__"
+  [ "${exalbum}" ] && {
+    [ "${exartist}" ] || exartist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    list_artist_tracks "$artist" "$track" "$exartist" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_artist_tracks $artist $track $exartist $exalbum\""
+  fi
+  track=
+  artist=
 }
 [ "$playtracklist" ] && {
-    [ "$playlist" ] || {
-        [ "$search" ] && playlist=$search
-    }
-    [ "$track" ] || track="__all__"
-    [ "${extrack}" ] && {
-      [ "${explaylist}" ] || explaylist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        list_playlist_tracks "$playlist" "$track" "$explaylist" "$extrack"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlist_tracks $playlist $track $explaylist $extrack\""
-    fi
-    track=
-    playlist=
+  [ "$playlist" ] || {
+    [ "$search" ] && playlist=$search
+  }
+  [ "$track" ] || track="__all__"
+  [ "${extrack}" ] && {
+    [ "${explaylist}" ] || explaylist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    list_playlist_tracks "$playlist" "$track" "$explaylist" "$extrack"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlist_tracks $playlist $track $explaylist $extrack\""
+  fi
+  track=
+  playlist=
 }
 [ "$comalbumlist" ] && {
-    [ "$composer" ] || {
-        [ "$search" ] && composer=$search
-    }
-    [ "$album" ] || album="__all__"
-    [ "${exalbum}" ] && {
-      [ "${exartist}" ] || exartist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        list_composer_albums "$composer" "$album" "$exartist" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_composer_albums $composer $album $exartist $exalbum\""
-    fi
-    album=
-    composer=
+  [ "$composer" ] || {
+    [ "$search" ] && composer=$search
+  }
+  [ "$album" ] || album="__all__"
+  [ "${exalbum}" ] && {
+    [ "${exartist}" ] || exartist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    list_composer_albums "$composer" "$album" "$exartist" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_composer_albums $composer $album $exartist $exalbum\""
+  fi
+  album=
+  composer=
 }
 [ "$composerlist" ] && {
-    [ "$composer" ] || {
-        [ "$search" ] && composer="$search"
-    }
-    [ "$composer" ] || composer="__all__"
-    if [ "${LOCAL}" = true ]
-    then
-        list_composers "$composer" "$exartist"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers $composer $exartist\""
-    fi
-    composer=
+  [ "$composer" ] || {
+    [ "$search" ] && composer="$search"
+  }
+  [ "$composer" ] || composer="__all__"
+  if [ "${LOCAL}" = true ]; then
+    list_composers "$composer" "$exartist"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers $composer $exartist\""
+  fi
+  composer=
 }
 [ "$genrelist" ] && {
-    [ "$genre" ] || {
-        [ "$search" ] && genre="$search"
-    }
-    [ "$genre" ] || genre="__all__"
-    if [ "${LOCAL}" = true ]
-    then
-        list_genres "$genre" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres $genre $exalbum\""
-    fi
-    genre=
+  [ "$genre" ] || {
+    [ "$search" ] && genre="$search"
+  }
+  [ "$genre" ] || genre="__all__"
+  if [ "${LOCAL}" = true ]; then
+    list_genres "$genre" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres $genre $exalbum\""
+  fi
+  genre=
 }
 [ "$genalbumlist" ] && {
-    [ "$album" ] || album="__all__"
-    [ "${exalbum}" ] && {
-      [ "${exartist}" ] || exartist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        list_genre_albums "$genre" "$album" "$exartist" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_albums $genre $album $exartist $exalbum\""
-    fi
-    album=
-    genre=
+  [ "$album" ] || album="__all__"
+  [ "${exalbum}" ] && {
+    [ "${exartist}" ] || exartist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    list_genre_albums "$genre" "$album" "$exartist" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_albums $genre $album $exartist $exalbum\""
+  fi
+  album=
+  genre=
 }
 [ "$genartistlist" ] && {
-    [ "$genre" ] || {
-        [ "$search" ] && genre=$search
-    }
-    [ "${exalbum}" ] && {
-      [ "${exartist}" ] || exartist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        list_genre_artists "$genre" "$artist" "$exartist" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_artists $genre $artist $exartist $exalbum\""
-    fi
-    artist=
-    genre=
+  [ "$genre" ] || {
+    [ "$search" ] && genre=$search
+  }
+  [ "${exalbum}" ] && {
+    [ "${exartist}" ] || exartist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    list_genre_artists "$genre" "$artist" "$exartist" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_artists $genre $artist $exartist $exalbum\""
+  fi
+  artist=
+  genre=
 }
 [ "$playlistlist" ] && {
-    [ "$playlist" ] || {
-        [ "$search" ] && playlist="$search"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        list_playlists $playlist "$exartist"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists $playlist $exartist\""
-    fi
-    playlist=
+  [ "$playlist" ] || {
+    [ "$search" ] && playlist="$search"
+  }
+  if [ "${LOCAL}" = true ]; then
+    list_playlists $playlist "$exartist"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists $playlist $exartist\""
+  fi
+  playlist=
 }
 [ "$radiolist" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        list_radio $search
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_radio $search\""
-    fi
+  if [ "${LOCAL}" = true ]; then
+    list_radio $search
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_radio $search\""
+  fi
 }
 [ "$taglist" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        list_tags $search
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_tags $search\""
-    fi
+  if [ "${LOCAL}" = true ]; then
+    list_tags $search
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_tags $search\""
+  fi
 }
 [ "$zonelist" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        list_zones $search
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones $search\""
-    fi
+  if [ "${LOCAL}" = true ]; then
+    list_zones $search
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones $search\""
+  fi
 }
 # First, handle album and artist requested
 [ "$album" ] && [ "$artist" ] && {
-    [ "${album}" == "default" ] && album=
-    [ "${artist}" == "default" ] && artist=
-    [ "${exalbum}" ] && {
-      [ "${exartist}" ] || exartist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        play_artist_album "$artist" "$album" "$exartist" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_album $artist $album $exartist $exalbum\""
-    fi
-    album=
-    artist=
+  [ "${album}" == "default" ] && album=
+  [ "${artist}" == "default" ] && artist=
+  [ "${exalbum}" ] && {
+    [ "${exartist}" ] || exartist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    play_artist_album "$artist" "$album" "$exartist" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_album $artist $album $exartist $exalbum\""
+  fi
+  album=
+  artist=
 }
 # Second, handle artist and track requested
 [ "$track" ] && [ "$artist" ] && {
-    [ "${artist}" == "default" ] && artist=
-    [ "${exalbum}" ] && {
-      [ "${exartist}" ] || exartist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        play_artist_track "$artist" "$track" "$exartist" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_track $artist $track $exartist $exalbum\""
-    fi
-    artist=
+  [ "${artist}" == "default" ] && artist=
+  [ "${exalbum}" ] && {
+    [ "${exartist}" ] || exartist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    play_artist_track "$artist" "$track" "$exartist" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_track $artist $track $exartist $exalbum\""
+  fi
+  artist=
 }
 # Third, handle album or artist and genre requested
 [ "$album" ] && [ "$genre" ] && {
-    [ "${album}" == "default" ] && album=
-    [ "${exalbum}" ] && {
-      [ "${exartist}" ] || exartist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        play_genre_album "$genre" "$album" "$exartist" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album $genre $album $exartist $exalbum\""
-    fi
-    album=
-    genre=
+  [ "${album}" == "default" ] && album=
+  [ "${exalbum}" ] && {
+    [ "${exartist}" ] || exartist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    play_genre_album "$genre" "$album" "$exartist" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album $genre $album $exartist $exalbum\""
+  fi
+  album=
+  genre=
 }
 # Fourth, handle album and composer requested
 [ "$album" ] && [ "$composer" ] && {
-    [ "${album}" == "default" ] && album=
-    [ "${composer}" == "default" ] && composer=
-    [ "${exalbum}" ] && {
-      [ "${exartist}" ] || exartist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        play_composer_album "$composer" "$album" "$exartist" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer_album $composer $album $exartist $exalbum\""
-    fi
-    album=
-    composer=
+  [ "${album}" == "default" ] && album=
+  [ "${composer}" == "default" ] && composer=
+  [ "${exalbum}" ] && {
+    [ "${exartist}" ] || exartist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    play_composer_album "$composer" "$album" "$exartist" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer_album $composer $album $exartist $exalbum\""
+  fi
+  album=
+  composer=
 }
 [ "$artist" ] && [ "$genre" ] && {
-    [ "${artist}" == "default" ] && artist=
-    [ "${exalbum}" ] && {
-      [ "${exartist}" ] || exartist="None"
-    }
-    if [ "${LOCAL}" = true ]
-    then
-        play_genre_artist "$genre" "$artist" "$exartist" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist $genre $artist $exartist $exalbum\""
-    fi
-    artist=
-    genre=
+  [ "${artist}" == "default" ] && artist=
+  [ "${exalbum}" ] && {
+    [ "${exartist}" ] || exartist="None"
+  }
+  if [ "${LOCAL}" = true ]; then
+    play_genre_artist "$genre" "$artist" "$exartist" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist $genre $artist $exartist $exalbum\""
+  fi
+  artist=
+  genre=
 }
 [ "$album" ] && {
-    [ "${album}" == "default" ] && album=
-    if [ "${LOCAL}" = true ]
-    then
-        play_album "$album" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album $exalbum\""
-    fi
+  [ "${album}" == "default" ] && album=
+  if [ "${LOCAL}" = true ]; then
+    play_album "$album" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album $exalbum\""
+  fi
 }
 [ "$artist" ] && {
-    [ "${artist}" == "default" ] && artist=
-    if [ "${LOCAL}" = true ]
-    then
-        play_artist "$artist" "$exartist"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $artist $exartist\""
-    fi
+  [ "${artist}" == "default" ] && artist=
+  if [ "${LOCAL}" = true ]; then
+    play_artist "$artist" "$exartist"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $artist $exartist\""
+  fi
 }
 [ "$composer" ] && {
-    [ "${composer}" == "default" ] && composer=
-    if [ "${LOCAL}" = true ]
-    then
-        play_composer "$composer" "$exartist"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer $composer $exartist\""
-    fi
+  [ "${composer}" == "default" ] && composer=
+  if [ "${LOCAL}" = true ]; then
+    play_composer "$composer" "$exartist"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer $composer $exartist\""
+  fi
 }
 [ "$genre" ] && {
-    [ "${genre}" == "default" ] && genre=
-    if [ "${LOCAL}" = true ]
-    then
-        play_genre "$genre" "$exalbum"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $genre $exalbum\""
-    fi
+  [ "${genre}" == "default" ] && genre=
+  if [ "${LOCAL}" = true ]; then
+    play_genre "$genre" "$exalbum"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $genre $exalbum\""
+  fi
 }
 [ "$playlist" ] && {
-    [ "${playlist}" == "default" ] && playlist=
-    if [ "${LOCAL}" = true ]
-    then
-        play_playlist "$playlist" "$exartist"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $playlist $exartist\""
-    fi
+  [ "${playlist}" == "default" ] && playlist=
+  if [ "${LOCAL}" = true ]; then
+    play_playlist "$playlist" "$exartist"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $playlist $exartist\""
+  fi
 }
 [ "$tag" ] && {
-    [ "${tag}" == "default" ] && tag=
-    if [ "${LOCAL}" = true ]
-    then
-        play_tag "$tag"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_tag $tag\""
-    fi
+  [ "${tag}" == "default" ] && tag=
+  if [ "${LOCAL}" = true ]; then
+    play_tag "$tag"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_tag $tag\""
+  fi
 }
 [ "$radio" ] && {
-    [ "${radio}" == "default" ] && radio=
-    if [ "${LOCAL}" = true ]
-    then
-        play_radio "${radio}"
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio ${radio}\""
-    fi
+  [ "${radio}" == "default" ] && radio=
+  if [ "${LOCAL}" = true ]; then
+    play_radio "${radio}"
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio ${radio}\""
+  fi
 }
 
 [ "${volume}" ] && {
-    if [ "${LOCAL}" = true ]
-    then
-        set_volume -v ${volume} ${grouped} ${relative} ${step}
-    else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} ${grouped} ${relative} ${step}\""
-    fi
+  if [ "${LOCAL}" = true ]; then
+    set_volume -v ${volume} ${grouped} ${relative} ${step}
+  else
+    ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} ${grouped} ${relative} ${step}\""
+  fi
 }
 
 [ "${comm}" ] && {
-    case "${comm}" in
-    "shuffle"|"unshuffle"|"repeat"|"unrepeat"|"mute"|"unmute"|"mute_all"|"next"|"previous"|"play"|"play_all"|"pause"|"pause_all"|"stop"|"stop_all"|"playpause")
-        if [ "${LOCAL}" = true ]
-        then
-            zone_command -c ${comm}
-        else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c ${comm}\""
-        fi
-        ;;
-    "group"|"ungroup")
-        ;;
+  case "${comm}" in
+    "shuffle" | "unshuffle" | "repeat" | "unrepeat" | "mute" | "unmute" | "mute_all" | "next" | "previous" | "play" | "play_all" | "pause" | "pause_all" | "stop" | "stop_all" | "playpause")
+      if [ "${LOCAL}" = true ]; then
+        zone_command -c ${comm}
+      else
+        ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c ${comm}\""
+      fi
+      ;;
+    "group" | "ungroup") ;;
     *)
-        echo "Unrecognized Roon command: $comm"
-        usage
-        ;;
-    esac
+      echo "Unrecognized Roon command: $comm"
+      usage
+      ;;
+  esac
 }
 
 [ "${show_roon_menu}" ] && {
