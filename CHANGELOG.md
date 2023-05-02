@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+May 2, 2023 :
+RoonCommandLine version 2.0.8 release 4
+
+    This is a bug fix release:
+        * Only restore saved roon_api.ini if in new format
+
 April 29, 2023 :
 RoonCommandLine version 2.0.8 release 3
 

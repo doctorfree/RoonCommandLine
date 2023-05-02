@@ -1,5 +1,7 @@
 # RoonCommandLine Release Notes
 
+RoonCommandLine version 2.0.8 release 4 is a minor bug fix release, only restore saved `roon_api.ini` if in new format.
+
 RoonCommandLine version 2.0.8 release 3 provides support for Homebrew installed Python and several bug fixes.
 
 RoonCommandLine version 2.0.8 release 2 provided compatibility with volume handling changes in the Python Roon API. Volume change/setting can now be made using a percentage. This release also adds support for fading track play volume immediately with the `roon_fade now` command along with Mac installation fixes.
@@ -17,13 +19,13 @@ The installation automatically detects and stores the Roon Core IP and port. The
 Install the package on Debian based systems by executing the command
 
 ```bash
-sudo apt install ./RoonCommandLine_2.0.8-3.deb
+sudo apt install ./RoonCommandLine_2.0.8-4.deb
 ```
 
 Install the package on RPM based systems by executing the command
 
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.8-3.rpm
+sudo yum localinstall ./RoonCommandLine-2.0.8-4.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
@@ -81,6 +83,6 @@ Version 2.0.7 release 1 added support for:
 - Add `get_zone_remaining` to get remaining time for now playing in zone
 - Add `get_zone_volume` and `get_zone_attributes.py`
 
-View the full changelog for this release at <https://github.com/doctorfree/RoonCommandLine/blob/v2.0.8r3/CHANGELOG.md>
+View the full changelog for this release at <https://github.com/doctorfree/RoonCommandLine/blob/v2.0.8r4/CHANGELOG.md>
 
 See [CHANGELOG.md](https://github.com/doctorfree/RoonCommandLine/blob/master/CHANGELOG.md) for a full list of changes in every RoonCommandLine release
