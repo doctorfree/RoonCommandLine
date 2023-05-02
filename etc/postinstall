@@ -7,50 +7,44 @@
 # update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
 export PATH=$PATH:/usr/local/bin
-if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]
-then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 else
-    [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+  [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
 fi
 
 PYTHON=
-python3_inst=`type -p python3`
-if [ "${python3_inst}" ]
-then
-    PYTHON="python3"
+python3_inst=$(type -p python3)
+if [ "${python3_inst}" ]; then
+  PYTHON="python3"
 else
-    PYTHON="python"
+  PYTHON="python"
 fi
 #${PYTHON} -m ensurepip --upgrade > /dev/null 2>&1
-${PYTHON} -m pip install --upgrade roonapi > /dev/null 2>&1
-${PYTHON} -m pip install rich-cli > /dev/null 2>&1
+${PYTHON} -m pip install --upgrade roonapi >/dev/null 2>&1
+${PYTHON} -m pip install rich-cli >/dev/null 2>&1
 [ -d /usr/local ] || mkdir /usr/local
 [ -d /usr/local/bin ] || mkdir /usr/local/bin
 cd /usr/local/bin
 
 ROON=/usr/local/Roon
-ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROON_INI=${ROONETC}/roon_api.ini
 ROONCONF=${ROONETC}/pyroonconf
-for command in ${ROON}/bin/*
-do
-  b=`basename ${command}`
-  if [ -f ${b} ]
-  then
-      diff ${command} ${b} > /dev/null || {
-          rm -f ${b}
-          ln -s ${command} .
-      }
+for command in "${ROON}"/bin/*; do
+  b=$(basename "${command}")
+  if [ -f "${b}" ]; then
+    diff "${command}" "${b}" >/dev/null || {
+      rm -f "${b}"
+      ln -s "${command}" .
+    }
   else
-      ln -s ${command} .
+    ln -s "${command}" .
   fi
 done
 
 ROON_DOC=/usr/local/share/doc/rooncommandline
-if [ -f "${ROON_DOC}/VERSION" ]
-then
+if [ -f "${ROON_DOC}/VERSION" ]; then
   . "${ROON_DOC}/VERSION"
   version=${VERSION}
   release=${RELEASE}
@@ -63,87 +57,86 @@ fi
 # Copy in distributed roon_api.ini template if no previous one exists
 [ -f ${ROON_INI} ] || {
   # Restore previously saved roon_api.ini and pyroonconf
-  if [ -f /tmp/_roon_api_ini_.save ]
-  then
-    echo "Restoring saved ${ROON_INI}"
-    cp /tmp/_roon_api_ini_.save ${ROON_INI}
-    rm -f /tmp/_roon_api_ini_.save
+  TMP_ROON_API="/tmp/_roon_api_ini_.save"
+  if [ -f ${TMP_ROON_API} ]; then
+    if grep defaultalbum "${TMP_ROON_API}" >/dev/null; then
+      cp ${ROONETC}/roon_api.ini-dist ${ROON_INI}
+    else
+      echo "Restoring saved ${ROON_INI}"
+      cp ${TMP_ROON_API} ${ROON_INI}
+    fi
+    rm -f ${TMP_ROON_API}
   else
     cp ${ROONETC}/roon_api.ini-dist ${ROON_INI}
   fi
 }
-EX_CORE_IP=`cat ${ROON_INI} | grep RoonCoreIP | awk -F '=' ' { print $2 } '`
+EX_CORE_IP=$(cat ${ROON_INI} | grep RoonCoreIP | awk -F '=' ' { print $2 } ')
 EX_CORE_IP="$(echo -e "${EX_CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-EX_CORE_PORT=`cat ${ROON_INI} | grep RoonCorePort | awk -F '=' ' { print $2 } '`
+EX_CORE_PORT=$(cat ${ROON_INI} | grep RoonCorePort | awk -F '=' ' { print $2 } ')
 EX_CORE_PORT="$(echo -e "${EX_CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 
 updatever=
-grep RoonCommandLineVersion ${ROON_INI} > /dev/null && updatever=1
-if [ "${updatever}" ]
-then
-  cat ${ROON_INI} | sed -e "s/RoonCommandLineVersion.*/RoonCommandLineVersion = ${version}/" > /tmp/v$$
+grep RoonCommandLineVersion ${ROON_INI} >/dev/null && updatever=1
+if [ "${updatever}" ]; then
+  cat ${ROON_INI} | sed -e "s/RoonCommandLineVersion.*/RoonCommandLineVersion = ${version}/" >/tmp/v$$
 else
-  cat ${ROON_INI} | sed -e "/RoonCorePort.*/a RoonCommandLineVersion = __VERSION__" > /tmp/v$$
+  cat ${ROON_INI} | sed -e "/RoonCorePort.*/a RoonCommandLineVersion = __VERSION__" >/tmp/v$$
 fi
 cp /tmp/v$$ ${ROON_INI}
 rm -f /tmp/v$$
 
 updaterel=
-grep RoonCommandLineRelease ${ROON_INI} > /dev/null && updaterel=1
-if [ "${updaterel}" ]
-then
-  cat ${ROON_INI} | sed -e "s/RoonCommandLineRelease.*/RoonCommandLineRelease = ${release}/" > /tmp/r$$
+grep RoonCommandLineRelease ${ROON_INI} >/dev/null && updaterel=1
+if [ "${updaterel}" ]; then
+  cat ${ROON_INI} | sed -e "s/RoonCommandLineRelease.*/RoonCommandLineRelease = ${release}/" >/tmp/r$$
 else
-  cat ${ROON_INI} | sed -e "/RoonCommandLineVersion.*/a RoonCommandLineRelease = __RELEASE__" > /tmp/r$$
+  cat ${ROON_INI} | sed -e "/RoonCommandLineVersion.*/a RoonCommandLineRelease = __RELEASE__" >/tmp/r$$
 fi
 cp /tmp/r$$ ${ROON_INI}
 rm -f /tmp/r$$
 
-IP=`hostname -I | awk ' { print $1 } '`
+IP=$(hostname -I | awk ' { print $1 } ')
 
 USER="root"
 numusers=0
-users=
-for homedir in /home/*
-do
-    [ "${homedir}" == "/home/*" ] && continue
-    [ -d ${homedir} ] && {
-        username=`basename ${homedir}`
-        exists=`id -g -n ${username} 2> /dev/null`
-        [ "${exists}" ] && {
-            USER="${username}"
-            users="${users} ${username}"
-            numusers=`expr ${numusers} + 1`
-        }
+users=()
+for homedir in /home/*; do
+  [ "${homedir}" == "/home/*" ] && continue
+  [ -d "${homedir}" ] && {
+    username=$(basename "${homedir}")
+    exists=$(id -g -n "${username}" 2>/dev/null)
+    [ "${exists}" ] && {
+      USER="${username}"
+      users+=("${username}")
+      numusers=$((numusers + 1))
     }
+  }
 done
 [ $numusers -gt 1 ] && {
-    # Create a selection dialog to allow user to select USER
-    PS3="Please enter SSH user (numeric or text): "
-    options=(${users} "None")
-    select opt in "${options[@]}"
-    do
-      case "$opt,$REPLY" in
-        "None",*|*,"None")
-            break
-            ;;
-        *)
-            [ -d /home/${opt} ] && {
-                USER="${opt}"
-                break
-            }
-            printf "\nInvalid entry. Please try again"
-            printf "\nEnter either a number or text of one of the menu entries\n"
-            ;;
-      esac
-    done
+  # Create a selection dialog to allow user to select USER
+  PS3="Please enter SSH user (numeric or text): "
+  users+=("None")
+  select opt in "${users[@]}"; do
+    case "$opt,$REPLY" in
+      "None",* | *,"None")
+        break
+        ;;
+      *)
+        [ -d /home/"${opt}" ] && {
+          USER="${opt}"
+          break
+        }
+        printf "\nInvalid entry. Please try again"
+        printf "\nEnter either a number or text of one of the menu entries\n"
+        ;;
+    esac
+  done
 }
 
 # Copy in saved pyroonconf if it exists
 [ -f ${ROONCONF} ] || {
   # Restore previously saved pyroonconf
-  if [ -f /tmp/_pyroonconf_.save ]
-  then
+  if [ -f /tmp/_pyroonconf_.save ]; then
     echo "Restoring saved ${ROONCONF}"
     cp /tmp/_pyroonconf_.save ${ROONCONF}
     rm -f /tmp/_pyroonconf_.save
@@ -151,18 +144,17 @@ done
 }
 
 echo "Enabling local access in ${ROONCONF}"
-if [ -f ${ROONCONF} ]
-then
-    grep -v ^LOCAL= ${ROONCONF} > /tmp/roon$$
-    echo "LOCAL=true" >> /tmp/roon$$
+if [ -f ${ROONCONF} ]; then
+  grep -v ^LOCAL= ${ROONCONF} >/tmp/roon$$
+  echo "LOCAL=true" >>/tmp/roon$$
 else
-    echo "LOCAL=true" > /tmp/roon$$
+  echo "LOCAL=true" >/tmp/roon$$
 fi
 cp /tmp/roon$$ ${ROONCONF}
 rm -f /tmp/roon$$
 
 echo "Setting the Python Roon API server IP address to $IP"
-cat ${ROON}/bin/roon | sed -e "s/XX.X.X.XXX/$IP/" -e "s/SSH_USERNAME/$USER/" > /tmp/roon$$
+cat ${ROON}/bin/roon | sed -e "s/XX.X.X.XXX/$IP/" -e "s/SSH_USERNAME/$USER/" >/tmp/roon$$
 cp ${ROON}/bin/roon ${ROON}/bin/roon.orig
 cp /tmp/roon$$ ${ROON}/bin/roon
 rm -f /tmp/roon$$
@@ -170,85 +162,78 @@ rm -f /tmp/roon$$
 PYTHONUSERBASE=
 # Check the global site directories
 SITES=($(${PYTHON} -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-for site in ${SITES[@]}
-do
-    site=`echo $site | sed -e "s/'//g"`
-    [ -d "${site}/roonapi" ] && {
-        PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
-        PYTHON_SITEDIR=`echo ${site} | awk -F "/dist-packages" ' { print $1 } '`
-        break
-    }
+for site in ${SITES[@]}; do
+  site=$(echo $site | sed -e "s/'//g")
+  [ -d "${site}/roonapi" ] && {
+    PYTHONUSERBASE=$(echo ${site} | awk -F "/lib/" ' { print $1 } ')
+    PYTHON_SITEDIR=$(echo ${site} | awk -F "/dist-packages" ' { print $1 } ')
+    break
+  }
 done
 
-if [ "${PYTHONUSERBASE}" ]
-then
-    if [ -f ${ROONCONF} ]
-    then
-        grep PYTHONUSERBASE ${ROONCONF} > /dev/null || {
-            echo "export PYTHONUSERBASE=${PYTHONUSERBASE}" >> ${ROONCONF}
-        }
-    else
-        echo "export PYTHONUSERBASE=${PYTHONUSERBASE}" > ${ROONCONF}
-    fi
-    . ${ROONCONF}
+if [ "${PYTHONUSERBASE}" ]; then
+  if [ -f ${ROONCONF} ]; then
+    grep PYTHONUSERBASE ${ROONCONF} >/dev/null || {
+      echo "export PYTHONUSERBASE=${PYTHONUSERBASE}" >>${ROONCONF}
+    }
+  else
+    echo "export PYTHONUSERBASE=${PYTHONUSERBASE}" >${ROONCONF}
+  fi
+  . ${ROONCONF}
 
-    RVER=`${PYTHON} -m pip show roonapi | grep Version | awk -F ':' ' { print $2 } '`
-    # Remove leading and trailing spaces in RVER
-    RVER="$(echo -e "${RVER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-    # Only patch Roonapi version 0.0.38 and earlier
-    LESSER=$(echo "${RVER} 0.0.38" | tr " " "\n" | sort -V | head -n 1)
-    if [ "${LESSER}" != "${RVER}" ]
-    then
-      # Mark it as having been patched
-      grep -v ROONAPIPATCHED ${ROONCONF} > /tmp/roonconf$$
-      echo "ROONAPIPATCHED=true" >> /tmp/roonconf$$
-      cp /tmp/roonconf$$ ${ROONCONF}
-      rm -f /tmp/roonconf$$
+  RVER=$(${PYTHON} -m pip show roonapi | grep Version | awk -F ':' ' { print $2 } ')
+  # Remove leading and trailing spaces in RVER
+  RVER="$(echo -e "${RVER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  # Only patch Roonapi version 0.0.38 and earlier
+  LESSER=$(echo "${RVER} 0.0.38" | tr " " "\n" | sort -V | head -n 1)
+  if [ "${LESSER}" != "${RVER}" ]; then
+    # Mark it as having been patched
+    grep -v ROONAPIPATCHED ${ROONCONF} >/tmp/roonconf$$
+    echo "ROONAPIPATCHED=true" >>/tmp/roonconf$$
+    cp /tmp/roonconf$$ ${ROONCONF}
+    rm -f /tmp/roonconf$$
+  else
+    # Apply the Python Roon API patch if it has not already been applied
+    if [ "${ROONAPIPATCHED}" = true ]; then
+      echo "Python Roon API already patched. Skipping patch."
     else
-      # Apply the Python Roon API patch if it has not already been applied
-      if [ "${ROONAPIPATCHED}" = true ]
-      then
-        echo "Python Roon API already patched. Skipping patch."
+      # Locate the patch file
+      ROONAPI_PATCH=roonapi-listmedia.patch
+      patchfile=
+      if [ -f ${ROON}/patches/${ROONAPI_PATCH} ]; then
+        patchfile=${ROON}/patches/${ROONAPI_PATCH}
       else
-        # Locate the patch file
-        ROONAPI_PATCH=roonapi-listmedia.patch
-        patchfile=
-        if [ -f ${ROON}/patches/${ROONAPI_PATCH} ]
-        then
-            patchfile=${ROON}/patches/${ROONAPI_PATCH}
-        else
-            echo "Cannot locate patch file ${ROONAPI_PATCH}"
-            echo "Python Roon API patch not applied."
-            echo "List commands will not function properly."
-        fi
-        [ "${patchfile}" ] && {
-            if type -p patch > /dev/null
-            then
-                cd ${PYTHON_SITEDIR}
-                patch -b -p0 < ${patchfile}
-                grep -v ROONAPIPATCHED ${ROONCONF} > /tmp/roonconf$$
-                echo "ROONAPIPATCHED=true" >> /tmp/roonconf$$
-                cp /tmp/roonconf$$ ${ROONCONF}
-                rm -f /tmp/roonconf$$
-            else
-                echo "Cannot locate the patch utility. Either patch is not installed"
-                echo "or it is not in your execution PATH."
-                echo ""
-                echo "Skipping the patch for the Python Roon API."
-                echo "Listing of Roon library media will not work without this patch."
-            fi
-        }
+        echo "Cannot locate patch file ${ROONAPI_PATCH}"
+        echo "Python Roon API patch not applied."
+        echo "List commands will not function properly."
       fi
+      [ "${patchfile}" ] && {
+        if type -p patch >/dev/null; then
+          cd ${PYTHON_SITEDIR}
+          patch -b -p0 <${patchfile}
+          grep -v ROONAPIPATCHED ${ROONCONF} >/tmp/roonconf$$
+          echo "ROONAPIPATCHED=true" >>/tmp/roonconf$$
+          cp /tmp/roonconf$$ ${ROONCONF}
+          rm -f /tmp/roonconf$$
+        else
+          echo "Cannot locate the patch utility. Either patch is not installed"
+          echo "or it is not in your execution PATH."
+          echo ""
+          echo "Skipping the patch for the Python Roon API."
+          echo "Listing of Roon library media will not work without this patch."
+        fi
+      }
     fi
+  fi
 else
-    echo "Could not locate the roonapi Python module installation directory"
-    echo "Python Roon API patch not applied."
-    echo "List commands will not function properly."
+  echo "Could not locate the roonapi Python module installation directory"
+  echo "Python Roon API patch not applied."
+  echo "List commands will not function properly."
 fi
 
 [ "${USER}" ] && {
-    GROUP=`id -g -n ${USER}`
-    chown -R ${USER}:${GROUP} ${ROONETC}
+  GROUP=$(id -g -n "${USER}")
+  chown -R "${USER}":"${GROUP}" ${ROONETC}
 }
 
 echo ""
@@ -260,20 +245,19 @@ echo "to authorize discovery"
 echo ""
 
 # Get and set the Roon Core IP address
-if [ "${USER}" ]
-then
-  sudo -u ${USER} ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+if [ "${USER}" ]; then
+  sudo -u "${USER}" ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
 else
   ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
 fi
-CORE_IP=`cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } '`
+CORE_IP=$(cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } ')
 CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-CORE_PORT=`cat /tmp/discover$$ | grep RoonCorePort | awk -F '=' ' { print $2 } '`
+CORE_PORT=$(cat /tmp/discover$$ | grep RoonCorePort | awk -F '=' ' { print $2 } ')
 CORE_PORT="$(echo -e "${CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 # Could use Python (or better, yq) to modify roon_api.ini something like:
 # python -c 'import yaml;f=open("roon_api.ini");y=yaml.safe_load(f);y["DEFAULT"]["RoonCoreIP"] = ${CORE_IP}; print(yaml.dump(y, default_flow_style=False, sort_keys=False))'
 # But for now we use sed
-cat ${ROON_INI} | sed -e "s/${EX_CORE_IP}/${CORE_IP}/" -e "s/${EX_CORE_PORT}/${CORE_PORT}/" > /tmp/core$$
+cat ${ROON_INI} | sed -e "s/${EX_CORE_IP}/${CORE_IP}/" -e "s/${EX_CORE_PORT}/${CORE_PORT}/" >/tmp/core$$
 cp /tmp/core$$ ${ROON_INI}
 rm -f /tmp/core$$ /tmp/discover$$ /tmp/roonapi.log
 
@@ -284,27 +268,25 @@ groupOne=
 groupTwo=
 groupRee=
 groupFor=
-if [ "${USER}" ]
-then
-  zones=`sudo -u ${USER} ${ROON}/bin/get_zones`
+if [ "${USER}" ]; then
+  zones=$(sudo -u "${USER}" ${ROON}/bin/get_zones)
 else
-  zones=`${ROON}/bin/get_zones`
+  zones=$(${ROON}/bin/get_zones)
 fi
-numZones=`echo "${zones}" | awk -F ',' ' { print NF } '`
+numZones=$(echo "${zones}" | awk -F ',' ' { print NF } ')
 numWith=0
 [ ${numZones} -gt 0 ] && {
-  defaultZone=`echo "${zones}" | awk -F ',' ' { print $1 } '`
-  if [ "${USER}" ]
-  then
-    withDefaultZone=`sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${defaultZone}"`
+  defaultZone=$(echo "${zones}" | awk -F ',' ' { print $1 } ')
+  if [ "${USER}" ]; then
+    withDefaultZone=$(sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${defaultZone}")
   else
-    withDefaultZone=`${ROON}/bin/get_zone_info -l -z "${defaultZone}"`
+    withDefaultZone=$(${ROON}/bin/get_zone_info -l -z "${defaultZone}")
   fi
-  numWith=`echo "${withDefaultZone}" | awk -F ',' ' { print NF } '`
+  numWith=$(echo "${withDefaultZone}" | awk -F ',' ' { print NF } ')
 }
 [ ${numZones} -gt 2 ] && {
   [ ${numWith} -gt 0 ] && {
-    groupOne=`echo "${defaultZone},${withDefaultZone}" | sed -e "s/,/, /g" -e "s/:/,/"`
+    groupOne=$(echo "${defaultZone},${withDefaultZone}" | sed -e "s/,/, /g" -e "s/:/,/")
     # Find a zone not in groupOne and use it for the second zone group
     zoneTwo=
     numWithTwo=0
@@ -313,22 +295,18 @@ numWith=0
     unset saved_IFS
     [ -n "${IFS+set}" ] && saved_IFS=$IFS
     IFS=","
-    for i in ${zones}
-    do
+    for i in ${zones}; do
       thiszone="$(echo -e "$i" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
       zonearray+=("${thiszone}")
     done
-    for i in ${groupOne}
-    do
+    for i in ${groupOne}; do
       thisgroup="$(echo -e "$i" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
       arrayone+=("${thisgroup}")
     done
 
     Array3=()
-    for zone in ${zonearray[@]}
-    do
-      for one in ${arrayone[@]}
-      do
+    for zone in ${zonearray[@]}; do
+      for one in ${arrayone[@]}; do
         [ "${zone}" == "${one}" ] && continue 2
       done
       Array3+=("${zone}")
@@ -336,92 +314,88 @@ numWith=0
 
     zoneTwo=${Array3[0]}
     [ "${zoneTwo}" ] || zoneTwo=${arrayone[1]}
-    if [ "${USER}" ]
-    then
-      withZoneTwo=`sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${zoneTwo}"`
+    if [ "${USER}" ]; then
+      withZoneTwo=$(sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
     else
-      withZoneTwo=`${ROON}/bin/get_zone_info -l -z "${zoneTwo}"`
+      withZoneTwo=$(${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
     fi
-    numWithTwo=`echo "${withZoneTwo}" | awk -F ',' ' { print NF } '`
+    numWithTwo=$(echo "${withZoneTwo}" | awk -F ',' ' { print NF } ')
     [ ${numWithTwo} -gt 0 ] && {
-      groupTwo=`echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/"`
+      groupTwo=$(echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/")
     }
     unset IFS
-    [ -n "${saved_IFS+set}" ] && { IFS=$saved_IFS; unset saved_IFS; }
+    [ -n "${saved_IFS+set}" ] && {
+      IFS=$saved_IFS
+      unset saved_IFS
+    }
   }
 }
 [ ${numZones} -gt 3 ] && {
-  secondZone=`echo "${zones}" | awk -F ',' ' { print $2 } ' | sed -e "s/^ //"`
-  if [ "${USER}" ]
-  then
-    withSecondZone=`sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${secondZone}"`
+  secondZone=$(echo "${zones}" | awk -F ',' ' { print $2 } ' | sed -e "s/^ //")
+  if [ "${USER}" ]; then
+    withSecondZone=$(sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${secondZone}")
   else
-    withSecondZone=`${ROON}/bin/get_zone_info -l -z "${secondZone}"`
+    withSecondZone=$(${ROON}/bin/get_zone_info -l -z "${secondZone}")
   fi
-  withSecondZone=`echo ${withSecondZone} | sed -e "s/${defaultZone},//"`
-  numWith=`echo "${withSecondZone}" | awk -F ',' ' { print NF } '`
-  if [ ${numWith} -gt 1 ]
-  then
-    withDefOne=`echo "${withSecondZone}" | awk -F ',' ' { print $1 ", " $2 } '`
+  withSecondZone=$(echo ${withSecondZone} | sed -e "s/${defaultZone},//")
+  numWith=$(echo "${withSecondZone}" | awk -F ',' ' { print NF } ')
+  if [ ${numWith} -gt 1 ]; then
+    withDefOne=$(echo "${withSecondZone}" | awk -F ',' ' { print $1 ", " $2 } ')
     groupRee="${secondZone}, ${withDefOne}"
   else
     [ ${numWith} -gt 0 ] && {
-      withDefOne=`echo "${withSecondZone}" | awk -F ',' ' { print $1 } '`
+      withDefOne=$(echo "${withSecondZone}" | awk -F ',' ' { print $1 } ')
       groupRee="${secondZone}, ${withDefOne}"
     }
   fi
 }
 [ ${numZones} -gt 4 ] && {
-  lastZone=`echo "${zones}" | awk -F ',' ' { print $(NF) } ' | sed -e "s/^ //"`
-  if [ "${USER}" ]
-  then
-    withLastZone=`sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${lastZone}"`
+  lastZone=$(echo "${zones}" | awk -F ',' ' { print $(NF) } ' | sed -e "s/^ //")
+  if [ "${USER}" ]; then
+    withLastZone=$(sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${lastZone}")
   else
-    withLastZone=`${ROON}/bin/get_zone_info -l -z "${lastZone}"`
+    withLastZone=$(${ROON}/bin/get_zone_info -l -z "${lastZone}")
   fi
-  withLastZone=`echo ${withLastZone} | sed -e "s/${defaultZone},//"`
-  withLastZone=`echo ${withLastZone} | sed -e "s/${secondZone},//"`
-  numWith=`echo "${withLastZone}" | awk -F ',' ' { print NF } '`
-  if [ ${numWith} -gt 2 ]
-  then
-    withDefOne=`echo "${withLastZone}" | awk -F ',' ' { print $(NF-2) ", " $(NF-1) ", " $(NF) } '`
+  withLastZone=$(echo ${withLastZone} | sed -e "s/${defaultZone},//")
+  withLastZone=$(echo ${withLastZone} | sed -e "s/${secondZone},//")
+  numWith=$(echo "${withLastZone}" | awk -F ',' ' { print NF } ')
+  if [ ${numWith} -gt 2 ]; then
+    withDefOne=$(echo "${withLastZone}" | awk -F ',' ' { print $(NF-2) ", " $(NF-1) ", " $(NF) } ')
     groupFor="${lastZone}, ${withDefOne}"
   else
-    if [ ${numWith} -gt 1 ]
-    then
-      withDefOne=`echo "${withLastZone}" | awk -F ',' ' { print $(NF-1) ", " $(NF) } '`
+    if [ ${numWith} -gt 1 ]; then
+      withDefOne=$(echo "${withLastZone}" | awk -F ',' ' { print $(NF-1) ", " $(NF) } ')
       groupFor="${lastZone}, ${withDefOne}"
     else
       [ ${numWith} -gt 0 ] && {
-        withDefOne=`echo "${withLastZone}" | awk -F ',' ' { print $(NF) } '`
+        withDefOne=$(echo "${withLastZone}" | awk -F ',' ' { print $(NF) } ')
         groupFor="${lastZone}, ${withDefOne}"
       }
     fi
   fi
 }
-cat ${ROON_INI} | \
-    sed -e "s/__ALL_ZONES__/${zones}/" \
-        -e "s/__GROUP_ONE__/${groupOne}/" \
-        -e "s/__GROUP_TWO__/${groupTwo}/" \
-        -e "s/__GROUP_REE__/${groupRee}/" \
-        -e "s/__GROUP_FOR__/${groupFor}/" \
-        -e "s/__VERSION__/${version}/" \
-        -e "s/__RELEASE__/${release}/" \
-        -e "s/__DEF_ZONE__/${defaultZone}/" > /tmp/zones$$
+cat ${ROON_INI} \
+  | sed -e "s/__ALL_ZONES__/${zones}/" \
+  -e "s/__GROUP_ONE__/${groupOne}/" \
+  -e "s/__GROUP_TWO__/${groupTwo}/" \
+  -e "s/__GROUP_REE__/${groupRee}/" \
+  -e "s/__GROUP_FOR__/${groupFor}/" \
+  -e "s/__VERSION__/${version}/" \
+  -e "s/__RELEASE__/${release}/" \
+  -e "s/__DEF_ZONE__/${defaultZone}/" >/tmp/zones$$
 cp /tmp/zones$$ ${ROON_INI}
 rm -f /tmp/zones$$
 
-DEFZONE=`grep ^DefaultZone ${ROON_INI} | awk -F '=' ' { print $2 } '`
+DEFZONE=$(grep ^DefaultZone ${ROON_INI} | awk -F '=' ' { print $2 } ')
 # Remove leading and trailing spaces in DEFZONE
 DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 # Set ROON_ZONE in pyroonconf if not already set
-if [ -f ${ROONCONF} ]
-then
-    grep ROON_ZONE ${ROONCONF} > /dev/null || {
-        echo "ROON_ZONE=\"$DEFZONE\"" >> ${ROONCONF}
-    }
+if [ -f ${ROONCONF} ]; then
+  grep ROON_ZONE ${ROONCONF} >/dev/null || {
+    echo "ROON_ZONE=\"$DEFZONE\"" >>${ROONCONF}
+  }
 else
-    echo "ROON_ZONE=\"$DEFZONE\"" > ${ROONCONF}
+  echo "ROON_ZONE=\"$DEFZONE\"" >${ROONCONF}
 fi
 
 [ "${USER}" ] && chown -R ${USER}:${GROUP} ${ROONETC}
