@@ -16,6 +16,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
+# shellcheck disable=SC1090,SC2001,SC2002,SC2016,SC2006,SC2086,SC2181,SC2129,SC2059,SC2076,SC2029,SC2207
+#
 # Edit these two settings if necessary
 #
 #   Both of these should have been set correctly during
@@ -365,7 +367,7 @@ bash -n ${ROONCONF} >/dev/null 2>&1
   bash -n ${ROONCONF}
   echo ""
   while true; do
-    read -p "Revert to default settings and continue? (y/n) " answer
+    read -r -p "Revert to default settings and continue? (y/n) " answer
     case ${answer} in
       [Yy]*)
         set_default_conf
@@ -395,8 +397,8 @@ fi
 select_zone() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
-  if [ "${LOCAL}" = true ]; then
-    zones=$(ROON}/bin/get_zones | sed -e 's/\, /\,/g')
+  if [ "${LOCAL}" == "true" ]; then
+    zones=$(${ROON}/bin/get_zones | sed -e 's/\, /\,/g')
   else
     zones=$(ssh $user@$server "bash -l -c \"${ROON}/bin/get_zones | sed -e 's/\, /\,/g'\"")
   fi
@@ -1028,10 +1030,8 @@ main_menu() {
   done
 }
 
-exact=
 info=
 now_playing=
-now_arg=
 fading=
 logfade=
 while getopts A:a:c:C:f:g:G:inNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
@@ -1205,7 +1205,7 @@ while getopts A:a:c:C:f:g:G:inNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       showexamples=
       usage
       ;;
-    u)
+    *)
       usage
       ;;
   esac
