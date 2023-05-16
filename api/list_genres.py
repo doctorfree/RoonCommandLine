@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -36,7 +37,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -73,12 +73,12 @@ if output_id is None:
 # List matching genres
 genres = roonapi.list_media(output_id, ["Genres", genresearch])
 if exgenresearch is not None and genres:
-    genres = [chk for chk in genres if not exgenresearch in chk]
+    genres = [chk for chk in genres if exgenresearch not in chk]
 if genres:
     if genresearch == "__all__":
         print("\nAll Genres in Library:\n")
     else:
         print("\nGenres with", genresearch, "in title", ":\n")
-    print(*genres, sep = "\n")
+    print(*genres, sep="\n")
 else:
     print("No genres found matching", genresearch)

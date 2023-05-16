@@ -6,6 +6,8 @@
 #
 # Usage: roon_fade [-i] [-l] [-R] [-V] [-t duration] [-uh]
 #                  [-y] [-z zone] on|off|now"
+#
+# shellcheck disable=SC1090,SC2220,SC2207,SC2009,SC2059
 
 ROON=/usr/local/Roon
 ROONETC=${ROON}/etc
@@ -16,7 +18,7 @@ POS_INT='^[1-9][0-9]*(,[1-9][0-9]*)*$'
 FADE_ZONE=
 LOG=
 BOLD=$(tput bold 2>/dev/null)
-NORMAL=$(tput sgr0 2>/dev/null)
+NORM=$(tput sgr0 2>/dev/null)
 
 # Get the zone and fade settings
 init_conf() {
@@ -24,9 +26,9 @@ init_conf() {
   then
     . ${ROONCONF}
   else
-    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | \
-        awk -F '=' ' { print $2 } '`
-    ${ROON}/bin/set_zone $DEFZONE
+    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | \
+        awk -F '=' ' { print $2 } ')
+    ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
   fi
   if [ -f ${FADECONF} ]
@@ -74,13 +76,13 @@ start_daemon() {
         stop_daemon
         init_conf
       else
-        printf "\n${ROONFADE} appears to be running."
+        printf "\n%s appears to be running." "${ROONFADE}"
         printf "\nOnly one instance of 'roon_faded' is currently supported."
         printf "\nThe current process can be exited with 'roon_fade off'"
         printf "\nor by answering 'y' below.\n\n"
         while true
         do
-          read -p "Exit 'roon_faded' and start a new one ? (y/n) " yn
+          read -r -p "Exit 'roon_faded' and start a new one ? (y/n) " yn
           case $yn in
             [Yy]* )
                   stop_daemon
@@ -113,8 +115,8 @@ start_daemon() {
 
 stop_daemon() {
     set_roon_fade off
-    printf "\nRoon fade disabled in ${FADECONF}"
-    printf "\nWaiting for ${ROONFADE} to exit ..."
+    printf "\nRoon fade disabled in %s" "${FADECONF}"
+    printf "\nWaiting for %s to exit ..." "${ROONFADE}"
     if [ "${proceed}" ]
     then
       elapsed=10
@@ -135,9 +137,9 @@ stop_daemon() {
         break
       }
       [ ${elapsed} -gt 10 ] && {
-        faded_pid=`ps -ef | grep roon_faded | \
-                            grep -v grep | awk ' { print $2 } '`
-        [ "${faded_pid}" ] && kill ${faded_pid}
+        faded_pid=$(ps -ef | grep roon_faded | \
+                            grep -v grep | awk ' { print $2 } ')
+        [ "${faded_pid}" ] && kill "${faded_pid}"
       }
     done
 }
@@ -164,7 +166,7 @@ save_vols() {
     printf "CURVOL=( " >> /tmp/fade$$
     for v in ${CURVOL[@]}
     do
-      printf "%d " $v >> /tmp/fade$$
+      printf "%d " "$v" >> /tmp/fade$$
     done
     printf ")\n" >> /tmp/fade$$
     cp /tmp/fade$$ ${FADECONF}
@@ -292,19 +294,19 @@ init_vols() {
     outdiv=$((FADE_DRTN / 4))
     while read voline
     do
-      zone=`echo "${voline}" | awk -F ':' ' { print $1 } ' | \
-                               sed -e 's/^ *//' -e 's/ *$//'`
+      zone=$(echo "${voline}" | awk -F ':' ' { print $1 } ' | \
+                               sed -e 's/^ *//' -e 's/ *$//')
       ZONES+=( "${zone}" )
-      volume=`echo "${voline}" | awk -F ':' ' { print $2 } ' | \
+      volume=$(echo "${voline}" | awk -F ':' ' { print $2 } ' | \
                                  awk -F ',' ' { print $1 } ' | \
                                  awk -F '=' ' { print $2 } ' | \
-                                 sed -e 's/^ *//' -e 's/ *$//'`
+                                 sed -e 's/^ *//' -e 's/ *$//')
       CURVOL+=( ${volume} )
       finish+=( 0 )
-      minimum=`echo "${voline}" | awk -F ':' ' { print $2 } ' | \
+      minimum=$(echo "${voline}" | awk -F ':' ' { print $2 } ' | \
                                   awk -F ',' ' { print $2 } ' | \
                                   awk -F '=' ' { print $2 } ' | \
-                                  sed -e 's/^ *//' -e 's/ *$//'`
+                                  sed -e 's/^ *//' -e 's/ *$//')
       minvol+=( ${minimum} )
       diff=$((volume - minimum))
       outstep=$((diff / outdiv))
@@ -384,7 +386,7 @@ fade_in() {
         cvol=${CURVOL[$z]}
         zone=${ZONES[$z]}
         step=${OUTSTEP[$z]}
-        zvol=`get_zone_volume -n -z "${zone}"`
+        zvol=$(get_zone_volume -n -z "${zone}")
         boom=$((cvol - zvol))
         if [ ${boom} -le ${step} ]
         then
@@ -418,7 +420,7 @@ fade_out() {
         step=${OUTSTEP[$z]}
         zone=${ZONES[$z]}
         mvol=${minvol[$z]}
-        zvol=`get_zone_volume -n -z "${zone}"`
+        zvol=$(get_zone_volume -n -z "${zone}")
         if [ ${zvol} -le ${mvol} ]
         then
           [ ${finish[$z]} -eq 1 ] || finish[$z]=1
@@ -474,6 +476,9 @@ select_fade_duration() {
   duration_options+=("Main Menu" "Quit")
   while true
   do
+    [ "${have_rich}" ] && {
+      rich "[bold][cyan]RoonCommandLine Fade Duration[/cyan][/bold]" -p -a rounded -c -C
+    }
     PS3="${BOLD}Please enter the fade duration you desire (numeric or text): ${NORM}"
     select opt in "${duration_options[@]}"
     do
@@ -512,13 +517,16 @@ select_fade_duration() {
 select_fade_zone() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
-  zones=`${ROON}/bin/get_zones | sed -e 's/\, /\,/g'`
+  zones=$(${ROON}/bin/get_zones | sed -e 's/\, /\,/g')
   zone_options=( $( echo "${zones}" | \
     awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }' ) )
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   zone_options+=("Main Menu" "Quit")
   while true
   do
+    [ "${have_rich}" ] && {
+      rich "[bold][cyan]RoonCommandLine Fade Zone[/cyan][/bold]" -p -a rounded -c -C
+    }
     PS3="${BOLD}Please enter the Roon zone you wish to fade (numeric or text): ${NORM}"
     select opt in "${zone_options[@]}"
     do
@@ -575,10 +583,10 @@ show_menu() {
   while true
   do
     init_conf
-    remline=`get_zone_remaining -z "${FADE_ZONE}"`
-    state=`echo "${remline}" | awk -F ',' ' { print $2 } ' | \
+    remline=$(get_zone_remaining -z "${FADE_ZONE}")
+    state=$(echo "${remline}" | awk -F ',' ' { print $2 } ' | \
                                awk -F '=' ' { print $2 } ' | \
-                               sed -e 's/^ *//' -e 's/ *$//'`
+                               sed -e 's/^ *//' -e 's/ *$//')
     echo ""
     if [ "${state}" == "playing" ]
     then
@@ -587,6 +595,9 @@ show_menu() {
       echo "Audio in zone ${FADE_ZONE} is: ${BOLD}Not playing${NORM}"
     fi
     show_status
+    [ "${have_rich}" ] && {
+      rich "[bold][cyan]RoonCommandLine Fade Menu[/cyan][/bold]" -p -a rounded -c -C
+    }
     PS3="${BOLD}Please enter your Roon fading choice (numeric or text): ${NORM}"
     options=()
     if [ "${FADE_NOW}" = true ]
@@ -668,7 +679,7 @@ show_menu() {
                 break
                 ;;
             "Main Roon Menu",*|*,"Main Roon Menu")
-                roon
+                exec roon
                 break
                 ;;
             "Quit",*|*,"Quit"|"quit",*|*,"quit")
@@ -684,7 +695,7 @@ init_conf
 
 fadetime=
 fadeinit=
-have_rich=`type -p rich`
+have_rich=$(type -p rich)
 interact=
 proceed=
 restore=
@@ -759,7 +770,7 @@ then
       echo "Ignoring \"$2\" argument and any other following arguments."
       echo "Only one of 'on', 'off', or 'now' command line arguments are recognized."
     }
-    argument=`echo "$1" | tr '[:upper:]' '[:lower:]'`
+    argument=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     if [ "${argument}" == "on" ]
     then
         start_daemon

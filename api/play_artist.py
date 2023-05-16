@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -36,7 +37,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -72,19 +72,22 @@ if output_id is None:
 else:
     artist = None
     # List matching artists from Library
-    artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
+    artists = roonapi.list_media(output_id,
+                                 ["Library",
+                                  "Artists", artistsearch])
     # Filter out excluded artist names
     if exartistsearch is not None and artists:
-        artists = [chk for chk in artists if not exartistsearch in chk]
+        artists = [chk for chk in artists if exartistsearch not in chk]
     if artists:
         # Play artist from Library
         artist = artists[0]
         print("Playing artist name", artist)
-        roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)
+        roonapi.play_media(output_id,
+                           ["Library", "Artists", artist], None, False)
         if len(artists) > 1:
             print("\nArtist names partially matching", artistsearch, ":\n")
-            print(*artists, sep = "\n")
+            print(*artists, sep="\n")
             print("\nTo play another artist with this name either specify the")
-            print("full name or enough of a substring to provide a single match\n")
+            print("full name or enough of a substring for a single match\n")
     if artist is None:
         print("No artists found matching", artistsearch)

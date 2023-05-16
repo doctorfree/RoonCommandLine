@@ -10,7 +10,7 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-appinfo = {
+app = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
     "display_version": fullver,
@@ -21,11 +21,12 @@ appinfo = {
 
 discover = RoonDiscovery(None)
 servers = discover.all()
-apis = [RoonApi(appinfo, None, server[0], server[1], False) for server in servers]
+apis = [RoonApi(app, None, server[0], server[1], False) for server in servers]
 
 auth_api = []
 while len(auth_api) == 0:
-    print("\nWaiting for authorization - in Roon, click \033[1mSettings -> Extensions -> Enable\033[0m\n", flush=True)
+    print("\nWaiting for authorization - in Roon, \
+        click \033[1mSettings -> Extensions -> Enable\033[0m\n", flush=True)
     time.sleep(15)
     auth_api = [api for api in apis if api.token is not None]
 

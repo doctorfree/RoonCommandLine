@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -36,7 +37,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -73,12 +73,12 @@ if output_id is None:
 # List matching artists
 artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
 if exartistsearch is not None and artists:
-    artists = [chkartist for chkartist in artists if not exartistsearch in chkartist]
+    artists = [cartst for cartst in artists if exartistsearch not in cartst]
 if artists:
     if artistsearch == "__all__":
         print("\nAll Artists in Library:\n")
     else:
         print("\nArtists with", artistsearch, "in name", ":\n")
-    print(*artists, sep = "\n")
+    print(*artists, sep="\n")
 else:
     print("No artists found matching ", artistsearch)

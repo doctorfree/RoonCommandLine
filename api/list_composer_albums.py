@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -46,7 +47,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -81,29 +81,36 @@ if output_id is None:
     sys.exit(err)
 
 # List matching composers
-composers = roonapi.list_media(output_id, ["Library", "Composers", composersearch])
+composers = roonapi.list_media(output_id,
+                               ["Library",
+                                "Composers",
+                                composersearch])
 
 if composers:
     album = None
     for composer in composers:
         if excomposersearch is not None:
-          if excomposersearch in composer:
-            continue
+            if excomposersearch in composer:
+                continue
         # List matching albums
-        albums = roonapi.list_media(output_id, ["Library", "Composers", composer, albumsearch])
+        albums = roonapi.list_media(output_id,
+                                    ["Library",
+                                     "Composers",
+                                     composer, albumsearch])
         if exalbumsearch is not None and albums:
-          albums = [chkalbum for chkalbum in albums if not exalbumsearch in chkalbum]
+            albums = [calb for calb in albums if exalbumsearch not in calb]
         if albums:
-          if "Play Composer" in albums:
-            albums.remove("Play Composer")
+            if "Play Composer" in albums:
+                albums.remove("Play Composer")
         if albums:
             album = albums[0]
             if albumsearch == "__all__":
                 print("\nAlbums by composer", composer, ":\n")
             else:
-                print("\nAlbums by composer", composer, "with", albumsearch, "in title", ":\n")
-            print(*albums, sep = "\n")
+                print("\nAlbums by composer", composer,
+                      "with", albumsearch, "in title", ":\n")
+            print(*albums, sep="\n")
     if album is None:
-        print("No albums found matching", albumsearch) 
+        print("No albums found matching", albumsearch)
 else:
     print("No composers found matching ", composersearch)

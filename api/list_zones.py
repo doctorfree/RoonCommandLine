@@ -1,6 +1,7 @@
 import argparse
 import configparser
 from os import path
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -13,7 +14,9 @@ port = config['DEFAULT']['RoonCorePort']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-g", "--get", help="Get a comma separated list of zones", action="store_true")
+parser.add_argument("-g", "--get",
+                    help="Get a comma separated list of zones",
+                    action="store_true")
 parser.add_argument("-i", "--info", help="Get zone info", action="store_true")
 parser.add_argument("-z", "--zone", help="Zone selection")
 args = parser.parse_args()
@@ -27,7 +30,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -111,6 +113,6 @@ for (k, v) in outputs.items():
         zone_number += 1
 
 if args.get:
-    if not(args.info):
+    if not (args.info):
         zonelist = "".join(zonelist.rsplit(", ", 1))
         print(zonelist)

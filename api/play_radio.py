@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -31,7 +32,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -66,17 +66,21 @@ if output_id is None:
     sys.exit(err)
 else:
     # Play live radio
-    found = roonapi.play_media(output_id, ["My Live Radio", radio], None, False)
+    found = roonapi.play_media(output_id,
+                               ["My Live Radio", radio],
+                               None, False)
     if found:
         print("Found media for radio search term:", radio)
     else:
         stations = roonapi.list_media(output_id, ["My Live Radio", radio])
         if stations:
             print("\nRadio station names partially matching", radio, ":\n")
-            print(*stations, sep = "\n")
+            print(*stations, sep="\n")
             if len(stations) == 1:
                 radio = stations[0]
-                roonapi.play_media(output_id, ["My Live Radio", radio], None, False)
+                roonapi.play_media(output_id,
+                                   ["My Live Radio", radio],
+                                   None, False)
             else:
                 print("\nTo play a radio station by name either specify the full name")
                 print("or enough of a substring to provide a single match")

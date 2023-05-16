@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220
 
 ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
@@ -12,7 +14,7 @@ EXARTIST=
 
 [ -d ${ROONAPI} ] || exit 1
 
-cd ${ROONAPI}
+cd ${ROONAPI} || exit 1
 
 [ -f $LIST ] || exit 2
 
@@ -29,14 +31,14 @@ if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    ${ROON}/bin/set_zone $DEFZONE
+    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+    ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
 
 # Get the default genre if one is not provided
 [ "${GENRE}" ] || {
-    GENRE=`grep ^DefaultGenre ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    GENRE=$(grep ^DefaultGenre ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
     # Remove leading and trailing spaces in GENRE
     GENRE="$(echo -e "${GENRE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
@@ -48,7 +50,7 @@ EXARGS=
 [ "${EXARTIST}" ] && EXARGS="-X ${EXARTIST}"
 [ "${EXGENRE}" ] && EXARGS="-x ${EXGENRE} ${EXARGS}"
 
-have_python3=`type -p python3`
+have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
     python3 $LIST -a "$ARTIST" -g "$GENRE" -z "$ROON_ZONE" $EXARGS

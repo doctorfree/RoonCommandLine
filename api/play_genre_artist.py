@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -46,7 +47,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -83,26 +83,31 @@ else:
     # List matching genres
     genres = roonapi.list_media(output_id, ["Genres", genresearch])
     if genres:
-      artist = None
-      for genre in genres:
-        if exgenresearch is not None:
-          if exgenresearch in genre:
-            continue
-        # List matching artists
-        artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
-        if exartistsearch is not None and artists:
-          artists = [chk for chk in artists if not exartistsearch in chk]
-          if artists:
-            artist = artists[0]
-            print("Playing artist name", artist, "in", genre, "genre")
-            roonapi.play_media(output_id, ["Genres", genre, "Artists", artist], None, False)
-            if len(artists) > 1:
-              print("\nArtist names in", genre, "genre matching", artistsearch, ":\n")
-              print(*artists, sep = "\n")
-              print("\nTo play another artist in this genre by name either specify")
-              print("the full name or enough of a substring to provide a single match\n")
-            break
-      if artist is None:
-        print("No artists found matching", artistsearch)
+        artist = None
+        for genre in genres:
+            if exgenresearch is not None:
+                if exgenresearch in genre:
+                    continue
+            # List matching artists
+            artists = roonapi.list_media(output_id,
+                                         ["Genres", genre,
+                                          "Artists", artistsearch])
+            if exartistsearch is not None and artists:
+                artists = [chk for chk in artists if exartistsearch not in chk]
+                if artists:
+                    artist = artists[0]
+                    print("Playing artist name", artist, "in", genre, "genre")
+                    roonapi.play_media(output_id,
+                                       ["Genres", genre,
+                                        "Artists", artist], None, False)
+                    if len(artists) > 1:
+                        print("\nArtist names in", genre,
+                              "genre matching", artistsearch, ":\n")
+                        print(*artists, sep="\n")
+                        print("\nTo play another artist in this genre by name either specify")
+                        print("the full name or enough of a substring to provide a single match\n")
+                    break
+        if artist is None:
+            print("No artists found matching", artistsearch)
     else:
-      print("No genres found matching ", genresearch)
+        print("No genres found matching ", genresearch)

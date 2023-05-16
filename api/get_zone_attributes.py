@@ -3,6 +3,7 @@ import configparser
 import json
 from os import path
 import sys
+from roonapi import RoonApi
 #
 # Get the volume of a zone's outputs
 #
@@ -18,7 +19,8 @@ port = config['DEFAULT']['RoonCorePort']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-g", "--grouped", default=False, action='store_true', help="return attributes for all zones in a grouped zone")
+parser.add_argument("-g", "--grouped", default=False, action='store_true',
+                    help="return attributes for all zones in a grouped zone")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -37,7 +39,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -75,19 +76,19 @@ else:
     result = []
     is_grouped = False
     if group is not None:
-      is_grouped = roonapi.is_grouped(output_id)
+        is_grouped = roonapi.is_grouped(output_id)
     if is_grouped:
-      # Get the attributes for all zones in a zone grouping
-      grouped_zone_names = roonapi.grouped_zone_names(output_id)
-      if grouped_zone_names is not None:
-        for zone_name in grouped_zone_names:
-          for (k, v) in outputs.items():
-            if zone_name in v["display_name"]:
-              result.append(v)
+        # Get the attributes for all zones in a zone grouping
+        grouped_zone_names = roonapi.grouped_zone_names(output_id)
+        if grouped_zone_names is not None:
+            for zone_name in grouped_zone_names:
+                for (k, v) in outputs.items():
+                    if zone_name in v["display_name"]:
+                        result.append(v)
     else:
-      # Get the attributes of the specified zone with the specified method
-      for (k, v) in outputs.items():
-        if zone_name in v["display_name"]:
-          result.append(v)
+        # Get the attributes of the specified zone with the specified method
+        for (k, v) in outputs.items():
+            if zone_name in v["display_name"]:
+                result.append(v)
 
     print(json.dumps(result))

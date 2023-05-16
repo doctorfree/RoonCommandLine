@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -46,7 +47,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -87,19 +87,22 @@ if genres:
     album = None
     for genre in genres:
         if exgenresearch is not None:
-          if exgenresearch in genre:
-            continue
+            if exgenresearch in genre:
+                continue
         # List matching albums
-        albums = roonapi.list_media(output_id, ["Genres", genre, "Albums", albumsearch])
+        albums = roonapi.list_media(output_id,
+                                    ["Genres", genre,
+                                     "Albums", albumsearch])
         if exalbumsearch is not None and albums:
-            albums = [chkalbum for chkalbum in albums if not exalbumsearch in chkalbum]
+            albums = [albm for albm in albums if exalbumsearch not in albm]
         if albums:
             album = albums[0]
             if albumsearch == "__all__":
                 print("\nAlbums in genre", genre, ":\n")
             else:
-                print("\nAlbums in", genre, "genre with", albumsearch, "in name", ":\n")
-            print(*albums, sep = "\n")
+                print("\nAlbums in", genre, "genre with",
+                      albumsearch, "in name", ":\n")
+            print(*albums, sep="\n")
     if album is None:
         print("No albums found matching", albumsearch)
 else:

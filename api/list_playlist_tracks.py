@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -46,7 +47,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -87,26 +87,28 @@ if playlists:
     found = None
     for playlist in playlists:
         if explaylistsearch is not None:
-          if explaylistsearch in playlist:
-            continue
+            if explaylistsearch in playlist:
+                continue
         # Search through this playlist's tracks for specified track
-        tracks = roonapi.list_media(output_id, ["Playlists", playlist, tracksearch])
+        tracks = roonapi.list_media(output_id,
+                                    ["Playlists", playlist, tracksearch])
         if tracks:
-          if "Play Playlist" in tracks:
-            tracks.remove("Play Playlist")
-          # List matching tracks
-          if extracksearch is not None and tracks:
-            tracks = [chktrack for chktrack in tracks if not extracksearch in chktrack]
-          if tracks:
             if "Play Playlist" in tracks:
-              tracks.remove("Play Playlist")
-            found = tracks[0]
-            if tracksearch == "__all__":
-              print("\nTrack titles on playlist", playlist, ":\n")
-            else:
-              print("\nTrack titles on playlist", playlist, "matching", tracksearch, ":\n")
-            print(*tracks, sep = "\n")
+                tracks.remove("Play Playlist")
+            # List matching tracks
+            if extracksearch is not None and tracks:
+                tracks = [trck for trck in tracks if extracksearch not in trck]
+            if tracks:
+                if "Play Playlist" in tracks:
+                    tracks.remove("Play Playlist")
+                found = tracks[0]
+                if tracksearch == "__all__":
+                    print("\nTrack titles on playlist", playlist, ":\n")
+                else:
+                    print("\nTrack titles on playlist", playlist,
+                          "matching", tracksearch, ":\n")
+                print(*tracks, sep="\n")
     if found is None:
-        print("No tracks found matching", tracksearch) 
+        print("No tracks found matching", tracksearch)
 else:
     print("No playlists found matching ", playlistsearch)

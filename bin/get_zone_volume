@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220
 
 ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
@@ -8,7 +10,7 @@ SCRIPT=get_zone_attributes.py
 
 [ -d ${ROONAPI} ] || exit 1
 
-cd ${ROONAPI}
+cd ${ROONAPI} || exit 1
 
 [ -f $SCRIPT ] || exit 2
 
@@ -17,8 +19,8 @@ if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    ${ROON}/bin/set_zone $DEFZONE
+    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+    ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
 
@@ -39,8 +41,8 @@ while getopts "gnz:" flag; do
     esac
 done
 
-have_python3=`type -p python3`
-have_jq=`type -p jq`
+have_python3=$(type -p python3)
+have_jq=$(type -p jq)
 if [ "${have_python3}" ]
 then
   if [ "${have_jq}" ]

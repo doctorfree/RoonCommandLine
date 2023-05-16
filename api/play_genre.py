@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -36,7 +37,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -75,7 +75,7 @@ else:
     genres = roonapi.list_media(output_id, ["Genres", genresearch])
     # Filter out excluded genre titles
     if exgenresearch is not None and genres:
-        genres = [chk for chk in genres if not exgenresearch in chk]
+        genres = [chk for chk in genres if exgenresearch not in chk]
     if genres:
         # Play genre from Library
         genre = genres[0]
@@ -83,7 +83,7 @@ else:
         roonapi.play_media(output_id, ["Genres", genre], None, False)
         if len(genres) > 1:
             print("\nGenre titles partially matching", genresearch, ":\n")
-            print(*genres, sep = "\n")
+            print(*genres, sep="\n")
             print("\nTo play another genre with this title either specify the")
             print("full title or enough of a substring to provide a single match\n")
     if genre is None:

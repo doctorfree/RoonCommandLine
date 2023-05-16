@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -31,7 +32,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -69,12 +69,10 @@ else:
     tags = roonapi.list_media(output_id, ["Library", "Tags", tag])
     if tags:
         print("\nTags matching", tag, ":\n")
-        print(*tags, sep = "\n")
+        print(*tags, sep="\n")
         if len(tags) == 1:
             tag = tags[0]
             print("\nPlaying media by tag is not yet working. Found tag for", tag, "\n")
-            # Need to identify the media here, somehow use tag to search for media. How?
-            # roonapi.play_media(output_id, ["Library", "Tags", tag], None, False)
         else:
             print("\nTo play a tag by name either specify the full name")
             print("or enough of a substring to provide a single match")

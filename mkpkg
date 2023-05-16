@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220
+#
 PKG="rooncommandline"
 SRC_NAME="RoonCommandLine"
 PKG_NAME="RoonCommandLine"
@@ -9,7 +12,7 @@ SRC=${HOME}/src
 SUDO=sudo
 GCI=
 
-dpkg=`type -p dpkg-deb`
+dpkg=$(type -p dpkg-deb)
 [ "${dpkg}" ] || {
     echo "Debian packaging tools do not appear to be installed on this system"
     echo "Are you on the appropriate Linux system with packaging requirements ?"
@@ -41,14 +44,14 @@ OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
     exit 1
 }
 
-cd "${SRC}/${SRC_NAME}"
+cd "${SRC}/${SRC_NAME}" || exit 1
 ${SUDO} rm -rf dist
 mkdir dist
 
-[ -d ${OUT_DIR} ] && rm -rf ${OUT_DIR}
-mkdir ${OUT_DIR}
-cp -a pkg/debian ${OUT_DIR}/DEBIAN
-chmod 755 ${OUT_DIR} ${OUT_DIR}/DEBIAN ${OUT_DIR}/DEBIAN/*
+[ -d "${OUT_DIR}" ] && rm -rf "${OUT_DIR}"
+mkdir "${OUT_DIR}"
+cp -a pkg/debian "${OUT_DIR}"/DEBIAN
+chmod 755 "${OUT_DIR}" "${OUT_DIR}"/DEBIAN "${OUT_DIR}"/DEBIAN/*
 
 echo "Package: ${PKG_NAME}
 Version: ${PKG_VER}-${PKG_REL}
@@ -62,95 +65,95 @@ Build-Depends: debhelper (>= 11)
 Standards-Version: 4.1.3
 Homepage: https://gitlab.com/doctorfree/RoonCommandLine
 Description: Roon Command Line Tools
- Manage your Roon Audio System from the command line" > ${OUT_DIR}/DEBIAN/control
+ Manage your Roon Audio System from the command line" > "${OUT_DIR}"/DEBIAN/control
 
-chmod 644 ${OUT_DIR}/DEBIAN/control
+chmod 644 "${OUT_DIR}"/DEBIAN/control
 
 for dir in "${TOP}" "${DESTDIR}" "${ROON}" \
            "${DESTDIR}/share" "${DESTDIR}/share/applications" \
            "${DESTDIR}/share/doc" "${DESTDIR}/share/doc/${PKG}"
 do
-    [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
-    ${SUDO} chown root:root ${OUT_DIR}/${dir}
+    [ -d "${OUT_DIR}"/${dir} ] || ${SUDO} mkdir "${OUT_DIR}"/"${dir}"
+    ${SUDO} chown root:root "${OUT_DIR}"/"${dir}"
 done
 
 for dir in bin etc api patches
 do
-    [ -d ${OUT_DIR}/${ROON}/${dir} ] && ${SUDO} rm -rf ${OUT_DIR}/${ROON}/${dir}
+    [ -d "${OUT_DIR}"/${ROON}/${dir} ] && ${SUDO} rm -rf "${OUT_DIR}"/${ROON}/${dir}
 done
 
-${SUDO} cp -a api ${OUT_DIR}/${ROON}/api
-${SUDO} cp -a bin ${OUT_DIR}/${ROON}/bin
-${SUDO} cp -a etc ${OUT_DIR}/${ROON}/etc
-${SUDO} cp -a patches ${OUT_DIR}/${ROON}/patches
+${SUDO} cp -a api "${OUT_DIR}"/${ROON}/api
+${SUDO} cp -a bin "${OUT_DIR}"/${ROON}/bin
+${SUDO} cp -a etc "${OUT_DIR}"/${ROON}/etc
+${SUDO} cp -a patches "${OUT_DIR}"/${ROON}/patches
 
-${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
-${SUDO} cp AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/AUTHORS
-${SUDO} cp LICENSE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/copyright
-${SUDO} cp CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
-${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/README
-${SUDO} cp VERSION ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/VERSION
-${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
+${SUDO} cp ./*.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
+${SUDO} cp AUTHORS "${OUT_DIR}"/${DESTDIR}/share/doc/${PKG}/AUTHORS
+${SUDO} cp LICENSE "${OUT_DIR}"/${DESTDIR}/share/doc/${PKG}/copyright
+${SUDO} cp CHANGELOG.md "${OUT_DIR}"/${DESTDIR}/share/doc/${PKG}/changelog
+${SUDO} cp README.md "${OUT_DIR}"/${DESTDIR}/share/doc/${PKG}/README
+${SUDO} cp VERSION "${OUT_DIR}"/${DESTDIR}/share/doc/${PKG}/VERSION
+${SUDO} gzip -9 "${OUT_DIR}"/${DESTDIR}/share/doc/${PKG}/changelog
 ${SUDO} cp -a markdown "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/markdown"
 ${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/man"
 ${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/man"
 
 [ -f .gitignore ] && {
-    while read ignore
+    while read -r ignore
     do
-        ${SUDO} rm -f ${OUT_DIR}/${ROON}/${ignore}
+        ${SUDO} rm -f "${OUT_DIR}"/${ROON}/"${ignore}"
     done < .gitignore
 }
 
-${SUDO} chmod 644 ${OUT_DIR}/${ROON}/etc/* \
-                  ${OUT_DIR}/${ROON}/api/* \
-                  ${OUT_DIR}/${ROON}/patches/*.md ${OUT_DIR}/${ROON}/patches/*.patch \
-                  ${OUT_DIR}/${ROON}/patches/roonapi/* \
-                  ${OUT_DIR}/${DESTDIR}/share/man/*/* \
-                  ${OUT_DIR}/${ROON}/patches/roon-web-controller/*
-${SUDO} chmod 755 ${OUT_DIR}/${ROON}/bin/* \
-                  ${OUT_DIR}/${ROON}/bin \
-                  ${OUT_DIR}/${ROON}/etc/roon_faded \
-                  ${OUT_DIR}/${ROON}/etc \
-                  ${OUT_DIR}/${ROON}/etc/postinstall \
-                  ${OUT_DIR}/${ROON}/etc/preremove \
-                  ${OUT_DIR}/${ROON}/etc/roon_faded \
-                  ${OUT_DIR}/${ROON}/api \
-                  ${OUT_DIR}/${ROON}/patches \
-                  ${OUT_DIR}/${ROON}/patches/mk* \
-                  ${OUT_DIR}/${ROON}/patches/roonapi \
-                  ${OUT_DIR}/${DESTDIR}/share/man \
-                  ${OUT_DIR}/${DESTDIR}/share/man/* \
-                  ${OUT_DIR}/${ROON}/patches/roon-web-controller
-${SUDO} chown -R root:root ${OUT_DIR}/${DESTDIR}
+${SUDO} chmod 644 "${OUT_DIR}"/${ROON}/etc/* \
+                  "${OUT_DIR}"/${ROON}/api/* \
+                  "${OUT_DIR}"/${ROON}/patches/*.md "${OUT_DIR}"/${ROON}/patches/*.patch \
+                  "${OUT_DIR}"/${ROON}/patches/roonapi/* \
+                  "${OUT_DIR}"/${DESTDIR}/share/man/*/* \
+                  "${OUT_DIR}"/${ROON}/patches/roon-web-controller/*
+${SUDO} chmod 755 "${OUT_DIR}"/${ROON}/bin/* \
+                  "${OUT_DIR}"/${ROON}/bin \
+                  "${OUT_DIR}"/${ROON}/etc/roon_faded \
+                  "${OUT_DIR}"/${ROON}/etc \
+                  "${OUT_DIR}"/${ROON}/etc/postinstall \
+                  "${OUT_DIR}"/${ROON}/etc/preremove \
+                  "${OUT_DIR}"/${ROON}/etc/roon_faded \
+                  "${OUT_DIR}"/${ROON}/api \
+                  "${OUT_DIR}"/${ROON}/patches \
+                  "${OUT_DIR}"/${ROON}/patches/mk* \
+                  "${OUT_DIR}"/${ROON}/patches/roonapi \
+                  "${OUT_DIR}"/${DESTDIR}/share/man \
+                  "${OUT_DIR}"/${DESTDIR}/share/man/* \
+                  "${OUT_DIR}"/${ROON}/patches/roon-web-controller
+${SUDO} chown -R root:root "${OUT_DIR}"/${DESTDIR}
 
-cd dist
+cd dist || exit 1
 echo "Building ${PKG_NAME}_${PKG_VER} package"
-${SUDO} dpkg-deb -Zxz --build ${PKG_NAME}_${PKG_VER} ${PKG_NAME}_${PKG_VER}-${PKG_REL}.deb
-cd ${PKG_NAME}_${PKG_VER}
+${SUDO} dpkg-deb -Zxz --build ${PKG_NAME}_"${PKG_VER}" ${PKG_NAME}_"${PKG_VER}"-"${PKG_REL}".deb
+cd "${PKG_NAME}"_"${PKG_VER}" || exit 1
 echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
-tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.tgz
+tar cf - usr | gzip -9 > ../${PKG_NAME}_"${PKG_VER}"-"${PKG_REL}".tgz
 
-have_zip=`type -p zip`
+have_zip=$(type -p zip)
 [ "${have_zip}" ] || {
   ${SUDO} apt-get update
   ${SUDO} apt-get install zip -y
 }
 echo "Creating zip archive of ${PKG_NAME} ${PKG_VER} distribution"
-zip -q -r ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.zip usr
+zip -q -r ../${PKG_NAME}_"${PKG_VER}"-"${PKG_REL}".zip usr
 
 cd ..
 [ "${GCI}" ] || {
     [ -d ../releases ] || mkdir ../releases
-    [ -d ../releases/${PKG_VER} ] || mkdir ../releases/${PKG_VER}
-    ${SUDO} cp *.deb *.tgz *.zip ../releases/${PKG_VER}
+    [ -d ../releases/"${PKG_VER}" ] || mkdir ../releases/"${PKG_VER}"
+    ${SUDO} cp ./*.deb ./*.tgz ./*.zip ../releases/"${PKG_VER}"
 }
 
-cd "${SRC}/${SRC_NAME}"
-[ -d pkg/rpm ] && cp -a pkg/rpm ${OUT_DIR}/rpm
-[ -d ${OUT_DIR}/rpm ] || mkdir ${OUT_DIR}/rpm
+cd "${SRC}/${SRC_NAME}" || exit 1
+[ -d pkg/rpm ] && cp -a pkg/rpm "${OUT_DIR}"/rpm
+[ -d "${OUT_DIR}"/rpm ] || mkdir "${OUT_DIR}"/rpm
 
-have_rpm=`type -p rpmbuild`
+have_rpm=$(type -p rpmbuild)
 [ "${have_rpm}" ] || {
   ${SUDO} apt-get update
   export DEBIAN_FRONTEND=noninteractive
@@ -164,24 +167,24 @@ rpmbuild -ba --build-in-place \
    --define "_sourcedir ${OUT_DIR}" \
    --define "_version ${PKG_VER}" \
    --define "_release ${PKG_REL}" \
-   --buildroot ${SRC}/${SRC_NAME}/${OUT_DIR}/BUILDROOT \
-   ${OUT_DIR}/rpm/${PKG_NAME}.spec
+   --buildroot "${SRC}"/${SRC_NAME}/"${OUT_DIR}"/BUILDROOT \
+   "${OUT_DIR}"/rpm/${PKG_NAME}.spec
 
 # Rename RPMs if necessary
-for rpmfile in ${OUT_DIR}/RPMS/*/*.rpm
+for rpmfile in "${OUT_DIR}"/RPMS/*/*.rpm
 do
   [ "${rpmfile}" == "${OUT_DIR}/RPMS/*/*.rpm" ] && continue
-  rpmbas=`basename ${rpmfile}`
-  rpmdir=`dirname ${rpmfile}`
-  newnam=`echo ${rpmbas} | sed -e "s/${PKG_NAME}-${PKG_VER}-${PKG_REL}/${PKG_NAME}_${PKG_VER}-${PKG_REL}/" -e "s/noarch.rpm/rpm/"`
+  rpmbas=$(basename "${rpmfile}")
+  rpmdir=$(dirname "${rpmfile}")
+  newnam=$(echo "${rpmbas}" | sed -e "s/${PKG_NAME}-${PKG_VER}-${PKG_REL}/${PKG_NAME}_${PKG_VER}-${PKG_REL}/" -e "s/noarch.rpm/rpm/")
   [ "${rpmbas}" == "${newnam}" ] && continue
-  mv ${rpmdir}/${rpmbas} ${rpmdir}/${newnam}
+  mv "${rpmdir}"/"${rpmbas}" "${rpmdir}"/"${newnam}"
 done
 
-${SUDO} cp ${OUT_DIR}/RPMS/*/*.rpm dist
+${SUDO} cp "${OUT_DIR}"/RPMS/*/*.rpm dist
 
 [ "${GCI}" ] || {
     [ -d releases ] || mkdir releases
-    [ -d releases/${PKG_VER} ] || mkdir releases/${PKG_VER}
-    ${SUDO} cp ${OUT_DIR}/RPMS/*/*.rpm releases/${PKG_VER}
+    [ -d releases/"${PKG_VER}" ] || mkdir releases/"${PKG_VER}"
+    ${SUDO} cp "${OUT_DIR}"/RPMS/*/*.rpm releases/"${PKG_VER}"
 }

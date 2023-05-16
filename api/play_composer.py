@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -36,7 +37,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -72,19 +72,23 @@ if output_id is None:
 else:
     composer = None
     # List matching composers from Library
-    composers = roonapi.list_media(output_id, ["Library", "Composers", composersearch])
+    composers = roonapi.list_media(output_id,
+                                   ["Library",
+                                    "Composers", composersearch])
     # Filter out excluded composer names
     if excomposersearch is not None and composers:
-        composers = [chk for chk in composers if not excomposersearch in chk]
+        composers = [chk for chk in composers if excomposersearch not in chk]
     if composers:
         # Play composer from Library
         composer = composers[0]
         print("Playing composer name", composer)
-        roonapi.play_media(output_id, ["Library", "Composers", composer], None, False)
+        roonapi.play_media(output_id,
+                           ["Library", "Composers", composer],
+                           None, False)
         if len(composers) > 1:
             print("\nComposer names partially matching", composersearch, ":\n")
-            print(*composers, sep = "\n")
-            print("\nTo play another composer with this name either specify the")
-            print("full name or enough of a substring to provide a single match\n")
+            print(*composers, sep="\n")
+            print("\nTo play a composer with this name either specify the")
+            print("full name or enough of a substring for a single match\n")
     if composer is None:
         print("No composers found matching", composersearch)

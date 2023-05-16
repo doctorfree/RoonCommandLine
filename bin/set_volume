@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220
 
 ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
@@ -6,14 +8,13 @@ ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 SCRIPT=set_volume.py
 VOLUME="-v 50"
-PERCENT=
 GROUPED=
 RELATIVE=
 STEP=
 
 [ -d ${ROONAPI} ] || exit 1
 
-cd ${ROONAPI}
+cd ${ROONAPI} || exit 1
 
 [ -f $SCRIPT ] || exit 2
 
@@ -22,8 +23,8 @@ if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    ${ROON}/bin/set_zone $DEFZONE
+    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+    ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
 
@@ -51,11 +52,11 @@ while getopts "gp:rsv:z:" flag; do
     esac
 done
 
-have_python3=`type -p python3`
+have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
-    python3 $SCRIPT ${GROUPED} ${RELATIVE} ${STEP} $VOLUME -z "$ROON_ZONE"
+    python3 $SCRIPT ${GROUPED} ${RELATIVE} ${STEP} ${VOLUME} -z "$ROON_ZONE"
 else
-    python $SCRIPT ${GROUPED} ${RELATIVE} ${STEP} $VOLUME -z "$ROON_ZONE"
+    python $SCRIPT ${GROUPED} ${RELATIVE} ${STEP} ${VOLUME} -z "$ROON_ZONE"
 fi
 

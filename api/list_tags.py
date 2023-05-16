@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -31,7 +32,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -69,6 +69,6 @@ if output_id is None:
 tags = roonapi.list_media(output_id, ["Library", "Tags", searchterm])
 
 if tags:
-    print(*tags, sep = "\n")
+    print(*tags, sep="\n")
 else:
     print("No tags found matching ", searchterm)

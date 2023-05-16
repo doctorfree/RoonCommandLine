@@ -1,5 +1,7 @@
 # RoonCommandLine Release Notes
 
+RoonCommandLine version 2.0.8 release 5 is a minor bug fix release and provides PEP 8 conformance
+
 RoonCommandLine version 2.0.8 release 4 is a minor bug fix release, only restore saved `roon_api.ini` if in new format.
 
 RoonCommandLine version 2.0.8 release 3 provides support for Homebrew installed Python and several bug fixes.

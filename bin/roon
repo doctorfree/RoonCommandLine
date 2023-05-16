@@ -404,8 +404,11 @@ select_zone() {
   fi
   zone_options=($(echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }'))
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
-  zone_options+=("Main Menu" "Quit")
+  zone_options+=("Defaults Menu" "Main Menu" "Quit")
   while true; do
+    [ "${have_rich}" ] && {
+      rich "[bold][cyan]RoonCommandLine Zones[/cyan][/bold]" -p -a rounded -c -C
+    }
     PS3="${BOLD}Please enter the Roon zone you wish to use (numeric or text): ${NORMAL}"
     select opt in "${zone_options[@]}"; do
       case "$opt,$REPLY" in
@@ -416,6 +419,10 @@ select_zone() {
         "Quit",* | *,"Quit" | "quit",* | *,"quit")
           printf "\nExiting\n"
           exit 0
+          ;;
+        "Defaults Menu",* | *,"Defaults Menu")
+          list_defaults
+          break 2
           ;;
         *,*)
           if [[ " ${zone_options[*]} " =~ " ${opt} " ]]; then
@@ -507,6 +514,9 @@ select_default() {
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   media_options+=("Set Defaults Menu" "Main Menu" "Quit")
   while true; do
+    [ "${have_rich}" ] && {
+      rich "[bold][cyan]RoonCommandLine Default ${medtype}[/cyan][/bold]" -p -a rounded -c -C
+    }
     PS3="${BOLD}Please enter the ${medtype} you wish to set as default (numeric or text): ${NORMAL}"
     select opt in "${media_options[@]}"; do
       case "$opt,$REPLY" in
@@ -594,6 +604,9 @@ select_media() {
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   media_options+=("Main Menu" "Quit")
   while true; do
+    [ "${have_rich}" ] && {
+      rich "[bold][cyan]RoonCommandLine Play ${medtype}[/cyan][/bold]" -p -a rounded -c -C
+    }
     PS3="${BOLD}Please enter the ${media} you wish to play (numeric or text): ${NORMAL}"
     select opt in "${media_options[@]}"; do
       case "$opt,$REPLY" in
@@ -622,6 +635,9 @@ select_media() {
 select_set_volume() {
   volume_options=("Mute/Unmute Zone" "Mute/Unmute All Zones" "Set Volume to 10" "Set Volume to 20" "Set Volume to 30" "Set Volume to 40" "Set Volume to 50" "Set Volume to 60" "Set Volume to 70" "Set Volume to 80" "Set Volume to 90" "Set Volume to 100" "Increase Volume by 1" "Increase Volume by 5" "Increase Volume by 10" "Increase Volume by 20" "Increase Volume by 40" "Decrease Volume by 1" "Decrease Volume by 5" "Decrease Volume by 10" "Decrease Volume by 20" "Decrease Volume by 40" "Main Menu" "Quit")
   while true; do
+    [ "${have_rich}" ] && {
+      rich "[bold][cyan]RoonCommandLine Volume Control[/cyan][/bold]" -p -a rounded -c -C
+    }
     printf "\n"
     PS3="${BOLD}Please enter the volume adjustment you wish to make (numeric or text): ${NORMAL}"
     select opt in "${volume_options[@]}"; do
@@ -687,7 +703,7 @@ select_set_volume() {
 }
 
 list_defaults() {
-  defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Main Menu" "Quit")
+  defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Set Default Zone" "Main Menu" "Quit")
   while true; do
     for media in Album Artist Composer Genre Playlist Radio Tag; do
       DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
@@ -696,6 +712,9 @@ list_defaults() {
       printf "\nDefault ${media}: ${DEFAULT}"
     done
     printf "\n\n"
+    [ "${have_rich}" ] && {
+      rich "[bold][cyan]RoonCommandLine Defaults Menu[/cyan][/bold]" -p -a rounded -c -C
+    }
     PS3="${BOLD}Please enter the default you wish to set (numeric or text): ${NORMAL}"
     select opt in "${defaults_options[@]}"; do
       case "$opt,$REPLY" in
@@ -706,6 +725,29 @@ list_defaults() {
         "Quit",* | *,"Quit" | "quit",* | *,"quit")
           printf "\nExiting\n"
           exit 0
+          ;;
+        "Set Default Zone",* | *,"Set Default Zone")
+          [ -f ${ROONCONF} ] && . ${ROONCONF}
+          if [ "${LOCAL}" = true ]; then
+            if [ "${ROON_ZONE}" ]; then
+              echo ""
+              echo "Current Roon Zone is ${ROON_ZONE}"
+            else
+              echo ""
+              echo "No default Roon Zone is set in ${ROONCONF}"
+            fi
+          else
+            roon_zone=$(ssh $user@$server "bash -l -c \"grep ROON_ZONE ${ROONCONF}\"")
+            if [ "${roon_zone}" ]; then
+              echo ""
+              echo "Current Roon Zone is ${roon_zone}"
+            else
+              echo ""
+              echo "No default Roon Zone is set in ${ROONCONF}"
+            fi
+          fi
+          select_zone
+          break
           ;;
         *,*)
           select_default "${opt}"
@@ -718,6 +760,9 @@ list_defaults() {
 
 main_menu() {
   while true; do
+    [ "${have_rich}" ] && {
+      rich "[bold][cyan]RoonCommandLine Main Menu[/cyan][/bold]" -p -a rounded -c -C
+    }
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
     options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Toggle Repeat" "Toggle Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Fade Menu" "Volume" "Quit")
     select opt in "${options[@]}"; do
@@ -730,15 +775,19 @@ main_menu() {
           [ -f ${ROONCONF} ] && . ${ROONCONF}
           if [ "${LOCAL}" = true ]; then
             if [ "${ROON_ZONE}" ]; then
+              echo ""
               echo "Current Roon Zone is ${ROON_ZONE}"
             else
+              echo ""
               echo "No default Roon Zone is set in ${ROONCONF}"
             fi
           else
             roon_zone=$(ssh $user@$server "bash -l -c \"grep ROON_ZONE ${ROONCONF}\"")
             if [ "${roon_zone}" ]; then
+              echo ""
               echo "Current Roon Zone is ${roon_zone}"
             else
+              echo ""
               echo "No default Roon Zone is set in ${ROONCONF}"
             fi
           fi
@@ -826,7 +875,7 @@ main_menu() {
           break
           ;;
         "Fade Menu",* | *,"Fade Menu")
-          roon_fade -i
+          exec roon_fade -i
           break
           ;;
         "Toggle Mute",* | *,"Toggle Mute")

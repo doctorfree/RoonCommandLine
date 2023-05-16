@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -46,7 +47,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -87,23 +87,27 @@ if artists:
     album = None
     for artist in artists:
         if exartistsearch is not None:
-          if exartistsearch in artist:
-            continue
+            if exartistsearch in artist:
+                continue
         # List matching albums
-        albums = roonapi.list_media(output_id, ["Library", "Artists", artist, albumsearch])
+        albums = roonapi.list_media(output_id,
+                                    ["Library",
+                                     "Artists",
+                                     artist, albumsearch])
         if exalbumsearch is not None and albums:
-          albums = [chkalbum for chkalbum in albums if not exalbumsearch in chkalbum]
+            albums = [calbm for calbm in albums if exalbumsearch not in calbm]
         if albums:
-          if "Play Artist" in albums:
-            albums.remove("Play Artist")
+            if "Play Artist" in albums:
+                albums.remove("Play Artist")
         if albums:
             album = albums[0]
             if albumsearch == "__all__":
                 print("\nAlbums by artist", artist, ":\n")
             else:
-                print("\nAlbums by artist", artist, "with", albumsearch, "in title", ":\n")
-            print(*albums, sep = "\n")
+                print("\nAlbums by artist", artist, "with",
+                      albumsearch, "in title", ":\n")
+            print(*albums, sep="\n")
     if album is None:
-        print("No albums found matching", albumsearch) 
+        print("No albums found matching", albumsearch)
 else:
     print("No artists found matching ", artistsearch)

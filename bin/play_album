@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220
 
 ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
@@ -10,7 +12,7 @@ EXALBUM=
 
 [ -d ${ROONAPI} ] || exit 1
 
-cd ${ROONAPI}
+cd ${ROONAPI} || exit 1
 
 [ -f $PLAY ] || exit 2
 
@@ -22,14 +24,14 @@ if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    ${ROON}/bin/set_zone $DEFZONE
+    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+    ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
 
 # Get the default album if one is not provided
 [ "${ALBUM}" ] || {
-    ALBUM=`grep ^DefaultAlbum ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    ALBUM=$(grep ^DefaultAlbum ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
     # Remove leading and trailing spaces in ALBUM
     ALBUM="$(echo -e "${ALBUM}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 }
@@ -37,7 +39,7 @@ fi
 EXARGS=
 [ "${EXALBUM}" ] && EXARGS="-x ${EXALBUM}"
 
-have_python3=`type -p python3`
+have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
     python3 $PLAY -a "$ALBUM" -z "$ROON_ZONE" $EXARGS

@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220
 
 ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
@@ -10,7 +12,7 @@ SCRIPT="zone_group.py"
     echo "Roon Command Line scripts not installed. Missing $ROONAPI/$SCRIPT"
     exit 1
 }
-cd ${ROONAPI}
+cd ${ROONAPI} || exit 1
 
 # Verify this is a valid zone grouping command
 [ "$1" ] || {
@@ -30,7 +32,7 @@ ZONE_COMMAND="$1"
 }
 ROON_ZONE_GROUP="Group_$2"
 found_group=
-for gn in `grep ^Group_ ${ROONETC}/roon_api.ini | awk -F '=' ' { print $1 } '`
+for gn in $(grep ^Group_ "${ROONETC}"/roon_api.ini | awk -F '=' ' { print $1 } ')
 do
     gn="$(echo -e "${gn}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     [ "$ROON_ZONE_GROUP" == "$gn" ] && found_group=1
@@ -44,12 +46,12 @@ if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
-    ${ROON}/bin/set_zone $DEFZONE
+    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+    ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
 
-have_python3=`type -p python3`
+have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
     python3 $SCRIPT -c "$ZONE_COMMAND" -z "$ROON_ZONE_GROUP"

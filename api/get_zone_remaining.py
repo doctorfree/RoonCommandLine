@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 #
 # Get the volume of a zone's outputs
 #
@@ -31,7 +32,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -70,14 +70,15 @@ if output_id is None:
 else:
     zone = roonapi.zone_by_output_id(output_id)
     if zone is not None:
-      state = zone["state"]
-      length = zone["now_playing"]["length"]
-      position = zone["now_playing"]["seek_position"]
-      if length is not None:
-        if position is not None:
-          remaining = length - position
+        state = zone["state"]
+        length = zone["now_playing"]["length"]
+        position = zone["now_playing"]["seek_position"]
+        if length is not None:
+            if position is not None:
+                remaining = length - position
 
     if remaining is not None:
-        print(zone_name + ": Time remaining = " + str(remaining) + " seconds, State = " + state)
+        print(zone_name + ": Time remaining = " + str(remaining) +
+              " seconds, State = " + state)
     else:
         print(zone_name + ": State = " + state)

@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -36,7 +37,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -71,14 +71,17 @@ if output_id is None:
     sys.exit(err)
 
 # List matching composers
-composers = roonapi.list_media(output_id, ["Library", "Composers", composersearch])
+composers = roonapi.list_media(output_id,
+                               ["Library",
+                                "Composers",
+                                composersearch])
 if excomposersearch is not None and composers:
-    composers = [chkcomposer for chkcomposer in composers if not excomposersearch in chkcomposer]
+    composers = [cmpsr for cmpsr in composers if excomposersearch not in cmpsr]
 if composers:
     if composersearch == "__all__":
         print("\nAll Composers in Library:\n")
     else:
         print("\nComposers with", composersearch, "in name", ":\n")
-    print(*composers, sep = "\n")
+    print(*composers, sep="\n")
 else:
     print("No composers found matching", composersearch)

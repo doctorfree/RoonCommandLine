@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220,SC2207
 
 ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
@@ -9,7 +11,7 @@ SCRIPT="zone_command.py"
     echo "Roon Command Line scripts not installed. Missing ${ROONAPI}/$SCRIPT"
     exit 1
 }
-cd ${ROONAPI}
+cd ${ROONAPI} || exit 1
 
 # Verify this is a valid zone name
 [ "$1" ] || {
@@ -18,12 +20,12 @@ cd ${ROONAPI}
 }
 MY_ZONE="$*"
 
-have_python3=`type -p python3`
+have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
-    ZONE=`python3 $SCRIPT -c "verify" -z "$MY_ZONE"`
+    ZONE=$(python3 $SCRIPT -c "verify" -z "$MY_ZONE")
 else
-    ZONE=`python $SCRIPT -c "verify" -z "$MY_ZONE"`
+    ZONE=$(python $SCRIPT -c "verify" -z "$MY_ZONE")
 fi
 
 [ "$ZONE" ] || {
@@ -41,9 +43,9 @@ else
 fi
 for site in ${SITES[@]}
 do
-    site=`echo $site | sed -e "s/\'//g"`
+    site=$(echo "${site}" | sed -e "s/\'//g")
     [ -d "${site}/roonapi" ] && {
-        PYTHONUSERBASE=`echo ${site} | awk -F "/lib/" ' { print $1 } '`
+        PYTHONUSERBASE=$(echo "${site}" | awk -F "/lib/" ' { print $1 } ')
         break
     }
 done

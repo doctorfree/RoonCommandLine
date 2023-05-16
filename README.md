@@ -562,7 +562,7 @@ The Roon Command Line install creates two configuration files:
 and
 
     `/usr/local/Roon/etc/roon_api.ini`
-    
+
 These two configuration files are the first place to look when you encounter an issue.
 The /usr/local/Roon/etc/pyroonconf file contains 3 settings:
 
@@ -622,7 +622,7 @@ interface. It accepts a wide variety of arguments and sends a command to the
 Python Roon API system which then communicates with the Roon Core.
 
 If no arguments are provided to the `roon` command then an interactive dialog
-is presented from which the user can select commands and queries. 
+is presented from which the user can select commands and queries.
 
 Here is the current output of "roon -u" which displays a usage message.
 
@@ -760,7 +760,7 @@ If multiple matches are found, the first match in the list is played.
 To narrow a search, exclusion filtering can be performed. Use the `-x string`
 argument to specify an exclusion substring for artist, composer, and playlist
 library searches. Use the `-X string` argument to specify an exclusion
-substring for album and genre library searches. 
+substring for album and genre library searches.
 
 In a large Roon library where multiple matches may be frequent and large,
 one approach is to first list the media you wish to play and based on the
@@ -793,7 +793,7 @@ would list the "Violin Concerto No. 1, Op. 26" by Mozart fist. Alternately,
 would also list the concerto first. Another search route for this album
 would be by searching albums by composer rather than albums by genre:
 
-`roon -l comalbums -C Mozart -A "Violin Concerto"` 
+`roon -l comalbums -C Mozart -A "Violin Concerto"`
 
 Listing/playing media in the Roon Library "Composers" category searches the
 entire Roon database of available Composers rather than limiting the search
@@ -1036,13 +1036,11 @@ of this package will require little to no manual configuration.
 
 [**NOTICE**](NOTICE) - Copyright notice
 
-[**Install**](Install) - Installation script for Linux systems, Debian format install
+[**Install**](Install) - Installation script
 
-[**Uninstall**](Uninstall) - Removal script for Linux systems, Debian format uninstall
+[**Uninstall**](Uninstall) - Removal script
 
-[**macInstall**](macInstall) - Installation script for Mac OS
-
-[**macUninstall**](macUninstall) - Removal script for Mac OS
+[**macInstall**](macInstall) - Installation script for Mac OS (called from `Install`)
 
 [**usage.txt**](usage.txt) - Frontend "roon" script usage documentation
 

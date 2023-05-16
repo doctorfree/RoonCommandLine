@@ -1,7 +1,8 @@
 import argparse
 import configparser
 
-config = configparser.RawConfigParser(comment_prefixes='/', allow_no_value=True)
+config = configparser.RawConfigParser(
+    comment_prefixes='/', allow_no_value=True)
 config.read('/usr/local/Roon/etc/roon_api.ini')
 
 parser = argparse.ArgumentParser()

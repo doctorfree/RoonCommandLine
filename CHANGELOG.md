@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+May 16, 2023 :
+RoonCommandLine version 2.0.8 release 5
+
+    This is a bug fix release:
+        * PEP 8 style guide conformance
+        * Improved interactive menu system
+        * Fix shellcheck warnings
+        * Fix bug in call to get_zones in Get/Set Zone
+
 May 2, 2023 :
 RoonCommandLine version 2.0.8 release 4
 

@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220
 
 ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
@@ -9,7 +11,7 @@ ZONE=
 
 [ -d ${ROONAPI} ] || exit 1
 
-cd ${ROONAPI}
+cd ${ROONAPI} || exit 1
 
 [ -f $LIST ] || exit 2
 
@@ -17,10 +19,10 @@ if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=`grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } '`
+    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
     # Remove leading and trailing spaces in DEFZONE
     DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-    ${ROON}/bin/set_zone $DEFZONE
+    ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
 
@@ -29,7 +31,7 @@ fi
 # List all zones if no zones are specified
 [ "${ZONE}" ] || ZONE="__all__"
 
-have_python3=`type -p python3`
+have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
     python3 $LIST -z "$ZONE"

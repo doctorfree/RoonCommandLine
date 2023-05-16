@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220,SC2086,SC2207,SC2001,SC2068
 
 PKG="RoonCommandLine"
 TOP="/usr"
@@ -140,7 +142,7 @@ ${SUDO} chown -R root:root ${ROON}
 IP=$(hostname -I | awk ' { print $1 } ')
 USER=$(id -u -n)
 
-cd /usr/local/bin
+cd /usr/local/bin || exit 1
 for command in "${ROON}"/bin/*; do
   b=$(basename "${command}")
   if [ -f "${b}" ]; then
@@ -313,7 +315,7 @@ if [ "${PYTHONUSERBASE}" ]; then
       [ "${patchfile}" ] && {
         patch_inst=$(type -p patch)
         if [ "$patch_inst" ]; then
-          cd ${PYTHON_SITEDIR}
+          cd ${PYTHON_SITEDIR} || exit 1
           ${SUDO} patch -b -p0 <${patchfile}
           grep -v ROONAPIPATCHED ${ROONCONF} >/tmp/roonconf$$
           echo "ROONAPIPATCHED=true" >>/tmp/roonconf$$

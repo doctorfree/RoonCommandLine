@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -46,7 +47,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -87,19 +87,22 @@ if genres:
     artist = None
     for genre in genres:
         if exgenresearch is not None:
-          if exgenresearch in genre:
-            continue
+            if exgenresearch in genre:
+                continue
         # List matching artists
-        artists = roonapi.list_media(output_id, ["Genres", genre, "Artists", artistsearch])
+        artists = roonapi.list_media(output_id,
+                                     ["Genres", genre,
+                                      "Artists", artistsearch])
         if exartistsearch is not None and artists:
-            artists = [chk for chk in artists if not exartistsearch in chk]
+            artists = [chk for chk in artists if exartistsearch not in chk]
         if artists:
             artist = artists[0]
             if artistsearch == "__all__":
-              print("\nArtists in genre", genre, ":\n")
+                print("\nArtists in genre", genre, ":\n")
             else:
-              print("\nArtists in", genre, "genre with", artistsearch, "in name", ":\n")
-            print(*artists, sep = "\n")
+                print("\nArtists in", genre, "genre with",
+                      artistsearch, "in name", ":\n")
+            print(*artists, sep="\n")
     if artist is None:
         print("No artists found matching", artistsearch)
 else:

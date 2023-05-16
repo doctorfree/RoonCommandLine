@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -46,7 +47,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -81,28 +81,38 @@ if output_id is None:
     sys.exit(err)
 else:
     # List matching artists
-    artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
+    artists = roonapi.list_media(output_id,
+                                 ["Library",
+                                  "Artists",
+                                  artistsearch])
     if artists:
-      album = None
-      for artist in artists:
-        if exartistsearch is not None:
-          if exartistsearch in artist:
-            continue
-        # List matching albums
-        albums = roonapi.list_media(output_id, ["Library", "Artists", artist, albumsearch])
-        if exalbumsearch is not None and albums:
-          albums = [chk for chk in albums if not exalbumsearch in chk]
-        if albums:
-          album = albums[0]
-          print("Playing album title", album, "by artist", artist)
-          roonapi.play_media(output_id, ["Library", "Artists", artist, album], None, False)
-          if len(albums) > 1:
-            print("\nAlbum titles by", artist, "artist matching", albumsearch, ":\n")
-            print(*albums, sep = "\n")
-            print("\nTo play another album by this artist by title either specify")
-            print("the full title or enough of a substring to provide a single match\n")
-          break
-      if album is None:
-        print("No albums found matching", albumsearch)
+        album = None
+        for artist in artists:
+            if exartistsearch is not None:
+                if exartistsearch in artist:
+                    continue
+            # List matching albums
+            albums = roonapi.list_media(output_id,
+                                        ["Library",
+                                         "Artists",
+                                         artist, albumsearch])
+            if exalbumsearch is not None and albums:
+                albums = [chk for chk in albums if exalbumsearch not in chk]
+            if albums:
+                album = albums[0]
+                print("Playing album title", album, "by artist", artist)
+                roonapi.play_media(output_id,
+                                   ["Library", "Artists",
+                                    artist, album], None, False)
+                if len(albums) > 1:
+                    print("\nAlbum titles by", artist,
+                          "artist matching", albumsearch, ":\n")
+                    print(*albums, sep="\n")
+                    print("\nTo play another album by this artist by title")
+                    print("\neither specify the full title or enough")
+                    print("\nof a substring to provide a single match\n")
+                break
+        if album is None:
+            print("No albums found matching", albumsearch)
     else:
-      print("No artists found matching", artistsearch)
+        print("No artists found matching", artistsearch)

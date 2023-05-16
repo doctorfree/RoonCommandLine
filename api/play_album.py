@@ -2,6 +2,7 @@ import argparse
 import configparser
 from os import path
 import sys
+from roonapi import RoonApi
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')
@@ -36,7 +37,6 @@ version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
-from roonapi import RoonApi
 appinfo = {
     "extension_id": "roon_command_line",
     "display_name": "Python library for Roon",
@@ -75,16 +75,18 @@ else:
     albums = roonapi.list_media(output_id, ["Library", "Albums", albumsearch])
     # Filter out excluded album titles
     if exalbumsearch is not None and albums:
-        albums = [chk for chk in albums if not exalbumsearch in chk]
+        albums = [chk for chk in albums if exalbumsearch not in chk]
     if albums:
         # Play album from Library
         album = albums[0]
         print("Playing album title", album)
-        roonapi.play_media(output_id, ["Library", "Albums", album], None, False)
+        roonapi.play_media(output_id,
+                           ["Library", "Albums", album], None, False)
         if len(albums) > 1:
             print("\nAlbum titles partially matching", albumsearch, ":\n")
-            print(*albums, sep = "\n")
+            print(*albums, sep="\n")
             print("\nTo play another album with this title either specify the")
-            print("full title or enough of a substring to provide a single match\n")
+            print(
+             "full title or enough of a substring to provide a single match\n")
     if album is None:
         print("No albums found matching", albumsearch)

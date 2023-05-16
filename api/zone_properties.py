@@ -52,31 +52,41 @@ with RoonApi(appinfo, token, server, port) as roonapi:
 
     output_id = None
     if target_zone is None:
-      for zone in roonapi.zones.values():
-        zone_name = zone["display_name"]
-        print("Zone name: %s" % zone_name)
-        print("Zone settings: %s" % json.dumps(zone["settings"], indent=4))
-        print("\nNow playing: {")
-        track = json.dumps(zone["now_playing"]["three_line"]["line1"], ensure_ascii=False).encode('utf8')
-        print("\t\"track\": %s," % track.decode())
-        artist = json.dumps(zone["now_playing"]["three_line"]["line2"], ensure_ascii=False).encode('utf8')
-        print("\t\"artist\": %s," % artist.decode())
-        album = json.dumps(zone["now_playing"]["three_line"]["line3"], ensure_ascii=False).encode('utf8')
-        print("\t\"album\": %s\n}" % album.decode())
-    else:
-      for (k, v) in outputs.items():
-        if target_zone in v["display_name"]:
-            zone_name = v["display_name"]
-            output_id = k
+        for zone in roonapi.zones.values():
+            zone_name = zone["display_name"]
             print("Zone name: %s" % zone_name)
-            print("Output properties: %s" % json.dumps(v, indent=4))
-            zone = roonapi.zone_by_output_id(output_id)
-            if zone is not None:
-              print("Zone settings: %s" % json.dumps(zone["settings"], indent=4))
-              print("\nNow playing: {")
-              track = json.dumps(zone["now_playing"]["three_line"]["line1"], ensure_ascii=False).encode('utf8')
-              print("\t\"track\": %s," % track.decode())
-              artist = json.dumps(zone["now_playing"]["three_line"]["line2"], ensure_ascii=False).encode('utf8')
-              print("\t\"artist\": %s," % artist.decode())
-              album = json.dumps(zone["now_playing"]["three_line"]["line3"], ensure_ascii=False).encode('utf8')
-              print("\t\"album\": %s\n}" % album.decode())
+            print("Zone settings: %s" % json.dumps(zone["settings"], indent=4))
+            print("\nNow playing: {")
+            track = json.dumps(zone["now_playing"]["three_line"]["line1"],
+                               ensure_ascii=False).encode('utf8')
+            print("\t\"track\": %s," % track.decode())
+            artist = json.dumps(zone["now_playing"]["three_line"]["line2"],
+                                ensure_ascii=False).encode('utf8')
+            print("\t\"artist\": %s," % artist.decode())
+            album = json.dumps(zone["now_playing"]["three_line"]["line3"],
+                               ensure_ascii=False).encode('utf8')
+            print("\t\"album\": %s\n}" % album.decode())
+    else:
+        for (k, v) in outputs.items():
+            if target_zone in v["display_name"]:
+                zone_name = v["display_name"]
+                output_id = k
+                print("Zone name: %s" % zone_name)
+                print("Output properties: %s" % json.dumps(v, indent=4))
+                zone = roonapi.zone_by_output_id(output_id)
+                if zone is not None:
+                    print("Zone settings: %s" % json.dumps(zone["settings"],
+                                                           indent=4))
+                    print("\nNow playing: {")
+                    track = json.dumps(
+                        zone["now_playing"]["three_line"]["line1"],
+                        ensure_ascii=False).encode('utf8')
+                    print("\t\"track\": %s," % track.decode())
+                    artist = json.dumps(
+                        zone["now_playing"]["three_line"]["line2"],
+                        ensure_ascii=False).encode('utf8')
+                    print("\t\"artist\": %s," % artist.decode())
+                    album = json.dumps(
+                        zone["now_playing"]["three_line"]["line3"],
+                        ensure_ascii=False).encode('utf8')
+                    print("\t\"album\": %s\n}" % album.decode())
