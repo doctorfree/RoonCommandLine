@@ -8,7 +8,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   The Roon Command Line project provides Bash and Python scripts to enable
   command line control of the Roon audio system over a local network.
 baseurl: ""
-url: "https://roon.neoman.dev"
+url: "https://rooncommand.dev"
 twitter_username: ronrecord
 github_username: doctorfree
 
