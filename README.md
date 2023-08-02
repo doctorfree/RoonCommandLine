@@ -14,6 +14,13 @@
 
 # RoonCommandLine
 
+RoonCommandLine is one of the [Neoman](https://neoman.dev) managed projects:
+
+| **Neoman** | **Managed** | **Projects** |
+| ---------- | ----------- | ------------ |
+| [Asciiville](https://asciiville.dev) | [Lazyman](https://lazyman.dev) | [MirrorCommand](https://mirrorcommand.dev) |
+| [MusicPlayerPlus](https://musicplayerplus.dev) | [Neoman](https://neoman.dev) | [RoonCommandLine](https://rooncommand.dev) |
+
 ## Table of contents
 
 1. [Overview](#overview)
