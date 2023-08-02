@@ -1,3 +1,16 @@
-remote_theme: pages-themes/midnight@v0.2.0
+remote_theme: doctorfree/jekyll-theme-neoman
 plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
+  - jekyll-remote-theme
+
+title: RoonCommandLine
+email: ronaldrecord@gmail.com
+description: >- # this means to ignore newlines until "baseurl:"
+  The Roon Command Line project provides Bash and Python scripts to enable
+  command line control of the Roon audio system over a local network.
+baseurl: ""
+url: "https://roon.neoman.dev"
+twitter_username: ronrecord
+github_username: doctorfree
+
+show_downloads: false
+# google_analytics:
