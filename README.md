@@ -12,7 +12,9 @@
 >
 > ― Neal Stephenson, In the Beginning...Was the Command Line
 
-# RoonCommandLine
+<div align="center">
+  <img src="https://raw.githubusercontent.com/wiki/doctorfree/RoonCommandLine/assets/rooncommandline.png" style="width:800px;height:140px;">
+</div>
 
 RoonCommandLine is one of the [Neoman](https://neoman.dev) managed projects:
 
