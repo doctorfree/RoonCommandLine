@@ -65,7 +65,7 @@ All commands and playback can target a specified Roon output zone.
 package resides entirely on other systems within your local area network.
 
 Additional detail and info can be found in the
-[RoonCommandLine Wiki](https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/home).
+[RoonCommandLine Wiki](https://github.com/doctorfree/RoonCommandLine/-/wikis/home).
 
 # COMMAND LINE OPTIONS
 
@@ -259,7 +259,7 @@ For example, to play the album 'Love Bomb':
 **roon -A "Love Bomb"**
 
 # AUTHORS
-Written by Ron Record gitlab@ronrecord.com
+Written by Ron Record github@ronrecord.com
 
 # LICENSING
 RoonCommandLine is distributed under an Open Source license.
@@ -268,12 +268,12 @@ for information on terms &amp; conditions for accessing and
 otherwise using RoonCommandLine.
 
 # BUGS
-Submit bug reports online at: https://gitlab.com/doctorfree/RoonCommandLine/issues
+Submit bug reports online at: https://github.com/doctorfree/RoonCommandLine/issues
 
 # SEE ALSO
 **clone_pyroon**(1), **get_core_ip**(1), **get_zone_info**(1), **get_zones**(1), **list_albums**(1), **list_artist_albums**(1), **list_artists**(1), **list_composers**(1), **list_genre_albums**(1), **list_genre_artists**(1), **list_genres**(1), **list_playlists**(1), **list_radio**(1), **list_tags**(1), **list_zones**(1), **play_album**(1), **play_artist**(1), **play_artist_album**(1), **play_artist_track**(1), **play_composer**(1), **play_genre**(1), **play_genre_album**(1), **play_genre_artist**(1), **play_playlist**(1), **play_radio**(1), **play_tag**(1), **roon**(1), **set_volume**(1), **set_zone**(1), **set_zone_group**(1), **zone_command**(1), **roon_fade**(1), **roon_faded**(5)
 
-Full documentation, installation packages, and sources at: https://gitlab.com/doctorfree/RoonCommandLine
+Full documentation, installation packages, and sources at: https://github.com/doctorfree/RoonCommandLine
 
 Information on the Roon Core System can be found at https://roonlabs.com/
 

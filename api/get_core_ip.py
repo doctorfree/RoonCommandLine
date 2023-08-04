@@ -16,7 +16,7 @@ app = {
     "display_version": fullver,
     "publisher": "RoonCommandLine",
     "email": "roon@ronrecord.com",
-    "website": "https://gitlab.com/doctorfree/RoonCommandLine",
+    "website": "https://github.com/doctorfree/RoonCommandLine",
 }
 
 discover = RoonDiscovery(None)

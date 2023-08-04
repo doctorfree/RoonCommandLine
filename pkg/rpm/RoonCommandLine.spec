@@ -5,7 +5,7 @@ Summary:    Command line control of the Roon audio system
 License:    MIT
 BuildArch:  noarch
 Requires:   python3-pip, jq, git
-URL:        https://gitlab.com/doctorfree/RoonCommandLine
+URL:        https://github.com/doctorfree/RoonCommandLine
 Vendor:     Doctorwhen's Bodacious Laboratory
 Packager:   ronaldrecord@gmail.com
 

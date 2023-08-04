@@ -63,7 +63,7 @@ Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Installed-Size: 1308
 Build-Depends: debhelper (>= 11)
 Standards-Version: 4.1.3
-Homepage: https://gitlab.com/doctorfree/RoonCommandLine
+Homepage: https://github.com/doctorfree/RoonCommandLine
 Description: Roon Command Line Tools
  Manage your Roon Audio System from the command line" > "${OUT_DIR}"/DEBIAN/control
 

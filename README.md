@@ -109,7 +109,7 @@ term `__all__` indicates match all albums, artists, playlists, genres, or tags.
 All commands and playback can target a specified Roon output zone.
 
 Additional detail and info can be found in the
-[RoonCommandLine Wiki](https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/home).
+[RoonCommandLine Wiki](https://github.com/doctorfree/RoonCommandLine/-/wikis/home).
 
 Command line control of Roon may be of particular interest to Roon users running a
 [Roon Bridge](https://help.roonlabs.com/portal/en/kb/articles/roonbridge) or
@@ -157,7 +157,7 @@ contents of the file `/etc/os-release`.
 
 To install on a Debian based Linux system, download the latest Debian format
 package from the
-[RoonCommandLine Releases](https://gitlab.com/doctorfree/RoonCommandLine/-/releases).
+[RoonCommandLine Releases](https://github.com/doctorfree/RoonCommandLine/-/releases).
 
 Install the RoonCommandLine package by executing the command
 
@@ -177,7 +177,7 @@ openSUSE, OpenMandriva, Mandrake Linux, Red Hat Linux, and Oracle Linux.
 
 To install on an RPM based Linux system, download the latest RPM format
 package from the
-[RoonCommandLine Releases](https://gitlab.com/doctorfree/RoonCommandLine/-/releases).
+[RoonCommandLine Releases](https://github.com/doctorfree/RoonCommandLine/-/releases).
 
 Install the RoonCommandLine package by executing the command
 
@@ -205,7 +205,7 @@ Once the Python 3 dependency is met, install RoonCommandLine by
 cloning the RoonCommandLine repository and executing the `Install` script:
 
 ```bash
-    git clone `https://gitlab.com/doctorfree/RoonCommandLine.git`
+    git clone `https://github.com/doctorfree/RoonCommandLine.git`
     cd RoonCommandLine
     ./Install
 ```
@@ -227,7 +227,7 @@ Once the Python 3 dependency is met, install RoonCommandLine by
 cloning the RoonCommandLine repository and executing the `Install` script:
 
 ```bash
-    git clone `https://gitlab.com/doctorfree/RoonCommandLine.git`
+    git clone `https://github.com/doctorfree/RoonCommandLine.git`
     cd RoonCommandLine
     ./Install
 ```
@@ -328,10 +328,10 @@ For example, on the system where the Python Roon API is installed:
 ```bash
     $ mkdir -p $HOME/src
     $ cd $HOME/src
-    $ git clone git@gitlab.com:doctorfree/RoonCommandLine.git
+    $ git clone git@github.com:doctorfree/RoonCommandLine.git
 
     # Alternatively, download the latest release:
-    # https://gitlab.com/doctorfree/RoonCommandLine/-/releases
+    # https://github.com/doctorfree/RoonCommandLine/-/releases
 
     $ cd RoonCommandLine
     $ ./Install
@@ -465,7 +465,7 @@ and configuration can be removed by executing the "Uninstall" script in the
 RoonCommandLine source directory:
 
 ```bash
-    git clone git@gitlab.com:doctorfree/RoonCommandLine.git
+    git clone git@github.com:doctorfree/RoonCommandLine.git
     cd RoonCommandLine
     ./Uninstall
 ```
@@ -486,45 +486,45 @@ can be viewed by issueing the command:
 
 Manual pages for each RoonCommandLine backend command can be viewed by issueing any of the following commands:
 
-- [man clone_pyroon](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/clone_pyroon.1.md)
-- [man get_core_ip](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_core_ip.1.md)
-- [man get_zone_info](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zone_info.1.md)
-- [man get_zones](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zones.1.md)
-- [man get_zone_remaining](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zone_remaining.1.md)
-- [man get_zone_volume](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zone_volume.1.md)
-- [man list_albums](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_albums.1.md)
-- [man list_artists](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_artists.1.md)
-- [man list_artist_albums](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_artist_albums.1.md)
-- [man list_artist_tracks](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_artist_tracks.1.md)
-- [man list_composer_albums](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_composer_albums.1.md)
-- [man list_composers](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_composers.1.md)
-- [man list_genre_albums](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_genre_albums.1.md)
-- [man list_genre_artists](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_genre_artists.1.md)
-- [man list_playlist_tracks](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_playlist_tracks.1.md)
-- [man list_genres](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_genres.1.md)
-- [man list_playlists](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_playlists.1.md)
-- [man list_radio](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_radio.1.md)
-- [man list_tags](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_tags.1.md)
-- [man list_zones](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_zones.1.md)
-- [man now_playing](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/now_playing.1.md)
-- [man play_album](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_album.1.md)
-- [man play_artist](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist.1.md)
-- [man play_artist_album](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist_album.1.md)
-- [man play_artist_track](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist_track.1.md)
-- [man play_composer](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_composer.1.md)
-- [man play_composer_album](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_composer_album.1.md)
-- [man play_genre_album](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre_album.1.md)
-- [man play_genre_artist](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre_artist.1.md)
-- [man play_genre](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre.1.md)
-- [man play_playlist](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_playlist.1.md)
-- [man play_radio](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_radio.1.md)
-- [man play_tag](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_tag.1.md)
-- [man roon_fade](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/roon_fade.1.md)
-- [man roon_faded](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/roon_faded.5.md)
-- [man set_volume](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_volume.1.md)
-- [man set_zone](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_zone.1.md)
-- [man set_zone_group](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_zone_group.1.md)
-- [man zone_command](https://gitlab.com/doctorfree/RoonCommandLine/-/blob/master/markdown/zone_command.1.md)
+- [man clone_pyroon](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/clone_pyroon.1.md)
+- [man get_core_ip](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_core_ip.1.md)
+- [man get_zone_info](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zone_info.1.md)
+- [man get_zones](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zones.1.md)
+- [man get_zone_remaining](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zone_remaining.1.md)
+- [man get_zone_volume](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/get_zone_volume.1.md)
+- [man list_albums](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_albums.1.md)
+- [man list_artists](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_artists.1.md)
+- [man list_artist_albums](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_artist_albums.1.md)
+- [man list_artist_tracks](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_artist_tracks.1.md)
+- [man list_composer_albums](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_composer_albums.1.md)
+- [man list_composers](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_composers.1.md)
+- [man list_genre_albums](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_genre_albums.1.md)
+- [man list_genre_artists](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_genre_artists.1.md)
+- [man list_playlist_tracks](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_playlist_tracks.1.md)
+- [man list_genres](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_genres.1.md)
+- [man list_playlists](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_playlists.1.md)
+- [man list_radio](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_radio.1.md)
+- [man list_tags](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_tags.1.md)
+- [man list_zones](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/list_zones.1.md)
+- [man now_playing](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/now_playing.1.md)
+- [man play_album](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_album.1.md)
+- [man play_artist](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist.1.md)
+- [man play_artist_album](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist_album.1.md)
+- [man play_artist_track](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_artist_track.1.md)
+- [man play_composer](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_composer.1.md)
+- [man play_composer_album](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_composer_album.1.md)
+- [man play_genre_album](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre_album.1.md)
+- [man play_genre_artist](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre_artist.1.md)
+- [man play_genre](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_genre.1.md)
+- [man play_playlist](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_playlist.1.md)
+- [man play_radio](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_radio.1.md)
+- [man play_tag](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/play_tag.1.md)
+- [man roon_fade](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/roon_fade.1.md)
+- [man roon_faded](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/roon_faded.5.md)
+- [man set_volume](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_volume.1.md)
+- [man set_zone](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_zone.1.md)
+- [man set_zone_group](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/set_zone_group.1.md)
+- [man zone_command](https://github.com/doctorfree/RoonCommandLine/-/blob/master/markdown/zone_command.1.md)
 
 ## Screenshots
 Roon_List_Artist_Tracks.png: 1354 x 409
@@ -828,7 +828,7 @@ The command line has a long and storied history in computing. Read some of that
 history, learn how to open a command line terminal window on various systems,
 how to get started using the command line, and see some examples of why the command
 line interface is so powerful by reading the RoonCommandLine wiki article
-[Introduction to Using the Command Line](https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/Introduction-to-Using-the-Command-Line).
+[Introduction to Using the Command Line](https://github.com/doctorfree/RoonCommandLine/-/wikis/Introduction-to-Using-the-Command-Line).
 
 This introduction to the command line includes an example of how to automate
 playback of Roon playlists in specified Roon zones at designated times of day.
@@ -842,14 +842,14 @@ Google Assistant are described in the following RoonCommandLine Wiki articles.
 
 #### Roon Voice Commands with Siri
 The RoonCommandLine Wiki article
-["Roon Voice Commands with Siri"](https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/Roon-Voice-Commands-with-Siri)
+["Roon Voice Commands with Siri"](https://github.com/doctorfree/RoonCommandLine/-/wikis/Roon-Voice-Commands-with-Siri)
 describes in detail how to setup Roon voice commands using Apple Shortcuts
 on an iOS device. This method utilizes Siri to recognize the voice commands
 and run the Shortcut which uses SSH to execute the command.
 
 #### Roon Voice Commands with Google Assistant
 The RoonCommandLine Wiki article
-["Roon Voice Commands with Google Assistant"](https://gitlab.com/doctorfree/RoonCommandLine/-/wikis/Roon-Voice-Commands-with-GA)
+["Roon Voice Commands with Google Assistant"](https://github.com/doctorfree/RoonCommandLine/-/wikis/Roon-Voice-Commands-with-GA)
 describes in detail how to setup Roon voice commands using the
 [MMM-GoogleAssistant](http://wiki.bugsounet.fr/en/MMM-GoogleAssistant)
 and [MMM-Detector](http://wiki.bugsounet.fr/en/MMM-Detector)
