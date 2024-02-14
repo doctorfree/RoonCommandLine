@@ -18,7 +18,7 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 **IMPORTANT NOTE** Older versions of RoonCommandLine will no longer function properly. In order to use RoonCommandLine you must install version 2.0.2 release 1 or later.
 
-[Download the latest Debian or RPM package format release](https://github.com/doctorfree/RoonCommandLine/-/releases)
+[Download the latest Debian or RPM package format release](https://github.com/doctorfree/RoonCommandLine/releases)
 
 Install the package on Debian based systems by executing the command
 
