@@ -408,7 +408,7 @@ select_zone() {
   fi
   zone_options=($(echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }'))
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
-  zone_options+=("Defaults Menu" "Main Menu" "Quit")
+  zone_options+=("Defaults Menu" "Main Menu" "Quit (q)")
   while true; do
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Zones[/cyan][/bold]" -p -a rounded -c -C
@@ -420,7 +420,7 @@ select_zone() {
           main_menu
           break 2
           ;;
-        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+        "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           printf "\nExiting\n"
           exit 0
           ;;
@@ -516,7 +516,7 @@ select_default() {
   printf "Default${medtype} = ${DEFAULT}\n\n"
 
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
-  media_options+=("Set Defaults Menu" "Main Menu" "Quit")
+  media_options+=("Set Defaults Menu" "Main Menu" "Quit (q)")
   while true; do
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Default ${medtype}[/cyan][/bold]" -p -a rounded -c -C
@@ -531,7 +531,7 @@ select_default() {
           main_menu
           break 3
           ;;
-        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+        "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           printf "\nExiting\n"
           exit 0
           ;;
@@ -606,7 +606,7 @@ select_media() {
   printf "Default ${media}: ${DEFAULT}\n\n"
 
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
-  media_options+=("Main Menu" "Quit")
+  media_options+=("Main Menu" "Quit (q)")
   while true; do
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Play ${medtype}[/cyan][/bold]" -p -a rounded -c -C
@@ -618,7 +618,7 @@ select_media() {
           main_menu
           break 2
           ;;
-        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+        "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           printf "\nExiting\n"
           exit 0
           ;;
@@ -637,7 +637,7 @@ select_media() {
 }
 
 select_set_volume() {
-  volume_options=("Mute/Unmute Zone" "Mute/Unmute All Zones" "Set Volume to 10" "Set Volume to 20" "Set Volume to 30" "Set Volume to 40" "Set Volume to 50" "Set Volume to 60" "Set Volume to 70" "Set Volume to 80" "Set Volume to 90" "Set Volume to 100" "Increase Volume by 1" "Increase Volume by 5" "Increase Volume by 10" "Increase Volume by 20" "Increase Volume by 40" "Decrease Volume by 1" "Decrease Volume by 5" "Decrease Volume by 10" "Decrease Volume by 20" "Decrease Volume by 40" "Main Menu" "Quit")
+  volume_options=("Mute/Unmute Zone" "Mute/Unmute All Zones" "Set Volume to 10" "Set Volume to 20" "Set Volume to 30" "Set Volume to 40" "Set Volume to 50" "Set Volume to 60" "Set Volume to 70" "Set Volume to 80" "Set Volume to 90" "Set Volume to 100" "Increase Volume by 1" "Increase Volume by 5" "Increase Volume by 10" "Increase Volume by 20" "Increase Volume by 40" "Decrease Volume by 1" "Decrease Volume by 5" "Decrease Volume by 10" "Decrease Volume by 20" "Decrease Volume by 40" "Main Menu" "Quit (q)")
   while true; do
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Volume Control[/cyan][/bold]" -p -a rounded -c -C
@@ -697,7 +697,7 @@ select_set_volume() {
           main_menu
           break 2
           ;;
-        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+        "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           printf "\nExiting\n"
           exit 0
           ;;
@@ -707,7 +707,7 @@ select_set_volume() {
 }
 
 list_defaults() {
-  defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Set Default Zone" "Main Menu" "Quit")
+  defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Set Default Zone" "Main Menu" "Quit (q)")
   while true; do
     for media in Album Artist Composer Genre Playlist Radio Tag; do
       DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
@@ -726,7 +726,7 @@ list_defaults() {
           main_menu
           break 2
           ;;
-        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+        "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           printf "\nExiting\n"
           exit 0
           ;;
@@ -768,7 +768,7 @@ main_menu() {
       rich "[bold][cyan]RoonCommandLine Main Menu[/cyan][/bold]" -p -a rounded -c -C
     }
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Toggle Repeat" "Toggle Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Fade Menu" "Volume" "Quit")
+    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Toggle Repeat" "Toggle Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Fade Menu" "Volume" "Quit (q)")
     select opt in "${options[@]}"; do
       case "$opt,$REPLY" in
         "Get/Set Defaults",* | *,"Get/Set Defaults")
@@ -1074,7 +1074,7 @@ main_menu() {
           select_set_volume
           break
           ;;
-        "Quit",* | *,"Quit" | "quit",* | *,"quit")
+        "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           printf "\nExiting\n"
           exit 0
           ;;
