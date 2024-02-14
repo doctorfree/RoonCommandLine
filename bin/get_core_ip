@@ -1,11 +1,12 @@
 #!/bin/bash
 
-ROON=/usr/local/Roon/api
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
 CORE=get_core_ip.py
 
-[ -d $ROON ] || exit 1
+[ -d $ROONAPI ] || exit 1
 
-cd $ROON || exit 1
+cd $ROONAPI || exit 1
 
 [ -f $CORE ] || exit 2
 

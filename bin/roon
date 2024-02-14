@@ -346,8 +346,12 @@ NORMAL=$(tput sgr0 2>/dev/null)
 [ -x ${ROON}/venv/bin/python ] && export PYTHON=${ROON}/venv/bin/python
 
 [[ ":$PATH:" == *":/usr/local/bin:"* ]] || export PATH=${PATH}:/usr/local/bin
-[[ ":$PATH:" == *":/usr/local/Roon/bin:"* ]] || export PATH=/usr/local/Roon/bin:${PATH}
-[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || export PATH=/usr/local/Roon/venv/bin:${PATH}
+[[ ":$PATH:" == *":/usr/local/Roon/bin:"* ]] || {
+  export PATH=/usr/local/Roon/bin:${PATH}
+}
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
 if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 else

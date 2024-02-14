@@ -17,6 +17,12 @@ cd ${ROONAPI} || exit 1
 
 [ "$1" ] && RADIO="$*"
 
+# Use a Python virtual environment
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
+
 # Get the zone if it is set
 if [ -f ${ROONCONF} ]
 then
@@ -28,12 +34,6 @@ else
 fi
 
 [ "${RADIO}" ] || RADIO="__all__"
-
-# Use a Python virtual environment
-[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
-[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
-  export PATH=/usr/local/Roon/venv/bin:${PATH}
-}
 
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]

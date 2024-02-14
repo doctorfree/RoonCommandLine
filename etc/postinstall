@@ -8,6 +8,7 @@ ROON=/usr/local/Roon
 ROONETC=${ROON}/etc
 ROON_INI=${ROONETC}/roon_api.ini
 ROONCONF=${ROONETC}/pyroonconf
+PIPARGS="--no-cache-dir --upgrade --force-reinstall"
 
 export PATH=$PATH:/usr/local/bin
 if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
@@ -25,12 +26,10 @@ else
 fi
 
 [ -d ${ROON} ] || mkdir -p ${ROON}
-${PYTHON} -m venv ${ROON}/venv
+${PYTHON} -m venv ${ROON}/venv >/dev/null 2>&1
 [ -x ${ROON}/venv/bin/python ] && export PYTHON=${ROON}/venv/bin/python
-${PYTHON} -m pip install roonapi
-${PYTHON} -m pip install rich-cli
-# ${PYTHON} -m pip install --upgrade roonapi >/dev/null 2>&1
-# ${PYTHON} -m pip install rich-cli >/dev/null 2>&1
+${PYTHON} -m pip install ${PIPARGS} roonapi >/dev/null 2>&1
+${PYTHON} -m pip install ${PIPARGS} rich-cli >/dev/null 2>&1
 
 [ -d /usr/local ] || mkdir /usr/local
 [ -d /usr/local/bin ] || mkdir /usr/local/bin
@@ -251,7 +250,11 @@ echo ""
 
 # Get and set the Roon Core IP address
 if [ "${USER}" ]; then
-  sudo -u "${USER}" ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+  if [ "${USER}" == "root" ]; then
+    ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+  else
+    sudo -E -u "${USER}" ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+  fi
 else
   ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
 fi
@@ -274,7 +277,11 @@ groupTwo=
 groupRee=
 groupFor=
 if [ "${USER}" ]; then
-  zones=$(sudo -u "${USER}" ${ROON}/bin/get_zones)
+  if [ "${USER}" == "root" ]; then
+    zones=$(${ROON}/bin/get_zones)
+  else
+    zones=$(sudo -E -u "${USER}" ${ROON}/bin/get_zones)
+  fi
 else
   zones=$(${ROON}/bin/get_zones)
 fi
@@ -283,7 +290,11 @@ numWith=0
 [ ${numZones} -gt 0 ] && {
   defaultZone=$(echo "${zones}" | awk -F ',' ' { print $1 } ')
   if [ "${USER}" ]; then
-    withDefaultZone=$(sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${defaultZone}")
+    if [ "${USER}" == "root" ]; then
+      withDefaultZone=$(${ROON}/bin/get_zone_info -l -z "${defaultZone}")
+    else
+      withDefaultZone=$(sudo -E -u ${USER} ${ROON}/bin/get_zone_info -l -z "${defaultZone}")
+    fi
   else
     withDefaultZone=$(${ROON}/bin/get_zone_info -l -z "${defaultZone}")
   fi
@@ -320,7 +331,11 @@ numWith=0
     zoneTwo=${Array3[0]}
     [ "${zoneTwo}" ] || zoneTwo=${arrayone[1]}
     if [ "${USER}" ]; then
-      withZoneTwo=$(sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
+      if [ "${USER}" == "root" ]; then
+        withZoneTwo=$(${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
+      else
+        withZoneTwo=$(sudo -E -u ${USER} ${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
+      fi
     else
       withZoneTwo=$(${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
     fi
@@ -338,7 +353,11 @@ numWith=0
 [ ${numZones} -gt 3 ] && {
   secondZone=$(echo "${zones}" | awk -F ',' ' { print $2 } ' | sed -e "s/^ //")
   if [ "${USER}" ]; then
-    withSecondZone=$(sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${secondZone}")
+    if [ "${USER}" == "root" ]; then
+      withSecondZone=$(${ROON}/bin/get_zone_info -l -z "${secondZone}")
+    else
+      withSecondZone=$(sudo -E -u ${USER} ${ROON}/bin/get_zone_info -l -z "${secondZone}")
+    fi
   else
     withSecondZone=$(${ROON}/bin/get_zone_info -l -z "${secondZone}")
   fi
@@ -357,7 +376,11 @@ numWith=0
 [ ${numZones} -gt 4 ] && {
   lastZone=$(echo "${zones}" | awk -F ',' ' { print $(NF) } ' | sed -e "s/^ //")
   if [ "${USER}" ]; then
-    withLastZone=$(sudo -u ${USER} ${ROON}/bin/get_zone_info -l -z "${lastZone}")
+    if [ "${USER}" == "root" ]; then
+      withLastZone=$(${ROON}/bin/get_zone_info -l -z "${lastZone}")
+    else
+      withLastZone=$(sudo -E -u ${USER} ${ROON}/bin/get_zone_info -l -z "${lastZone}")
+    fi
   else
     withLastZone=$(${ROON}/bin/get_zone_info -l -z "${lastZone}")
   fi
