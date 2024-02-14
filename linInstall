@@ -41,8 +41,6 @@ fi
   exit 1
 }
 
-# ${SUDO} ${PYTHON} -m ensurepip --upgrade
-
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
 [ -f "${SCRIPT_DIR}/VERSION" ] || {
@@ -69,14 +67,6 @@ while true; do
   esac
 done
 
-# Install the Python Roon API
-if pip list | grep roonapi >/dev/null; then
-  ${SUDO} ${PYTHON} -m pip install --upgrade roonapi >/dev/null 2>&1
-else
-  ${SUDO} ${PYTHON} -m pip install roonapi >/dev/null 2>&1
-fi
-${SUDO} ${PYTHON} -m pip install rich-cli >/dev/null 2>&1
-
 [ -d /usr/local ] || ${SUDO} mkdir /usr/local
 [ -d /usr/local/bin ] || ${SUDO} mkdir /usr/local/bin
 [ -d ${ROON} ] || ${SUDO} mkdir ${ROON}
@@ -84,6 +74,18 @@ ${SUDO} ${PYTHON} -m pip install rich-cli >/dev/null 2>&1
 [ -d ${DESTDIR}/share/applications ] || ${SUDO} mkdir ${DESTDIR}/share/applications
 [ -d ${DESTDIR}/share/doc ] || ${SUDO} mkdir ${DESTDIR}/share/doc
 [ -d ${DESTDIR}/share/doc/${PKG} ] || ${SUDO} mkdir ${DESTDIR}/share/doc/${PKG}
+
+# Install the Python Roon API
+# if pip list | grep roonapi >/dev/null; then
+#   ${SUDO} ${PYTHON} -m pip install --upgrade roonapi >/dev/null 2>&1
+# else
+#   ${SUDO} ${PYTHON} -m pip install roonapi >/dev/null 2>&1
+# fi
+# ${SUDO} ${PYTHON} -m pip install rich-cli >/dev/null 2>&1
+${SUDO} ${PYTHON} -m venv ${ROON}/venv
+[ -x ${ROON}/venv/bin/python ] && PYTHON=${ROON}/venv/bin/python
+${SUDO} ${PYTHON} -m pip install roonapi
+${SUDO} ${PYTHON} -m pip install rich-cli
 
 [ -f /usr/local/Roon/etc/roon_api.ini ] && {
   ${SUDO} cp /usr/local/Roon/etc/roon_api.ini ${TMP_ROON_API}

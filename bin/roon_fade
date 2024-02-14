@@ -691,6 +691,12 @@ show_menu() {
   done
 }
 
+# Use a Python virtual environment
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
+
 init_conf
 
 fadetime=

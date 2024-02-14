@@ -342,6 +342,18 @@ LOCAL=false
 BOLD=$(tput bold 2>/dev/null)
 NORMAL=$(tput sgr0 2>/dev/null)
 
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[ -x ${ROON}/venv/bin/python ] && export PYTHON=${ROON}/venv/bin/python
+
+[[ ":$PATH:" == *":/usr/local/bin:"* ]] || export PATH=${PATH}:/usr/local/bin
+[[ ":$PATH:" == *":/usr/local/Roon/bin:"* ]] || export PATH=/usr/local/Roon/bin:${PATH}
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || export PATH=/usr/local/Roon/venv/bin:${PATH}
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+else
+  [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 set_default_conf() {
   if [ -w ${ROONETC} ]; then
     echo "LOCAL=true" >${ROONCONF}
@@ -385,14 +397,6 @@ bash -n ${ROONCONF} >/dev/null 2>&1
   done
 }
 [ -f ${ROONCONF} ] && . ${ROONCONF}
-
-[[ ":$PATH:" == *":/usr/local/bin:"* ]] || export PATH=${PATH}:/usr/local/bin
-[[ ":$PATH:" == *":/usr/local/Roon/bin:"* ]] || export PATH=${PATH}:/usr/local/Roon/bin
-if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-else
-  [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
-fi
 
 select_zone() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
