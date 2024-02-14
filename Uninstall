@@ -25,47 +25,6 @@ uninstall() {
   sudo rm -rf ${DOC}/RoonCommandLine
   sudo rm -f ${APPL}/rooncommand.desktop
 
-  ROON_SITE_DIR=
-  # Check the global site directories
-  have_python3=$(type -p python3)
-  if [ "${have_python3}" ]
-  then
-    SITES=($(sudo python3 -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-  else
-    SITES=($(sudo python -c 'import site; print(site.getsitepackages())' | tr -d '[],'))
-  fi
-  for site in ${SITES[@]}
-  do
-    site=$(echo "$site" | sed -e "s/'//g")
-    [ -d "${site}"/roonapi ] && {
-      ROON_SITE_DIR=${site}/roonapi
-      break
-    }
-  done
-
-  if [ "$ROON_SITE_DIR" ]
-  then
-    # Roll back the Python Roon API patch if it was applied
-    cd "$ROON_SITE_DIR" || exit 1
-    for i in *.orig
-    do
-      [ "$i" == "*.orig" ] && continue
-      j=$(echo "$i" | sed -e "s/.orig//")
-      sudo mv "$i" "$j"
-    done
-  else
-    echo "Could not locate the roonapi Python module installation directory"
-    echo "Python Roon API patch not reversed."
-  fi
-
-  # Don't uninstall roonapi Python module, they might be using it for something else
-  # if [ "${have_python3}" ]
-  # then
-  #     sudo python3 -m pip uninstall roonapi -y
-  # else
-  #     sudo python -m pip uninstall roonapi -y
-  # fi
-
   echo ""
   echo "RoonCommandLine uninstalled"
 }

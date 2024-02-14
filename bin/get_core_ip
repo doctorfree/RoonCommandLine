@@ -12,6 +12,12 @@ cd $ROON || exit 1
 # echo "When prompted for authorization, go to a Roon Remote client window,"
 # echo "click on 'Settings' then click on 'Extensions' then 'Enable' the extension"
 
+# Use a Python virtual environment
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
+
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then

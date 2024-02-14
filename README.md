@@ -315,6 +315,15 @@ the Python Roon API:
     $ sudo python3 -m pip install roonapi
 ```
 
+**Important Note:** recent releases of Debian based systems (e.g. Ubuntu) are
+enforcing a requirement that Python modules are installed in a virtual environment.
+To install `roonapi` in a Python virtual environment, use the following commands:
+
+```bash
+sudo python3 -m venv /usr/local/Roon/venv
+sudo /usr/local/Roon/venv/bin/python3 -m pip install roonapi
+```
+
 The second component is the Python Roon API frontend shell scripts
 and the Python Roon API backend Python scripts. These both get installed on
 the system on which the Python Roon API is installed. Copy this entire repository

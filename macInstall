@@ -37,6 +37,9 @@ fi
   exit 1
 }
 
+[ -d ${ROON} ] || ${SUDO} mkdir -p ${ROON}
+${SUDO} ${PYTHON} -m venv ${ROON}/venv
+[ -x ${ROON}/venv/bin/python ] && export PYTHON=${ROON}/venv/bin/python
 ${SUDO} ${PYTHON} -m ensurepip --upgrade >/dev/null 2>&1
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)

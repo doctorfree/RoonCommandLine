@@ -26,6 +26,11 @@ ROON_INI=${ROONETC}/roon_api.ini
 # Locate the global site directories
 ROON_SITE_DIR=
 PYTHONUSERBASE=
+
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
 # Check the global site directories
 if type -p python3 > /dev/null
 then

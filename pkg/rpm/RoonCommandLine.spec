@@ -101,6 +101,7 @@ if [ -x /usr/local/Roon/etc/preremove ]
 then
     /usr/local/Roon/etc/preremove
 fi
+rm -rf /usr/local/Roon/venv
 
 %files
 /usr

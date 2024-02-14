@@ -18,7 +18,14 @@ set -e
 
 
 case "$1" in
-    remove|upgrade|deconfigure)
+    remove)
+        if [ -x /usr/local/Roon/etc/preremove ]
+        then
+            /usr/local/Roon/etc/preremove
+        fi
+        rm -rf /usr/local/Roon/venv
+    ;;
+    upgrade|deconfigure)
         if [ -x /usr/local/Roon/etc/preremove ]
         then
             /usr/local/Roon/etc/preremove

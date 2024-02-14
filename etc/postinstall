@@ -3,8 +3,11 @@
 # Postinstall script for rooncommandline
 #
 # Author: Ronald Joe Record <ronaldrecord@gmail.com>
-#
-# update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+
+ROON=/usr/local/Roon
+ROONETC=${ROON}/etc
+ROON_INI=${ROONETC}/roon_api.ini
+ROONCONF=${ROONETC}/pyroonconf
 
 export PATH=$PATH:/usr/local/bin
 if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
@@ -20,17 +23,19 @@ if [ "${python3_inst}" ]; then
 else
   PYTHON="python"
 fi
-#${PYTHON} -m ensurepip --upgrade > /dev/null 2>&1
-${PYTHON} -m pip install --upgrade roonapi >/dev/null 2>&1
-${PYTHON} -m pip install rich-cli >/dev/null 2>&1
+
+[ -d ${ROON} ] || mkdir -p ${ROON}
+${PYTHON} -m venv ${ROON}/venv
+[ -x ${ROON}/venv/bin/python ] && export PYTHON=${ROON}/venv/bin/python
+${PYTHON} -m pip install roonapi
+${PYTHON} -m pip install rich-cli
+# ${PYTHON} -m pip install --upgrade roonapi >/dev/null 2>&1
+# ${PYTHON} -m pip install rich-cli >/dev/null 2>&1
+
 [ -d /usr/local ] || mkdir /usr/local
 [ -d /usr/local/bin ] || mkdir /usr/local/bin
 cd /usr/local/bin
 
-ROON=/usr/local/Roon
-ROONETC=${ROON}/etc
-ROON_INI=${ROONETC}/roon_api.ini
-ROONCONF=${ROONETC}/pyroonconf
 for command in "${ROON}"/bin/*; do
   b=$(basename "${command}")
   if [ -f "${b}" ]; then

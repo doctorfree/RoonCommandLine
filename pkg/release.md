@@ -1,5 +1,7 @@
 # RoonCommandLine Release Notes
 
+RoonCommandLine version 2.1.0 release 1 moves to a Python virtual environment to support Ubuntu 22.04, Debian 12, and later
+
 RoonCommandLine version 2.0.8 release 5 is a minor bug fix release and provides PEP 8 conformance
 
 RoonCommandLine version 2.0.8 release 4 is a minor bug fix release, only restore saved `roon_api.ini` if in new format.
@@ -16,18 +18,18 @@ The installation automatically detects and stores the Roon Core IP and port. The
 
 **IMPORTANT NOTE** Older versions of RoonCommandLine will no longer function properly. In order to use RoonCommandLine you must install version 2.0.2 release 1 or later.
 
-[Download the latest Debian or RPM package format release](https://github.com/doctorfree/RoonCommandLine/-/releases)
+[Download the latest Debian or RPM package format release](https://github.com/doctorfree/RoonCommandLine/releases)
 
 Install the package on Debian based systems by executing the command
 
 ```bash
-sudo apt install ./RoonCommandLine_2.0.8-4.deb
+sudo apt install ./RoonCommandLine_2.1.0-1.deb
 ```
 
 Install the package on RPM based systems by executing the command
 
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.0.8-4.rpm
+sudo yum localinstall ./RoonCommandLine-2.1.0-1.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
@@ -52,7 +54,9 @@ cd RoonCommandLine
 
 ## Changelog
 
-This release adds support for:
+This release primarily adds support for installation on Ubuntu 22.04, Debian 12 and later in which a Python virtual environment is required.
+
+The previous release added support for:
 
 - Check for python3 in roon set_default
 - Support for Homebrew installed Python etc
@@ -85,6 +89,6 @@ Version 2.0.7 release 1 added support for:
 - Add `get_zone_remaining` to get remaining time for now playing in zone
 - Add `get_zone_volume` and `get_zone_attributes.py`
 
-View the full changelog for this release at <https://github.com/doctorfree/RoonCommandLine/blob/v2.0.8r4/CHANGELOG.md>
+View the full changelog for this release at <https://github.com/doctorfree/RoonCommandLine/blob/v2.1.0r1/CHANGELOG.md>
 
 See [CHANGELOG.md](https://github.com/doctorfree/RoonCommandLine/blob/master/CHANGELOG.md) for a full list of changes in every RoonCommandLine release
