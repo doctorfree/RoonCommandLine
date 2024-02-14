@@ -83,7 +83,7 @@ done
 # fi
 # ${SUDO} ${PYTHON} -m pip install rich-cli >/dev/null 2>&1
 ${SUDO} ${PYTHON} -m venv ${ROON}/venv
-[ -x ${ROON}/venv/bin/python ] && PYTHON=${ROON}/venv/bin/python
+[ -x ${ROON}/venv/bin/python ] && export PYTHON=${ROON}/venv/bin/python
 ${SUDO} ${PYTHON} -m pip install roonapi
 ${SUDO} ${PYTHON} -m pip install rich-cli
 

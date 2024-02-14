@@ -26,7 +26,7 @@ fi
 
 [ -d ${ROON} ] || mkdir -p ${ROON}
 ${PYTHON} -m venv ${ROON}/venv
-[ -x ${ROON}/venv/bin/python ] && PYTHON=${ROON}/venv/bin/python
+[ -x ${ROON}/venv/bin/python ] && export PYTHON=${ROON}/venv/bin/python
 ${PYTHON} -m pip install roonapi
 ${PYTHON} -m pip install rich-cli
 # ${PYTHON} -m pip install --upgrade roonapi >/dev/null 2>&1
