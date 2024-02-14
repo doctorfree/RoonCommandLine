@@ -1,6 +1,6 @@
 # RoonCommandLine Release Notes
 
-RoonCommandLine version 2.1.0 release 1 moves to a Python virtual environment to support Ubuntu 22.04, Debian 12, and later
+RoonCommandLine version 2.1.0 release 1 moves to a Python virtual environment to support Ubuntu 23.04, Debian 12, and later
 
 RoonCommandLine version 2.0.8 release 5 is a minor bug fix release and provides PEP 8 conformance
 
@@ -54,7 +54,7 @@ cd RoonCommandLine
 
 ## Changelog
 
-This release primarily adds support for installation on Ubuntu 22.04, Debian 12 and later in which a Python virtual environment is required.
+This release primarily adds support for installation on Ubuntu 23.04, Debian 12 and later in which a Python virtual environment is required.
 
 The previous release added support for:
 
