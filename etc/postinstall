@@ -54,20 +54,28 @@ if [ -f "${ROON_DOC}/VERSION" ]; then
   release=${RELEASE}
 else
   # Should not happen but if it did we fake it
-  version="2.0.5"
-  release="1"
+  version="2.1.0"
+  release="2"
 fi
 
 # Copy in distributed roon_api.ini template if no previous one exists
 [ -f ${ROON_INI} ] || {
   # Restore previously saved roon_api.ini and pyroonconf
   TMP_ROON_API="/tmp/_roon_api_ini_.save"
-  if [ -f ${TMP_ROON_API} ]; then
+  if [ -s ${TMP_ROON_API} ]; then
     if grep defaultalbum "${TMP_ROON_API}" >/dev/null; then
       cp ${ROONETC}/roon_api.ini-dist ${ROON_INI}
     else
-      echo "Restoring saved ${ROON_INI}"
-      cp ${TMP_ROON_API} ${ROON_INI}
+      if grep DefaultZone "${TMP_ROON_API}" >/dev/null; then
+        if grep RoonCorePort "${TMP_ROON_API}" >/dev/null; then
+          echo "Restoring saved ${ROON_INI}"
+          cp ${TMP_ROON_API} ${ROON_INI}
+        else
+          cp ${ROONETC}/roon_api.ini-dist ${ROON_INI}
+        fi
+      else
+        cp ${ROONETC}/roon_api.ini-dist ${ROON_INI}
+      fi
     fi
     rm -f ${TMP_ROON_API}
   else
@@ -140,7 +148,7 @@ done
 # Copy in saved pyroonconf if it exists
 [ -f ${ROONCONF} ] || {
   # Restore previously saved pyroonconf
-  if [ -f /tmp/_pyroonconf_.save ]; then
+  if [ -s /tmp/_pyroonconf_.save ]; then
     echo "Restoring saved ${ROONCONF}"
     cp /tmp/_pyroonconf_.save ${ROONCONF}
     rm -f /tmp/_pyroonconf_.save
