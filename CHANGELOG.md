@@ -3,10 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 Feb 14, 2024 :
-RoonCommandLine version 2.1.0 release 2
+RoonCommandLine version 2.1.0 release 3
 
     This release provides support for Ubuntu 23.04, Debian 12, and later:
         * Use a Python virtual environment
+        * Additional checks for valid saved roon_api.ini
         * Add support for 'q' to quit
         * Migrate to Github
         * Add lolcat colored figlet text transparent PNG header
