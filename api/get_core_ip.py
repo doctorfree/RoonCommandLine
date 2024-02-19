@@ -21,6 +21,8 @@ app = {
 
 discover = RoonDiscovery(None)
 servers = discover.all()
+discover.stop()
+
 apis = [RoonApi(app, None, server[0], server[1], False) for server in servers]
 
 auth_api = []
@@ -31,6 +33,9 @@ while len(auth_api) == 0:
     auth_api = [api for api in apis if api.token is not None]
 
 api = auth_api[0]
+
+for api in apis:
+    api.stop()
 
 print("RoonCoreIP =", api.host)
 print("RoonCorePort =", api._port)
