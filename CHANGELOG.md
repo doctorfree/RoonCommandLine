@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+Unreleased :
+RoonCommandLine version 2.1.0 release 4
+
+    This is a bug fix release:
+        * Stop core discovery after core discovered
+
 Feb 14, 2024 :
 RoonCommandLine version 2.1.0 release 3
 
