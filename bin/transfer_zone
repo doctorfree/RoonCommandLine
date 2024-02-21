@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+TRAN=transfer_zone.py
+FROM_ZONE=
+TO_ZONE=
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI} || exit 1
+
+[ -f $TRAN ] || exit 2
+
+# First argument is from zone, second is to zone (required)
+# If only one argument, use default zone as from and argument as to
+if [ "$2" ]; then
+  FROM_ZONE="$1"
+  TO_ZONE="$2"
+else
+  TO_ZONE="$1"
+fi
+[ "${TO_ZONE}" ] || {
+  printf "\nUsage: transfer_zone <from zone> <to zone>"
+  printf "\nAt least <to zone> required. Exiting.\n"
+  exit 1
+}
+
+# Use a Python virtual environment
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+    ${ROON}/bin/set_zone "${DEFZONE}"
+    . ${ROONCONF}
+fi
+
+# Get the default from zone if one is not provided
+[ "${FROM_ZONE}" ] || {
+    FROM_ZONE="${ROON_ZONE}"
+    # Remove leading and trailing spaces in FROM_ZONE
+    FROM_ZONE="$(echo -e "${FROM_ZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
+
+have_python3=$(type -p python3)
+if [ "${have_python3}" ]
+then
+    python3 $TRAN -f "$FROM_ZONE" -t "$TO_ZONE"
+else
+    python $TRAN -f "$FROM_ZONE" -t "$TO_ZONE"
+fi
+${ROON}/bin/set_zone "${TO_ZONE}"

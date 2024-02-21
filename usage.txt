@@ -1,52 +1,61 @@
-Usage: roon -A album -a artist -C composer -f [on|onlog|off|status] -g genre -G zone_group -i
-	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|playtracks|tags|zones]
-	-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]
-	-s search -p playlist -T track -t tag -z zone -L -S -r radio
-	-X ex_album -x ex_artist [-EuU]
+Usage: roon -A album -a artist -C composer -D destination zone
+    -F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i
+    -l [albums|artists|artalbums|arttracks|composers|comalbums|
+        genres|genalbums|genartists|playlists|playtracks|tags|zones]
+    -c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|
+        next|previous|shuffle|repeat|mute|mute_all]
+    -s search -p playlist -T track -t tag -z zone -L -S -r radio
+    -X ex_album -x ex_artist [-EuU]
 Where:
-	-A album selects an album to play
-	-a artist selects an artist to list/play
-	-C composer selects a composer to play
-	-g genre selects a genre to list/play
-	-i displays zone information (combine with '-z zone' for extended
-		info on a specified zone, otherwise display info on all zones)
-	-f [on|onlog|off|status] enables/disables fading/logging in specified zone
-		'on' enables fading, 'onlog' fading and logging, 'off' disables fading
-		(combine with '-z zone' for 'fading' in that zone)
-	-n displays 'now playing' information for zones actively playing
-	-N displays 'now playing' information for all zones
-		(combine with '-z zone' for 'now playing' in only that zone)
-	-p playlist selects a playlist to play
-	-G zone_group specifies a zone grouping specified in roon_api.ini
-	-L setup roon to execute local commands rather than remote via SSH
-	-S Set Roon defaults in roon_api.ini
-	-l [albums|artists|artalbums|arttracks|composers|comalbums|genres|genalbums|genartists|playlists|playtracks|tags|zones]
-		indicates list albums, artists, albums by artist, composers, albums by composers, genres, albums in genre, artists in genre, playlists, tags, or Roon zones
-	-r radio selects a live radio stream to play
-	-s search specifies a term to search for in the lists retrieved with -l
-	-T track specifies a track to play
-	-t tag selects an tag to play
-	-z zone selects the Roon Zone in which to play
-	-c [group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]
-		issues the command in the selected zone
-		'mute' toggles the zone's muted or unmuted state
-		'mute_all' toggles all zones' muted or unmuted state
-		'pause_all' pauses playback in all zones
-		'play_all' begins playback in all zones
-		'stop_all' stops playback in all zones and releases devices
-		'shuffle' toggles the zone's shuffled or unshuffled setting
-		'repeat' toggles the zone's looping or non-looping setting
-	-v volume sets the volume level in the selected zone
-		The volume argument has the format [g:][r:][s:]num
-		Where 'g' indicates set volume for all zones in the group
-		'r' specifies use relative method volume setting
-		's' specifies use relative_step method volume setting
-		'num' can be absolute, relative, and negative or positive
-	-X ex_album specifies a string to exclude from album/genre names
-	-x ex_artist specifies a string to exclude from artist/composer/playlist names
-	-u displays a full usage message with examples
-	-U displays a usage message without examples
-	-E displays examples with no usage message
+    -A album selects an album to play
+    -a artist selects an artist to list/play
+    -C composer selects a composer to play
+    -D destination zone specifies the zone to transfer current queue to
+    -F from zone specifies the zone to transfer from (default: last played)
+    -g genre selects a genre to list/play
+    -i displays zone information (combine with '-z zone' for extended
+        info on a specified zone, otherwise display info on all zones)
+    -f [on|onlog|off|status] enables/disables fading/logging in specified zone
+        'on' enables fading, 'onlog' fading and logging, 'off' disables fading
+        (combine with '-z zone' for 'fading' in that zone)
+    -n displays 'now playing' information for zones actively playing
+    -N displays 'now playing' information for all zones
+        (combine with '-z zone' for 'now playing' in only that zone)
+    -p playlist selects a playlist to play
+    -G zone_group specifies a zone grouping specified in roon_api.ini
+    -L setup roon to execute local commands rather than remote via SSH
+    -S Set Roon defaults in roon_api.ini
+    -l [albums|artists|artalbums|arttracks|composers|comalbums|
+        genres|genalbums|genartists|playlists|playtracks|tags|zones]
+            indicates list albums, artists, albums by artist,
+            composers, albums by composers, genres, albums in genre,
+            artists in genre, playlists, tags, or Roon zones
+    -r radio selects a live radio stream to play
+    -s search specifies a term to search for in the lists retrieved with -l
+    -T track specifies a track to play
+    -t tag selects an tag to play
+    -z zone selects the Roon Zone in which to play
+    -c [group|ungroup|play|play_all|pause|pause_all|playpause|
+        stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]
+            issues the command in the selected zone
+            'roon -c mute' toggles the zone's muted or unmuted state
+            'roon -c mute_all' toggles all zones' muted or unmuted state
+            'roon -c pause_all' pauses playback in all zones
+            'roon -c play_all' begins playback in all zones
+            'roon -c stop_all' stops playback in all zones and releases devices
+            'roon -c shuffle' toggles the zone's shuffled or unshuffled setting
+            'roon -c repeat' toggles the zone's looping or non-looping setting
+    -v volume sets the volume level in the selected zone
+        The volume argument has the format [g:][r:][s:]num
+        Where 'g' indicates set volume for all zones in the group
+        'r' specifies use relative method volume setting
+        's' specifies use relative_step method volume setting
+        'num' can be absolute, relative, and negative or positive
+    -X ex_album specifies a string to exclude from album/genre names
+    -x ex_artist specifies a string to exclude from artist/composer/playlist names
+    -u displays a full usage message with examples
+    -U displays a usage message without examples
+    -E displays examples with no usage message
 Combine '-a artist' and '-A album' to play an album by a specified artist
 Combine '-a artist' and '-T track' to play a track by a specified artist
 Combine '-a artist' or '-A album' with '-g genre' to play an artist or album in a specified genre
@@ -55,64 +64,65 @@ Special search term __all__ matches all entries
 Special name default plays the default setting in roon_api.ini
 
 Example invocations
-	Play artist:
-		roon -a "Deep Purple"
-	Play album by artist:
-		roon -a "Deep Purple" -A Burn
-	Play track by artist:
-		roon -a "Aretha Franklin" -T Think
-	Play artist in specified zone:
-		roon -a "Jethro Tull" -z "Mac Pro DAC"
-	Play genre:
-		roon -g Classical
-	Play default live radio:
-		roon -r default
-	Play playlist:
-		roon -p "Bowie Favs"
-	Play next track:
-		roon -c next
-	Stop play in specified zone:
-		roon -c stop -z Kitchen
-	Mute/Unmute a specified zone:
-		roon -c mute -z "Mac Pro DAC"
-	Mute/Unmute all zones:
-		roon -c mute_all
-	List all playlists containing the string 'Best':
-		roon -l playlists -s Best
-	List albums by artist:
-		roon -l artalbums -a "Deep Purple"
-	List artists containing the string 'Will' in the 'Country' genre:
-		roon -l genartists -a Will -g Country
-	List albums containing the string 'Magic' in the 'Rock' genre:
-		roon -l genalbums -A Magic -g Rock
-	Play artist containing the string 'Willie' in the 'Country' genre:
-		roon -a Willie -g Country
-	Play album containing the string 'Magic' in the 'Rock' genre:
-		roon -A Magic -g Rock
-	Group the zones listed in roon_api.ini Group_foobar:
-		roon -G foobar -c group
-	Set the volume level to 50 in the currently active zone
-		roon -v 50
-	Decrease the volume level by 10 in the currently active zone
-		roon -v r:-10
-	Set the volume level to 40 in all zones grouped with the zone named 'Mac Pro DAC'
-		roon -v g:40 -z 'Mac Pro DAC'
-	Increase the volume level by 20 in all zones grouped with the zone named 'Mac Pro DAC'
-		roon -v g:r:20 -z 'Mac Pro DAC'
-	Get info on all Roon zones
-		roon -i
-	Get extended info on Roon zone named 'Mac Pro DAC'
-		roon -i -z 'Mac Pro DAC'
-	Get now playing info on all zones regardless of state
-		roon -N
-	Get now playing info on all zones actively playing
-		roon -n
-	Get now playing info on Roon zone named 'Mac Pro DAC'
-		roon -n -z 'Mac Pro DAC'
-	Enable volume fading in default Roon zone
-		roon -f on
-	Disable volume fading in default Roon zone
-		roon -f off
-	NOTE: Use quotes to specify media names which contain spaces.
-	For example, to play the album 'Love Bomb':
-		roon -A "Love Bomb"
+    Play artist:
+        roon -a "Deep Purple"
+    Play album by artist:
+        roon -a "Deep Purple" -A Burn
+    Play track by artist:
+        roon -a "Aretha Franklin" -T Think
+    Play artist in specified zone:
+        roon -a "Jethro Tull" -z "Mac Pro DAC"
+    Play genre:
+        roon -g Classical
+    Play default live radio:
+        roon -r default
+    Play playlist:
+        roon -p "Bowie Favs"
+    Play next track:
+        roon -c next
+    Stop play in specified zone:
+        roon -c stop -z Kitchen
+    Mute/Unmute a specified zone:
+        roon -c mute -z "Mac Pro DAC"
+    Mute/Unmute all zones:
+        roon -c mute_all
+    List all playlists containing the string 'Best':
+        roon -l playlists -s Best
+    List albums by artist:
+        roon -l artalbums -a "Deep Purple"
+    List artists containing the string 'Will' in the 'Country' genre:
+        roon -l genartists -a Will -g Country
+    List albums containing the string 'Magic' in the 'Rock' genre:
+        roon -l genalbums -A Magic -g Rock
+    Play artist containing the string 'Willie' in the 'Country' genre:
+        roon -a Willie -g Country
+    Play album containing the string 'Magic' in the 'Rock' genre:
+        roon -A Magic -g Rock
+    Group the zones listed in roon_api.ini Group_foobar:
+        roon -G foobar -c group
+    Set the volume level to 50 in the currently active zone
+        roon -v 50
+    Decrease the volume level by 10 in the currently active zone
+        roon -v r:-10
+    Set the volume level to 40 in all zones grouped with the zone named 'Mac Pro DAC'
+        roon -v g:40 -z 'Mac Pro DAC'
+    Increase the volume level by 20 in all zones grouped with the zone named 'Mac Pro DAC'
+        roon -v g:r:20 -z 'Mac Pro DAC'
+    Get info on all Roon zones
+        roon -i
+    Get extended info on Roon zone named 'Mac Pro DAC'
+        roon -i -z 'Mac Pro DAC'
+    Get now playing info on all zones regardless of state
+        roon -N
+    Get now playing info on all zones actively playing
+        roon -n
+    Get now playing info on Roon zone named 'Mac Pro DAC'
+        roon -n -z 'Mac Pro DAC'
+    Enable volume fading in default Roon zone
+        roon -f on
+    Disable volume fading in default Roon zone
+        roon -f off
+    NOTE: Use quotes to specify media names which contain spaces.
+    For example, to play the album 'Love Bomb':
+        roon -A "Love Bomb"
+

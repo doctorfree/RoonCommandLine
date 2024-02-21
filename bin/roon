@@ -44,6 +44,8 @@ artalbumlist=
 arttracklist=
 composerlist=
 comalbumlist=
+dest_zone=
+from_zone=
 exalbum=
 exartist=
 genrelist=
@@ -70,8 +72,8 @@ have_rich=$(type -p rich)
 usage() {
   [ "${showusage}" ] && {
     if [ "${have_rich}" ]; then
-      rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-C[/] [yellow]composer[/]" --print
-      rich "    [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i[/]" --print
+      rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-C[/] [yellow]composer[/] [cyan]-D[/] [yellow]destination zone[/]" --print
+      rich "    [cyan]-F[/] [yellow]\[from zone][/] [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i[/]" --print
       rich "    [cyan]-l[/] [yellow]\[albums|artists|artalbums|arttracks|composers|comalbums|[/]" --print
       rich "        [yellow]genres|genalbums|genartists|playlists|playtracks|tags|zones][/]" --print
       rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|stop|stop_all|[/]" --print
@@ -79,10 +81,11 @@ usage() {
       rich "    [cyan]-s[/] [yellow]search[/] [cyan]-p[/] [yellow]playlist[/] [cyan]-T[/] [yellow]track[/] [cyan]-t[/] [yellow]tag[/] [cyan]-z[/] [yellow]zone[/] [cyan]-L[/] [cyan]-S[/] [cyan]-r[/] [yellow]radio[/]" --print
       rich "    [cyan]-X[/] [yellow]ex_album[/] [cyan]-x[/] [yellow]ex_artist[/] [cyan]\[-EuU][/]" --print
       rich "[bold]Where:[/]" --print
-      printf "\n"
       rich "    [cyan]-A[/] [yellow]album[/] selects an album to play" --print
       rich "    [cyan]-a[/] [yellow]artist[/] selects an artist to list/play" --print
       rich "    [cyan]-C[/] [yellow]composer[/] selects a composer to play" --print
+      rich "    [cyan]-D[/] [yellow]destination zone[/] specifies the zone to transfer current queue to" --print
+      rich "    [cyan]-F[/] [yellow]from zone[/] specifies the zone to transfer from (default: last played)" --print
       rich "    [cyan]-g[/] [yellow]genre[/] selects a genre to list/play" --print
       rich "    [cyan]-i[/] displays zone information (combine with '[cyan]-z[/] [yellow]zone[/]' for extended" --print
       rich "        info on a specified zone, otherwise display info on all zones)" --print
@@ -135,8 +138,8 @@ usage() {
       rich "Special name [bold italic green]default[/] plays the default setting in roon_api.ini" --print
       printf "\n"
     else
-      printf "\nUsage: roon -A album -a artist -C composer"
-      printf "\n\t-f [on|onlog|off|status] -g genre -G zone_group -i"
+      printf "\nUsage: roon -A album -a artist -C composer -D destination zone"
+      printf "\n\t-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i"
       printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|"
       printf "\n\t    genres|genalbums|genartists|playlists|playtracks|tags|zones]"
       printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|"
@@ -146,6 +149,8 @@ usage() {
       printf "\nWhere:\n\t-A album selects an album to play"
       printf "\n\t-a artist selects an artist to list/play"
       printf "\n\t-C composer selects a composer to play"
+      printf "\n\t-D 'destination zone' specifies the zone to transfer current queue to"
+      printf "\n\t-F 'from zone' specifies the zone to transfer from (default: last played)"
       printf "\n\t-g genre selects a genre to list/play"
       printf "\n\t-i displays zone information (combine with '-z zone' for extended"
       printf "\n\t\tinfo on a specified zone, otherwise display info on all zones)"
@@ -415,7 +420,7 @@ select_zone() {
   zone_options+=("Defaults Menu" "Main Menu" "Quit (q)")
   while true; do
     [ "${have_rich}" ] && {
-      rich "[bold][cyan]RoonCommandLine Zones[/cyan][/bold]" -p -a rounded -c -C
+      rich "[bold][cyan]Select Roon Zone[/cyan][/bold]" -p -a rounded -c -C
     }
     PS3="${BOLD}Please enter the Roon zone you wish to use (numeric or text): ${NORMAL}"
     select opt in "${zone_options[@]}"; do
@@ -1091,7 +1096,7 @@ info=
 now_playing=
 fading=
 logfade=
-while getopts A:a:c:C:f:g:G:inNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
+while getopts A:a:c:C:D:f:F:g:G:inNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
   case $flag in
     A)
       album="$OPTARG"
@@ -1104,6 +1109,12 @@ while getopts A:a:c:C:f:g:G:inNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       ;;
     C)
       composer="$OPTARG"
+      ;;
+    D)
+      dest_zone="$OPTARG"
+      ;;
+    F)
+      from_zone="$OPTARG"
       ;;
     f)
       fading="$OPTARG"
@@ -1320,6 +1331,20 @@ done
       ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info\""
     fi
   fi
+}
+
+# Transfer Zone
+[ "$dest_zone" ] && {
+  [ "$from_zone" ] || from_zone="${ROON_ZONE}"
+  if [ "${LOCAL}" = true ]; then
+    ${ROON}/bin/transfer_zone "$from_zone" "$dest_zone"
+  else
+    ssh $user@$server bash -l -c "${ROON}/bin/transfer_zone \"$from_zone\" \"$dest_zone\""
+  fi
+  status=$?
+  [ ${status} -eq 0 ] || {
+    echo "Unable to transfer zone to zone = $dest_zone"
+  }
 }
 
 [ "${fading}" ] && {

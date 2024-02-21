@@ -2,10 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-Unreleased :
+Feb 20, 2024 :
 RoonCommandLine version 2.1.0 release 4
 
-    This is a bug fix release:
+    This release adds the capability to transfer the current queue to another zone:
+        * Add 'transfer_zone' command and Python backend
         * Stop core discovery after core discovered
 
 Feb 14, 2024 :

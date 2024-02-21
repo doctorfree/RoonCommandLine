@@ -55,7 +55,7 @@ if [ -f "${ROON_DOC}/VERSION" ]; then
 else
   # Should not happen but if it did we fake it
   version="2.1.0"
-  release="3"
+  release="4"
 fi
 
 # Copy in distributed roon_api.ini template if no previous one exists
