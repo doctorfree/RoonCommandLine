@@ -26,8 +26,20 @@ else
 fi
 
 [ -d ${ROON} ] || mkdir -p ${ROON}
+# Create the RoonCommandLine Python virtual environment
 ${PYTHON} -m venv ${ROON}/venv >/dev/null 2>&1
+# Use the RoonCommandLine Python virtual environment
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
 [ -x ${ROON}/venv/bin/python ] && export PYTHON=${ROON}/venv/bin/python
+# Make sure we have pip installed
+${PYTHON} -m ensurepip --upgrade >/dev/null 2>&1
+[ -x ${ROON}/venv/bin/pip ] || {
+  ${PYTHON} -m pip install --upgrade pip >/dev/null 2>&1
+}
+
 ${PYTHON} -m pip install ${PIPARGS} roonapi >/dev/null 2>&1
 ${PYTHON} -m pip install ${PIPARGS} rich-cli >/dev/null 2>&1
 
@@ -55,7 +67,7 @@ if [ -f "${ROON_DOC}/VERSION" ]; then
 else
   # Should not happen but if it did we fake it
   version="2.1.0"
-  release="4"
+  release="5"
 fi
 
 # Copy in distributed roon_api.ini template if no previous one exists

@@ -38,9 +38,19 @@ fi
 }
 
 [ -d ${ROON} ] || ${SUDO} mkdir -p ${ROON}
-${SUDO} ${PYTHON} -m venv ${ROON}/venv
+# Create the RoonCommandLine Python virtual environment
+${SUDO} ${PYTHON} -m venv ${ROON}/venv >/dev/null 2>&1
+# Use the RoonCommandLine Python virtual environment
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
 [ -x ${ROON}/venv/bin/python ] && export PYTHON=${ROON}/venv/bin/python
+# Make sure we have pip installed
 ${SUDO} ${PYTHON} -m ensurepip --upgrade >/dev/null 2>&1
+[ -x ${ROON}/venv/bin/pip ] || {
+  ${SUDO} ${PYTHON} -m pip install --upgrade pip >/dev/null 2>&1
+}
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
