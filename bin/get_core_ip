@@ -26,3 +26,4 @@ then
 else
     python $CORE
 fi
+sleep 2

@@ -8,6 +8,7 @@ RoonCommandLine version 2.1.0 release 5
     This release ensures that pip is installed in the Python virtual environment:
         * Activate the Python virtual environment in all install scripts
         * Use the built-in ensurepip Python module to ensure pip is installed
+        * Fix timing after first discovery to avoid requiring dual authorization
 
 Feb 20, 2024 :
 RoonCommandLine version 2.1.0 release 4
