@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+May 09, 2024 :
+RoonCommandLine version 2.1.0 release 6
+
+    This release provides a more robust Python virtual environment installation of pip:
+        * If ensurepip Python module not available then download and run get-pip.py
+        * Requires curl or wget
+
 May 08, 2024 :
 RoonCommandLine version 2.1.0 release 5
 

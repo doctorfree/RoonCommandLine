@@ -49,7 +49,28 @@ ${SUDO} ${PYTHON} -m venv ${ROON}/venv >/dev/null 2>&1
 # Make sure we have pip installed
 ${SUDO} ${PYTHON} -m ensurepip --upgrade >/dev/null 2>&1
 [ -x ${ROON}/venv/bin/pip ] || {
-  ${SUDO} ${PYTHON} -m pip install --upgrade pip >/dev/null 2>&1
+  PYOUT="/tmp/get-pip$$.py"
+  PYURL="https://bootstrap.pypa.io/get-pip.py"
+  have_curl=$(type -p curl)
+  if [ "${have_curl}" ]; then
+    curl -sSL -o ${PYOUT} ${PYURL}
+  else
+    have_wget=$(type -p wget)
+    if [ "${have_wget}" ]; then
+      wget -q -O ${PYOUT} ${PYURL}
+    else
+      echo "WARNING: Unable to locate curl or wget to download pip install script"
+    fi
+  fi
+  if [ -f ${PYOUT} ]; then
+    ${SUDO} ${PYTHON} ${PYOUT}
+  else
+    echo "WARNING: pip install script not found"
+  fi
+  rm -f ${PYOUT}
+}
+[ -x ${ROON}/venv/bin/pip ] || {
+  echo "WARNING: ${ROON}/venv/bin/pip not found or not executable"
 }
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
