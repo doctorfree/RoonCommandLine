@@ -16,13 +16,6 @@
   <img src="https://raw.githubusercontent.com/wiki/doctorfree/RoonCommandLine/assets/rooncommandline.png" style="width:800px;height:140px;">
 </div>
 
-RoonCommandLine is one of the [Neoman](https://neoman.dev) managed projects:
-
-| **Neoman** | **Managed** | **Projects** |
-| ---------- | ----------- | ------------ |
-| [Asciiville](https://asciiville.dev) | [Lazyman](https://lazyman.dev) | [MirrorCommand](https://mirrorcommand.dev) |
-| [MusicPlayerPlus](https://musicplayerplus.dev) | [Neoman](https://neoman.dev) | [RoonCommandLine](https://rooncommand.dev) |
-
 ## Table of contents
 
 1. [Overview](#overview)
@@ -135,6 +128,19 @@ the RoonCommandLine package. Most modern Linux systems will have Python 3
 already installed. A good guide for installing Python 3 on Mac OS X can
 be found at https://docs.python-guide.org/starting/install3/osx/ and on
 Linux at https://docs.python-guide.org/starting/install3/linux/
+
+### Supported platforms
+
+`RoonCommandLine` has been thoroughly tested on `Ubuntu Linux`, `Fedora Linux`,
+`macOS`, and on a `Raspberry Pi 4`. It should work on any `Linux` or `macOS`
+with a modern version of `Bash` and `Python 3`. Users have reported successful
+installation and use of `RoonCommandLine` on the following platforms:
+
+`AntiX 23.1`, `Debian 12.5.0`, `Linux Mint 21.3 Cinnamon`,
+`Linux Mint 21.3 XFCE`, `MX 23.2`, `Ubuntu 24.04 Desktop`,
+`Ubuntu Studio 24.04`, `Xubuntu 24.04 Desktop`, and `Zorin OS 17.1 Core`.
+
+Tell us what you're running `RoonCommandLine` on and we'll add it to the list.
 
 ## Installation
 
