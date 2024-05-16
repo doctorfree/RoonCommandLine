@@ -109,8 +109,8 @@ usage() {
       rich "    [cyan]-T[/] [yellow]track[/] specifies a track to play" --print
       rich "    [cyan]-t[/] [yellow]tag[/] selects an tag to play" --print
       rich "    [cyan]-z[/] [yellow]zone[/] selects the Roon Zone in which to play" --print
-      rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|playpause|[/]" --print
-      rich "        [yellow]stop|stop_all|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
+      rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|[/]" --print
+      rich "        [yellow]next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
       rich "            issues the command in the selected zone" --print
       rich "            '[italic green]roon -c mute[/]' toggles the zone's muted or unmuted state" --print
       rich "            '[italic green]roon -c mute_all[/]' toggles all zones' muted or unmuted state" --print
@@ -176,8 +176,8 @@ usage() {
       printf "\n\t-T track specifies a track to play"
       printf "\n\t-t tag selects an tag to play"
       printf "\n\t-z zone selects the Roon Zone in which to play"
-      printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|playpause|"
-      printf "\n\t    stop|stop_all|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]"
+      printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|"
+      printf "\n\t    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]"
       printf "\n\t        issues the command in the selected zone"
       printf "\n\t        'mute' toggles the zone's muted or unmuted state"
       printf "\n\t        'mute_all' toggles all zones' muted or unmuted state"
