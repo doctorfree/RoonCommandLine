@@ -2,24 +2,6 @@
 
 RoonCommandLine version 2.1.1 release 1 provides support for shuffled playlist playback
 
-RoonCommandLine version 2.1.0 release 6 provides a more robust Python virtual environment installation of pip
-
-RoonCommandLine version 2.1.0 release 5 ensures that pip is installed in the Python virtual environment
-
-RoonCommandLine version 2.1.0 release 4 adds the capability to transfer the current queue from one Roon zone to another
-
-RoonCommandLine version 2.1.0 release 3 moves to a Python virtual environment to support Ubuntu 23.04, Debian 12, and later
-
-RoonCommandLine version 2.0.8 release 5 is a minor bug fix release and provides PEP 8 conformance
-
-RoonCommandLine version 2.0.8 release 4 is a minor bug fix release, only restore saved `roon_api.ini` if in new format.
-
-RoonCommandLine version 2.0.8 release 3 provides support for Homebrew installed Python and several bug fixes.
-
-RoonCommandLine version 2.0.8 release 2 provided compatibility with volume handling changes in the Python Roon API. Volume change/setting can now be made using a percentage. This release also adds support for fading track play volume immediately with the `roon_fade now` command along with Mac installation fixes.
-
-RoonCommandLine version 2.0.7 release 1 was a minor feature and bugfix update. That release added support for fading track play volume and fixed possible stale authentication tokens.
-
 ## Installation
 
 The installation automatically detects and stores the Roon Core IP and port. There is no need for any manual configuration.
@@ -60,11 +42,31 @@ cd RoonCommandLine
 ./Install
 ```
 
+## Release history
+
+RoonCommandLine version 2.1.0 release 6 provides a more robust Python virtual environment installation of pip
+
+RoonCommandLine version 2.1.0 release 5 ensures that pip is installed in the Python virtual environment
+
+RoonCommandLine version 2.1.0 release 4 adds the capability to transfer the current queue from one Roon zone to another
+
+RoonCommandLine version 2.1.0 release 3 moves to a Python virtual environment to support Ubuntu 23.04, Debian 12, and later
+
+RoonCommandLine version 2.0.8 release 5 is a minor bug fix release and provides PEP 8 conformance
+
+RoonCommandLine version 2.0.8 release 4 is a minor bug fix release, only restore saved `roon_api.ini` if in new format.
+
+RoonCommandLine version 2.0.8 release 3 provides support for Homebrew installed Python and several bug fixes.
+
+RoonCommandLine version 2.0.8 release 2 provided compatibility with volume handling changes in the Python Roon API. Volume change/setting can now be made using a percentage. This release also adds support for fading track play volume immediately with the `roon_fade now` command along with Mac installation fixes.
+
+RoonCommandLine version 2.0.7 release 1 was a minor feature and bugfix update. That release added support for fading track play volume and fixed possible stale authentication tokens.
+
 ## Changelog
 
 This release primarily adds support for installation on Ubuntu 23.04, Debian 12 and later in which a Python virtual environment is required.
 
-The previous release added support for:
+The previous releases added support for:
 
 - Check for python3 in roon set_default
 - Support for Homebrew installed Python etc
