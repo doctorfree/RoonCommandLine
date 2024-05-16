@@ -77,7 +77,7 @@ usage() {
       rich "    [cyan]-l[/] [yellow]\[albums|artists|artalbums|arttracks|composers|comalbums|[/]" --print
       rich "        [yellow]genres|genalbums|genartists|playlists|playtracks|tags|zones][/]" --print
       rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|stop|stop_all|[/]" --print
-      rich "        [yellow]next|previous|shuffle|repeat|mute|mute_all][/]" --print
+      rich "        [yellow]next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
       rich "    [cyan]-s[/] [yellow]search[/] [cyan]-p[/] [yellow]playlist[/] [cyan]-T[/] [yellow]track[/] [cyan]-t[/] [yellow]tag[/] [cyan]-z[/] [yellow]zone[/] [cyan]-L[/] [cyan]-S[/] [cyan]-r[/] [yellow]radio[/]" --print
       rich "    [cyan]-X[/] [yellow]ex_album[/] [cyan]-x[/] [yellow]ex_artist[/] [cyan]\[-EuU][/]" --print
       rich "[bold]Where:[/]" --print
@@ -110,15 +110,17 @@ usage() {
       rich "    [cyan]-t[/] [yellow]tag[/] selects an tag to play" --print
       rich "    [cyan]-z[/] [yellow]zone[/] selects the Roon Zone in which to play" --print
       rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|playpause|[/]" --print
-      rich "        [yellow]stop|stop_all|next|previous|shuffle|repeat|mute|mute_all][/]" --print
+      rich "        [yellow]stop|stop_all|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
       rich "            issues the command in the selected zone" --print
       rich "            '[italic green]roon -c mute[/]' toggles the zone's muted or unmuted state" --print
       rich "            '[italic green]roon -c mute_all[/]' toggles all zones' muted or unmuted state" --print
       rich "            '[italic green]roon -c pause_all[/]' pauses playback in all zones" --print
       rich "            '[italic green]roon -c play_all[/]' begins playback in all zones" --print
       rich "            '[italic green]roon -c stop_all[/]' stops playback in all zones and releases devices" --print
-      rich "            '[italic green]roon -c shuffle[/]' toggles the zone's shuffled or unshuffled setting" --print
-      rich "            '[italic green]roon -c repeat[/]' toggles the zone's looping or non-looping setting" --print
+      rich "            '[italic green]roon -c shuffle[/]' enables the zone's shuffled setting" --print
+      rich "            '[italic green]roon -c unshuffle[/]' disables the zone's shuffled setting" --print
+      rich "            '[italic green]roon -c repeat[/]' enables the zone's looping setting" --print
+      rich "            '[italic green]roon -c unrepeat[/]' disables the zone's looping setting" --print
       rich "    [cyan]-v[/] [yellow]volume[/] sets the volume level in the selected zone" --print
       rich "        The volume argument has the format [yellow]\[g:]\[r:]\[s:]num[/]" --print
       rich "        Where '[yellow]g[/]' indicates set volume for all zones in the group" --print
@@ -143,7 +145,7 @@ usage() {
       printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|"
       printf "\n\t    genres|genalbums|genartists|playlists|playtracks|tags|zones]"
       printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|"
-      printf "\n\t    next|previous|shuffle|repeat|mute|mute_all]"
+      printf "\n\t    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]"
       printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
       printf "\n\t-X ex_album -x ex_artist [-EuU]"
       printf "\nWhere:\n\t-A album selects an album to play"
@@ -175,15 +177,17 @@ usage() {
       printf "\n\t-t tag selects an tag to play"
       printf "\n\t-z zone selects the Roon Zone in which to play"
       printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|playpause|"
-      printf "\n\t    stop|stop_all|next|previous|shuffle|repeat|mute|mute_all]"
+      printf "\n\t    stop|stop_all|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]"
       printf "\n\t        issues the command in the selected zone"
       printf "\n\t        'mute' toggles the zone's muted or unmuted state"
       printf "\n\t        'mute_all' toggles all zones' muted or unmuted state"
       printf "\n\t        'pause_all' pauses playback in all zones"
       printf "\n\t        'play_all' begins playback in all zones"
       printf "\n\t        'stop_all' stops playback in all zones and releases devices"
-      printf "\n\t        'shuffle' toggles the zone's shuffled or unshuffled setting"
-      printf "\n\t        'repeat' toggles the zone's looping or non-looping setting"
+      printf "\n\t        'shuffle' enables the zone's shuffled setting"
+      printf "\n\t        'unshuffle' disables the zone's shuffled setting"
+      printf "\n\t        'repeat' enables the zone's looping setting"
+      printf "\n\t        'repeat' disables the zone's looping setting"
       printf "\n\t-v volume sets the volume level in the selected zone"
       printf "\n\t\tThe volume argument has the format [g:][r:][s:]num"
       printf "\n\t\tWhere 'g' indicates set volume for all zones in the group"
@@ -777,7 +781,7 @@ main_menu() {
       rich "[bold][cyan]RoonCommandLine Main Menu[/cyan][/bold]" -p -a rounded -c -C
     }
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Toggle Repeat" "Toggle Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Fade Menu" "Volume" "Quit (q)")
+    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Disable Repeat" "Enable Repeat" "Disable Shuffle" "Enable Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Fade Menu" "Volume" "Quit (q)")
     select opt in "${options[@]}"; do
       case "$opt,$REPLY" in
         "Get/Set Defaults",* | *,"Get/Set Defaults")
@@ -911,8 +915,18 @@ main_menu() {
           printf " Done\n\n"
           break
           ;;
-        "Toggle Repeat",* | *,"Toggle Repeat")
-          printf "\nExecuting Roon command to toggle repeat ..."
+        "Disable Repeat",* | *,"Disable Repeat")
+          printf "\nExecuting Roon command to disable repeat ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c unrepeat
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c unrepeat\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Enable Repeat",* | *,"Enable Repeat")
+          printf "\nExecuting Roon command to enable repeat ..."
           if [ "${LOCAL}" = true ]; then
             zone_command -c repeat
           else
@@ -921,8 +935,18 @@ main_menu() {
           printf " Done\n\n"
           break
           ;;
-        "Toggle Shuffle",* | *,"Toggle Shuffle")
-          printf "\nExecuting Roon command to toggle shuffle ..."
+        "Disable Shuffle",* | *,"Disable Shuffle")
+          printf "\nExecuting Roon command to disable shuffle ..."
+          if [ "${LOCAL}" = true ]; then
+            zone_command -c unshuffle
+          else
+            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c unshuffle\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Enable Shuffle",* | *,"Enable Shuffle")
+          printf "\nExecuting Roon command to enable shuffle ..."
           if [ "${LOCAL}" = true ]; then
             zone_command -c shuffle
           else
@@ -1096,7 +1120,7 @@ info=
 now_playing=
 fading=
 logfade=
-while getopts A:a:c:C:D:f:F:g:G:inNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
+while getopts A:a:c:C:D:f:F:g:G:hHinNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
   case $flag in
     A)
       album="$OPTARG"
@@ -1265,6 +1289,18 @@ while getopts A:a:c:C:D:f:F:g:G:inNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       ;;
     E)
       showusage=
+      showexamples=1
+      usage
+      ;;
+    h)
+      have_rich=
+      showusage=1
+      showexamples=
+      usage
+      ;;
+    H)
+      have_rich=
+      showusage=1
       showexamples=1
       usage
       ;;
@@ -1554,6 +1590,37 @@ done
     ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones $search\""
   fi
 }
+
+# Issue commands before playback begins
+[ "${comm}" ] && {
+  case "${comm}" in
+    "shuffle" | "unshuffle" | "repeat" | "unrepeat" | "mute" | "unmute" | "mute_all" | "next" | "previous" | "play" | "play_all" | "pause" | "pause_all" | "stop" | "stop_all" | "playpause")
+      if [ "${LOCAL}" = true ]; then
+        if [ "$zone" ]; then
+          zone_command -c ${comm} -z "${zone}"
+        else
+          zone_command -c ${comm}
+        fi
+      else
+        if [ "$zone" ]; then
+          ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c ${comm} -z ${zone}\""
+        else
+          ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c ${comm}\""
+        fi
+      fi
+      ;;
+    "group" | "ungroup") ;;
+    *)
+      echo "Unrecognized Roon command: $comm"
+      usage
+      ;;
+  esac
+}
+
+# Shuffle action only supported in Playlist playback for now
+shuffled=
+[ "${comm}" == "shuffle" ] && shuffled="-s"
+
 # First, handle album and artist requested
 [ "$album" ] && [ "$artist" ] && {
   [ "${album}" == "default" ] && album=
@@ -1562,9 +1629,17 @@ done
     [ "${exartist}" ] || exartist="None"
   }
   if [ "${LOCAL}" = true ]; then
-    play_artist_album "$artist" "$album" "$exartist" "$exalbum"
+    if [ "$zone" ]; then
+      play_artist_album -z "$zone" "$artist" "$album" "$exartist" "$exalbum"
+    else
+      play_artist_album "$artist" "$album" "$exartist" "$exalbum"
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_album $artist $album $exartist $exalbum\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_album -z $zone $artist $album $exartist $exalbum\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_album $artist $album $exartist $exalbum\""
+    fi
   fi
   album=
   artist=
@@ -1576,9 +1651,17 @@ done
     [ "${exartist}" ] || exartist="None"
   }
   if [ "${LOCAL}" = true ]; then
-    play_artist_track "$artist" "$track" "$exartist" "$exalbum"
+    if [ "$zone" ]; then
+      play_artist_track -z "$zone" "$artist" "$track" "$exartist" "$exalbum"
+    else
+      play_artist_track "$artist" "$track" "$exartist" "$exalbum"
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_track $artist $track $exartist $exalbum\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_track -z $zone $artist $track $exartist $exalbum\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_track $artist $track $exartist $exalbum\""
+    fi
   fi
   artist=
 }
@@ -1589,9 +1672,17 @@ done
     [ "${exartist}" ] || exartist="None"
   }
   if [ "${LOCAL}" = true ]; then
-    play_genre_album "$genre" "$album" "$exartist" "$exalbum"
+    if [ "$zone" ]; then
+      play_genre_album -z "$zone" "$genre" "$album" "$exartist" "$exalbum"
+    else
+      play_genre_album "$genre" "$album" "$exartist" "$exalbum"
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album $genre $album $exartist $exalbum\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album -z $zone $genre $album $exartist $exalbum\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album $genre $album $exartist $exalbum\""
+    fi
   fi
   album=
   genre=
@@ -1604,9 +1695,17 @@ done
     [ "${exartist}" ] || exartist="None"
   }
   if [ "${LOCAL}" = true ]; then
-    play_composer_album "$composer" "$album" "$exartist" "$exalbum"
+    if [ "$zone" ]; then
+      play_composer_album -z "$zone" "$composer" "$album" "$exartist" "$exalbum"
+    else
+      play_composer_album "$composer" "$album" "$exartist" "$exalbum"
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer_album $composer $album $exartist $exalbum\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer_album -z $zone $composer $album $exartist $exalbum\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer_album $composer $album $exartist $exalbum\""
+    fi
   fi
   album=
   composer=
@@ -1617,93 +1716,150 @@ done
     [ "${exartist}" ] || exartist="None"
   }
   if [ "${LOCAL}" = true ]; then
-    play_genre_artist "$genre" "$artist" "$exartist" "$exalbum"
+    if [ "$zone" ]; then
+      play_genre_artist -z "$zone" "$genre" "$artist" "$exartist" "$exalbum"
+    else
+      play_genre_artist "$genre" "$artist" "$exartist" "$exalbum"
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist $genre $artist $exartist $exalbum\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist -z $zone $genre $artist $exartist $exalbum\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist $genre $artist $exartist $exalbum\""
+    fi
   fi
   artist=
   genre=
 }
-[ "$album" ] && {
-  [ "${album}" == "default" ] && album=
-  if [ "${LOCAL}" = true ]; then
-    play_album "$album" "$exalbum"
-  else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album $exalbum\""
-  fi
-}
 [ "$artist" ] && {
   [ "${artist}" == "default" ] && artist=
   if [ "${LOCAL}" = true ]; then
-    play_artist "$artist" "$exartist"
+    if [ "$zone" ]; then
+      play_artist -z "$zone" "$artist" "$exartist"
+    else
+      play_artist "$artist" "$exartist"
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $artist $exartist\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist -z $zone $artist $exartist\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $artist $exartist\""
+    fi
   fi
 }
 [ "$composer" ] && {
   [ "${composer}" == "default" ] && composer=
   if [ "${LOCAL}" = true ]; then
-    play_composer "$composer" "$exartist"
+    if [ "$zone" ]; then
+      play_composer -z "$zone" "$composer" "$exartist"
+    else
+      play_composer "$composer" "$exartist"
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer $composer $exartist\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer -z $zone $composer $exartist\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer $composer $exartist\""
+    fi
   fi
 }
 [ "$genre" ] && {
   [ "${genre}" == "default" ] && genre=
   if [ "${LOCAL}" = true ]; then
-    play_genre "$genre" "$exalbum"
+    if [ "$zone" ]; then
+      play_genre -z "$zone" "$genre" "$exalbum"
+    else
+      play_genre "$genre" "$exalbum"
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $genre $exalbum\""
-  fi
-}
-[ "$playlist" ] && {
-  [ "${playlist}" == "default" ] && playlist=
-  if [ "${LOCAL}" = true ]; then
-    play_playlist "$playlist" "$exartist"
-  else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $playlist $exartist\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre -z $zone $genre $exalbum\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $genre $exalbum\""
+    fi
   fi
 }
 [ "$tag" ] && {
   [ "${tag}" == "default" ] && tag=
   if [ "${LOCAL}" = true ]; then
-    play_tag "$tag"
+    if [ "$zone" ]; then
+      play_tag -z "$zone" "$tag"
+    else
+      play_tag "$tag"
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_tag $tag\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_tag -z $zone $tag\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_tag $tag\""
+    fi
   fi
 }
 [ "$radio" ] && {
   [ "${radio}" == "default" ] && radio=
   if [ "${LOCAL}" = true ]; then
-    play_radio "${radio}"
+    if [ "$zone" ]; then
+      play_radio -z "$zone" "${radio}"
+    else
+      play_radio "${radio}"
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio ${radio}\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio -z ${zone} ${radio}\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio ${radio}\""
+    fi
   fi
 }
 
 [ "${volume}" ] && {
   if [ "${LOCAL}" = true ]; then
-    set_volume -v ${volume} ${grouped} ${relative} ${step}
+    if [ "$zone" ]; then
+      set_volume -v ${volume} -z "${zone}" ${grouped} ${relative} ${step}
+    else
+      set_volume -v ${volume} ${grouped} ${relative} ${step}
+    fi
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} ${grouped} ${relative} ${step}\""
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -z ${zone} ${grouped} ${relative} ${step}\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} ${grouped} ${relative} ${step}\""
+    fi
   fi
 }
 
-[ "${comm}" ] && {
-  case "${comm}" in
-    "shuffle" | "unshuffle" | "repeat" | "unrepeat" | "mute" | "unmute" | "mute_all" | "next" | "previous" | "play" | "play_all" | "pause" | "pause_all" | "stop" | "stop_all" | "playpause")
-      if [ "${LOCAL}" = true ]; then
-        zone_command -c ${comm}
-      else
-        ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c ${comm}\""
-      fi
-      ;;
-    "group" | "ungroup") ;;
-    *)
-      echo "Unrecognized Roon command: $comm"
-      usage
-      ;;
-  esac
+[ "$album" ] && {
+  [ "${album}" == "default" ] && album=
+  if [ "${LOCAL}" = true ]; then
+    if [ "$zone" ]; then
+      play_album -z "$zone" "$album" "$exalbum"
+    else
+      play_album "$album" "$exalbum"
+    fi
+  else
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_album -z $zone $album $exalbum\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album $exalbum\""
+    fi
+  fi
+}
+
+[ "$playlist" ] && {
+  [ "${playlist}" == "default" ] && playlist=
+  if [ "${LOCAL}" = true ]; then
+    if [ "$zone" ]; then
+      play_playlist $shuffled -z "$zone" "$playlist" "$exartist"
+    else
+      play_playlist $shuffled "$playlist" "$exartist"
+    fi
+  else
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $shuffled -z $zone $playlist $exartist\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $shuffled $playlist $exartist\""
+    fi
+  fi
 }
 
 [ "${show_roon_menu}" ] && {

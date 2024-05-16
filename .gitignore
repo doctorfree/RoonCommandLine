@@ -1,5 +1,6 @@
 dist/*
 releases/*
+test/__pycache__/*
 tmp/*
 # vim files
 .*.sw[a-z]

@@ -9,12 +9,15 @@ date: December 05, 2021
 play_radio - Play Roon Live Radio
 
 # SYNOPSIS
-**play_radio** [ RADIO ]
+**play_radio** [ -z ZONE ] [ RADIO ]
 
 # DESCRIPTION
 Plays the Roon Live Radio channel named *RADIO*. If no Live Radio channel name matches *RADIO* exactly, search for Roon Live Radio channels whose name contains the case-sensitive string *RADIO*. If there is a unique match on the search substring then *play_radio* will play that Live Radio channel. If more than one Roon Live Radio channel name matches the search substring then *play_radio* will return a list of matching Live Radio channel names. To play a Live Radio channel using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Live Radio channel name.
 
 # COMMAND LINE OPTIONS
+**-z ZONE**
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+
 **RADIO**
 :  Provide a Live Radio channel name, in quotes if it contains spaces, or a case-sensitive substring. A Roon Live Radio channel name matching the provided Live Radio channel name or containing the substring will be played if a unique match is found.
 

@@ -9,12 +9,15 @@ date: February 13, 2022
 play_genre_album - Play Roon Library Album in Genre
 
 # SYNOPSIS
-**play_genre_album** [ GENRE ] [ ALBUM ] [ EXGENRE ] [ EXALBUM ]
+**play_genre_album** [ -z ZONE ] [ GENRE ] [ ALBUM ] [ EXGENRE ] [ EXALBUM ]
 
 # DESCRIPTION
 Plays Roon Library genre's album matching the specified album name or substring. This command is invoked by "roon -g genre [-A album] [-x exgenre] [-X exalbum]".
 
 # COMMAND LINE OPTIONS
+**-z ZONE**
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+
 **GENRE**
 : Provide a genre name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library genre names matching the provided genre name or containing the substring will be searched for albums
 

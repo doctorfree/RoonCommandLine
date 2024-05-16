@@ -9,12 +9,27 @@ ROONCONF=${ROONETC}/pyroonconf
 PLAY=play_playlist.py
 PLAYLIST=
 EXPLAYLIST=
+ZONE=
 
 [ -d ${ROONAPI} ] || exit 1
 
 cd ${ROONAPI} || exit 1
 
 [ -f $PLAY ] || exit 2
+
+SHUFFLED=
+# Parse the arguments to get the play order
+while getopts "sz:" flag; do
+    case $flag in
+        z)
+            ZONE="$OPTARG"
+            ;;
+        s)
+            SHUFFLED="-s"
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
 
 [ "$1" ] && PLAYLIST="$1"
 [ "$2" ] && EXPLAYLIST="$2"
@@ -34,6 +49,9 @@ else
     ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
+[ "${ZONE}" ] && ROON_ZONE="${ZONE}"
+# Use all zones if no zone is specified or set
+[ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
 
 # Get the default playlist if one is not provided
 [ "${PLAYLIST}" ] || {
@@ -43,8 +61,8 @@ fi
 }
 
 # Construct the exclusion args if passed
-EXARGS=
-[ "${EXPLAYLIST}" ] && EXARGS="-x ${EXPLAYLIST}"
+EXARGS="${SHUFFLED}"
+[ "${EXPLAYLIST}" ] && EXARGS="-x ${EXPLAYLIST} ${EXARGS}"
 
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]

@@ -9,12 +9,15 @@ date: December 05, 2021
 play_artist - Play Roon Library Artist
 
 # SYNOPSIS
-**play_artist** [ ARTIST ] [ EXARTIST ]
+**play_artist** [ -z ZONE ] [ ARTIST ] [ EXARTIST ]
 
 # DESCRIPTION
 Plays the Roon Library artist named *ARTIST*. If no library artist name matches *ARTIST* exactly, search for Roon Library artist whose name contains the case-sensitive string *ARTIST*. If there is a match on the search substring then *play_artist* will play that artist. If more than one Roon Library artist name matches the search substring then *play_artist* will return a list of matching artist names and play the first one in the list.
 
 # COMMAND LINE OPTIONS
+**-z ZONE**
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+
 **ARTIST**
 :  Provide an artist name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library artist name matching the provided artist name or containing the substring will be played if a match is found.
 

@@ -18,6 +18,17 @@ cd ${ROONAPI} || exit 1
 
 [ -f $PLAY ] || exit 2
 
+ZONE=
+# Parse the arguments to get the zone
+while getopts "z:" flag; do
+    case $flag in
+        z)
+            ZONE="$OPTARG"
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
 # First argument is genre, second is album (required)
 # Third optional argument is genre exclusion string (optional)
 # Fourth optional argument is album exclusion string (optional)
@@ -41,6 +52,9 @@ else
     ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
+[ "${ZONE}" ] && ROON_ZONE="${ZONE}"
+# Use all zones if no zone is specified or set
+[ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
 
 # Get the default genre if one is not provided
 [ "${GENRE}" ] || {

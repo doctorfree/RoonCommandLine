@@ -21,7 +21,7 @@
 play_tag - Play Roon Library Tag
 .SH SYNOPSIS
 .PP
-\f[B]play_tag\f[R] [ TAG ]
+\f[B]play_tag\f[R] [ -z ZONE ] [ TAG ]
 .SH DESCRIPTION
 .PP
 Plays the Roon Library tag named \f[I]TAG\f[R].
@@ -34,6 +34,10 @@ If more than one Roon Library tag name matches the search substring then
 To play an tag using the substring search facility, enough of a
 substring must be supplied to uniquely match a Roon Library tag name.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-z ZONE\f[R]
+Specify the Roon Zone in which to play.
+If no zone is specified the default zone will be used.
 .TP
 \f[B]TAG\f[R]
 Provide an tag name, in quotes if it contains spaces, or a

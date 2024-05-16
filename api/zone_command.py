@@ -108,23 +108,18 @@ else:
             elif zone_command == "pause_all":
                 roonapi.pause_all()
                 not_executed = False
-            elif zone_command == "repeat" or zone_command == "unrepeat":
-                zone = roonapi.zone_by_output_id(output_id)
-                if zone is not None:
-                    looping = zone["settings"]["loop"]
-                    if looping == "loop" or looping == "loop_one":
-                        roonapi.repeat(output_id, "disabled")
-                    else:
-                        roonapi.repeat(output_id, "loop")
-                    not_executed = False
-            elif zone_command == "shuffle" or zone_command == "unshuffle":
-                zone = roonapi.zone_by_output_id(output_id)
-                if zone is not None:
-                    if zone["settings"]["shuffle"]:
-                        roonapi.shuffle(output_id, False)
-                    else:
-                        roonapi.shuffle(output_id, True)
-                    not_executed = False
+            elif zone_command == "repeat":
+                roonapi.repeat(output_id, "loop")
+                not_executed = False
+            elif zone_command == "unrepeat":
+                roonapi.repeat(output_id, "disabled")
+                not_executed = False
+            elif zone_command == "shuffle":
+                roonapi.shuffle(output_id, True)
+                not_executed = False
+            elif zone_command == "unshuffle":
+                roonapi.shuffle(output_id, False)
+                not_executed = False
             elif zone_command == "play_all":
                 for (k, v) in outputs.items():
                     roonapi.playback_control(k, "play")
@@ -139,21 +134,14 @@ else:
         if not_executed:
             if zone_command == "pause_all":
                 roonapi.pause_all()
-            elif zone_command == "repeat" or zone_command == "unrepeat":
-                zone = roonapi.zone_by_output_id(output_id)
-                if zone is not None:
-                    looping = zone["settings"]["loop"]
-                    if looping == "loop" or looping == "loop_one":
-                        roonapi.repeat(output_id, "disabled")
-                    else:
-                        roonapi.repeat(output_id, "loop")
-            elif zone_command == "shuffle" or zone_command == "unshuffle":
-                zone = roonapi.zone_by_output_id(output_id)
-                if zone is not None:
-                    if zone["settings"]["shuffle"]:
-                        roonapi.shuffle(output_id, False)
-                    else:
-                        roonapi.shuffle(output_id, True)
+            elif zone_command == "repeat":
+                roonapi.repeat(output_id, "loop")
+            elif zone_command == "unrepeat":
+                roonapi.repeat(output_id, "disabled")
+            elif zone_command == "shuffle":
+                roonapi.shuffle(output_id, True)
+            elif zone_command == "unshuffle":
+                roonapi.shuffle(output_id, False)
             elif zone_command == "play_all":
                 for (k, v) in outputs.items():
                     roonapi.playback_control(k, "play")

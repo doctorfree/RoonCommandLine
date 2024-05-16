@@ -21,7 +21,7 @@
 play_playlist - Play Roon Library Playlist
 .SH SYNOPSIS
 .PP
-\f[B]play_playlist\f[R] [ PLAYLIST ] [ EXPLAYLIST ]
+\f[B]play_playlist\f[R] [ -s ] [ -z ZONE ] [ PLAYLIST ] [ EXPLAYLIST ]
 .SH DESCRIPTION
 .PP
 Plays the Roon Library playlist named \f[I]PLAYLIST\f[R].
@@ -33,6 +33,14 @@ If more than one Roon Library playlist name matches the search substring
 then \f[I]play_playlist\f[R] will also return a list of matching
 playlist names.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-s\f[R]
+Indicates shuffled playlist playback.
+Without \f[B]-s\f[R] playlist is played back in order.
+.TP
+\f[B]-z ZONE\f[R]
+Specify the Roon Zone in which to play.
+If no zone is specified the default zone will be used.
 .TP
 \f[B]PLAYLIST\f[R]
 Provide an playlist name, in quotes if it contains spaces, or a
@@ -46,17 +54,20 @@ No Roon library playlist names including the provided playlist exclusion
 string will be played
 .SH EXAMPLES
 .TP
-\f[B]play_playlist Mood\f[R]
+\f[B]play_playlist -s Mood\f[R]
 Will play the Roon library playlist whose name contains the string
 \[dq]Mood\[dq].
 If more than one playlist name matches, the first returned will be
 played.
+Order of tracks will be shuffled.
 .TP
-\f[B]play_playlist Best Gold\f[R]
+\f[B]play_playlist -z \[dq]WiiM Amp Roon Ready\[dq] Best Gold\f[R]
 Will play the Roon library playlist whose name contains the string
 \[dq]Best\[dq] but not \[dq]Gold\[dq].
 If more than one playlist name matches, the first returned will be
 played.
+Playback will occur in the Roon zone named \[dq]WiiM Amp Roon Ready\[dq]
+and any grouped zones.
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

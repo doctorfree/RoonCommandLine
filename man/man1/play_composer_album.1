@@ -21,8 +21,8 @@
 play_composer_album - Play Roon Library Album by Composer
 .SH SYNOPSIS
 .PP
-\f[B]play_composer_album\f[R] [ COMPOSER ] [ ALBUM ] [ EXCOMPOSER ] [
-EXALBUM ]
+\f[B]play_composer_album\f[R] [ -z ZONE ] [ COMPOSER ] [ ALBUM ] [
+EXCOMPOSER ] [ EXALBUM ]
 .SH DESCRIPTION
 .PP
 Plays Roon Library composer\[aq]s album matching the specified album
@@ -30,6 +30,10 @@ name or substring.
 This command is invoked by \[dq]roon -C composer [-A album] [-x
 excomposer] [-X exalbum]\[dq].
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-z ZONE\f[R]
+Specify the Roon Zone in which to play.
+If no zone is specified the default zone will be used.
 .TP
 \f[B]COMPOSER\f[R]
 Provide an composer name, in quotes if it contains spaces, or a

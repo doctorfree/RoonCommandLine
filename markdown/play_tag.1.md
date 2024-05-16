@@ -9,12 +9,15 @@ date: December 05, 2021
 play_tag - Play Roon Library Tag
 
 # SYNOPSIS
-**play_tag** [ TAG ]
+**play_tag** [ -z ZONE ] [ TAG ]
 
 # DESCRIPTION
 Plays the Roon Library tag named *TAG*. If no library tag name matches *TAG* exactly, search for Roon Library tag whose name contains the case-sensitive string *TAG*. If there is a unique match on the search substring then *play_tag* will play that tag. If more than one Roon Library tag name matches the search substring then *play_tag* will return a list of matching tag names. To play an tag using the substring search facility, enough of a substring must be supplied to uniquely match a Roon Library tag name.
 
 # COMMAND LINE OPTIONS
+**-z ZONE**
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+
 **TAG**
 :    Provide an tag name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library tag name matching the provided tag name or containing the substring will be played if a unique match is found.
 

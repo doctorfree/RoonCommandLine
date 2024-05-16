@@ -80,8 +80,7 @@ else:
         # Play album from Library
         album = albums[0]
         print("Playing album title", album)
-        roonapi.play_media(output_id,
-                           ["Library", "Albums", album], None, False)
+        roonapi.play_media(output_id, ["Library", "Albums", album], None, False)
         if len(albums) > 1:
             print("\nAlbum titles partially matching", albumsearch, ":\n")
             print(*albums, sep="\n")

@@ -21,8 +21,8 @@
 play_artist_album - Play Roon Library Album by Artist
 .SH SYNOPSIS
 .PP
-\f[B]play_artist_album\f[R] [ ARTIST ] [ ALBUM ] [ EXARTIST ] [ EXALBUM
-]
+\f[B]play_artist_album\f[R] [ -z ZONE ] [ ARTIST ] [ ALBUM ] [ EXARTIST
+] [ EXALBUM ]
 .SH DESCRIPTION
 .PP
 Plays Roon Library artist\[aq]s album matching the specified album name
@@ -30,6 +30,10 @@ or substring.
 This command is invoked by \[dq]roon -a artist [-A album] [-x exartist]
 [-X exalbum]\[dq].
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-z ZONE\f[R]
+Specify the Roon Zone in which to play.
+If no zone is specified the default zone will be used.
 .TP
 \f[B]ARTIST\f[R]
 Provide an artist name, in quotes if it contains spaces, or a

@@ -9,12 +9,15 @@ date: December 05, 2021
 play_album - Play Roon Library Album
 
 # SYNOPSIS
-**play_album** [ ALBUM ] [ EXALBUM ]
+**play_album** [ -z ZONE ] [ ALBUM ] [ EXALBUM ]
 
 # DESCRIPTION
 Plays the Roon Library album named *ALBUM*. If no library album name matches *ALBUM* exactly, search for Roon Library albums whose name contains the case-sensitive string *ALBUM*. If there is a match on the search substring then *play_album* will play the first album in the list of matches. If more than one Roon Library album name matches the search substring then *play_album* will return a list of matching album names.
 
 # COMMAND LINE OPTIONS
+**-z ZONE**
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+
 **ALBUM**
 :  Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library album name matching the provided album name or containing the substring will be played if a match is found.
 

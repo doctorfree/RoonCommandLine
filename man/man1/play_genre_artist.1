@@ -21,8 +21,8 @@
 play_genre_artist - Play Roon Library Artist in Genre
 .SH SYNOPSIS
 .PP
-\f[B]play_genre_artist\f[R] [ GENRE ] [ ARTIST ] [ EXGENRE ] [ EXARTIST
-]
+\f[B]play_genre_artist\f[R] [ -z ZONE ] [ GENRE ] [ ARTIST ] [ EXGENRE ]
+[ EXARTIST ]
 .SH DESCRIPTION
 .PP
 Plays Roon Library genre\[aq]s artist matching the specified artist name
@@ -30,6 +30,10 @@ or substring.
 This command is invoked by \[dq]roon -g genre [-a artist] [-x exgenre]
 [-X exartist]\[dq].
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-z ZONE\f[R]
+Specify the Roon Zone in which to play.
+If no zone is specified the default zone will be used.
 .TP
 \f[B]GENRE\f[R]
 Provide a genre name, in quotes if it contains spaces, or a

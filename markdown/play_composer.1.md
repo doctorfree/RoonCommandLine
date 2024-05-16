@@ -9,12 +9,15 @@ date: February 13, 2022
 play_composer - Play Roon Library Composer
 
 # SYNOPSIS
-**play_composer** [ COMPOSER ] [ EXCOMPOSER ]
+**play_composer** [ -z ZONE ] [ COMPOSER ] [ EXCOMPOSER ]
 
 # DESCRIPTION
 Plays the Roon Library composer named *COMPOSER*. If no library composer name matches *COMPOSER* exactly, search for Roon Library composer whose name contains the case-sensitive string *COMPOSER*. If there is a match on the search substring then *play_composer* will play that composer. If more than one Roon Library composer name matches the search substring then *play_composer* will return a list of matching composer names.
 
 # COMMAND LINE OPTIONS
+**-z ZONE**
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+
 **COMPOSER**
 :  Provide a composer name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library composer name matching the provided composer name or containing the substring will be played if a match is found.
 

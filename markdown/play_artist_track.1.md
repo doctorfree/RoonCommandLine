@@ -9,12 +9,15 @@ date: February 13, 2022
 play_artist_track - Play Roon Library Track by Artist
 
 # SYNOPSIS
-**play_artist_track** [ ARTIST ] [ TRACK ] [ EXARTIST ] [ EXTRACK ]
+**play_artist_track** [ -z ZONE ] [ ARTIST ] [ TRACK ] [ EXARTIST ] [ EXTRACK ]
 
 # DESCRIPTION
 Plays Roon Library artist's track matching the specified track name or substring. This command is invoked by "roon -a artist [-T track] [-x exartist] [-X extrack]".
 
 # COMMAND LINE OPTIONS
+**-z ZONE**
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+
 **ARTIST**
 : Provide an artist name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library artist names matching the provided artist name or containing the substring will be searched for tracks
 

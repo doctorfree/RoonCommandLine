@@ -26,4 +26,4 @@ then
 else
     python $CORE
 fi
-sleep 2
+sleep 4

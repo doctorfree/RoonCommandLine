@@ -21,7 +21,7 @@
 play_album - Play Roon Library Album
 .SH SYNOPSIS
 .PP
-\f[B]play_album\f[R] [ ALBUM ] [ EXALBUM ]
+\f[B]play_album\f[R] [ -z ZONE ] [ ALBUM ] [ EXALBUM ]
 .SH DESCRIPTION
 .PP
 Plays the Roon Library album named \f[I]ALBUM\f[R].
@@ -33,6 +33,10 @@ will play the first album in the list of matches.
 If more than one Roon Library album name matches the search substring
 then \f[I]play_album\f[R] will return a list of matching album names.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-z ZONE\f[R]
+Specify the Roon Zone in which to play.
+If no zone is specified the default zone will be used.
 .TP
 \f[B]ALBUM\f[R]
 Provide an album name, in quotes if it contains spaces, or a

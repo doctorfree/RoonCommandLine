@@ -9,12 +9,15 @@ date: February 13, 2022
 play_genre_artist - Play Roon Library Artist in Genre
 
 # SYNOPSIS
-**play_genre_artist** [ GENRE ] [ ARTIST ] [ EXGENRE ] [ EXARTIST ]
+**play_genre_artist** [ -z ZONE ] [ GENRE ] [ ARTIST ] [ EXGENRE ] [ EXARTIST ]
 
 # DESCRIPTION
 Plays Roon Library genre's artist matching the specified artist name or substring. This command is invoked by "roon -g genre [-a artist] [-x exgenre] [-X exartist]".
 
 # COMMAND LINE OPTIONS
+**-z ZONE**
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+
 **GENRE**
 : Provide a genre name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library genre names matching the provided genre name or containing the substring will be searched for artists
 

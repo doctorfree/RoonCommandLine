@@ -21,7 +21,7 @@
 play_genre - Play Roon Library Genre
 .SH SYNOPSIS
 .PP
-\f[B]play_genre\f[R] [ GENRE ] [ EXGENRE ]
+\f[B]play_genre\f[R] [ -z ZONE ] [ GENRE ] [ EXGENRE ]
 .SH DESCRIPTION
 .PP
 Plays the Roon Library genre named \f[I]GENRE\f[R].
@@ -32,6 +32,10 @@ will play the first genre that matches.
 If more than one Roon Library genre name matches the search substring
 then \f[I]play_genre\f[R] will return a list of matching genre names.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-z ZONE\f[R]
+Specify the Roon Zone in which to play.
+If no zone is specified the default zone will be used.
 .TP
 \f[B]GENRE\f[R]
 Provide an genre name, in quotes if it contains spaces, or a

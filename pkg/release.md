@@ -1,5 +1,7 @@
 # RoonCommandLine Release Notes
 
+RoonCommandLine version 2.1.1 release 1 provides support for shuffled playlist playback
+
 RoonCommandLine version 2.1.0 release 6 provides a more robust Python virtual environment installation of pip
 
 RoonCommandLine version 2.1.0 release 5 ensures that pip is installed in the Python virtual environment
@@ -29,13 +31,13 @@ Download the latest Debian or RPM package format release from the **Assets** sec
 Install the package on Debian based systems by executing the command
 
 ```bash
-sudo apt install ./RoonCommandLine_2.1.0-6.deb
+sudo apt install ./RoonCommandLine_2.1.1-1.deb
 ```
 
 Install the package on RPM based systems by executing the command
 
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.1.0-6.rpm
+sudo yum localinstall ./RoonCommandLine-2.1.1-1.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
@@ -95,6 +97,6 @@ Version 2.0.7 release 1 added support for:
 - Add `get_zone_remaining` to get remaining time for now playing in zone
 - Add `get_zone_volume` and `get_zone_attributes.py`
 
-View the full changelog for this release at <https://github.com/doctorfree/RoonCommandLine/blob/v2.1.0r6/CHANGELOG.md>
+View the full changelog for this release at <https://github.com/doctorfree/RoonCommandLine/blob/v2.1.1r1/CHANGELOG.md>
 
 See [CHANGELOG.md](https://github.com/doctorfree/RoonCommandLine/blob/master/CHANGELOG.md) for a full list of changes in every RoonCommandLine release

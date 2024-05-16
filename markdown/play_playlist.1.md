@@ -9,12 +9,18 @@ date: December 05, 2021
 play_playlist - Play Roon Library Playlist
 
 # SYNOPSIS
-**play_playlist** [ PLAYLIST ] [ EXPLAYLIST ]
+**play_playlist** [ -s ] [ -z ZONE ] [ PLAYLIST ] [ EXPLAYLIST ]
 
 # DESCRIPTION
 Plays the Roon Library playlist named *PLAYLIST*. Search for Roon Library playlists whose name contains the case-sensitive string *PLAYLIST*. If there is a match on the search substring then *play_playlist* will play the first playlist returned. If more than one Roon Library playlist name matches the search substring then *play_playlist* will also return a list of matching playlist names.
 
 # COMMAND LINE OPTIONS
+**-s**
+: Indicates shuffled playlist playback. Without **-s** playlist is played back in order.
+
+**-z ZONE**
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+
 **PLAYLIST**
 :  Provide an playlist name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library playlist name matching the provided playlist name or containing the substring will be played if a match is found.
 
@@ -22,11 +28,11 @@ Plays the Roon Library playlist named *PLAYLIST*. Search for Roon Library playli
 : Provide a playlist exclusion string, in quotes if it contains spaces. No Roon library playlist names including the provided playlist exclusion string will be played
 
 # EXAMPLES
-**play_playlist Mood**
-: Will play the Roon library playlist whose name contains the string "Mood". If more than one playlist name matches, the first returned will be played.
+**play_playlist -s Mood**
+: Will play the Roon library playlist whose name contains the string "Mood". If more than one playlist name matches, the first returned will be played. Order of tracks will be shuffled.
 
-**play_playlist Best Gold**
-: Will play the Roon library playlist whose name contains the string "Best" but not "Gold". If more than one playlist name matches, the first returned will be played.
+**play_playlist -z "WiiM Amp Roon Ready" Best Gold**
+: Will play the Roon library playlist whose name contains the string "Best" but not "Gold". If more than one playlist name matches, the first returned will be played. Playback will occur in the Roon zone named "WiiM Amp Roon Ready" and any grouped zones.
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

@@ -9,12 +9,15 @@ date: February 13, 2022
 play_composer_album - Play Roon Library Album by Composer
 
 # SYNOPSIS
-**play_composer_album** [ COMPOSER ] [ ALBUM ] [ EXCOMPOSER ] [ EXALBUM ]
+**play_composer_album** [ -z ZONE ] [ COMPOSER ] [ ALBUM ] [ EXCOMPOSER ] [ EXALBUM ]
 
 # DESCRIPTION
 Plays Roon Library composer's album matching the specified album name or substring. This command is invoked by "roon -C composer [-A album] [-x excomposer] [-X exalbum]".
 
 # COMMAND LINE OPTIONS
+**-z ZONE**
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+
 **COMPOSER**
 : Provide an composer name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library composer names matching the provided composer name or containing the substring will be searched for albums
 

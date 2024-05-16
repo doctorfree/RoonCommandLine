@@ -16,6 +16,17 @@ cd ${ROONAPI} || exit 1
 
 [ -f $PLAY ] || exit 2
 
+ZONE=
+# Parse the arguments to get the zone
+while getopts "z:" flag; do
+    case $flag in
+        z)
+            ZONE="$OPTARG"
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
 [ "$1" ] && COMPOSER="$1"
 [ "$2" ] && EXCOMPOSER="$2"
 
@@ -34,6 +45,9 @@ else
     ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
+[ "${ZONE}" ] && ROON_ZONE="${ZONE}"
+# Use all zones if no zone is specified or set
+[ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
 
 # Get the default composer if one is not provided
 [ "${COMPOSER}" ] || {

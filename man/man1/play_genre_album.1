@@ -21,7 +21,8 @@
 play_genre_album - Play Roon Library Album in Genre
 .SH SYNOPSIS
 .PP
-\f[B]play_genre_album\f[R] [ GENRE ] [ ALBUM ] [ EXGENRE ] [ EXALBUM ]
+\f[B]play_genre_album\f[R] [ -z ZONE ] [ GENRE ] [ ALBUM ] [ EXGENRE ] [
+EXALBUM ]
 .SH DESCRIPTION
 .PP
 Plays Roon Library genre\[aq]s album matching the specified album name
@@ -29,6 +30,10 @@ or substring.
 This command is invoked by \[dq]roon -g genre [-A album] [-x exgenre]
 [-X exalbum]\[dq].
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-z ZONE\f[R]
+Specify the Roon Zone in which to play.
+If no zone is specified the default zone will be used.
 .TP
 \f[B]GENRE\f[R]
 Provide a genre name, in quotes if it contains spaces, or a

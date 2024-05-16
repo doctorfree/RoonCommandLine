@@ -21,7 +21,7 @@
 play_radio - Play Roon Live Radio
 .SH SYNOPSIS
 .PP
-\f[B]play_radio\f[R] [ RADIO ]
+\f[B]play_radio\f[R] [ -z ZONE ] [ RADIO ]
 .SH DESCRIPTION
 .PP
 Plays the Roon Live Radio channel named \f[I]RADIO\f[R].
@@ -37,6 +37,10 @@ To play a Live Radio channel using the substring search facility, enough
 of a substring must be supplied to uniquely match a Roon Live Radio
 channel name.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-z ZONE\f[R]
+Specify the Roon Zone in which to play.
+If no zone is specified the default zone will be used.
 .TP
 \f[B]RADIO\f[R]
 Provide a Live Radio channel name, in quotes if it contains spaces, or a
