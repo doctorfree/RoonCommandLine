@@ -16,12 +16,16 @@ cd ${ROONAPI} || exit 1
 
 [ -f $PLAY ] || exit 2
 
+SHUFFLED=
 ZONE=
-# Parse the arguments to get the zone
-while getopts "z:" flag; do
+# Parse the arguments to get the play order and zone
+while getopts "sz:" flag; do
     case $flag in
         z)
             ZONE="$OPTARG"
+            ;;
+        s)
+            SHUFFLED="-s"
             ;;
     esac
 done
@@ -57,8 +61,8 @@ fi
 }
 
 # Construct the exclusion args if passed
-EXARGS=
-[ "${EXGENRE}" ] && EXARGS="-x ${EXGENRE}"
+EXARGS="${SHUFFLED}"
+[ "${EXGENRE}" ] && EXARGS="-x ${EXGENRE} ${EXARGS}"
 
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]

@@ -1617,7 +1617,7 @@ done
   esac
 }
 
-# Shuffle action only supported in Playlist playback for now
+# Shuffle action only supported in Artist, Genre, and Playlist playback for now
 shuffled=
 [ "${comm}" == "shuffle" ] && shuffled="-s"
 
@@ -1735,15 +1735,15 @@ shuffled=
   [ "${artist}" == "default" ] && artist=
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
-      play_artist -z "$zone" "$artist" "$exartist"
+      play_artist $shuffled -z "$zone" "$artist" "$exartist"
     else
-      play_artist "$artist" "$exartist"
+      play_artist $shuffled "$artist" "$exartist"
     fi
   else
     if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist -z $zone $artist $exartist\""
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $shuffled -z $zone $artist $exartist\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $artist $exartist\""
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $shuffled $artist $exartist\""
     fi
   fi
 }
@@ -1767,15 +1767,15 @@ shuffled=
   [ "${genre}" == "default" ] && genre=
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
-      play_genre -z "$zone" "$genre" "$exalbum"
+      play_genre $shuffled -z "$zone" "$genre" "$exalbum"
     else
-      play_genre "$genre" "$exalbum"
+      play_genre $shuffled "$genre" "$exalbum"
     fi
   else
     if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre -z $zone $genre $exalbum\""
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $shuffled -z $zone $genre $exalbum\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $genre $exalbum\""
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $shuffled $genre $exalbum\""
     fi
   fi
 }

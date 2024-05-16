@@ -16,6 +16,13 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-g", "--genre", help="genre selection")
+parser.add_argument(
+    "-s",
+    "--shuffled",
+    default=False,
+    action="store_true",
+    help="play genre in shuffled order",
+)
 parser.add_argument("-x", "--exgenre", help="genre exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
@@ -28,6 +35,10 @@ if args.exgenre:
     exgenresearch = args.exgenre
 else:
     exgenresearch = None
+if args.shuffled:
+    shuffled = True
+else:
+    shuffled = False
 if args.zone:
     target_zone = args.zone
 else:
@@ -80,7 +91,10 @@ else:
         # Play genre from Library
         genre = genres[0]
         print("Playing genre title", genre)
-        roonapi.play_media(output_id, ["Genres", genre], None, False)
+        if shuffled:
+            roonapi.play_media(output_id, ["Genres", genre], "Shuffle", False)
+        else:
+            roonapi.play_media(output_id, ["Genres", genre], None, False)
         if len(genres) > 1:
             print("\nGenre titles partially matching", genresearch, ":\n")
             print(*genres, sep="\n")

@@ -16,6 +16,13 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--artist", help="artist selection")
+parser.add_argument(
+    "-s",
+    "--shuffled",
+    default=False,
+    action="store_true",
+    help="play artist in shuffled order",
+)
 parser.add_argument("-x", "--exartist", help="artist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
@@ -28,6 +35,10 @@ if args.exartist:
     exartistsearch = args.exartist
 else:
     exartistsearch = None
+if args.shuffled:
+    shuffled = True
+else:
+    shuffled = False
 if args.zone:
     target_zone = args.zone
 else:
@@ -82,8 +93,10 @@ else:
         # Play artist from Library
         artist = artists[0]
         print("Playing artist name", artist)
-        roonapi.play_media(output_id,
-                           ["Library", "Artists", artist], None, False)
+        if shuffled:
+            roonapi.play_media(output_id, ["Library", "Artists", artist], "Shuffle", False)
+        else:
+            roonapi.play_media(output_id, ["Library", "Artists", artist], None, False)
         if len(artists) > 1:
             print("\nArtist names partially matching", artistsearch, ":\n")
             print(*artists, sep="\n")
