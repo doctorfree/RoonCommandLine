@@ -1,6 +1,6 @@
 # RoonCommandLine Release Notes
 
-RoonCommandLine version 2.1.1 release 1 provides support for shuffled playlist playback
+RoonCommandLine version 2.1.1 release 1 provides support for shuffled artist/genre/playlist playback
 
 ## Installation
 

@@ -2,11 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-May 15, 2024 :
+May 16, 2024 :
 RoonCommandLine version 2.1.1 release 1
 
-    This release provides support for shuffled playlist playback
-        * Shuffled playlist playback is accomplished using the play_media 'Shuffle' action
+    This release provides support for shuffled artist/genre/playlist playback
+        * Shuffled playback is accomplished using the play_media 'Shuffle' action
         * All play commands now accept a '-z ZONE' argument to specify playback zone
 
 May 09, 2024 :
