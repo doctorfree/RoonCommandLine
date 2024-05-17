@@ -113,11 +113,11 @@ ${SUDO} chmod 644 "${OUT_DIR}"/${ROON}/etc/* \
                   "${OUT_DIR}"/${ROON}/patches/roon-web-controller/*
 ${SUDO} chmod 755 "${OUT_DIR}"/${ROON}/bin/* \
                   "${OUT_DIR}"/${ROON}/bin \
+                  "${OUT_DIR}"/${ROON}/etc/install-roon-tui \
                   "${OUT_DIR}"/${ROON}/etc/roon_faded \
                   "${OUT_DIR}"/${ROON}/etc \
                   "${OUT_DIR}"/${ROON}/etc/postinstall \
                   "${OUT_DIR}"/${ROON}/etc/preremove \
-                  "${OUT_DIR}"/${ROON}/etc/roon_faded \
                   "${OUT_DIR}"/${ROON}/api \
                   "${OUT_DIR}"/${ROON}/patches \
                   "${OUT_DIR}"/${ROON}/patches/mk* \

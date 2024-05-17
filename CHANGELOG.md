@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+May 20, 2024 :
+RoonCommandLine version 2.1.1 release 2
+
+    This release provides support for installation and use of 'roon-tui'
+        * Install 'roon-tui' with 'roon -I'
+
 May 16, 2024 :
 RoonCommandLine version 2.1.1 release 1
 

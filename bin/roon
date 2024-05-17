@@ -73,7 +73,7 @@ usage() {
   [ "${showusage}" ] && {
     if [ "${have_rich}" ]; then
       rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-C[/] [yellow]composer[/] [cyan]-D[/] [yellow]destination zone[/]" --print
-      rich "    [cyan]-F[/] [yellow]\[from zone][/] [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i[/]" --print
+      rich "    [cyan]-F[/] [yellow]\[from zone][/] [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i -I[/]" --print
       rich "    [cyan]-l[/] [yellow]\[albums|artists|artalbums|arttracks|composers|comalbums|[/]" --print
       rich "        [yellow]genres|genalbums|genartists|playlists|playtracks|tags|zones][/]" --print
       rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|stop|stop_all|[/]" --print
@@ -89,6 +89,7 @@ usage() {
       rich "    [cyan]-g[/] [yellow]genre[/] selects a genre to list/play" --print
       rich "    [cyan]-i[/] displays zone information (combine with '[cyan]-z[/] [yellow]zone[/]' for extended" --print
       rich "        info on a specified zone, otherwise display info on all zones)" --print
+      rich "    [cyan]-I[/] installs the [green]roon-tui[/] terminal user interface for Roon and exits" --print
       rich "    [cyan]-f[/] [yellow]\[on|onlog|off|status][/] enables/disables fading/logging in specified zone" --print
       rich "        '[yellow]on[/]' enables fading, '[yellow]onlog[/]' fading and logging, '[yellow]off[/]' disables fading" --print
       rich "        (combine with '[cyan]-z[/] [yellow]zone[/]' for 'fading' in that zone)" --print
@@ -142,7 +143,7 @@ usage() {
     else
       printf "\nUsage: roon -A album -a artist -C composer -D destination zone"
       printf "\n\t-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i"
-      printf "\n\t-l [albums|artists|artalbums|arttracks|composers|comalbums|"
+      printf "\n\t-I -l [albums|artists|artalbums|arttracks|composers|comalbums|"
       printf "\n\t    genres|genalbums|genartists|playlists|playtracks|tags|zones]"
       printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|"
       printf "\n\t    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]"
@@ -156,6 +157,7 @@ usage() {
       printf "\n\t-g genre selects a genre to list/play"
       printf "\n\t-i displays zone information (combine with '-z zone' for extended"
       printf "\n\t\tinfo on a specified zone, otherwise display info on all zones)"
+      printf "\n\t-I installs the roon-tui terminal user interface for Roon and exits"
       printf "\n\t-f [on|onlog|off|status] enables/disables fading/logging in specified zone"
       printf "\n\t\t'on' enables fading, 'onlog' fading and logging, 'off' disables fading"
       printf "\n\t\t(combine with '-z zone' for 'fading' in that zone)"
@@ -781,7 +783,15 @@ main_menu() {
       rich "[bold][cyan]RoonCommandLine Main Menu[/cyan][/bold]" -p -a rounded -c -C
     }
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
-    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Disable Repeat" "Enable Repeat" "Disable Shuffle" "Enable Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Fade Menu" "Volume" "Quit (q)")
+    options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Disable Repeat" "Enable Repeat" "Disable Shuffle" "Enable Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Fade Menu" "Volume")
+    have_tui=$(type -p roon-tui)
+    if [ "${have_tui}" ]; then
+      options+=("Open roon-tui")
+    else
+      [ -x ${ROONETC}/install-roon-tui ] && options+=("Install roon-tui")
+    fi
+    options+=("Quit (q)")
+
     select opt in "${options[@]}"; do
       case "$opt,$REPLY" in
         "Get/Set Defaults",* | *,"Get/Set Defaults")
@@ -1107,6 +1117,14 @@ main_menu() {
           select_set_volume
           break
           ;;
+        "Open roon-tui",* | *,"Open roon-tui")
+          roon-tui
+          break
+          ;;
+        "Install roon-tui",* | *,"Install roon-tui")
+          ${ROONETC}/install-roon-tui
+          break
+          ;;
         "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           printf "\nExiting\n"
           exit 0
@@ -1119,8 +1137,9 @@ main_menu() {
 info=
 now_playing=
 fading=
+inst_roon_tui=
 logfade=
-while getopts A:a:c:C:D:f:F:g:G:hHinNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
+while getopts A:a:c:C:D:f:F:g:G:hHiInNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
   case $flag in
     A)
       album="$OPTARG"
@@ -1168,6 +1187,9 @@ while getopts A:a:c:C:D:f:F:g:G:hHinNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       ;;
     i)
       info=1
+      ;;
+    I)
+      inst_roon_tui=1
       ;;
     N)
       now_playing=1
@@ -1314,6 +1336,20 @@ while getopts A:a:c:C:D:f:F:g:G:hHinNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       ;;
   esac
 done
+
+[ "${inst_roon_tui}" ] && {
+  [ -x ${ROON}/etc/install-roon-tui ] && ${ROON}/etc/install-roon-tui
+  if [ -x ${HOME}/.local/bin/roon-tui ]; then
+    ${HOME}/.local/bin/roon-tui
+    echo ""
+    echo "Successful installation of roon-tui"
+    exit 0
+  else
+    echo "Installation of roon-tui failed or did not create $HOME/.local/bin/roon-tui"
+    echo "Exiting"
+    exit 1
+  fi
+}
 
 [ "$search" ] || search="__all__"
 

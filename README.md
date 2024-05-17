@@ -37,6 +37,7 @@
 1. [Screenshots](#screenshots)
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
+    1. [Roon Terminal User Interface](#roon-terminal-user-interface)
     1. [Introduction to Using the Command Line](#introduction-to-using-the-command-line)
     1. [Voice Activated Roon Control](#voice-activated-roon-control)
         1. [Roon Voice Commands with Siri](#roon-voice-commands-with-siri)
@@ -653,7 +654,7 @@ Here is the current output of "roon -u" which displays a usage message.
 ```
 Usage: roon -A album -a artist -C composer -D destination zone
 	-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i
-	-l [albums|artists|artalbums|arttracks|composers|comalbums|
+	-I -l [albums|artists|artalbums|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
 	-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|
 	    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
@@ -668,6 +669,7 @@ Where:
 	-g genre selects a genre to list/play
 	-i displays zone information (combine with '-z zone' for extended
 		info on a specified zone, otherwise display info on all zones)
+	-I installs the roon-tui terminal user interface for Roon and exits
 	-f [on|onlog|off|status] enables/disables fading/logging in specified zone
 		'on' enables fading, 'onlog' fading and logging, 'off' disables fading
 		(combine with '-z zone' for 'fading' in that zone)
@@ -688,8 +690,8 @@ Where:
 	-T track specifies a track to play
 	-t tag selects an tag to play
 	-z zone selects the Roon Zone in which to play
-	-c [group|ungroup|play|play_all|pause|pause_all|playpause|
-	    stop|stop_all|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
+	-c [group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|
+	    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
 	        issues the command in the selected zone
 	        'mute' toggles the zone's muted or unmuted state
 	        'mute_all' toggles all zones' muted or unmuted state
@@ -847,6 +849,35 @@ entry in that returned list, remove the `-l genalbums` argument and re-run the c
 `roon -g Classical -A Mozart -X Berliner`
 
 Any listing command can be turned into a play command in a similar manner.
+
+### Roon Terminal User Interface
+
+The `roon` command can be used to install the
+[Roon terminal user interface](https://github.com/TheAppgineer/roon-tui)
+(`roon-tui`), a project maintained by `TheAppgineer` organization, authors
+of the [Roon Extension Manager](https://github.com/TheAppgineer/roon-extension-manager).
+
+Install `roon-tui` with the command `roon -I` or via the RoonCommandLine menu interface.
+
+The RoonCommandLine installation of `roon-tui` installs the binary as
+`~/.local/bin/roon-tui-bin` and creates a front-end `~/.local/bin/roon-tui`
+which serves to locate the `roon-tui` configuration file and log in `~/.config/roon-tui/`.
+
+The `roon-tui` usage message:
+
+```
+Usage: roon-tui [OPTIONS]
+
+Options:
+  -c, --config <CONFIG>     Path to the config.json file [default: config.json]
+  -i, --ip <IP>             IP address of the Server, disables server discovery
+  -p, --port <PORT>         Port number of the Server [default: 9330]
+  -l, --log <LOG>           Path to the log file [default: roon-tui.log]
+  -v, --verbose             Enable verbose logging to file
+  -u, --no-unicode-symbols  Disable the use of Unicode symbols
+  -h, --help                Print help
+  -V, --version             Print version
+```
 
 ### Introduction to Using the Command Line
 
