@@ -301,6 +301,12 @@ Core allowed other than via the API.
 
 ### Manual installation
 
+<details><summary>Click here to view the
+
+**manual installation instructions**
+
+</summary>
+
 There are three components to install. First, install the Python Roon API
 on a system which is on the same local network as your Roon Core.
 
@@ -383,6 +389,8 @@ not to install the RoonCommandLine package there (see the section below on
     # which the Python Roon API is installed, then execute the command
     # "roon -L" on that system. This will enable local execution of the
     # Roon Command Line scripts rather than remote execution via SSH.
+
+</details>
 
 ## Upgrades
 
