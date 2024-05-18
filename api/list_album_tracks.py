@@ -89,32 +89,20 @@ if albums:
         if exalbumsearch is not None:
             if exalbumsearch in album:
                 continue
-        # Search through this album's albums for specified track
-        albums = roonapi.list_media(output_id,
-                                    ["Library", "Albums", album, "__all__"])
-        if albums:
-            if "Play album" in albums:
-                albums.remove("Play album")
-            for album in albums:
-                # List matching tracks
-                tracks = roonapi.list_media(output_id,
-                                            ["Library",
-                                             "Albums",
-                                             album, album, tracksearch])
-                if extracksearch is not None and tracks:
-                    tracks = [tr for tr in tracks if extracksearch not in tr]
-                if tracks:
-                    if "Play Album" in tracks:
-                        tracks.remove("Play Album")
-                    found = tracks[0]
-                    if tracksearch == "__all__":
-                        print("\nTrack titles by", album,
-                              "on album", album, ":\n")
-                    else:
-                        print("\nTrack titles by", album,
-                              "on album", album, "matching",
-                              tracksearch, ":\n")
-                    print(*tracks, sep="\n")
+        if "Play album" in albums:
+            albums.remove("Play album")
+        # List matching tracks
+        tracks = roonapi.list_media(output_id, ["Library", "Albums", album, tracksearch])
+        if extracksearch is not None and tracks:
+            tracks = [tr for tr in tracks if extracksearch not in tr]
+        if tracks:
+            found = tracks[0]
+            if tracksearch == "__all__":
+                print("\nTrack titles on album", album, ":\n")
+            else:
+                print("\nTrack titles on album", album, "matching",
+                      tracksearch, ":\n")
+            print(*tracks, sep="\n")
     if found is None:
         print("No tracks found matching", tracksearch)
 else:
