@@ -786,7 +786,7 @@ main_menu() {
     }
     PS3="${BOLD}Please enter your Roon command choice (numeric or text): ${NORMAL}"
     options=("Get/Set Defaults" "Get/Set Zone" "Play" "Play All" "Pause" "Pause All" "Next Track" "Previous Track" "Stop" "Stop All" "Toggle Mute" "Toggle Mute All" "Disable Repeat" "Enable Repeat" "Disable Shuffle" "Enable Shuffle" "List Albums" "List Artists" "List Composers" "List Genres" "List Playlists" "List Live Radio" "List Tags" "List Zones" "Select Album" "Select Artist" "Select Composer" "Select Genre" "Select Live Radio" "Select Playlist" "Select Tag" "Play Default Album" "Play Default Artist" "Play Default Composer" "Play Default Genre" "Play Default Radio" "Play Default Playlist" "Play Default Tag" "Fade Menu" "Volume")
-    have_tui=$(type -p roon-tui)
+    have_tui=$(type -p roontui)
     if [ "${have_tui}" ]; then
       options+=("Open roon-tui")
     else
@@ -1120,7 +1120,7 @@ main_menu() {
           break
           ;;
         "Open roon-tui",* | *,"Open roon-tui")
-          roon-tui
+          roontui
           break
           ;;
         "Install roon-tui",* | *,"Install roon-tui")
@@ -1203,7 +1203,7 @@ while getopts A:a:c:C:D:f:F:g:G:hHiInNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       nowarg=
       ;;
     O)
-      [ -x ${HOME}/.local/bin/roon-tui ] && open_roon_tui=1
+      [ -x ${ROON}/bin/roontui ] && open_roon_tui=1
       ;;
     p)
       playlist="$OPTARG"
@@ -1345,13 +1345,13 @@ done
 
 [ "${inst_roon_tui}" ] && {
   [ -x ${ROON}/etc/install-roon-tui ] && ${ROON}/etc/install-roon-tui
-  if [ -x ${HOME}/.local/bin/roon-tui ]; then
-    ${HOME}/.local/bin/roon-tui
+  if [ -x ${ROON}/bin/roontui ]; then
+    ${ROON}/bin/roontui
     echo ""
     echo "Successful installation of roon-tui"
     exit 0
   else
-    echo "Installation of roon-tui failed or did not create $HOME/.local/bin/roon-tui"
+    echo "Installation of roon-tui failed or unable to locate $ROON/bin/roontui"
     echo "Exiting"
     exit 1
   fi
@@ -1905,7 +1905,7 @@ shuffled=
 }
  
 if [ "${open_roon_tui}" ]; then
-  [ -x ${HOME}/.local/bin/roon-tui ] && ${HOME}/.local/bin/roon-tui
+  [ -x ${ROON}/bin/roontui ] && ${ROON}/bin/roontui
 else
   [ "${show_roon_menu}" ] && main_menu
 fi

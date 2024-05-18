@@ -885,19 +885,28 @@ of the [Roon Extension Manager](https://github.com/TheAppgineer/roon-extension-m
 Install `roon-tui` with the command `roon -I` or via the RoonCommandLine menu interface.
 
 The RoonCommandLine installation of `roon-tui` installs the binary as
-`~/.local/bin/roon-tui-bin` and creates a front-end `~/.local/bin/roon-tui`
-which serves to locate the `roon-tui` configuration file and log in `~/.config/roon-tui/`.
+`~/.local/bin/roon-tui` or `/opt/homebrew/bin/roon-tui` on `macOS`.
 
-The `roon-tui` wrapper usage message:
+RoonCommandLine includes a front-end wrapper for `roon-tui`, installed
+as `/usr/local/Roon/bin/roontui` which serves to locate the `roon-tui`
+configuration file and log in `~/.config/roon-tui/`.
+
+The `roon-tui` terminal user interface for Roon can be executed either
+with the wrapper, `roontui` or with `roon -O`. Executing `roon-tui`
+directly will attempt to use and write the configuration and log files
+in the directory where `roon-tui` is located. Recommended usage is either
+with `roontui` or, if no options are required, `roon -O`.
+
+The `roontui` wrapper usage message:
 
 ```
-Usage: roon-tui [OPTIONS]
+Usage: roontui [OPTIONS]
 Options:
-  -b, --binary <BINARY>     Path to the roon-tui binary [default: ~/.local/bin/roon-tui-bin]
-  -c, --config <CONFIG>     Path to the config.json file [default: ~/.config/roon-tui/config.json]
+  -b, --binary <BINARY>     Path to the roon-tui binary
+  -c, --config <CONFIG>     Path to the config.json file
   -i, --ip <IP>             IP address of the Server, disables server discovery
   -p, --port <PORT>         Port number of the Server [default: 9330]
-  -l, --log <LOG>           Path to the log file [default: ~/.config/roon-tui/roon-tui.log]
+  -l, --log <LOG>           Path to the log file
   -v, --verbose             Enable verbose logging to file
   -u, --no-unicode-symbols  Disable the use of Unicode symbols
   -U, --upgrade             Upgrade roon-tui if a newer version is available
@@ -905,7 +914,7 @@ Options:
   -V, --version             Print version
 
 Defaults:
-  Binary location:          ~/.local/bin/roon-tui-bin
+  Binary location:          ~/.local/bin/roon-tui
   Configuration location:   ~/.config/roon-tui/config.json
   Log file location:        ~/.config/roon-tui/roon-tui.log
 ```

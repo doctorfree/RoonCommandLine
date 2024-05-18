@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Install roon-tui and wrapper
+# Install roon-tui
 #
 
 set_download_url() {
@@ -40,21 +40,7 @@ install_roon_tui() {
         [ -f /tmp/roon$$/roon-tui ] && {
           [ -d ${HOME}/.local ] || mkdir -p ${HOME}/.local
           [ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
-          cp /tmp/roon$$/roon-tui ${HOME}/.local/bin/roon-tui-bin
-          chmod 755 ${HOME}/.local/bin/roon-tui-bin
-          [ -d ${HOME}/.config ] || mkdir -p ${HOME}/.config
-          [ -d ${HOME}/.config/roon-tui ] || mkdir -p ${HOME}/.config/roon-tui
-          touch ${HOME}/.config/roon-tui/config.json
-          if [ -f ${ROON}/etc/roon-tui-wrapper ]; then
-            rm -f ${HOME}/.local/bin/roon-tui
-            ln -s ${ROON}/etc/roon-tui-wrapper ${HOME}/.local/bin/roon-tui
-          else
-            echo '#!/bin/bash' > ${HOME}/.local/bin/roon-tui
-            echo '' >> ${HOME}/.local/bin/roon-tui
-            echo '${HOME}/.local/bin/roon-tui-bin \' >> ${HOME}/.local/bin/roon-tui
-            echo '  -c ${HOME}/.config/roon-tui/config.json \' >> ${HOME}/.local/bin/roon-tui
-            echo '  -l ${HOME}/.config/roon-tui/roon-tui.log' >> ${HOME}/.local/bin/roon-tui
-          fi
+          cp /tmp/roon$$/roon-tui ${HOME}/.local/bin/roon-tui
           chmod 755 ${HOME}/.local/bin/roon-tui
         }
         rm -f "${TEMP_ASS}"
@@ -63,6 +49,9 @@ install_roon_tui() {
       }
     }
   fi
+  [ -d ${HOME}/.config ] || mkdir -p ${HOME}/.config
+  [ -d ${HOME}/.config/roon-tui ] || mkdir -p ${HOME}/.config/roon-tui
+  touch ${HOME}/.config/roon-tui/config.json
 }
 
 # Use a Github API token if one is set
@@ -78,6 +67,7 @@ else
   AUTH_HEADER=
 fi
 
+have_brew=$(type -p brew)
 have_curl=$(type -p curl)
 have_jq=$(type -p jq)
 have_wget=$(type -p wget)

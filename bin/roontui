@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# roon-tui - Frontend for roon-tui terminal user interface for Roon
-#            Default to ~/.config/roon-tui/ for roon-tui configuration and log files
+# roontui - Frontend for roon-tui terminal user interface for Roon
+#           Default to ~/.config/roon-tui/ for roon-tui configuration and log files
 #
 # See: https://github.com/TheAppgineer/roon-tui
 #      https://github.com/doctorfree/RoonCommandLine
@@ -9,10 +9,10 @@
 # Author: Ronald Joe Record <ronaldrecord@gmail.com>
 # Written: 17-May-2024
 #
-# Usage: roon-tui [OPTIONS]
+# Usage: roontui [OPTIONS]
 # 
 # Options:
-#   -b, --binary <BINARY>     Path to the roon-tui binary [default: ~/.local/bin/roon-tui-bin]
+#   -b, --binary <BINARY>     Path to the roon-tui binary [default: ~/.local/bin/roon-tui]
 #   -c, --config <CONFIG>     Path to the config.json file [default: ~/.config/roon-tui/config.json]
 #   -i, --ip <IP>             IP address of the Server, disables server discovery
 #   -p, --port <PORT>         Port number of the Server [default: 9330]
@@ -23,19 +23,30 @@
 #   -h, --help                Print help
 #   -V, --version             Print version
 
-TUI_BIN="${HOME}/.local/bin/roon-tui-bin"
 TUI_CONFDIR="${HOME}/.config/roon-tui"
 TUI_CONF="${TUI_CONFDIR}/config.json"
 TUI_LOG="${TUI_CONFDIR}/roon-tui.log"
+TUI_BIN="${HOME}/.local/bin/roon-tui"
+[ -x ${TUI_BIN} ] || {
+  if [ -x /opt/homebrew/bin/roon-tui ]; then
+    TUI_BIN="/opt/homebrew/bin/roon-tui"
+  else
+    if command -v roon-tui > /dev/null; then
+      TUI_BIN=$(command -v roon-tui)
+    else
+      TUI_BIN=
+    fi
+  fi
+}
 
 usage() {
-  printf "\nUsage: roon-tui [OPTIONS]"
+  printf "\nUsage: roontui [OPTIONS]"
   printf "\nOptions:"
-  printf "\n  -b, --binary <BINARY>     Path to the roon-tui binary [default: ~/.local/bin/roon-tui-bin]"
-  printf "\n  -c, --config <CONFIG>     Path to the config.json file [default: ~/.config/roon-tui/config.json]"
+  printf "\n  -b, --binary <BINARY>     Path to the roon-tui binary"
+  printf "\n  -c, --config <CONFIG>     Path to the config.json file"
   printf "\n  -i, --ip <IP>             IP address of the Server, disables server discovery"
   printf "\n  -p, --port <PORT>         Port number of the Server [default: 9330]"
-  printf "\n  -l, --log <LOG>           Path to the log file [default: ~/.config/roon-tui/roon-tui.log]"
+  printf "\n  -l, --log <LOG>           Path to the log file"
   printf "\n  -v, --verbose             Enable verbose logging to file"
   printf "\n  -u, --no-unicode-symbols  Disable the use of Unicode symbols"
   printf "\n  -U, --upgrade             Upgrade roon-tui if a newer version is available"
@@ -116,5 +127,11 @@ while [[ $1 ]]; do
   esac
 done
 
-${TUI_BIN} -c ${TUI_CONF} -l ${TUI_LOG} \
-              ${IP_OPT} ${PORT_OPT} ${UNICODE_OPT} ${VERB_OPT} ${VERSION_OPT}
+if [ "${TUI_BIN}" ]; then
+  ${TUI_BIN} -c ${TUI_CONF} -l ${TUI_LOG} \
+                ${IP_OPT} ${PORT_OPT} ${UNICODE_OPT} ${VERB_OPT} ${VERSION_OPT}
+else
+  printf "\nCannot locate roon-tui"
+  printf "\nInstall roon-tui with:"
+  printf "\n\troon -I\n\n"
+fi
