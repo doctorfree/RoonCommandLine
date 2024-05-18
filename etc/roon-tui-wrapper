@@ -1,6 +1,13 @@
 #!/bin/bash
 #
-# roon-tui - frontend for roon-tui terminal user interface for Roon
+# roon-tui - Frontend for roon-tui terminal user interface for Roon
+#            Default to ~/.config/roon-tui/ for roon-tui configuration and log files
+#
+# See: https://github.com/TheAppgineer/roon-tui
+#      https://github.com/doctorfree/RoonCommandLine
+#
+# Author: Ronald Joe Record <ronaldrecord@gmail.com>
+# Written: 17-May-2024
 #
 # Usage: roon-tui [OPTIONS]
 # 
@@ -12,6 +19,7 @@
 #   -l, --log <LOG>           Path to the log file [default: ~/.config/roon-tui/roon-tui.log]
 #   -v, --verbose             Enable verbose logging to file
 #   -u, --no-unicode-symbols  Disable the use of Unicode symbols
+#   -U, --upgrade             Upgrade roon-tui if a newer version is available
 #   -h, --help                Print help
 #   -V, --version             Print version
 
@@ -23,15 +31,20 @@ TUI_LOG="${TUI_CONFDIR}/roon-tui.log"
 usage() {
   printf "\nUsage: roon-tui [OPTIONS]"
   printf "\nOptions:"
-  printf "\n   -b, --binary <BINARY>     Path to the roon-tui binary [default: ~/.local/bin/roon-tui-bin]"
-  printf "\n   -c, --config <CONFIG>     Path to the config.json file [default: ~/.config/roon-tui/config.json]"
-  printf "\n   -i, --ip <IP>             IP address of the Server, disables server discovery"
-  printf "\n   -p, --port <PORT>         Port number of the Server [default: 9330]"
-  printf "\n   -l, --log <LOG>           Path to the log file [default: ~/.config/roon-tui/roon-tui.log]"
-  printf "\n   -v, --verbose             Enable verbose logging to file"
-  printf "\n   -u, --no-unicode-symbols  Disable the use of Unicode symbols"
-  printf "\n   -h, --help                Print help"
-  printf "\n   -V, --version             Print version\n"
+  printf "\n  -b, --binary <BINARY>     Path to the roon-tui binary [default: ~/.local/bin/roon-tui-bin]"
+  printf "\n  -c, --config <CONFIG>     Path to the config.json file [default: ~/.config/roon-tui/config.json]"
+  printf "\n  -i, --ip <IP>             IP address of the Server, disables server discovery"
+  printf "\n  -p, --port <PORT>         Port number of the Server [default: 9330]"
+  printf "\n  -l, --log <LOG>           Path to the log file [default: ~/.config/roon-tui/roon-tui.log]"
+  printf "\n  -v, --verbose             Enable verbose logging to file"
+  printf "\n  -u, --no-unicode-symbols  Disable the use of Unicode symbols"
+  printf "\n  -U, --upgrade             Upgrade roon-tui if a newer version is available"
+  printf "\n  -h, --help                Print help"
+  printf "\n  -V, --version             Print version\n"
+  printf "\nDefaults:"
+  printf "\n  Binary location:          ${TUI_BIN}"
+  printf "\n  Configuration location:   ${TUI_CONF}"
+  printf "\n  Log file location:        ${TUI_LOG}\n\n"
   exit 1
 }
 
@@ -81,6 +94,11 @@ while [[ $1 ]]; do
       ;;
     -u | --no-unicode-symbols)
       UNICODE_OPT="-u"
+      shift
+      ;;
+    -U | --upgrade)
+      ROON="/usr/local/Roon"
+      [ -x ${ROON}/etc/install-roon-tui ] && ${ROON}/etc/install-roon-tui
       shift
       ;;
     -h | --help)
