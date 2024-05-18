@@ -542,6 +542,11 @@ select_default() {
       listcom="list_tags"
       medtype="Tag"
       ;;
+    "Set Default Zone")
+      setdefcom="${pycom} -z"
+      listcom="list_zones"
+      medtype="Zone"
+      ;;
     *)
       return 1
       ;;
@@ -854,7 +859,7 @@ list_defaults() {
   defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Set Default Zone" "Main Menu" "Quit (q)")
   while true; do
     tput clear
-    for media in Album Artist Composer Genre Playlist Radio Tag; do
+    for media in Album Artist Composer Genre Playlist Radio Tag Zone; do
       DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
       # Remove leading and trailing spaces
       DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
