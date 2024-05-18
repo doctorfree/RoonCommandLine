@@ -344,6 +344,11 @@ usage() {
   exit 1
 }
 
+farewell_exit() {
+  heading "$1" "Farewell"
+  exit 0
+}
+
 show_now_playing() {
   nowarg="$1"
   zone="$2"
@@ -450,6 +455,7 @@ select_zone() {
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   zone_options+=("Defaults Menu" "Main Menu" "Quit (q)")
   while true; do
+    tput clear
     [ "${have_rich}" ] && {
       rich "[bold][cyan]Select Roon Zone[/cyan][/bold]" -p -a rounded -c -C
     }
@@ -461,8 +467,7 @@ select_zone() {
           break 2
           ;;
         "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
-          printf "\nExiting\n"
-          exit 0
+          farewell_exit "Exiting RoonCommandLine"
           ;;
         "Defaults Menu",* | *,"Defaults Menu")
           list_defaults
@@ -557,36 +562,69 @@ select_default() {
 
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   media_options+=("Set Defaults Menu" "Main Menu" "Quit (q)")
-  while true; do
-    [ "${have_rich}" ] && {
-      rich "[bold][cyan]RoonCommandLine Default ${medtype}[/cyan][/bold]" -p -a rounded -c -C
-    }
-    PS3="${BOLD}Please enter the ${medtype} you wish to set as default (numeric or text): ${NORMAL}"
-    select opt in "${media_options[@]}"; do
-      case "$opt,$REPLY" in
-        "Set Defaults Menu",* | *,"Set Defaults Menu")
-          break 2
-          ;;
-        "Main Menu",* | *,"Main Menu")
-          main_menu
-          break 3
-          ;;
-        "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
-          printf "\nExiting\n"
-          exit 0
-          ;;
-        *,*)
-          echo "${BOLD}Setting Roon ${medtype} default to: ${opt}${NORMAL}"
-          if [ "${LOCAL}" = true ]; then
-            ${setdefcom} "${opt}"
-          else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/${setdefcom} ${opt}\""
-          fi
-          break 2
-          ;;
-      esac
+  if [ "${have_fzf}" ]; then
+    while true; do
+      heading "RoonCommandLine default ${medtype}" "Default ${medtype}"
+      choice=$(printf "%s\n" "${media_options[@]}" | fzf -m --prompt=" 🎶 Select default ${medtype} ('Main Menu' or 'Esc' to return, 'Quit' to exit)  " --height=18 --layout=reverse --exit-0)
+      if [ "${choice}" ]; then
+        case "${choice}" in
+          "Quit"* | "quit"* | "Q" | "q")
+            farewell_exit "Exiting RoonCommandLine"
+            ;;
+          "Main Menu"* | "main menu"*)
+            main_menu
+            break
+            ;;
+          "Set Defaults Menu"*)
+            break
+            ;;
+          *)
+            echo "${BOLD}Setting Roon ${medtype} default to: ${choice}${NORMAL}"
+            if [ "${LOCAL}" = true ]; then
+              echo "${setdefcom} ${choice}" > /tmp/debug$$
+              ${setdefcom} "${choice}"
+            else
+              ssh $user@$server "bash -l -c \"${ROON}/bin/${setdefcom} ${choice}\""
+            fi
+            break
+            ;;
+        esac
+      else
+        break
+      fi
     done
-  done
+  else
+    while true; do
+      tput clear
+      [ "${have_rich}" ] && {
+        rich "[bold][cyan]RoonCommandLine Default ${medtype}[/cyan][/bold]" -p -a rounded -c -C
+      }
+      PS3="${BOLD}Please enter the ${medtype} you wish to set as default (numeric or text): ${NORMAL}"
+      select opt in "${media_options[@]}"; do
+        case "$opt,$REPLY" in
+          "Set Defaults Menu",* | *,"Set Defaults Menu")
+            break 2
+            ;;
+          "Main Menu",* | *,"Main Menu")
+            main_menu
+            break 3
+            ;;
+          "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
+            farewell_exit "Exiting RoonCommandLine"
+            ;;
+          *,*)
+            echo "${BOLD}Setting Roon ${medtype} default to: ${opt}${NORMAL}"
+            if [ "${LOCAL}" = true ]; then
+              ${setdefcom} "${opt}"
+            else
+              ssh $user@$server "bash -l -c \"${ROON}/bin/${setdefcom} ${opt}\""
+            fi
+            break 2
+            ;;
+        esac
+      done
+    done
+  fi
 }
 
 select_media() {
@@ -663,8 +701,7 @@ select_media() {
       if [ "${choice}" ]; then
         case "${choice}" in
           "Quit"* | "quit"* | "Q" | "q")
-            printf "\nExiting\n"
-            exit 0
+            farewell_exit "Exiting RoonCommandLine"
             ;;
           "Main Menu"* | "main menu"*)
             main_menu
@@ -700,6 +737,7 @@ select_media() {
     done
   else
     while true; do
+      tput clear
       [ "${have_rich}" ] && {
         rich "[bold][cyan]RoonCommandLine ${action} ${medtype}[/cyan][/bold]" -p -a rounded -c -C
       }
@@ -711,8 +749,7 @@ select_media() {
             break 2
             ;;
           "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
-            printf "\nExiting\n"
-            exit 0
+            farewell_exit "Exiting RoonCommandLine"
             ;;
           *,*)
             echo "${BOLD}Executing Roon command to ${action} ${media}: ${opt}${NORMAL}"
@@ -746,6 +783,7 @@ select_media() {
 select_set_volume() {
   volume_options=("Mute/Unmute Zone" "Mute/Unmute All Zones" "Set Volume to 10" "Set Volume to 20" "Set Volume to 30" "Set Volume to 40" "Set Volume to 50" "Set Volume to 60" "Set Volume to 70" "Set Volume to 80" "Set Volume to 90" "Set Volume to 100" "Increase Volume by 1" "Increase Volume by 5" "Increase Volume by 10" "Increase Volume by 20" "Increase Volume by 40" "Decrease Volume by 1" "Decrease Volume by 5" "Decrease Volume by 10" "Decrease Volume by 20" "Decrease Volume by 40" "Main Menu" "Quit (q)")
   while true; do
+    tput clear
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Volume Control[/cyan][/bold]" -p -a rounded -c -C
     }
@@ -805,8 +843,7 @@ select_set_volume() {
           break 2
           ;;
         "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
-          printf "\nExiting\n"
-          exit 0
+          farewell_exit "Exiting RoonCommandLine"
           ;;
       esac
     done
@@ -816,6 +853,7 @@ select_set_volume() {
 list_defaults() {
   defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Set Default Zone" "Main Menu" "Quit (q)")
   while true; do
+    tput clear
     for media in Album Artist Composer Genre Playlist Radio Tag; do
       DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
       # Remove leading and trailing spaces
@@ -834,8 +872,7 @@ list_defaults() {
           break 2
           ;;
         "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
-          printf "\nExiting\n"
-          exit 0
+          farewell_exit "Exiting RoonCommandLine"
           ;;
         "Set Default Zone",* | *,"Set Default Zone")
           [ -f ${ROONCONF} ] && . ${ROONCONF}
@@ -1134,6 +1171,7 @@ main_menu() {
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones\""
           fi
+          prompt_continue
           break
           ;;
         "Select Album"*,* | *,"Select Album"* | "sa",* | *,"sa")
@@ -1257,8 +1295,7 @@ main_menu() {
           break
           ;;
         "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
-          heading "Exiting RoonCommandLine" "Farewell"
-          exit 0
+          farewell_exit "Exiting RoonCommandLine"
           ;;
       esac
     done
@@ -1479,8 +1516,7 @@ done
   if [ -x ${ROON}/bin/roontui ]; then
     ${ROON}/bin/roontui
     echo ""
-    echo "Successful installation of roon-tui"
-    exit 0
+    farewell_exit "Successful installation of roon-tui"
   else
     echo "Installation of roon-tui failed or unable to locate $ROON/bin/roontui"
     echo "Exiting"
@@ -1491,9 +1527,7 @@ done
 [ "$search" ] || search="__all__"
 
 # Set Defaults
-[ "$setdefs" ] && {
-  list_defaults
-}
+[ "$setdefs" ] && list_defaults
 
 # Set Zone
 [ "$zone" ] && {

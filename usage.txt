@@ -1,6 +1,6 @@
 Usage: roon -A album -a artist -C composer -D destination zone -n -N -O
 	-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i
-	-I -l [albums|artists|artalbums|arttracks|composers|comalbums|
+	-I -l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
 	-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|
 	    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
@@ -27,7 +27,7 @@ Where:
 	-G zone_group specifies a zone grouping specified in roon_api.ini
 	-L setup roon to execute local commands rather than remote via SSH
 	-S Set Roon defaults in roon_api.ini
-	-l [albums|artists|artalbums|arttracks|composers|comalbums|
+	-l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
 	        indicates list albums, artists, albums by artist,
 	        composers, albums by composers, genres, albums in genre,
