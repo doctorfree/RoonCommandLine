@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+LIST=list_album_tracks.py
+ALBUM=
+TRACK=
+EXALBUM=
+EXTRACK=
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI} || exit 1
+
+[ -f $LIST ] || exit 2
+
+# First argument is album, second is track
+# Third optional argument is album exclusion string (optional)
+# Fourth optional argument is track exclusion string (optional)
+[ "$1" ] && ALBUM="$1"
+[ "$2" ] && TRACK="$2"
+[ "$3" ] && EXALBUM="$3"
+[ "$4" ] && EXTRACK="$4"
+
+# Use a Python virtual environment
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+    ${ROON}/bin/set_zone "${DEFZONE}"
+    . ${ROONCONF}
+fi
+
+# Get the default album if one is not provided
+[ "${ALBUM}" ] || {
+    ALBUM=$(grep ^Defaultalbum ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+    # Remove leading and trailing spaces in ALBUM
+    ALBUM="$(echo -e "${ALBUM}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+}
+
+[ "${TRACK}" ] || TRACK="__all__"
+
+# Construct the exclusion args if passed
+EXARGS=
+[ "${EXTRACK}" ] && EXARGS="-X ${EXTRACK}"
+[ "${EXALBUM}" ] && EXARGS="-x ${EXALBUM} ${EXARGS}"
+
+have_python3=$(type -p python3)
+if [ "${have_python3}" ]
+then
+    python3 $LIST -t "$TRACK" -a "$ALBUM" -z "$ROON_ZONE" $EXARGS
+else
+    python $LIST -t "$TRACK" -a "$ALBUM" -z "$ROON_ZONE" $EXARGS
+fi

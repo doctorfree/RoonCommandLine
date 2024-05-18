@@ -124,6 +124,7 @@ done
 ${SUDO} cp -a api ${ROON}/api
 ${SUDO} cp -a bin ${ROON}/bin
 ${SUDO} cp -a etc ${ROON}/etc
+${SUDO} cp VERSION ${ROON}/etc/VERSION
 ${SUDO} cp -a patches ${ROON}/patches
 
 ${SUDO} cp ./*.desktop "${DESTDIR}/share/applications"
@@ -157,6 +158,7 @@ ${SUDO} chmod 644 ${ROON}/etc/* \
   ${ROON}/patches/roon-web-controller/*
 ${SUDO} chmod 755 ${ROON}/bin/* \
   ${ROON}/bin \
+  ${ROON}/etc/install-fzf \
   ${ROON}/etc/install-roon-tui \
   ${ROON}/etc/roon_faded \
   ${ROON}/etc \
