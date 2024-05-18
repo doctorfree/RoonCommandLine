@@ -649,10 +649,14 @@ Python Roon API system which then communicates with the Roon Core.
 If no arguments are provided to the `roon` command then an interactive dialog
 is presented from which the user can select commands and queries.
 
-Here is the current output of "roon -u" which displays a usage message.
+<details><summary>Click here to view the
+
+**roon command usage message**
+
+</summary>
 
 ```
-Usage: roon -A album -a artist -C composer -D destination zone
+Usage: roon -A album -a artist -C composer -D destination zone -n -N -O
 	-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i
 	-I -l [albums|artists|artalbums|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
@@ -676,6 +680,7 @@ Where:
 	-n displays 'now playing' information for zones actively playing
 	-N displays 'now playing' information for all zones
 		(combine with '-z zone' for 'now playing' in only that zone)
+	-O opens 'roon-tui' terminal user interface for Roon if available
 	-p playlist selects a playlist to play
 	-G zone_group specifies a zone grouping specified in roon_api.ini
 	-L setup roon to execute local commands rather than remote via SSH
@@ -719,7 +724,17 @@ Combine '-a artist' or '-A album' with '-g genre' to play an artist or album in 
 
 Special search term '__all__' matches all entries
 Special name 'default' plays the default setting in roon_api.ini
+```
 
+</details>
+
+<details><summary>Click here to view the
+
+**roon command example invocations**
+
+</summary>
+
+```
 Example invocations
 	Play artist:
 		roon -a "Deep Purple"
@@ -783,6 +798,8 @@ Example invocations
 	For example, to play the album 'Love Bomb':
 		roon -A "Love Bomb"
 ```
+
+</details>
 
 When playing media from the command line it is possible to specify a substring
 with which a partial match can be made. In order to play media, either the full

@@ -1,0 +1,102 @@
+#!/bin/bash
+#
+# roon-tui - frontend for roon-tui terminal user interface for Roon
+#
+# Usage: roon-tui [OPTIONS]
+# 
+# Options:
+#   -b, --binary <BINARY>     Path to the roon-tui binary [default: ~/.local/bin/roon-tui-bin]
+#   -c, --config <CONFIG>     Path to the config.json file [default: ~/.config/roon-tui/config.json]
+#   -i, --ip <IP>             IP address of the Server, disables server discovery
+#   -p, --port <PORT>         Port number of the Server [default: 9330]
+#   -l, --log <LOG>           Path to the log file [default: ~/.config/roon-tui/roon-tui.log]
+#   -v, --verbose             Enable verbose logging to file
+#   -u, --no-unicode-symbols  Disable the use of Unicode symbols
+#   -h, --help                Print help
+#   -V, --version             Print version
+
+TUI_BIN="${HOME}/.local/bin/roon-tui-bin"
+TUI_CONFDIR="${HOME}/.config/roon-tui"
+TUI_CONF="${TUI_CONFDIR}/config.json"
+TUI_LOG="${TUI_CONFDIR}/roon-tui.log"
+
+usage() {
+  printf "\nUsage: roon-tui [OPTIONS]"
+  printf "\nOptions:"
+  printf "\n   -b, --binary <BINARY>     Path to the roon-tui binary [default: ~/.local/bin/roon-tui-bin]"
+  printf "\n   -c, --config <CONFIG>     Path to the config.json file [default: ~/.config/roon-tui/config.json]"
+  printf "\n   -i, --ip <IP>             IP address of the Server, disables server discovery"
+  printf "\n   -p, --port <PORT>         Port number of the Server [default: 9330]"
+  printf "\n   -l, --log <LOG>           Path to the log file [default: ~/.config/roon-tui/roon-tui.log]"
+  printf "\n   -v, --verbose             Enable verbose logging to file"
+  printf "\n   -u, --no-unicode-symbols  Disable the use of Unicode symbols"
+  printf "\n   -h, --help                Print help"
+  printf "\n   -V, --version             Print version\n"
+  exit 1
+}
+
+IP_OPT=
+PORT_OPT=
+UNICODE_OPT=
+VERB_OPT=
+VERSION_OPT=
+while [[ $1 ]]; do
+  case "$1" in
+    -b | --binary)
+      if [ -x "$2" ]; then
+        TUI_BIN="$2"
+      else
+        printf "\nWARNING: specified roon-tui binary, $2, not found. Using default\n"
+      fi
+      shift 2
+      ;;
+    -c | --config)
+      if [ -f "$2" ]; then
+        TUI_CONF="$2"
+      else
+        printf "\nWARNING: specified roon-tui configuration, $2, not found. Using default\n"
+      fi
+      shift 2
+      ;;
+    -i | --ip)
+      IP_OPT="-i $2"
+      shift 2
+      ;;
+    -p | --port)
+      PORT_OPT="-p $2"
+      shift 2
+      ;;
+    -l | --log)
+      logdir=$(dirname "$2")
+      if [ -d "${logdir}" ]; then
+        TUI_LOG="$2"
+      else
+        printf "\nWARNING: specified roon-tui log folder, ${logdir}, does not exist. Using default\n"
+      fi
+      shift 2
+      ;;
+    -v | --verbose)
+      VERB_OPT="-v"
+      shift
+      ;;
+    -u | --no-unicode-symbols)
+      UNICODE_OPT="-u"
+      shift
+      ;;
+    -h | --help)
+      usage
+      shift
+      ;;
+    -V | --version)
+      VERSION_OPT="-V"
+      shift
+      ;;
+    *)
+      printf "\nUnsupported roon-tui command option: $1\n"
+      usage
+      ;;
+  esac
+done
+
+${TUI_BIN} -c ${TUI_CONF} -l ${TUI_LOG} \
+              ${IP_OPT} ${PORT_OPT} ${UNICODE_OPT} ${VERB_OPT} ${VERSION_OPT}

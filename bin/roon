@@ -72,9 +72,9 @@ have_rich=$(type -p rich)
 usage() {
   [ "${showusage}" ] && {
     if [ "${have_rich}" ]; then
-      rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-C[/] [yellow]composer[/] [cyan]-D[/] [yellow]destination zone[/]" --print
-      rich "    [cyan]-F[/] [yellow]\[from zone][/] [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i -I[/]" --print
-      rich "    [cyan]-l[/] [yellow]\[albums|artists|artalbums|arttracks|composers|comalbums|[/]" --print
+      rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-C[/] [yellow]composer[/] [cyan]-D[/] [yellow]destination zone[/] [cyan]-n -N -O[/]" --print
+      rich "    [cyan]-F[/] [yellow]\[from zone][/] [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i[/]" --print
+      rich "    [cyan]-I -l[/] [yellow]\[albums|artists|artalbums|arttracks|composers|comalbums|[/]" --print
       rich "        [yellow]genres|genalbums|genartists|playlists|playtracks|tags|zones][/]" --print
       rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|stop|stop_all|[/]" --print
       rich "        [yellow]next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
@@ -96,6 +96,7 @@ usage() {
       rich "    [cyan]-n[/] displays 'now playing' information for zones actively playing" --print
       rich "    [cyan]-N[/] displays 'now playing' information for all zones" --print
       rich "        (combine with '[cyan]-z[/] [yellow]zone[/]' for 'now playing' in only that zone)" --print
+      rich "    [cyan]-O[/] opens [green]roon-tui[/] terminal user interface for Roon if available" --print
       rich "    [cyan]-p[/] [yellow]playlist[/] selects a playlist to play" --print
       rich "    [cyan]-G[/] [yellow]zone_group[/] specifies a zone grouping specified in roon_api.ini" --print
       rich "    [cyan]-L[/] setup roon to execute local commands rather than remote via SSH" --print
@@ -141,7 +142,7 @@ usage() {
       rich "Special name [bold italic green]default[/] plays the default setting in roon_api.ini" --print
       printf "\n"
     else
-      printf "\nUsage: roon -A album -a artist -C composer -D destination zone"
+      printf "\nUsage: roon -A album -a artist -C composer -D destination zone -n -N -O"
       printf "\n\t-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i"
       printf "\n\t-I -l [albums|artists|artalbums|arttracks|composers|comalbums|"
       printf "\n\t    genres|genalbums|genartists|playlists|playtracks|tags|zones]"
@@ -164,6 +165,7 @@ usage() {
       printf "\n\t-n displays 'now playing' information for zones actively playing"
       printf "\n\t-N displays 'now playing' information for all zones"
       printf "\n\t\t(combine with '-z zone' for 'now playing' in only that zone)"
+      printf "\n\t-O opens 'roon-tui' terminal user interface for Roon if available"
       printf "\n\t-p playlist selects a playlist to play"
       printf "\n\t-G zone_group specifies a zone grouping specified in roon_api.ini"
       printf "\n\t-L setup roon to execute local commands rather than remote via SSH"
@@ -1135,11 +1137,12 @@ main_menu() {
 }
 
 info=
-now_playing=
 fading=
-inst_roon_tui=
 logfade=
-while getopts A:a:c:C:D:f:F:g:G:hHiInNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
+now_playing=
+inst_roon_tui=
+open_roon_tui=
+while getopts A:a:c:C:D:f:F:g:G:hHiInNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
   case $flag in
     A)
       album="$OPTARG"
@@ -1198,6 +1201,9 @@ while getopts A:a:c:C:D:f:F:g:G:hHiInNp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
     n)
       now_playing=1
       nowarg=
+      ;;
+    O)
+      [ -x ${HOME}/.local/bin/roon-tui ] && open_roon_tui=1
       ;;
     p)
       playlist="$OPTARG"
@@ -1897,9 +1903,11 @@ shuffled=
     fi
   fi
 }
-
-[ "${show_roon_menu}" ] && {
-  main_menu
-}
+ 
+if [ "${open_roon_tui}" ]; then
+  [ -x ${HOME}/.local/bin/roon-tui ] && ${HOME}/.local/bin/roon-tui
+else
+  [ "${show_roon_menu}" ] && main_menu
+fi
 
 exit 0

@@ -45,13 +45,16 @@ install_roon_tui() {
           [ -d ${HOME}/.config ] || mkdir -p ${HOME}/.config
           [ -d ${HOME}/.config/roon-tui ] || mkdir -p ${HOME}/.config/roon-tui
           touch ${HOME}/.config/roon-tui/config.json
-          [ -f ${HOME}/.local/bin/roon-tui ] || {
+          if [ -f ${ROON}/etc/roon-tui-wrapper ]; then
+            rm -f ${HOME}/.local/bin/roon-tui
+            ln -s ${ROON}/etc/roon-tui-wrapper ${HOME}/.local/bin/roon-tui
+          else
             echo '#!/bin/bash' > ${HOME}/.local/bin/roon-tui
             echo '' >> ${HOME}/.local/bin/roon-tui
             echo '${HOME}/.local/bin/roon-tui-bin \' >> ${HOME}/.local/bin/roon-tui
             echo '  -c ${HOME}/.config/roon-tui/config.json \' >> ${HOME}/.local/bin/roon-tui
             echo '  -l ${HOME}/.config/roon-tui/roon-tui.log' >> ${HOME}/.local/bin/roon-tui
-          }
+          fi
           chmod 755 ${HOME}/.local/bin/roon-tui
         }
         rm -f "${TEMP_ASS}"
@@ -97,4 +100,5 @@ platform=$(uname -s)
   }
 }
 
+ROON="/usr/local/Roon"
 install_roon_tui

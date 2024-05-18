@@ -1,4 +1,4 @@
-Usage: roon -A album -a artist -C composer -D destination zone
+Usage: roon -A album -a artist -C composer -D destination zone -n -N -O
 	-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i
 	-I -l [albums|artists|artalbums|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
@@ -22,6 +22,7 @@ Where:
 	-n displays 'now playing' information for zones actively playing
 	-N displays 'now playing' information for all zones
 		(combine with '-z zone' for 'now playing' in only that zone)
+	-O opens 'roon-tui' terminal user interface for Roon if available
 	-p playlist selects a playlist to play
 	-G zone_group specifies a zone grouping specified in roon_api.ini
 	-L setup roon to execute local commands rather than remote via SSH
