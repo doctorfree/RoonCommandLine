@@ -691,8 +691,11 @@ bash -n ${ROONCONF} >/dev/null 2>&1
 [ -f ${ROONCONF} ] && . ${ROONCONF}
 
 select_zone() {
-  media_options=("Defaults Menu" "Main Menu" "Quit (q)")
+  media_options=()
   set_zone_options
+  media_options+=("Defaults Menu    [d]")
+  media_options+=("Main Menu        [m]")
+  media_options+=("Quit             [q]")
   while true; do
     clear_screen
     [ "${have_rich}" ] && {
@@ -701,14 +704,14 @@ select_zone() {
     PS3="${BOLD}Please enter the Roon zone you wish to use (numeric or text): ${NORMAL}"
     select opt in "${media_options[@]}"; do
       case "$opt,$REPLY" in
-        "Main Menu",* | *,"Main Menu")
+        "Main Menu"*,* | *,"Main Menu"* | "m",* | *,"m")
           main_menu
           break 2
           ;;
         "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           farewell_exit "Exiting RoonCommandLine"
           ;;
-        "Defaults Menu",* | *,"Defaults Menu")
+        "Defaults Menu"*,* | *,"Defaults Menu"* | "d",* | *,"d")
           list_defaults
           break 2
           ;;
@@ -791,7 +794,11 @@ select_default() {
       ;;
   esac
   printf "\nRetrieving ${medtype}s in your Roon library ..."
-  media_options=("Set Defaults Menu" "Main Menu" "Quit (q)")
+  if [ "${have_fzf}" ]; then
+    media_options=("Set Defaults Menu" "Main Menu" "Quit")
+  else
+    media_options=()
+  fi
   if [ "${medtype}" == "Zone" ]; then
     set_zone_options
   else
@@ -881,6 +888,9 @@ select_default() {
       fi
     done
   else
+    media_options+=("Set Defaults Menu    [d]")
+    media_options+=("Main Menu            [m]")
+    media_options+=("Quit                 [q]")
     while true; do
       clear_screen
       [ "${have_rich}" ] && {
@@ -889,10 +899,10 @@ select_default() {
       PS3="${BOLD}Please enter the ${medtype} you wish to set as default (numeric or text): ${NORMAL}"
       select opt in "${media_options[@]}"; do
         case "$opt,$REPLY" in
-          "Set Defaults Menu",* | *,"Set Defaults Menu")
+          "Set Defaults Menu"*,* | *,"Set Defaults Menu"* | "d",* | *,"d")
             break 2
             ;;
-          "Main Menu",* | *,"Main Menu")
+          "Main Menu"*,* | *,"Main Menu"* | "m",* | *,"m")
             main_menu
             break 3
             ;;
@@ -966,7 +976,10 @@ select_media() {
       ;;
   esac
   printf "\nRetrieving ${media}s in your Roon library ..."
-  media_options+=("Main Menu" "Quit (q)")
+  if [ "${have_fzf}" ]; then
+    media_options=("Main Menu" "Quit")
+  else
+    media_options=()
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
   if [ "${LOCAL}" = true ]; then
@@ -1023,6 +1036,8 @@ select_media() {
       fi
     done
   else
+    media_options+=("Main Menu    [m]")
+    media_options+=("Quit         [q]")
     while true; do
       clear_screen
       [ "${have_rich}" ] && {
@@ -1031,7 +1046,7 @@ select_media() {
       PS3="${BOLD}Please enter the ${media} you wish to ${action} (numeric or text): ${NORMAL}"
       select opt in "${media_options[@]}"; do
         case "$opt,$REPLY" in
-          "Main Menu",* | *,"Main Menu")
+          "Main Menu"*,* | *,"Main Menu"* | "m",* | *,"m")
             main_menu
             break 2
             ;;
@@ -1068,7 +1083,12 @@ select_media() {
 }
 
 select_set_volume() {
-  volume_options=("Mute/Unmute Zone" "Mute/Unmute All Zones" "Set Volume to 10" "Set Volume to 20" "Set Volume to 30" "Set Volume to 40" "Set Volume to 50" "Set Volume to 60" "Set Volume to 70" "Set Volume to 80" "Set Volume to 90" "Set Volume to 100" "Increase Volume by 1" "Increase Volume by 5" "Increase Volume by 10" "Increase Volume by 20" "Increase Volume by 40" "Decrease Volume by 1" "Decrease Volume by 5" "Decrease Volume by 10" "Decrease Volume by 20" "Decrease Volume by 40" "Main Menu" "Quit (q)")
+  volume_options=()
+  volume_options+=("Mute/Unmute Zone      [m]")
+  volume_options+=("Mute/Unmute All Zones [M]")
+  volume_options+=("Set Volume to 10" "Set Volume to 20" "Set Volume to 30" "Set Volume to 40" "Set Volume to 50" "Set Volume to 60" "Set Volume to 70" "Set Volume to 80" "Set Volume to 90" "Set Volume to 100" "Increase Volume by 1" "Increase Volume by 5" "Increase Volume by 10" "Increase Volume by 20" "Increase Volume by 40" "Decrease Volume by 1" "Decrease Volume by 5" "Decrease Volume by 10" "Decrease Volume by 20" "Decrease Volume by 40")
+  volume_options+=("Main Menu             [r]")
+  volume_options+=("Quit                  [q]")
   while true; do
     clear_screen
     [ "${have_rich}" ] && {
@@ -1105,7 +1125,7 @@ select_set_volume() {
           fi
           break
           ;;
-        "Mute/Unmute Zone",* | *,"Mute/Unmute Zone")
+        "Mute/Unmute Zone"*,* | *,"Mute/Unmute Zone"* | "m",* | *,"m")
           printf "\nExecuting Roon command to toggle mute audio ..."
           if [ "${LOCAL}" = true ]; then
             zone_command -c mute
@@ -1115,7 +1135,7 @@ select_set_volume() {
           printf " Done\n\n"
           break
           ;;
-        "Mute/Unmute All Zones",* | *,"Mute/Unmute All Zones")
+        "Mute/Unmute All Zones"*,* | *,"Mute/Unmute All Zones"* | "M",* | *,"M")
           printf "\nExecuting Roon command to toggle mute in all zones ..."
           if [ "${LOCAL}" = true ]; then
             zone_command -c mute_all
@@ -1125,7 +1145,7 @@ select_set_volume() {
           printf " Done\n\n"
           break
           ;;
-        "Main Menu",* | *,"Main Menu")
+        "Main Menu"*,* | *,"Main Menu"* | "r",* | *,"r")
           main_menu
           break 2
           ;;
@@ -1138,7 +1158,17 @@ select_set_volume() {
 }
 
 list_defaults() {
-  defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Set Default Zone" "Main Menu" "Quit (q)")
+  defaults_options=()
+  defaults_options+=("Set Default Album    [a]")
+  defaults_options+=("Set Default Artist   [A]")
+  defaults_options+=("Set Default Composer [c]")
+  defaults_options+=("Set Default Genre    [g]")
+  defaults_options+=("Set Default Playlist [p]")
+  defaults_options+=("Set Default Radio    [r]")
+  defaults_options+=("Set Default Tag      [t]")
+  defaults_options+=("Set Default Zone     [z]")
+  defaults_options+=("Main Menu            [m]")
+  defaults_options+=("Quit                 [q]")
   while true; do
     clear_screen
     for media in Album Artist Composer Genre Playlist Radio Tag Zone; do
@@ -1154,7 +1184,7 @@ list_defaults() {
     PS3="${BOLD}Please enter the default you wish to set (numeric or text): ${NORMAL}"
     select opt in "${defaults_options[@]}"; do
       case "$opt,$REPLY" in
-        "Main Menu",* | *,"Main Menu")
+        "Main Menu"*,* | *,"Main Menu"* | "m",* | *,"m")
           main_menu
           break 2
           ;;
@@ -1162,7 +1192,9 @@ list_defaults() {
           farewell_exit "Exiting RoonCommandLine"
           ;;
         *,*)
-          select_default "${opt}"
+          def_opt=$(echo "$opt" | awk -F '[' '{ print $1 }')
+          def_opt="$(echo -e "${def_opt}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+          select_default "${def_opt}"
           break
           ;;
       esac
