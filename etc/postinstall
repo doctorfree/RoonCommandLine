@@ -87,8 +87,8 @@ if [ -f "${ROON_DOC}/VERSION" ]; then
   release=${RELEASE}
 else
   # Should not happen but if it did we fake it
-  version="2.1.1"
-  release="2"
+  version="2.1.2"
+  release="1"
 fi
 
 # Copy in distributed roon_api.ini template if no previous one exists
@@ -299,6 +299,7 @@ if [ "${USER}" ]; then
 else
   ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
 fi
+sleep 5
 CORE_IP=$(cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } ')
 CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 CORE_PORT=$(cat /tmp/discover$$ | grep RoonCorePort | awk -F '=' ' { print $2 } ')
@@ -470,9 +471,10 @@ fi
 [ "${USER}" ] && chown -R ${USER}:${GROUP} ${ROONETC}
 
 echo ""
-echo "Verify the 'server' and 'user' settings in the roon script are correct"
-echo "and copy the 'roon' frontend shell script to a location in your execution"
-echo "PATH on all systems from which you wish to control Roon via SSH"
+echo "Verify the 'server' and 'user' settings in the roon script are correct."
+echo "If you wish to deploy RoonCommandLine on other systems, install the package"
+echo "there or copy the 'roon' frontend shell script to a location in your execution"
+echo "PATH on those systems from which you wish to control Roon via SSH."
 echo ""
 echo "Edit the Roon Command Line configuration settings at:"
 echo "${ROON_INI}"

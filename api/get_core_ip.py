@@ -23,13 +23,16 @@ discover = RoonDiscovery(None)
 servers = discover.all()
 discover.stop()
 
+print("Found the following Roon Core servers")
+print(servers)
+
 apis = [RoonApi(app, None, server[0], server[1], False) for server in servers]
 
 auth_api = []
 while len(auth_api) == 0:
     print("\nWaiting for authorization - in Roon, \
         click \033[1mSettings -> Extensions -> Enable\033[0m\n", flush=True)
-    time.sleep(15)
+    time.sleep(1)
     auth_api = [api for api in apis if api.token is not None]
 
 api = auth_api[0]

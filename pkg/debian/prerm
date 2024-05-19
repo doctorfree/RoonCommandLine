@@ -26,6 +26,15 @@ case "$1" in
         rm -rf /usr/local/Roon/venv
     ;;
     upgrade|deconfigure)
+        ROONETC=/usr/local/Roon/etc
+        ROONCONF=${ROONETC}/pyroonconf
+        ROON_INI=${ROONETC}/roon_api.ini
+        [ -f ${ROON_INI} ] && {
+            cp ${ROON_INI} /tmp/_roon_api_ini_.save
+        }
+        [ -f ${ROONCONF} ] && {
+            cp ${ROONCONF} /tmp/_pyroonconf_.save
+        }
         if [ -x /usr/local/Roon/etc/preremove ]
         then
             /usr/local/Roon/etc/preremove
