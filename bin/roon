@@ -980,6 +980,7 @@ select_media() {
     media_options=("Main Menu" "Quit")
   else
     media_options=()
+  fi
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
   if [ "${LOCAL}" = true ]; then
