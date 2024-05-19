@@ -634,7 +634,7 @@ show_menu() {
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
-            "Restore Volume"*,*|*,"Restore Volume"*|"Fade Now"*,*|*,"Fade Now"* | "r",* | *,"r")
+            "Restore Volume"*,*|*,"Restore Volume"*|"Fade Now"*,*|*,"Fade Now"* | "r",* | *,"r" | "f",* | *,"f")
                 fade_now
                 break
                 ;;
