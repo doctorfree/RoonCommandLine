@@ -349,6 +349,7 @@ farewell_exit() {
   exit 0
 }
 
+# media_options array must be set prior to calling set_zone_options
 set_zone_options() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
@@ -357,7 +358,7 @@ set_zone_options() {
   else
     zones=$(ssh $user@$server "bash -l -c \"${ROON}/bin/get_zones | sed -e 's/\, /\,/g'\"")
   fi
-  media_options=($(echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }'))
+  media_options+=($(echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }'))
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
 }
 
@@ -462,9 +463,8 @@ bash -n ${ROONCONF} >/dev/null 2>&1
 [ -f ${ROONCONF} ] && . ${ROONCONF}
 
 select_zone() {
-  media_options=()
+  media_options=("Defaults Menu" "Main Menu" "Quit (q)")
   set_zone_options
-  media_options+=("Defaults Menu" "Main Menu" "Quit (q)")
   while true; do
     tput clear
     [ "${have_rich}" ] && {
@@ -563,16 +563,16 @@ select_default() {
       ;;
   esac
   printf "\nRetrieving ${medtype}s in your Roon library ..."
+  media_options=("Set Defaults Menu" "Main Menu" "Quit (q)")
   if [ "${medtype}" == "Zone" ]; then
-    media_options=()
     set_zone_options
   else
     ${IFS+"false"} && unset oldifs || oldifs="$IFS"
     IFS=$'\n'
     if [ "${LOCAL}" = true ]; then
-      media_options=($(${listcom} -q))
+      media_options+=($(${listcom} -q))
     else
-      media_options=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
+      media_options+=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
     fi
     ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   fi
@@ -582,7 +582,6 @@ select_default() {
   printf " Done\n\n"
   printf "Default${medtype} = ${DEFAULT}\n\n"
 
-  media_options+=("Set Defaults Menu" "Main Menu" "Quit (q)")
   if [ "${have_fzf}" ]; then
     while true; do
       heading "RoonCommandLine Default ${medtype}" "Default ${medtype}"
@@ -739,12 +738,13 @@ select_media() {
       ;;
   esac
   printf "\nRetrieving ${media}s in your Roon library ..."
+  media_options+=("Main Menu" "Quit (q)")
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
   if [ "${LOCAL}" = true ]; then
-    media_options=($(${listcom} -q))
+    media_options+=($(${listcom} -q))
   else
-    media_options=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
+    media_options+=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
   fi
   DEFAULT=$(grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } ')
   # Remove leading and trailing spaces
@@ -753,7 +753,6 @@ select_media() {
   printf "Default ${media}: ${DEFAULT}\n\n"
 
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
-  media_options+=("Main Menu" "Quit (q)")
   if [ "${have_fzf}" ]; then
     while true; do
       heading "RoonCommandLine ${action} ${medtype}" "${action} ${medtype}"
@@ -946,6 +945,7 @@ list_defaults() {
 main_menu() {
   while true; do
     tput clear
+    media_options=()
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Main Menu[/cyan][/bold]" -p -a rounded -c -C
     }
