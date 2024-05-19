@@ -755,57 +755,49 @@ select_default() {
     pycom="python ${ROONAPI}/set_default.py"
   fi
   case "${media}" in
-    "Set Default Album")
+    "Album")
       setdefcom="${pycom} -A"
       listcom="list_albums"
-      medtype="Album"
       ;;
-    "Set Default Artist")
+    "Artist")
       setdefcom="${pycom} -a"
       listcom="list_artists"
-      medtype="Artist"
       ;;
-    "Set Default Composer")
+    "Composer")
       setdefcom="${pycom} -c"
       listcom="list_composers"
-      medtype="Composer"
       ;;
-    "Set Default Genre")
+    "Genre")
       setdefcom="${pycom} -g"
       listcom="list_genres"
-      medtype="Genre"
       ;;
-    "Set Default Playlist")
+    "Playlist")
       setdefcom="${pycom} -p"
       listcom="list_playlists"
-      medtype="Playlist"
       ;;
-    "Set Default Radio")
+    "Radio")
       setdefcom="${pycom} -r"
       listcom="list_radio"
-      medtype="Radio"
       ;;
-    "Set Default Tag")
+    "Tag")
       setdefcom="${pycom} -t"
       listcom="list_tags"
-      medtype="Tag"
       ;;
-    "Set Default Zone")
+    "Zone")
       setdefcom="${pycom} -z"
       listcom="list_zones"
-      medtype="Zone"
       ;;
     *)
       return 1
       ;;
   esac
-  printf "\nRetrieving ${medtype}s in your Roon library ..."
+  printf "\nRetrieving ${media}s in your Roon library ..."
   if [ "${have_fzf}" ]; then
     media_options=("Set Defaults Menu" "Main Menu" "Quit")
   else
     media_options=()
   fi
-  if [ "${medtype}" == "Zone" ]; then
+  if [ "${media}" == "Zone" ]; then
     set_zone_options
   else
     ${IFS+"false"} && unset oldifs || oldifs="$IFS"
@@ -817,16 +809,16 @@ select_default() {
     fi
     ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   fi
-  DEFAULT=$(grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } ')
+  DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
   # Remove leading and trailing spaces
   DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
   printf " Done\n\n"
-  printf "Default${medtype} = ${DEFAULT}\n\n"
+  printf "Default${media} = ${DEFAULT}\n\n"
 
   if [ "${have_fzf}" ]; then
     while true; do
-      heading "RoonCommandLine Default ${medtype}" "Default ${medtype}"
-      case ${medtype} in
+      heading "RoonCommandLine Default ${media}" "Default ${media}"
+      case ${media} in
         Zone)
           [ -f ${ROONCONF} ] && . ${ROONCONF}
           if [ "${LOCAL}" = true ]; then
@@ -851,15 +843,15 @@ select_default() {
           fi
           ;;
         *)
-          default=$(get_roon_default ${medtype})
+          default=$(get_roon_default ${media})
           if [ "${default}" ]; then
-            echo "Default Roon ${medtype}: ${default}"
+            echo "Default Roon ${media}: ${default}"
           else
-            echo "No Default Roon ${medtype} is set in ${ROON_INI}"
+            echo "No Default Roon ${media} is set in ${ROON_INI}"
           fi
           ;;
       esac
-      choice=$(printf "%s\n" "${media_options[@]}" | fzf -m --prompt=" 🎶 Select Default ${medtype} ('Main Menu' or 'Esc' to return, 'Quit' to exit)  " --height=18 --layout=reverse --exit-0)
+      choice=$(printf "%s\n" "${media_options[@]}" | fzf -m --prompt=" 🎶 Select Default ${media} ('Main Menu' or 'Esc' to return, 'Quit' to exit)  " --height=18 --layout=reverse --exit-0)
       if [ "${choice}" ]; then
         case "${choice}" in
           "Quit"* | "quit"* | "Q" | "q")
@@ -873,13 +865,13 @@ select_default() {
             break
             ;;
           *)
-            echo "${BOLD}Setting Roon ${medtype} default to: ${choice}${NORMAL}"
+            echo "${BOLD}Setting Roon ${media} default to: ${choice}${NORMAL}"
             if [ "${LOCAL}" = true ]; then
               ${setdefcom} "${choice}"
             else
               ssh $user@$server "bash -l -c \"${ROON}/bin/${setdefcom} ${choice}\""
             fi
-            [ "${medtype}" == "Zone" ] && {
+            [ "${media}" == "Zone" ] && {
               if [ "${LOCAL}" = true ]; then
                 ${ROON}/bin/set_zone "${choice}"
               else
@@ -900,9 +892,9 @@ select_default() {
     while true; do
       clear_screen
       [ "${have_rich}" ] && {
-        rich "[bold][cyan]RoonCommandLine Default ${medtype}[/cyan][/bold]" -p -a rounded -c -C
+        rich "[bold][cyan]RoonCommandLine Default ${media}[/cyan][/bold]" -p -a rounded -c -C
       }
-      PS3="${BOLD}Please enter the ${medtype} you wish to set as default (numeric or text): ${NORMAL}"
+      PS3="${BOLD}Please enter the ${media} you wish to set as default (numeric or text): ${NORMAL}"
       select opt in "${media_options[@]}"; do
         case "$opt,$REPLY" in
           "Set Defaults Menu"*,* | *,"Set Defaults Menu"* | "d",* | *,"d")
@@ -916,7 +908,7 @@ select_default() {
             farewell_exit "Exiting RoonCommandLine"
             ;;
           *,*)
-            echo "${BOLD}Setting Roon ${medtype} default to: ${opt}${NORMAL}"
+            echo "${BOLD}Setting Roon ${media} default to: ${opt}${NORMAL}"
             if [ "${LOCAL}" = true ]; then
               ${setdefcom} "${opt}"
             else
@@ -1198,10 +1190,36 @@ list_defaults() {
         "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           farewell_exit "Exiting RoonCommandLine"
           ;;
-        *,*)
-          def_opt=$(echo "$opt" | awk -F '[' '{ print $1 }')
-          def_opt="$(echo -e "${def_opt}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-          select_default "${def_opt}"
+        "Set Default Album"*,* | *, "Set Default Album"* | "a",* | *,"a")
+          select_default Album
+          break
+          ;;
+        "Set Default Artist"*,* | *, "Set Default Artist"* | "A",* | *,"A")
+          select_default Artist
+          break
+          ;;
+        "Set Default Composer"*,* | *, "Set Default Composer"* | "c",* | *,"c")
+          select_default Composer
+          break
+          ;;
+        "Set Default Genre"*,* | *, "Set Default Genre"* | "g",* | *,"g")
+          select_default Genre
+          break
+          ;;
+        "Set Default Playlist"*,* | *, "Set Default Playlist"* | "p",* | *,"p")
+          select_default Playlist
+          break
+          ;;
+        "Set Default Radio"*,* | *, "Set Default Radio"* | "r",* | *,"r")
+          select_default Radio
+          break
+          ;;
+        "Set Default Tag"*,* | *, "Set Default Tag"* | "t",* | *,"t")
+          select_default Tag
+          break
+          ;;
+        "Set Default Zone"*,* | *, "Set Default Zone"* | "z",* | *,"z")
+          select_default Zone
           break
           ;;
       esac
