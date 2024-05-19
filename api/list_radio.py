@@ -16,6 +16,13 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-r", "--radio", help="radio search term")
+parser.add_argument(
+    "-q",
+    "--quiet",
+    default=False,
+    action="store_true",
+    help="list stations without other output"
+)
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -23,6 +30,10 @@ if args.radio:
     searchterm = args.radio
 else:
     searchterm = config['DEFAULT']['DefaultRadio']
+if args.quiet:
+    verbose = False
+else:
+    verbose = True
 if args.zone:
     target_zone = args.zone
 else:
@@ -71,4 +82,5 @@ stations = roonapi.list_media(output_id, ["My Live Radio", searchterm])
 if stations:
     print(*stations, sep="\n")
 else:
-    print("No stations found matching ", searchterm)
+    if verbose:
+        print("No stations found matching ", searchterm)

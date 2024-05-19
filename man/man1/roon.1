@@ -25,8 +25,9 @@ roon - Command line control of the Roon Audio System
 \f[B]-l\f[R] albums | artists | artalbums | composers | genres |
 genalbums | genartists | playlists | tags | zones ] [ \f[B]-A\f[R] album
 ] [ \f[B]-a\f[R] artist ] [ \f[B]-C\f[R] composer ] [ \f[B]-g\f[R] genre
-] [ \f[B]-p\f[R] playlist ] [ \f[B]-r\f[R] radio ] [ \f[B]-t\f[R] tag ]
-[ \f[B]-s\f[R] search ] [-v volume] [ \f[B]-z\f[R] zone ] [ \f[B]-G\f[R]
+] [ \f[B]-m\f[R] ] [ \f[B]-n\f[R] ] [ \f[B]-N\f[R] ] [ \f[B]-O\f[R] ] [
+\f[B]-p\f[R] playlist ] [ \f[B]-r\f[R] radio ] [ \f[B]-t\f[R] tag ] [
+\f[B]-s\f[R] search ] [-v volume] [ \f[B]-z\f[R] zone ] [ \f[B]-G\f[R]
 zone_group ] [ \f[B]-c\f[R] group | ungroup | play | play_all | pause |
 pause_all | stop | stop_all | next | previous | shuffle | repeat | mute
 | mute_all ] [ \f[B]-T\f[R] track ] [ \f[B]-f\f[R] on|onlog|off|status ]
@@ -151,12 +152,19 @@ enables/disables fading/logging in specified zone.
 \[aq]off\[aq] disables fading (combine with \[aq]-z zone\[aq] for
 \[aq]fading\[aq] in that zone)
 .TP
+\f[B]-m\f[R]
+displays the \f[I]RoonCommandLine\f[R] menu interface system after
+processing other arguments
+.TP
 \f[B]-n\f[R]
 displays \[aq]now playing\[aq] information for zones actively playing
 .TP
 \f[B]-N\f[R]
 displays \[aq]now playing\[aq] information for all zones regardless of
 state
+.TP
+\f[B]-O\f[R]
+opens the \f[B]roon-tui\f[R] terminal user interface for \f[I]Roon\f[R]
 .TP
 \f[B]-p\f[R] playlist
 Selects a playlist to play

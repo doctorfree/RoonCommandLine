@@ -16,6 +16,13 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--tag", help="tag search term")
+parser.add_argument(
+    "-q",
+    "--quiet",
+    default=False,
+    action="store_true",
+    help="list tags without other output"
+)
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -23,6 +30,10 @@ if args.tag:
     searchterm = args.tag
 else:
     searchterm = config['DEFAULT']['DefaultTag']
+if args.quiet:
+    verbose = False
+else:
+    verbose = True
 if args.zone:
     target_zone = args.zone
 else:
@@ -71,4 +82,5 @@ tags = roonapi.list_media(output_id, ["Library", "Tags", searchterm])
 if tags:
     print(*tags, sep="\n")
 else:
-    print("No tags found matching ", searchterm)
+    if verbose:
+        print("No tags found matching ", searchterm)

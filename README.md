@@ -37,6 +37,7 @@
 1. [Screenshots](#screenshots)
 1. [Troubleshooting](#troubleshooting)
 1. [Usage](#usage)
+    1. [Roon Terminal User Interface](#roon-terminal-user-interface)
     1. [Introduction to Using the Command Line](#introduction-to-using-the-command-line)
     1. [Voice Activated Roon Control](#voice-activated-roon-control)
         1. [Roon Voice Commands with Siri](#roon-voice-commands-with-siri)
@@ -300,6 +301,12 @@ Core allowed other than via the API.
 
 ### Manual installation
 
+<details><summary>Click here to view the
+
+**manual installation instructions**
+
+</summary>
+
 There are three components to install. First, install the Python Roon API
 on a system which is on the same local network as your Roon Core.
 
@@ -382,6 +389,8 @@ not to install the RoonCommandLine package there (see the section below on
     # which the Python Roon API is installed, then execute the command
     # "roon -L" on that system. This will enable local execution of the
     # Roon Command Line scripts rather than remote execution via SSH.
+
+</details>
 
 ## Upgrades
 
@@ -648,12 +657,16 @@ Python Roon API system which then communicates with the Roon Core.
 If no arguments are provided to the `roon` command then an interactive dialog
 is presented from which the user can select commands and queries.
 
-Here is the current output of "roon -u" which displays a usage message.
+<details><summary>Click here to view the
+
+**roon command usage message**
+
+</summary>
 
 ```
-Usage: roon -A album -a artist -C composer -D destination zone
+Usage: roon -A album -a artist -C composer -D destination zone -m -n -N -O
 	-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i
-	-l [albums|artists|artalbums|arttracks|composers|comalbums|
+	-I -l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
 	-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|
 	    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
@@ -668,17 +681,20 @@ Where:
 	-g genre selects a genre to list/play
 	-i displays zone information (combine with '-z zone' for extended
 		info on a specified zone, otherwise display info on all zones)
+	-I installs the roon-tui terminal user interface for Roon and exits
 	-f [on|onlog|off|status] enables/disables fading/logging in specified zone
 		'on' enables fading, 'onlog' fading and logging, 'off' disables fading
 		(combine with '-z zone' for 'fading' in that zone)
+	-m indicates show the RoonCommandLine menu
 	-n displays 'now playing' information for zones actively playing
 	-N displays 'now playing' information for all zones
 		(combine with '-z zone' for 'now playing' in only that zone)
+	-O opens 'roon-tui' terminal user interface for Roon if available
 	-p playlist selects a playlist to play
 	-G zone_group specifies a zone grouping specified in roon_api.ini
 	-L setup roon to execute local commands rather than remote via SSH
 	-S Set Roon defaults in roon_api.ini
-	-l [albums|artists|artalbums|arttracks|composers|comalbums|
+	-l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
 	        indicates list albums, artists, albums by artist,
 	        composers, albums by composers, genres, albums in genre,
@@ -688,8 +704,8 @@ Where:
 	-T track specifies a track to play
 	-t tag selects an tag to play
 	-z zone selects the Roon Zone in which to play
-	-c [group|ungroup|play|play_all|pause|pause_all|playpause|
-	    stop|stop_all|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
+	-c [group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|
+	    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
 	        issues the command in the selected zone
 	        'mute' toggles the zone's muted or unmuted state
 	        'mute_all' toggles all zones' muted or unmuted state
@@ -717,7 +733,17 @@ Combine '-a artist' or '-A album' with '-g genre' to play an artist or album in 
 
 Special search term '__all__' matches all entries
 Special name 'default' plays the default setting in roon_api.ini
+```
 
+</details>
+
+<details><summary>Click here to view the
+
+**roon command example invocations**
+
+</summary>
+
+```
 Example invocations
 	Play artist:
 		roon -a "Deep Purple"
@@ -781,6 +807,8 @@ Example invocations
 	For example, to play the album 'Love Bomb':
 		roon -A "Love Bomb"
 ```
+
+</details>
 
 When playing media from the command line it is possible to specify a substring
 with which a partial match can be made. In order to play media, either the full
@@ -847,6 +875,50 @@ entry in that returned list, remove the `-l genalbums` argument and re-run the c
 `roon -g Classical -A Mozart -X Berliner`
 
 Any listing command can be turned into a play command in a similar manner.
+
+### Roon Terminal User Interface
+
+The `roon` command can be used to install the
+[Roon terminal user interface](https://github.com/TheAppgineer/roon-tui)
+(`roon-tui`), a project maintained by `TheAppgineer` organization, authors
+of the [Roon Extension Manager](https://github.com/TheAppgineer/roon-extension-manager).
+
+Install `roon-tui` with the command `roon -I` or via the RoonCommandLine menu interface.
+
+The RoonCommandLine installation of `roon-tui` installs the binary as
+`~/.local/bin/roon-tui` or `/opt/homebrew/bin/roon-tui` on `macOS`.
+
+RoonCommandLine includes a front-end wrapper for `roon-tui`, installed
+as `/usr/local/Roon/bin/roontui` which serves to locate the `roon-tui`
+configuration file and log in `~/.config/roon-tui/`.
+
+The `roon-tui` terminal user interface for Roon can be executed either
+with the wrapper, `roontui` or with `roon -O`. Executing `roon-tui`
+directly will attempt to use and write the configuration and log files
+in the directory where `roon-tui` is located. Recommended usage is either
+with `roontui` or, if no options are required, `roon -O`.
+
+The `roontui` wrapper usage message:
+
+```
+Usage: roontui [OPTIONS]
+Options:
+  -b, --binary <BINARY>     Path to the roon-tui binary
+  -c, --config <CONFIG>     Path to the config.json file
+  -i, --ip <IP>             IP address of the Server, disables server discovery
+  -p, --port <PORT>         Port number of the Server [default: 9330]
+  -l, --log <LOG>           Path to the log file
+  -v, --verbose             Enable verbose logging to file
+  -u, --no-unicode-symbols  Disable the use of Unicode symbols
+  -U, --upgrade             Upgrade roon-tui if a newer version is available
+  -h, --help                Print help
+  -V, --version             Print version
+
+Defaults:
+  Binary location:          ~/.local/bin/roon-tui
+  Configuration location:   ~/.config/roon-tui/config.json
+  Log file location:        ~/.config/roon-tui/roon-tui.log
+```
 
 ### Introduction to Using the Command Line
 

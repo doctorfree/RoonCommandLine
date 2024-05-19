@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# Install fzf fuzzy finder
+
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$1${PATH:+":$PATH"}"
+  fi
+}
+
+pathadd "${HOME}/.local/bin"
+pathadd "${HOME}/.fzf/bin"
+export PATH
+
+have_git=$(type -p git)
+[ "${have_git}" ] || {
+  printf "\nERROR: cannot locate required git command"
+  printf "\nInstall git and re-run this install script\n\n"
+  exit 1
+}
+
+have_fzf=$(type -p fzf)
+[ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
+
+[ -f ${HOME}/.local/bin/fzf ] && {
+  mv ${HOME}/.local/bin/fzf ${HOME}/.local/bin/fzf-bak$$
+}
+[ "${have_fzf}" ] || {
+  printf "\nInstalling fzf fuzzy finder\n"
+  [ -d ${HOME}/.fzf ] && mv ${HOME}/.fzf ${HOME}/.fzf$$
+  git clone --depth 1 https://github.com/junegunn/fzf.git \
+      ${HOME}/.fzf >/dev/null 2>&1
+  [ -f ${HOME}/.fzf/install ] && chmod 755 ${HOME}/.fzf/install
+  [ -x ${HOME}/.fzf/install ] && ${HOME}/.fzf/install --all >/dev/null 2>&1
+}
+if [ -f ${HOME}/.fzf/bin/fzf ]; then
+  ln -s ${HOME}/.fzf/bin/fzf ${HOME}/.local/bin/fzf
+  rm -f ${HOME}/.local/bin/fzf-bak$$
+else
+  [ -f ${HOME}/.local/bin/fzf-bak$$ ] && {
+    mv ${HOME}/.local/bin/fzf-bak$$ ${HOME}/.local/bin/fzf
+  }
+fi

@@ -16,6 +16,13 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--album", help="album search term")
+parser.add_argument(
+    "-q",
+    "--quiet",
+    default=False,
+    action="store_true",
+    help="list albums without other output"
+)
 parser.add_argument("-x", "--exalbum", help="album exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
@@ -24,6 +31,10 @@ if args.album:
     albumsearch = args.album
 else:
     albumsearch = config['DEFAULT']['DefaultArtist']
+if args.quiet:
+    verbose = False
+else:
+    verbose = True
 if args.exalbum:
     exalbumsearch = args.exalbum
 else:
@@ -75,10 +86,12 @@ albums = roonapi.list_media(output_id, ["Library", "Albums", albumsearch])
 if exalbumsearch is not None and albums:
     albums = [chkalbum for chkalbum in albums if exalbumsearch not in chkalbum]
 if albums:
-    if albumsearch == "__all__":
-        print("\nAll Albums in Library:\n")
-    else:
-        print("\nAlbums with", albumsearch, "in title", ":\n")
+    if verbose:
+        if albumsearch == "__all__":
+            print("\nAll Albums in Library:\n")
+        else:
+            print("\nAlbums with", albumsearch, "in title", ":\n")
     print(*albums, sep="\n")
 else:
-    print("No albums found matching ", albumsearch)
+    if verbose:
+        print("No albums found matching ", albumsearch)

@@ -16,6 +16,13 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--artist", help="artist search term")
+parser.add_argument(
+    "-q",
+    "--quiet",
+    default=False,
+    action="store_true",
+    help="list artists without other output"
+)
 parser.add_argument("-x", "--exartist", help="artist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
@@ -24,6 +31,10 @@ if args.artist:
     artistsearch = args.artist
 else:
     artistsearch = config['DEFAULT']['DefaultArtist']
+if args.quiet:
+    verbose = False
+else:
+    verbose = True
 if args.exartist:
     exartistsearch = args.exartist
 else:
@@ -75,10 +86,12 @@ artists = roonapi.list_media(output_id, ["Library", "Artists", artistsearch])
 if exartistsearch is not None and artists:
     artists = [cartst for cartst in artists if exartistsearch not in cartst]
 if artists:
-    if artistsearch == "__all__":
-        print("\nAll Artists in Library:\n")
-    else:
-        print("\nArtists with", artistsearch, "in name", ":\n")
+    if verbose:
+        if artistsearch == "__all__":
+            print("\nAll Artists in Library:\n")
+        else:
+            print("\nArtists with", artistsearch, "in name", ":\n")
     print(*artists, sep="\n")
 else:
-    print("No artists found matching ", artistsearch)
+    if verbose:
+        print("No artists found matching ", artistsearch)

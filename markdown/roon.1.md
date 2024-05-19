@@ -10,7 +10,7 @@ roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
 
-**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | play_all | pause | pause_all | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ] [ **-f** on|onlog|off|status ]
+**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-m** ] [ **-n** ] [ **-N** ] [ **-O** ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | play_all | pause | pause_all | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ] [ **-f** on|onlog|off|status ]
 
 # DESCRIPTION
 The *roon* command acts as a front-end for executing the RoonCommandLine
@@ -93,11 +93,17 @@ Additional detail and info can be found in the
 **-f** on|onlog|off|status
 : enables/disables fading/logging in specified zone. 'on' enables fading, 'onlog' fading and logging, 'off' disables fading (combine with '-z zone' for 'fading' in that zone)
 
+**-m**
+: displays the *RoonCommandLine* menu interface system after processing other arguments
+
 **-n**
 : displays 'now playing' information for zones actively playing
 
 **-N**
 : displays 'now playing' information for all zones regardless of state
+
+**-O**
+: opens the **roon-tui** terminal user interface for *Roon*
 
 **-p** playlist
 : Selects a playlist to play

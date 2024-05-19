@@ -1,8 +1,8 @@
 import argparse
 import configparser
 
-config = configparser.RawConfigParser(
-    comment_prefixes='/', allow_no_value=True)
+config = configparser.RawConfigParser(comment_prefixes='/', allow_no_value=True)
+config.optionxform=str
 config.read('/usr/local/Roon/etc/roon_api.ini')
 
 parser = argparse.ArgumentParser()
@@ -13,6 +13,7 @@ parser.add_argument("-g", "--genre", help="set default genre")
 parser.add_argument("-p", "--playlist", help="set default playlist")
 parser.add_argument("-r", "--radio", help="set default radio")
 parser.add_argument("-t", "--tag", help="set default tag")
+parser.add_argument("-z", "--zone", help="set default zone")
 args = parser.parse_args()
 
 if args.album:
@@ -29,6 +30,8 @@ if args.radio:
     config['DEFAULT']['DefaultRadio'] = args.radio
 if args.tag:
     config['DEFAULT']['DefaultTag'] = args.tag
+if args.zone:
+    config['DEFAULT']['DefaultZone'] = args.zone
 
 with open('/usr/local/Roon/etc/roon_api.ini', 'w') as configfile:
     config.write(configfile)

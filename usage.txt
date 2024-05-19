@@ -1,6 +1,6 @@
-Usage: roon -A album -a artist -C composer -D destination zone
+Usage: roon -A album -a artist -C composer -D destination zone -m -n -N -O
 	-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i
-	-l [albums|artists|artalbums|arttracks|composers|comalbums|
+	-I -l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
 	-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|
 	    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
@@ -15,17 +15,20 @@ Where:
 	-g genre selects a genre to list/play
 	-i displays zone information (combine with '-z zone' for extended
 		info on a specified zone, otherwise display info on all zones)
+	-I installs the roon-tui terminal user interface for Roon and exits
 	-f [on|onlog|off|status] enables/disables fading/logging in specified zone
 		'on' enables fading, 'onlog' fading and logging, 'off' disables fading
 		(combine with '-z zone' for 'fading' in that zone)
+	-m indicates show the RoonCommandLine menu
 	-n displays 'now playing' information for zones actively playing
 	-N displays 'now playing' information for all zones
 		(combine with '-z zone' for 'now playing' in only that zone)
+	-O opens 'roon-tui' terminal user interface for Roon if available
 	-p playlist selects a playlist to play
 	-G zone_group specifies a zone grouping specified in roon_api.ini
 	-L setup roon to execute local commands rather than remote via SSH
 	-S Set Roon defaults in roon_api.ini
-	-l [albums|artists|artalbums|arttracks|composers|comalbums|
+	-l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
 	        indicates list albums, artists, albums by artist,
 	        composers, albums by composers, genres, albums in genre,
@@ -35,8 +38,8 @@ Where:
 	-T track specifies a track to play
 	-t tag selects an tag to play
 	-z zone selects the Roon Zone in which to play
-	-c [group|ungroup|play|play_all|pause|pause_all|playpause|
-	    stop|stop_all|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
+	-c [group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|
+	    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
 	        issues the command in the selected zone
 	        'mute' toggles the zone's muted or unmuted state
 	        'mute_all' toggles all zones' muted or unmuted state

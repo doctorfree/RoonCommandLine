@@ -15,6 +15,21 @@ cd ${ROONAPI} || exit 1
 
 [ -f $LIST ] || exit 2
 
+ZONE=
+listargs=
+# Parse the arguments to get the zone
+while getopts "qz:" flag; do
+    case $flag in
+        q)
+            listargs="-q"
+            ;;
+        z)
+            ZONE="$OPTARG"
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
 [ "$1" ] && TAG="$*"
 
 # Use a Python virtual environment
@@ -32,14 +47,17 @@ else
     ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
+[ "${ZONE}" ] && ROON_ZONE="${ZONE}"
+# Use all zones if no zone is specified or set
+[ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
 
 [ "${TAG}" ] || TAG="__all__"
 
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
-    python3 $LIST -t "$TAG" -z "$ROON_ZONE"
+    python3 $LIST -t "$TAG" -z "$ROON_ZONE" ${listargs}
 else
-    python $LIST -t "$TAG" -z "$ROON_ZONE"
+    python $LIST -t "$TAG" -z "$ROON_ZONE" ${listargs}
 fi
 

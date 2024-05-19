@@ -15,30 +15,29 @@ port = config['DEFAULT']['RoonCorePort']
 tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--playlist", help="playlist search term")
-parser.add_argument(
-    "-q",
-    "--quiet",
-    default=False,
-    action="store_true",
-    help="list playlists without other output"
-)
-parser.add_argument("-x", "--explaylist", help="playlist exclude search term")
+parser.add_argument("-t", "--track", help="track search term")
+parser.add_argument("-a", "--album", help="album search term")
+parser.add_argument("-X", "--extrack", help="track exclude search term")
+parser.add_argument("-x", "--exalbum", help="album exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
-if args.playlist:
-    playlistsearch = args.playlist
+if args.track:
+    tracksearch = args.track
 else:
-    playlistsearch = config['DEFAULT']['DefaultPlaylist']
-if args.quiet:
-    verbose = False
+    tracksearch = "__all__"
+if args.album:
+    albumsearch = args.album
 else:
-    verbose = True
-if args.explaylist:
-    explaylistsearch = args.explaylist
+    albumsearch = config['DEFAULT']['DefaultAlbum']
+if args.extrack:
+    extracksearch = args.extrack
 else:
-    explaylistsearch = None
+    extracksearch = None
+if args.exalbum:
+    exalbumsearch = args.exalbum
+else:
+    exalbumsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -81,17 +80,30 @@ if output_id is None:
     err = "No zone found matching " + target_zone
     sys.exit(err)
 
-# List matching playlists
-playlists = roonapi.list_media(output_id, ["Playlists", playlistsearch])
-if explaylistsearch is not None and playlists:
-    playlists = [chk for chk in playlists if explaylistsearch not in chk]
-if playlists:
-    if verbose:
-        if playlistsearch == "__all__":
-            print("\nAll Playlists in Library:\n")
-        else:
-            print("\nPlaylists with", playlistsearch, "in title", ":\n")
-    print(*playlists, sep="\n")
+# List matching albums
+albums = roonapi.list_media(output_id, ["Library", "Albums", albumsearch])
+
+if albums:
+    found = None
+    for album in albums:
+        if exalbumsearch is not None:
+            if exalbumsearch in album:
+                continue
+        if "Play album" in albums:
+            albums.remove("Play album")
+        # List matching tracks
+        tracks = roonapi.list_media(output_id, ["Library", "Albums", album, tracksearch])
+        if extracksearch is not None and tracks:
+            tracks = [tr for tr in tracks if extracksearch not in tr]
+        if tracks:
+            found = tracks[0]
+            if tracksearch == "__all__":
+                print("\nTrack titles on album", album, ":\n")
+            else:
+                print("\nTrack titles on album", album, "matching",
+                      tracksearch, ":\n")
+            print(*tracks, sep="\n")
+    if found is None:
+        print("No tracks found matching", tracksearch)
 else:
-    if verbose:
-        print("No playlists found matching ", playlistsearch)
+    print("No albums found matching ", albumsearch)

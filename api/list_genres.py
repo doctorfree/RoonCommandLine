@@ -16,6 +16,13 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-g", "--genre", help="genre search term")
+parser.add_argument(
+    "-q",
+    "--quiet",
+    default=False,
+    action="store_true",
+    help="list genres without other output"
+)
 parser.add_argument("-x", "--exgenre", help="genre exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
@@ -24,6 +31,10 @@ if args.genre:
     genresearch = args.genre
 else:
     genresearch = config['DEFAULT']['DefaultGenre']
+if args.quiet:
+    verbose = False
+else:
+    verbose = True
 if args.exgenre:
     exgenresearch = args.exgenre
 else:
@@ -75,10 +86,12 @@ genres = roonapi.list_media(output_id, ["Genres", genresearch])
 if exgenresearch is not None and genres:
     genres = [chk for chk in genres if exgenresearch not in chk]
 if genres:
-    if genresearch == "__all__":
-        print("\nAll Genres in Library:\n")
-    else:
-        print("\nGenres with", genresearch, "in title", ":\n")
+    if verbose:
+        if genresearch == "__all__":
+            print("\nAll Genres in Library:\n")
+        else:
+            print("\nGenres with", genresearch, "in title", ":\n")
     print(*genres, sep="\n")
 else:
-    print("No genres found matching", genresearch)
+    if verbose:
+        print("No genres found matching", genresearch)

@@ -1,0 +1,94 @@
+#!/bin/bash
+#
+# Install roon-tui
+#
+
+set_download_url() {
+  OWNER=TheAppgineer
+  PROJECT=roon-tui
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+  [ "${have_curl}" ] && [ "${have_jq}" ] && {
+    DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+      | jq --raw-output '.assets | .[]?.browser_download_url' \
+      | grep "linux-gnu\.tar\.gz$")
+  }
+}
+
+get_roon_tui_release() {
+  DL_URL=
+  set_download_url
+  echo "${DL_URL}" | awk -F '/' '{ print $8 }'
+}
+
+install_roon_tui() {
+  if [ "${darwin}" ]; then
+    if [ "${have_brew}" ]; then
+      brew tap nepherte/roon > /dev/null 2>&1
+      brew install --formula roon-tui > /dev/null 2>&1
+    fi
+  else
+    DL_URL=
+    set_download_url
+    [ "${DL_URL}" ] && {
+      [ "${have_wget}" ] && {
+        printf "\nDownloading roon-tui release asset ..."
+        TEMP_ASS="$(mktemp --suffix=.tgz)"
+        wget --quiet -O "${TEMP_ASS}" "${DL_URL}" > /dev/null 2>&1
+        chmod 644 "${TEMP_ASS}"
+        mkdir -p /tmp/roon$$
+        tar -C /tmp/roon$$ -xzf "${TEMP_ASS}"
+        [ -f /tmp/roon$$/roon-tui ] && {
+          [ -d ${HOME}/.local ] || mkdir -p ${HOME}/.local
+          [ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
+          cp /tmp/roon$$/roon-tui ${HOME}/.local/bin/roon-tui
+          chmod 755 ${HOME}/.local/bin/roon-tui
+        }
+        rm -f "${TEMP_ASS}"
+        rm -rf /tmp/roon$$
+        printf " done\n"
+      }
+    }
+  fi
+  [ -d ${HOME}/.config ] || mkdir -p ${HOME}/.config
+  [ -d ${HOME}/.config/roon-tui ] || mkdir -p ${HOME}/.config/roon-tui
+  touch ${HOME}/.config/roon-tui/config.json
+}
+
+# Use a Github API token if one is set
+[ "${GITHUB_TOKEN}" ] || {
+  [ "${GH_API_TOKEN}" ] && export GITHUB_TOKEN="${GH_API_TOKEN}"
+  [ "${GITHUB_TOKEN}" ] || {
+    [ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
+  }
+}
+if [ "${GITHUB_TOKEN}" ]; then
+  AUTH_HEADER="-H \"Authorization: Bearer ${GITHUB_TOKEN}\""
+else
+  AUTH_HEADER=
+fi
+
+have_brew=$(type -p brew)
+have_curl=$(type -p curl)
+have_jq=$(type -p jq)
+have_wget=$(type -p wget)
+
+[ "$1" == "version" ] && {
+  get_roon_tui_release
+  exit 0
+}
+
+arm=
+darwin=
+mach=$(uname -m)
+platform=$(uname -s)
+[ "${platform}" == "Darwin" ] && darwin=1
+[ "${mach}" == "arm64" ] && arm=1
+[ "${darwin}" ] || {
+  [ "${arm}" ] && {
+    echo "Arm architecture not yet supported. Exiting."
+    exit 1
+  }
+}
+
+ROON="/usr/local/Roon"
+install_roon_tui

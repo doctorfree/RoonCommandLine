@@ -28,10 +28,10 @@ Lists Roon Library artist's tracks matching the specified track name or substrin
 : Provide a track exclusion string, in quotes if it contains spaces. No Roon library track names including the provided track exclusion string will be listed
 
 # EXAMPLES
-**list_artist_track Beatles Yesterday**
+**list_artist_tracks Beatles Yesterday**
 : Will list the tracks titles containing the string "Yesterday" by the artists whose name contains "Beatles"
 
-**list_artist_track Beatles Love foo "Love version"**
+**list_artist_tracks Beatles Love foo "Love version"**
 : Will list the tracks titles containing the string "Love" but not the string "Love version" by the artists whose name contains "Beatles" but not "foo"
 
 # AUTHORS
