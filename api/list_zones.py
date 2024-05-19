@@ -18,7 +18,13 @@ parser.add_argument("-g", "--get",
                     help="Get a comma separated list of zones",
                     action="store_true")
 parser.add_argument("-i", "--info", help="Get zone info", action="store_true")
-parser.add_argument("-q", "--quiet", help="list zones without other output")
+parser.add_argument(
+    "-q",
+    "--quiet",
+    default=False,
+    action="store_true",
+    help="list zones without other output"
+)
 parser.add_argument("-z", "--zone", help="Zone selection")
 args = parser.parse_args()
 

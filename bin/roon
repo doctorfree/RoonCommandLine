@@ -520,42 +520,42 @@ select_default() {
   case "${media}" in
     "Set Default Album")
       setdefcom="${pycom} -A"
-      listcom="list_albums -q"
+      listcom="list_albums"
       medtype="Album"
       ;;
     "Set Default Artist")
       setdefcom="${pycom} -a"
-      listcom="list_artists -q"
+      listcom="list_artists"
       medtype="Artist"
       ;;
     "Set Default Composer")
       setdefcom="${pycom} -c"
-      listcom="list_composers -q"
+      listcom="list_composers"
       medtype="Composer"
       ;;
     "Set Default Genre")
       setdefcom="${pycom} -g"
-      listcom="list_genres -q"
+      listcom="list_genres"
       medtype="Genre"
       ;;
     "Set Default Playlist")
       setdefcom="${pycom} -p"
-      listcom="list_playlists -q"
+      listcom="list_playlists"
       medtype="Playlist"
       ;;
     "Set Default Radio")
       setdefcom="${pycom} -r"
-      listcom="list_radio -q"
+      listcom="list_radio"
       medtype="Radio"
       ;;
     "Set Default Tag")
       setdefcom="${pycom} -t"
-      listcom="list_tags -q"
+      listcom="list_tags"
       medtype="Tag"
       ;;
     "Set Default Zone")
       setdefcom="${pycom} -z"
-      listcom="list_zones -q"
+      listcom="list_zones"
       medtype="Zone"
       ;;
     *)
@@ -570,9 +570,9 @@ select_default() {
     ${IFS+"false"} && unset oldifs || oldifs="$IFS"
     IFS=$'\n'
     if [ "${LOCAL}" = true ]; then
-      media_options=($(${listcom} __all__))
+      media_options=($(${listcom} -q))
     else
-      media_options=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\""))
+      media_options=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
     fi
     ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   fi
@@ -694,43 +694,43 @@ select_media() {
   case "${media}" in
     album)
       playcom="play_album"
-      listcom="list_albums -q"
+      listcom="list_albums"
       details="list_album_tracks"
       medtype="Album"
       ;;
     artist)
       playcom="play_artist"
-      listcom="list_artists -q"
+      listcom="list_artists"
       details="list_artist_albums"
       medtype="Artist"
       ;;
     composer)
       playcom="play_composer"
-      listcom="list_composers -q"
+      listcom="list_composers"
       details="list_composer_albums"
       medtype="Composer"
       ;;
     genre)
       playcom="play_genre"
-      listcom="list_genres -q"
+      listcom="list_genres"
       details="list_genre_artists"
       medtype="Genre"
       ;;
     playlist)
       playcom="play_playlist"
-      listcom="list_playlists -q"
+      listcom="list_playlists"
       details="list_playlist_tracks"
       medtype="Playlist"
       ;;
     station)
       playcom="play_radio"
-      listcom="list_radio -q"
+      listcom="list_radio"
       details=
       medtype="Radio"
       ;;
     tag)
       playcom="play_tag"
-      listcom="list_tags -q"
+      listcom="list_tags"
       details=
       medtype="Tag"
       ;;
@@ -742,9 +742,9 @@ select_media() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
   IFS=$'\n'
   if [ "${LOCAL}" = true ]; then
-    media_options=($(${listcom} __all__))
+    media_options=($(${listcom} -q))
   else
-    media_options=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\""))
+    media_options=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
   fi
   DEFAULT=$(grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } ')
   # Remove leading and trailing spaces

@@ -16,7 +16,13 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--artist", help="artist search term")
-parser.add_argument("-q", "--quiet", help="list artists without other output")
+parser.add_argument(
+    "-q",
+    "--quiet",
+    default=False,
+    action="store_true",
+    help="list artists without other output"
+)
 parser.add_argument("-x", "--exartist", help="artist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()

@@ -16,7 +16,13 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--tag", help="tag search term")
-parser.add_argument("-q", "--quiet", help="list tags without other output")
+parser.add_argument(
+    "-q",
+    "--quiet",
+    default=False,
+    action="store_true",
+    help="list tags without other output"
+)
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
