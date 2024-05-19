@@ -1190,35 +1190,35 @@ list_defaults() {
         "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           farewell_exit "Exiting RoonCommandLine"
           ;;
-        "Set Default Album"*,* | *, "Set Default Album"* | "a",* | *,"a")
+        "Set Default Album"*,* | *,"Set Default Album"* | "a",* | *,"a")
           select_default Album
           break
           ;;
-        "Set Default Artist"*,* | *, "Set Default Artist"* | "A",* | *,"A")
+        "Set Default Artist"*,* | *,"Set Default Artist"* | "A",* | *,"A")
           select_default Artist
           break
           ;;
-        "Set Default Composer"*,* | *, "Set Default Composer"* | "c",* | *,"c")
+        "Set Default Composer"*,* | *,"Set Default Composer"* | "c",* | *,"c")
           select_default Composer
           break
           ;;
-        "Set Default Genre"*,* | *, "Set Default Genre"* | "g",* | *,"g")
+        "Set Default Genre"*,* | *,"Set Default Genre"* | "g",* | *,"g")
           select_default Genre
           break
           ;;
-        "Set Default Playlist"*,* | *, "Set Default Playlist"* | "p",* | *,"p")
+        "Set Default Playlist"*,* | *,"Set Default Playlist"* | "p",* | *,"p")
           select_default Playlist
           break
           ;;
-        "Set Default Radio"*,* | *, "Set Default Radio"* | "r",* | *,"r")
+        "Set Default Radio"*,* | *,"Set Default Radio"* | "r",* | *,"r")
           select_default Radio
           break
           ;;
-        "Set Default Tag"*,* | *, "Set Default Tag"* | "t",* | *,"t")
+        "Set Default Tag"*,* | *,"Set Default Tag"* | "t",* | *,"t")
           select_default Tag
           break
           ;;
-        "Set Default Zone"*,* | *, "Set Default Zone"* | "z",* | *,"z")
+        "Set Default Zone"*,* | *,"Set Default Zone"* | "z",* | *,"z")
           select_default Zone
           break
           ;;
