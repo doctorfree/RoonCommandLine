@@ -1,13 +1,18 @@
 # RoonCommandLine Release Notes
 
-RoonCommandLine version 2.1.1 release 2 provides support for installation and
-use of the `roon-tui` Roon terminal user interface
+RoonCommandLine version 2.1.1 release 2 provides support for:
+
+- Installation and use of the `roon-tui` Roon terminal user interface
+  - Install `roon-tui` with `roon -I`
+  - Open `roon-tui` with `roon -O`
+- Add `roon-tui` wrapper `roontui`
+- Add shortcuts to RoonCommandLine menus
+- Add `list_album_tracks` command
+- Use `fzf` to fuzzy select and list media
 
 ## Installation
 
 The installation automatically detects and stores the Roon Core IP and port. There is no need for any manual configuration.
-
-**IMPORTANT NOTE** Older versions of RoonCommandLine will no longer function properly. In order to use RoonCommandLine you must install version 2.0.2 release 1 or later.
 
 Download the latest Debian or RPM package format release from the **Assets** section below.
 
