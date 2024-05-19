@@ -664,7 +664,7 @@ is presented from which the user can select commands and queries.
 </summary>
 
 ```
-Usage: roon -A album -a artist -C composer -D destination zone -n -N -O
+Usage: roon -A album -a artist -C composer -D destination zone -m -n -N -O
 	-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i
 	-I -l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
@@ -685,6 +685,7 @@ Where:
 	-f [on|onlog|off|status] enables/disables fading/logging in specified zone
 		'on' enables fading, 'onlog' fading and logging, 'off' disables fading
 		(combine with '-z zone' for 'fading' in that zone)
+	-m indicates show the RoonCommandLine menu
 	-n displays 'now playing' information for zones actively playing
 	-N displays 'now playing' information for all zones
 		(combine with '-z zone' for 'now playing' in only that zone)

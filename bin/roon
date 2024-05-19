@@ -73,7 +73,7 @@ have_rich=$(type -p rich)
 usage() {
   [ "${showusage}" ] && {
     if [ "${have_rich}" ]; then
-      rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-C[/] [yellow]composer[/] [cyan]-D[/] [yellow]destination zone[/] [cyan]-n -N -O[/]" --print
+      rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-C[/] [yellow]composer[/] [cyan]-D[/] [yellow]destination zone[/] [cyan]-m -n -N -O[/]" --print
       rich "    [cyan]-F[/] [yellow]\[from zone][/] [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i[/]" --print
       rich "    [cyan]-I -l[/] [yellow]\[albums|artists|artalbums|albtracks|arttracks|composers|comalbums|[/]" --print
       rich "        [yellow]genres|genalbums|genartists|playlists|playtracks|tags|zones][/]" --print
@@ -94,6 +94,7 @@ usage() {
       rich "    [cyan]-f[/] [yellow]\[on|onlog|off|status][/] enables/disables fading/logging in specified zone" --print
       rich "        '[yellow]on[/]' enables fading, '[yellow]onlog[/]' fading and logging, '[yellow]off[/]' disables fading" --print
       rich "        (combine with '[cyan]-z[/] [yellow]zone[/]' for 'fading' in that zone)" --print
+      rich "    [cyan]-m[/] indicates show the RoonCommandLine menu" --print
       rich "    [cyan]-n[/] displays 'now playing' information for zones actively playing" --print
       rich "    [cyan]-N[/] displays 'now playing' information for all zones" --print
       rich "        (combine with '[cyan]-z[/] [yellow]zone[/]' for 'now playing' in only that zone)" --print
@@ -143,7 +144,7 @@ usage() {
       rich "Special name [bold italic green]default[/] plays the default setting in roon_api.ini" --print
       printf "\n"
     else
-      printf "\nUsage: roon -A album -a artist -C composer -D destination zone -n -N -O"
+      printf "\nUsage: roon -A album -a artist -C composer -D destination zone -m -n -N -O"
       printf "\n\t-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i"
       printf "\n\t-I -l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|"
       printf "\n\t    genres|genalbums|genartists|playlists|playtracks|tags|zones]"
@@ -163,6 +164,7 @@ usage() {
       printf "\n\t-f [on|onlog|off|status] enables/disables fading/logging in specified zone"
       printf "\n\t\t'on' enables fading, 'onlog' fading and logging, 'off' disables fading"
       printf "\n\t\t(combine with '-z zone' for 'fading' in that zone)"
+      printf "\n\t-m indicates show the RoonCommandLine menu"
       printf "\n\t-n displays 'now playing' information for zones actively playing"
       printf "\n\t-N displays 'now playing' information for all zones"
       printf "\n\t\t(combine with '-z zone' for 'now playing' in only that zone)"
@@ -349,6 +351,10 @@ farewell_exit() {
   exit 0
 }
 
+clear_screen() {
+  [ "${debug}" ] || tput clear
+}
+
 # media_options array must be set prior to calling set_zone_options
 set_zone_options() {
   ${IFS+"false"} && unset oldifs || oldifs="$IFS"
@@ -410,7 +416,7 @@ fi
 
 # Source our general use and version/upgrade functions
 [ -f ${ROONETC}/functions ] && source ${ROONETC}/functions
-tput clear
+clear_screen
 
 get_roon_default() {
   mt="$1"
@@ -466,7 +472,7 @@ select_zone() {
   media_options=("Defaults Menu" "Main Menu" "Quit (q)")
   set_zone_options
   while true; do
-    tput clear
+    clear_screen
     [ "${have_rich}" ] && {
       rich "[bold][cyan]Select Roon Zone[/cyan][/bold]" -p -a rounded -c -C
     }
@@ -654,7 +660,7 @@ select_default() {
     done
   else
     while true; do
-      tput clear
+      clear_screen
       [ "${have_rich}" ] && {
         rich "[bold][cyan]RoonCommandLine Default ${medtype}[/cyan][/bold]" -p -a rounded -c -C
       }
@@ -796,7 +802,7 @@ select_media() {
     done
   else
     while true; do
-      tput clear
+      clear_screen
       [ "${have_rich}" ] && {
         rich "[bold][cyan]RoonCommandLine ${action} ${medtype}[/cyan][/bold]" -p -a rounded -c -C
       }
@@ -842,7 +848,7 @@ select_media() {
 select_set_volume() {
   volume_options=("Mute/Unmute Zone" "Mute/Unmute All Zones" "Set Volume to 10" "Set Volume to 20" "Set Volume to 30" "Set Volume to 40" "Set Volume to 50" "Set Volume to 60" "Set Volume to 70" "Set Volume to 80" "Set Volume to 90" "Set Volume to 100" "Increase Volume by 1" "Increase Volume by 5" "Increase Volume by 10" "Increase Volume by 20" "Increase Volume by 40" "Decrease Volume by 1" "Decrease Volume by 5" "Decrease Volume by 10" "Decrease Volume by 20" "Decrease Volume by 40" "Main Menu" "Quit (q)")
   while true; do
-    tput clear
+    clear_screen
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Volume Control[/cyan][/bold]" -p -a rounded -c -C
     }
@@ -912,7 +918,7 @@ select_set_volume() {
 list_defaults() {
   defaults_options=("Set Default Album" "Set Default Artist" "Set Default Composer" "Set Default Genre" "Set Default Playlist" "Set Default Radio" "Set Default Tag" "Set Default Zone" "Main Menu" "Quit (q)")
   while true; do
-    tput clear
+    clear_screen
     for media in Album Artist Composer Genre Playlist Radio Tag Zone; do
       DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
       # Remove leading and trailing spaces
@@ -944,7 +950,7 @@ list_defaults() {
 
 main_menu() {
   while true; do
-    tput clear
+    clear_screen
     media_options=()
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Main Menu[/cyan][/bold]" -p -a rounded -c -C
@@ -1335,13 +1341,14 @@ main_menu() {
   done
 }
 
+debug=
 info=
 fading=
 logfade=
 now_playing=
 inst_roon_tui=
 open_roon_tui=
-while getopts A:a:c:C:D:f:F:g:G:hHiInNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
+while getopts A:a:c:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
   case $flag in
     A)
       album="$OPTARG"
@@ -1354,6 +1361,9 @@ while getopts A:a:c:C:D:f:F:g:G:hHiInNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       ;;
     C)
       composer="$OPTARG"
+      ;;
+    d)
+      debug=1
       ;;
     D)
       dest_zone="$OPTARG"
@@ -1392,6 +1402,9 @@ while getopts A:a:c:C:D:f:F:g:G:hHiInNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       ;;
     I)
       inst_roon_tui=1
+      ;;
+    m)
+      show_roon_menu=1
       ;;
     N)
       now_playing=1
