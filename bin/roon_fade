@@ -473,9 +473,10 @@ select_fade_duration() {
     duration_options+=("${dur}")
     dur=$((dur + 5))
   done
-  duration_options+=("Main Menu" "Quit")
+  duration_options+=("Main Fade Menu [m]" "Main Roon Menu [M]" "Quit           [q]")
   while true
   do
+    tput clear
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Fade Duration[/cyan][/bold]" -p -a rounded -c -C
     }
@@ -483,11 +484,15 @@ select_fade_duration() {
     select opt in "${duration_options[@]}"
     do
         case "$opt,$REPLY" in
-            "Main Menu",*|*,"Main Menu")
+            "Main Fade Menu"*,*|*,"Main Fade Menu"* | "m",* | *,"m")
                 show_menu
                 break 2
                 ;;
-            "Quit",*|*,"Quit"|"quit",*|*,"quit")
+            "Main Roon Menu"*,*|*,"Main Roon Menu"* | "M",* | *,"M")
+                exec roon
+                break 2
+                ;;
+            "Quit"*,*|*,"Quit"*|"quit"*,*|*,"quit"* | "q",* | *,"q")
                 printf "\nExiting\n"
                 exit 0
                 ;;
@@ -521,9 +526,10 @@ select_fade_zone() {
   zone_options=( $( echo "${zones}" | \
     awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }' ) )
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
-  zone_options+=("Main Menu" "Quit")
+  zone_options+=("Main Fade Menu [m]" "Main Roon Menu [M]" "Quit           [q]")
   while true
   do
+    tput clear
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Fade Zone[/cyan][/bold]" -p -a rounded -c -C
     }
@@ -531,11 +537,15 @@ select_fade_zone() {
     select opt in "${zone_options[@]}"
     do
         case "$opt,$REPLY" in
-            "Main Menu",*|*,"Main Menu")
+            "Main Fade Menu"*,*|*,"Main Fade Menu"* | "m",* | *,"m")
                 show_menu
                 break 2
                 ;;
-            "Quit",*|*,"Quit"|"quit",*|*,"quit")
+            "Main Roon Menu"*,*|*,"Main Roon Menu"* | "M",* | *,"M")
+                exec roon
+                break 2
+                ;;
+            "Quit"*,*|*,"Quit"*|"quit"*,*|*,"quit"* | "q",* | *,"q")
                 printf "\nExiting\n"
                 exit 0
                 ;;
@@ -582,6 +592,7 @@ select_fade_zone() {
 show_menu() {
   while true
   do
+    tput clear
     init_conf
     remline=$(get_zone_remaining -z "${FADE_ZONE}")
     state=$(echo "${remline}" | awk -F ',' ' { print $2 } ' | \
@@ -602,46 +613,46 @@ show_menu() {
     options=()
     if [ "${FADE_NOW}" = true ]
     then
-      options+=("Restore Volume")
+      options+=("Restore Volume       [r]")
     else
-      options+=("Fade Now")
+      options+=("Fade Now             [f]")
     fi
     if [ "${ROON_FADE}" = true ]
     then
-      options+=("Disable Fade Daemon")
+      options+=("Disable Fade Daemon  [d]")
     else
-      options+=("Enable Fade Daemon")
+      options+=("Enable Fade Daemon   [e]")
     fi
     if [ "${state}" == "playing" ]
     then
-      options+=("Pause in ${FADE_ZONE}")
+      options+=("Pause in Fading Zone [P]")
     else
-      options+=("Play in ${FADE_ZONE}")
+      options+=("Play in Fading Zone  [p]")
     fi
-    options+=("Set Fade Duration" "Select Fade Zone" "Toggle Mute")
-    options+=("Main Roon Menu" "Quit")
+    options+=("Set Fade Duration    [s]" "Select Fade Zone     [z]" "Toggle Mute          [t]")
+    options+=("Main Roon Menu       [m]" "Quit                 [q]")
     select opt in "${options[@]}"
     do
         case "$opt,$REPLY" in
-            "Restore Volume",*|*,"Restore Volume"|"Fade Now",*|*,"Fade Now")
+            "Restore Volume"*,*|*,"Restore Volume"*|"Fade Now"*,*|*,"Fade Now"* | "r",* | *,"r")
                 fade_now
                 break
                 ;;
-            "Disable Fade Daemon",*|*,"Disable Fade Daemon")
+            "Disable Fade Daemon"*,*|*,"Disable Fade Daemon"* | "d",* | *,"d")
                 stop_daemon
                 break
                 ;;
-            "Enable Fade Daemon",*|*,"Enable Fade Daemon")
+            "Enable Fade Daemon"*,*|*,"Enable Fade Daemon"* | "e",* | *,"e")
                 start_daemon -y
                 sleep 2
                 break
                 ;;
-            "Pause"*,*|*,"Pause"*)
+            "Pause"*,*|*,"Pause"* | "P",* | *,"P")
                 roon -c pause -z "${FADE_ZONE}"
                 sleep 2
                 break
                 ;;
-            "Play"*,*|*,"Play"*)
+            "Play"*,*|*,"Play"* | "p",* | *,"p")
                 if [ "${FADE_NOW}" = true ]
                 then
                   fade_now
@@ -652,11 +663,11 @@ show_menu() {
                 fi
                 break
                 ;;
-            "Toggle Mute"*,*|*,"Toggle Mute"*)
+            "Toggle Mute"*,*|*,"Toggle Mute"* | "t",* | *,"t")
                 roon -c mute -z "${FADE_ZONE}"
                 break
                 ;;
-            "Set Fade Duration",*|*,"Set Fade Duration")
+            "Set Fade Duration"*,*|*,"Set Fade Duration"* | "s",* | *,"s")
                 init_conf
                 if [ "${FADE_DURATION}" ]
                 then
@@ -667,7 +678,7 @@ show_menu() {
                 select_fade_duration
                 break
                 ;;
-            "Select Fade Zone",*|*,"Select Fade Zone")
+            "Select Fade Zone"*,*|*,"Select Fade Zone"* | "z",* | *,"z")
                 init_conf
                 if [ "${FADE_ZONE}" ]
                 then
@@ -678,11 +689,11 @@ show_menu() {
                 select_fade_zone
                 break
                 ;;
-            "Main Roon Menu",*|*,"Main Roon Menu")
+            "Main Roon Menu"*,*|*,"Main Roon Menu"* | "m",* | *,"m")
                 exec roon
                 break
                 ;;
-            "Quit",*|*,"Quit"|"quit",*|*,"quit")
+            "Quit"*,*|*,"Quit"*|"quit"*,*|*,"quit"* | "q",* | *,"q")
                 printf "\nExiting\n"
                 exit 0
                 ;;
