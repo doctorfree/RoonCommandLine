@@ -483,7 +483,7 @@ show_versions() {
       printf "\nAvailable fzf version: ${release_version}\n"
     fi
   fi
-  [ "${have_tui}" ] && {
+  if [ "${have_tui}" ]; then
     release_version=$(${ROON}/etc/install-roon-tui version)
     install_version=$(roon-tui --version | awk '{ print $2 }')
     if [ "${have_rich}" ]; then
@@ -501,7 +501,13 @@ show_versions() {
         printf "\nAvailable roon-tui version: ${release_version}\n"
       fi
     fi
-  }
+  else
+    if [ "${have_rich}" ]; then
+      rich "[red]roon-tui[/] not installed" -p
+    else
+      printf "\nroon-tui not installed\n"
+    fi
+  fi
 }
 
 # Display RoonCommandLine info, versions, and update availability
@@ -1264,7 +1270,7 @@ main_menu() {
     else
       [ -x ${ROONETC}/install-fzf ] && options+=("Install fzf")
     fi
-    have_tui=$(type -p roontui)
+    have_tui=$(type -p roon-tui)
     if [ "${have_tui}" ]; then
       options+=("Open roon-tui    [O]")
     else
