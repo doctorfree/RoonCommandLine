@@ -16,6 +16,7 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--playlist", help="playlist search term")
+parser.add_argument("-q", "--quiet", help="list playlists without other output")
 parser.add_argument("-x", "--explaylist", help="playlist exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
@@ -24,6 +25,10 @@ if args.playlist:
     playlistsearch = args.playlist
 else:
     playlistsearch = config['DEFAULT']['DefaultPlaylist']
+if args.quiet:
+    verbose = False
+else:
+    verbose = True
 if args.explaylist:
     explaylistsearch = args.explaylist
 else:
@@ -75,10 +80,12 @@ playlists = roonapi.list_media(output_id, ["Playlists", playlistsearch])
 if explaylistsearch is not None and playlists:
     playlists = [chk for chk in playlists if explaylistsearch not in chk]
 if playlists:
-    if playlistsearch == "__all__":
-        print("\nAll Playlists in Library:\n")
-    else:
-        print("\nPlaylists with", playlistsearch, "in title", ":\n")
+    if verbose:
+        if playlistsearch == "__all__":
+            print("\nAll Playlists in Library:\n")
+        else:
+            print("\nPlaylists with", playlistsearch, "in title", ":\n")
     print(*playlists, sep="\n")
 else:
-    print("No playlists found matching ", playlistsearch)
+    if verbose:
+        print("No playlists found matching ", playlistsearch)

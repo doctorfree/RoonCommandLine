@@ -16,6 +16,21 @@ cd ${ROONAPI} || exit 1
 
 [ -f $LIST ] || exit 2
 
+listargs=
+ZONE=
+# Parse the arguments to get the zone
+while getopts "qz:" flag; do
+    case $flag in
+        z)
+            ZONE="$OPTARG"
+            ;;
+        q)
+            listargs="-q"
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
 # First argument is album name/substring, Second argument is album exclusion string
 [ "$1" ] && ALBUM="$1"
 [ "$2" ] && EXALBUM="$2"
@@ -35,12 +50,15 @@ else
     ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
+[ "${ZONE}" ] && ROON_ZONE="${ZONE}"
+# Use all zones if no zone is specified or set
+[ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
 
 [ "${ALBUM}" ] || ALBUM="__all__"
 
 # Construct the exclusion args if passed
-EXARGS=
-[ "${EXALBUM}" ] && EXARGS="-x ${EXALBUM}"
+EXARGS="${listargs}"
+[ "${EXALBUM}" ] && EXARGS="${EXARGS} -x ${EXALBUM}"
 
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]
@@ -49,4 +67,3 @@ then
 else
     python $LIST -a "$ALBUM" -z "$ROON_ZONE" $EXARGS
 fi
-

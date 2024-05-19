@@ -16,6 +16,21 @@ cd ${ROONAPI} || exit 1
 
 [ -f $LIST ] || exit 2
 
+ZONE=
+listargs=
+# Parse the arguments to get the zone
+while getopts "qz:" flag; do
+    case $flag in
+        q)
+            listargs="-q"
+            ;;
+        z)
+            ZONE="$OPTARG"
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
 [ "$1" ] && ARTIST="$1"
 [ "$2" ] && EXARTIST="$2"
 
@@ -34,12 +49,15 @@ else
     ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
+[ "${ZONE}" ] && ROON_ZONE="${ZONE}"
+# Use all zones if no zone is specified or set
+[ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
 
 [ "${ARTIST}" ] || ARTIST="__all__"
 
 # Construct the exclusion args if passed
-EXARGS=
-[ "${EXARTIST}" ] && EXARGS="-x ${EXARTIST}"
+EXARGS="${listargs}"
+[ "${EXARTIST}" ] && EXARGS="${EXARGS} -x ${EXARTIST}"
 
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]

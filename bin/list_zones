@@ -7,13 +7,24 @@ ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 LIST=list_zones.py
-ZONE=
 
 [ -d ${ROONAPI} ] || exit 1
 
 cd ${ROONAPI} || exit 1
 
 [ -f $LIST ] || exit 2
+
+ZONE=
+listargs=
+# Parse the arguments to get the zone
+while getopts "q" flag; do
+    case $flag in
+        q)
+            listargs="-q"
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
 
 # Use a Python virtual environment
 [ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
@@ -40,11 +51,7 @@ fi
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
-    python3 $LIST -z "$ZONE"
+    python3 $LIST -z "$ZONE" ${listargs}
 else
-    python $LIST -z "$ZONE"
+    python $LIST -z "$ZONE" ${listargs}
 fi
-
-echo ""
-echo "Your configured zone groupings:"
-grep ^Group_ ${ROONETC}/roon_api.ini

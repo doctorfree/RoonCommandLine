@@ -18,6 +18,7 @@ parser.add_argument("-g", "--get",
                     help="Get a comma separated list of zones",
                     action="store_true")
 parser.add_argument("-i", "--info", help="Get zone info", action="store_true")
+parser.add_argument("-q", "--quiet", help="list zones without other output")
 parser.add_argument("-z", "--zone", help="Zone selection")
 args = parser.parse_args()
 
@@ -25,6 +26,10 @@ if args.zone:
     searchterm = args.zone
 else:
     searchterm = config['DEFAULT']['DefaultZone']
+if args.quiet:
+    verbose = False
+else:
+    verbose = True
 
 version = config['DEFAULT']['RoonCommandLineVersion']
 release = config['DEFAULT']['RoonCommandLineRelease']
@@ -86,21 +91,27 @@ for (k, v) in outputs.items():
                 zonelist = zonelist + zone_name + ', '
         else:
             if is_grouped:
-                print(
-                    "Zone",
-                    str(zone_number) + ":",
-                    '\033[1m' + zone_name + '\033[0m',
-                    "\n\tGrouped zone names:",
-                    '\033[1m',
-                    grouped_zone_names,
-                    '\033[0m',
-                )
+                if verbose:
+                    print(
+                        "Zone",
+                        str(zone_number) + ":",
+                        '\033[1m' + zone_name + '\033[0m',
+                        "\n\tGrouped zone names:",
+                        '\033[1m',
+                        grouped_zone_names,
+                        '\033[0m',
+                    )
+                else:
+                    print(zone_name)
             else:
-                print(
-                    "Zone",
-                    str(zone_number) + ":",
-                    '\033[1m' + zone_name + '\033[0m',
-                )
+                if verbose:
+                    print(
+                        "Zone",
+                        str(zone_number) + ":",
+                        '\033[1m' + zone_name + '\033[0m',
+                    )
+                else:
+                    print(zone_name)
             if args.info:
                 print(
                     "\tCan group with:",
@@ -109,7 +120,8 @@ for (k, v) in outputs.items():
                     '\033[0m'
                 )
             if is_group_main:
-                print("\tThis is the group main zone")
+                if verbose:
+                    print("\tThis is the group main zone")
         zone_number += 1
 
 if args.get:

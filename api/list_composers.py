@@ -16,6 +16,7 @@ tokenfile = config['DEFAULT']['TokenFileName']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--composer", help="composer search term")
+parser.add_argument("-q", "--quiet", help="list composers without other output")
 parser.add_argument("-x", "--excomposer", help="composer exclude search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
@@ -24,6 +25,10 @@ if args.composer:
     composersearch = args.composer
 else:
     composersearch = config['DEFAULT']['DefaultComposer']
+if args.quiet:
+    verbose = False
+else:
+    verbose = True
 if args.excomposer:
     excomposersearch = args.excomposer
 else:
@@ -78,10 +83,12 @@ composers = roonapi.list_media(output_id,
 if excomposersearch is not None and composers:
     composers = [cmpsr for cmpsr in composers if excomposersearch not in cmpsr]
 if composers:
-    if composersearch == "__all__":
-        print("\nAll Composers in Library:\n")
-    else:
-        print("\nComposers with", composersearch, "in name", ":\n")
+    if verbose:
+        if composersearch == "__all__":
+            print("\nAll Composers in Library:\n")
+        else:
+            print("\nComposers with", composersearch, "in name", ":\n")
     print(*composers, sep="\n")
 else:
-    print("No composers found matching", composersearch)
+    if verbose:
+        print("No composers found matching", composersearch)

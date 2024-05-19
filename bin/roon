@@ -349,6 +349,18 @@ farewell_exit() {
   exit 0
 }
 
+set_zone_options() {
+  ${IFS+"false"} && unset oldifs || oldifs="$IFS"
+  IFS=$'\n'
+  if [ "${LOCAL}" == "true" ]; then
+    zones=$(${ROON}/bin/get_zones | sed -e 's/\, /\,/g')
+  else
+    zones=$(ssh $user@$server "bash -l -c \"${ROON}/bin/get_zones | sed -e 's/\, /\,/g'\"")
+  fi
+  media_options=($(echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }'))
+  ${oldifs+"false"} && unset IFS || IFS="$oldifs"
+}
+
 show_now_playing() {
   nowarg="$1"
   zone="$2"
@@ -399,12 +411,18 @@ fi
 [ -f ${ROONETC}/functions ] && source ${ROONETC}/functions
 tput clear
 
+get_roon_default() {
+  mt="$1"
+  dz=$(grep ^Default${mt} ${ROON_INI} | awk -F '=' ' { print $2 } ')
+  # Remove leading and trailing spaces in dz
+  dz="$(echo -e "${dz}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  echo "${dz}"
+}
+
 set_default_conf() {
   if [ -w ${ROONETC} ]; then
     echo "LOCAL=true" >${ROONCONF}
-    DEFZONE=$(grep ^DefaultZone ${ROON_INI} | awk -F '=' ' { print $2 } ')
-    # Remove leading and trailing spaces in DEFZONE
-    DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    DEFZONE=$(get_roon_default Zone)
     echo "ROON_ZONE=\"$DEFZONE\"" >>${ROONCONF}
   else
     echo "${ROONETC} is not writeable by this user."
@@ -444,23 +462,16 @@ bash -n ${ROONCONF} >/dev/null 2>&1
 [ -f ${ROONCONF} ] && . ${ROONCONF}
 
 select_zone() {
-  ${IFS+"false"} && unset oldifs || oldifs="$IFS"
-  IFS=$'\n'
-  if [ "${LOCAL}" == "true" ]; then
-    zones=$(${ROON}/bin/get_zones | sed -e 's/\, /\,/g')
-  else
-    zones=$(ssh $user@$server "bash -l -c \"${ROON}/bin/get_zones | sed -e 's/\, /\,/g'\"")
-  fi
-  zone_options=($(echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }'))
-  ${oldifs+"false"} && unset IFS || IFS="$oldifs"
-  zone_options+=("Defaults Menu" "Main Menu" "Quit (q)")
+  media_options=()
+  set_zone_options
+  media_options+=("Defaults Menu" "Main Menu" "Quit (q)")
   while true; do
     tput clear
     [ "${have_rich}" ] && {
       rich "[bold][cyan]Select Roon Zone[/cyan][/bold]" -p -a rounded -c -C
     }
     PS3="${BOLD}Please enter the Roon zone you wish to use (numeric or text): ${NORMAL}"
-    select opt in "${zone_options[@]}"; do
+    select opt in "${media_options[@]}"; do
       case "$opt,$REPLY" in
         "Main Menu",* | *,"Main Menu")
           main_menu
@@ -474,7 +485,7 @@ select_zone() {
           break 2
           ;;
         *,*)
-          if [[ " ${zone_options[*]} " =~ " ${opt} " ]]; then
+          if [[ " ${media_options[*]} " =~ " ${opt} " ]]; then
             echo "${BOLD}Executing Roon command to set default zone to: ${opt}${NORMAL}"
             if [ "${LOCAL}" = true ]; then
               ${ROON}/bin/set_zone "${opt}"
@@ -509,42 +520,42 @@ select_default() {
   case "${media}" in
     "Set Default Album")
       setdefcom="${pycom} -A"
-      listcom="list_albums"
+      listcom="list_albums -q"
       medtype="Album"
       ;;
     "Set Default Artist")
       setdefcom="${pycom} -a"
-      listcom="list_artists"
+      listcom="list_artists -q"
       medtype="Artist"
       ;;
     "Set Default Composer")
       setdefcom="${pycom} -c"
-      listcom="list_composers"
+      listcom="list_composers -q"
       medtype="Composer"
       ;;
     "Set Default Genre")
       setdefcom="${pycom} -g"
-      listcom="list_genres"
+      listcom="list_genres -q"
       medtype="Genre"
       ;;
     "Set Default Playlist")
       setdefcom="${pycom} -p"
-      listcom="list_playlists"
+      listcom="list_playlists -q"
       medtype="Playlist"
       ;;
     "Set Default Radio")
       setdefcom="${pycom} -r"
-      listcom="list_radio"
+      listcom="list_radio -q"
       medtype="Radio"
       ;;
     "Set Default Tag")
       setdefcom="${pycom} -t"
-      listcom="list_tags"
+      listcom="list_tags -q"
       medtype="Tag"
       ;;
     "Set Default Zone")
       setdefcom="${pycom} -z"
-      listcom="list_zones"
+      listcom="list_zones -q"
       medtype="Zone"
       ;;
     *)
@@ -552,12 +563,18 @@ select_default() {
       ;;
   esac
   printf "\nRetrieving ${medtype}s in your Roon library ..."
-  ${IFS+"false"} && unset oldifs || oldifs="$IFS"
-  IFS=$'\n'
-  if [ "${LOCAL}" = true ]; then
-    media_options=($(${listcom} __all__))
+  if [ "${medtype}" == "Zone" ]; then
+    media_options=()
+    set_zone_options
   else
-    media_options=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\""))
+    ${IFS+"false"} && unset oldifs || oldifs="$IFS"
+    IFS=$'\n'
+    if [ "${LOCAL}" = true ]; then
+      media_options=($(${listcom} __all__))
+    else
+      media_options=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} __all__\""))
+    fi
+    ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   fi
   DEFAULT=$(grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } ')
   # Remove leading and trailing spaces
@@ -565,12 +582,44 @@ select_default() {
   printf " Done\n\n"
   printf "Default${medtype} = ${DEFAULT}\n\n"
 
-  ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   media_options+=("Set Defaults Menu" "Main Menu" "Quit (q)")
   if [ "${have_fzf}" ]; then
     while true; do
-      heading "RoonCommandLine default ${medtype}" "Default ${medtype}"
-      choice=$(printf "%s\n" "${media_options[@]}" | fzf -m --prompt=" 🎶 Select default ${medtype} ('Main Menu' or 'Esc' to return, 'Quit' to exit)  " --height=18 --layout=reverse --exit-0)
+      heading "RoonCommandLine Default ${medtype}" "Default ${medtype}"
+      case ${medtype} in
+        Zone)
+          [ -f ${ROONCONF} ] && . ${ROONCONF}
+          if [ "${LOCAL}" = true ]; then
+            if [ "${ROON_ZONE}" ]; then
+              echo "Current Roon Zone: ${ROON_ZONE}"
+            else
+              echo "No Roon Zone is set in ${ROONCONF}"
+            fi
+          else
+            roon_zone=$(ssh $user@$server "bash -l -c \"grep ROON_ZONE ${ROONCONF}\"")
+            if [ "${roon_zone}" ]; then
+              echo "Current Roon Zone: ${roon_zone}"
+            else
+              echo "No Roon Zone is set in ${ROONCONF}"
+            fi
+          fi
+          DEFZONE=$(get_roon_default Zone)
+          if [ "${DEFZONE}" ]; then
+            echo "Default Roon Zone: ${DEFZONE}"
+          else
+            echo "No Default Roon Zone is set in ${ROON_INI}"
+          fi
+          ;;
+        *)
+          default=$(get_roon_default ${medtype})
+          if [ "${default}" ]; then
+            echo "Default Roon ${medtype}: ${default}"
+          else
+            echo "No Default Roon ${medtype} is set in ${ROON_INI}"
+          fi
+          ;;
+      esac
+      choice=$(printf "%s\n" "${media_options[@]}" | fzf -m --prompt=" 🎶 Select Default ${medtype} ('Main Menu' or 'Esc' to return, 'Quit' to exit)  " --height=18 --layout=reverse --exit-0)
       if [ "${choice}" ]; then
         case "${choice}" in
           "Quit"* | "quit"* | "Q" | "q")
@@ -586,11 +635,17 @@ select_default() {
           *)
             echo "${BOLD}Setting Roon ${medtype} default to: ${choice}${NORMAL}"
             if [ "${LOCAL}" = true ]; then
-              echo "${setdefcom} ${choice}" > /tmp/debug$$
               ${setdefcom} "${choice}"
             else
               ssh $user@$server "bash -l -c \"${ROON}/bin/${setdefcom} ${choice}\""
             fi
+            [ "${medtype}" == "Zone" ] && {
+              if [ "${LOCAL}" = true ]; then
+                ${ROON}/bin/set_zone "${choice}"
+              else
+                ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone ${choice}\""
+              fi
+            }
             break
             ;;
         esac
@@ -639,43 +694,43 @@ select_media() {
   case "${media}" in
     album)
       playcom="play_album"
-      listcom="list_albums"
+      listcom="list_albums -q"
       details="list_album_tracks"
       medtype="Album"
       ;;
     artist)
       playcom="play_artist"
-      listcom="list_artists"
+      listcom="list_artists -q"
       details="list_artist_albums"
       medtype="Artist"
       ;;
     composer)
       playcom="play_composer"
-      listcom="list_composers"
+      listcom="list_composers -q"
       details="list_composer_albums"
       medtype="Composer"
       ;;
     genre)
       playcom="play_genre"
-      listcom="list_genres"
+      listcom="list_genres -q"
       details="list_genre_artists"
       medtype="Genre"
       ;;
     playlist)
       playcom="play_playlist"
-      listcom="list_playlists"
+      listcom="list_playlists -q"
       details="list_playlist_tracks"
       medtype="Playlist"
       ;;
     station)
       playcom="play_radio"
-      listcom="list_radio"
+      listcom="list_radio -q"
       details=
       medtype="Radio"
       ;;
     tag)
       playcom="play_tag"
-      listcom="list_tags"
+      listcom="list_tags -q"
       details=
       medtype="Tag"
       ;;
@@ -879,29 +934,6 @@ list_defaults() {
         "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           farewell_exit "Exiting RoonCommandLine"
           ;;
-        "Set Default Zone",* | *,"Set Default Zone")
-          [ -f ${ROONCONF} ] && . ${ROONCONF}
-          if [ "${LOCAL}" = true ]; then
-            if [ "${ROON_ZONE}" ]; then
-              echo ""
-              echo "Current Roon Zone is ${ROON_ZONE}"
-            else
-              echo ""
-              echo "No default Roon Zone is set in ${ROONCONF}"
-            fi
-          else
-            roon_zone=$(ssh $user@$server "bash -l -c \"grep ROON_ZONE ${ROONCONF}\"")
-            if [ "${roon_zone}" ]; then
-              echo ""
-              echo "Current Roon Zone is ${roon_zone}"
-            else
-              echo ""
-              echo "No default Roon Zone is set in ${ROONCONF}"
-            fi
-          fi
-          select_zone
-          break
-          ;;
         *,*)
           select_default "${opt}"
           break
@@ -989,19 +1021,15 @@ main_menu() {
           [ -f ${ROONCONF} ] && . ${ROONCONF}
           if [ "${LOCAL}" = true ]; then
             if [ "${ROON_ZONE}" ]; then
-              echo ""
-              echo "Current Roon Zone is ${ROON_ZONE}"
+              echo "Current Roon Zone: ${ROON_ZONE}"
             else
-              echo ""
               echo "No default Roon Zone is set in ${ROONCONF}"
             fi
           else
             roon_zone=$(ssh $user@$server "bash -l -c \"grep ROON_ZONE ${ROONCONF}\"")
             if [ "${roon_zone}" ]; then
-              echo ""
-              echo "Current Roon Zone is ${roon_zone}"
+              echo "Current Roon Zone: ${roon_zone}"
             else
-              echo ""
               echo "No default Roon Zone is set in ${ROONCONF}"
             fi
           fi
