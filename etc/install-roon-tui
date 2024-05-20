@@ -23,8 +23,10 @@ get_roon_tui_release() {
 install_roon_tui() {
   if [ "${darwin}" ]; then
     if [ "${have_brew}" ]; then
+      printf "\nInstalling roon-tui with Homebrew, please be patient ..."
       brew tap nepherte/roon > /dev/null 2>&1
       brew install --formula roon-tui > /dev/null 2>&1
+      printf " done\n"
     fi
   else
     DL_URL=
