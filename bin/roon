@@ -931,43 +931,36 @@ select_media() {
       playcom="play_album"
       listcom="list_albums"
       details="list_album_tracks"
-      medtype="Album"
       ;;
     artist)
       playcom="play_artist"
       listcom="list_artists"
       details="list_artist_albums"
-      medtype="Artist"
       ;;
     composer)
       playcom="play_composer"
       listcom="list_composers"
       details="list_composer_albums"
-      medtype="Composer"
       ;;
     genre)
       playcom="play_genre"
       listcom="list_genres"
       details="list_genre_artists"
-      medtype="Genre"
       ;;
     playlist)
       playcom="play_playlist"
       listcom="list_playlists"
       details="list_playlist_tracks"
-      medtype="Playlist"
       ;;
     station)
       playcom="play_radio"
       listcom="list_radio"
       details=
-      medtype="Radio"
       ;;
     tag)
       playcom="play_tag"
       listcom="list_tags"
       details=
-      medtype="Tag"
       ;;
     *)
       return 1
@@ -986,7 +979,7 @@ select_media() {
   else
     media_options+=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
   fi
-  DEFAULT=$(grep ^Default${medtype} ${ROON_INI} | awk -F '=' ' { print $2 } ')
+  DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
   # Remove leading and trailing spaces
   DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
   printf " Done\n\n"
@@ -995,8 +988,8 @@ select_media() {
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   if [ "${have_fzf}" ]; then
     while true; do
-      heading "RoonCommandLine ${action} ${medtype}" "${action} ${medtype}"
-      choice=$(printf "%s\n" "${media_options[@]}" | fzf -m --prompt=" 🎶 Select ${medtype} ('Main Menu' or 'Esc' to return, 'Quit' to exit)  " --height=18 --layout=reverse --exit-0)
+      heading "RoonCommandLine ${action} ${media}" "${action} ${media}"
+      choice=$(printf "%s\n" "${media_options[@]}" | fzf -m --prompt=" 🎶 Select ${media} ('Main Menu' or 'Esc' to return, 'Quit' to exit)  " --height=18 --layout=reverse --exit-0)
       if [ "${choice}" ]; then
         case "${choice}" in
           "Quit"* | "quit"* | "Q" | "q")
@@ -1040,7 +1033,7 @@ select_media() {
     while true; do
       clear_screen
       [ "${have_rich}" ] && {
-        rich "[bold][cyan]RoonCommandLine ${action} ${medtype}[/cyan][/bold]" -p -a rounded -c -C
+        rich "[bold][cyan]RoonCommandLine ${action} ${media}[/cyan][/bold]" -p -a rounded -c -C
       }
       PS3="${BOLD}Please enter the ${media} you wish to ${action} (numeric or text): ${NORMAL}"
       select opt in "${media_options[@]}"; do
@@ -1456,31 +1449,31 @@ main_menu() {
           break
           ;;
         "List Albums"*,* | *,"List Albums"* | "la",* | *,"la")
-          select_media album List
+          select_media Album List
           break
           ;;
         "List Artists"*,* | *,"List Artists"* | "lA",* | *,"lA")
-          select_media artist List
+          select_media Artist List
           break
           ;;
         "List Composers"*,* | *,"List Composers"* | "lc",* | *,"lc")
-          select_media composer List
+          select_media Composer List
           break
           ;;
         "List Genres"*,* | *,"List Genres"* | "lg",* | *,"lg")
-          select_media genre List
+          select_media Genre List
           break
           ;;
         "List Playlists"*,* | *,"List Playlists"* | "lp",* | *,"lp")
-          select_media playlist List
+          select_media Playlist List
           break
           ;;
         "List Radio"*,* | *,"List Radio"* | "lr",* | *,"lr")
-          select_media station List
+          select_media Radio List
           break
           ;;
         "List Tags"*,* | *,"List Tags"* | "lt",* | *,"lt")
-          select_media tag List
+          select_media Tag List
           break
           ;;
         "List Zones"*,* | *,"List Zones"* | "lz",* | *,"lz")
@@ -1493,31 +1486,31 @@ main_menu() {
           break
           ;;
         "Select Album"*,* | *,"Select Album"* | "sa",* | *,"sa")
-          select_media album
+          select_media Album
           break
           ;;
         "Select Artist"*,* | *,"Select Artist"* | "sA",* | *,"sA")
-          select_media artist
+          select_media Artist
           break
           ;;
         "Select Composer"*,* | *,"Select Composer"* | "sc",* | *,"sc")
-          select_media composer
+          select_media Composer
           break
           ;;
         "Select Genre"*,* | *,"Select Genre"* | "sg",* | *,"sg")
-          select_media genre
+          select_media Genre
           break
           ;;
         "Select Playlist"*,* | *,"Select Playlist"* | "sp",* | *,"sp")
-          select_media playlist
+          select_media Playlist
           break
           ;;
         "Select Radio"*,* | *,"Select Radio"* | "sr",* | *,"sr")
-          select_media station
+          select_media Radio
           break
           ;;
         "Select Tag"*,* | *,"Select Tag"* | "st",* | *,"st")
-          select_media tag
+          select_media Tag
           break
           ;;
         "Play Album"*,* | *,"Play Album"* | "pa",* | *,"pa")

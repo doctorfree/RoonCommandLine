@@ -96,6 +96,8 @@ if albums:
         if extracksearch is not None and tracks:
             tracks = [tr for tr in tracks if extracksearch not in tr]
         if tracks:
+            if "Play Album" in tracks:
+                tracks.remove("Play Album")
             found = tracks[0]
             if tracksearch == "__all__":
                 print("\nTrack titles on album", album, ":\n")
