@@ -304,9 +304,6 @@ CORE_IP=$(cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } ')
 CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 CORE_PORT=$(cat /tmp/discover$$ | grep RoonCorePort | awk -F '=' ' { print $2 } ')
 CORE_PORT="$(echo -e "${CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-# Could use Python (or better, yq) to modify roon_api.ini something like:
-# python -c 'import yaml;f=open("roon_api.ini");y=yaml.safe_load(f);y["DEFAULT"]["RoonCoreIP"] = ${CORE_IP}; print(yaml.dump(y, default_flow_style=False, sort_keys=False))'
-# But for now we use sed
 cat ${ROON_INI} | sed -e "s/${EX_CORE_IP}/${CORE_IP}/" -e "s/${EX_CORE_PORT}/${CORE_PORT}/" >/tmp/core$$
 cp /tmp/core$$ ${ROON_INI}
 rm -f /tmp/core$$ /tmp/discover$$ /tmp/roonapi.log

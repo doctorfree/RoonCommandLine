@@ -36,7 +36,7 @@ api = auth_api[0]
 for api in apis:
     api.stop()
 
-print("RoonCoreIP =", api.host)
+print("\nRoonCoreIP =", api.host)
 print("RoonCorePort =", api._port)
 
 # save the token for next time
