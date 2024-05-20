@@ -53,8 +53,78 @@ The **roon-tui** terminal user interface for Roon can be executed either with th
 **-V, --version**
 : Print version
 
+# KEY BINDINGS
+## Global (useable in all views)
+|||
+|---|---|
+|Tab|Switch between views
+|Shift-Tab|Reverse switch between views
+|Ctrl-z|Open zone selector
+|Ctrl-g|Open zone grouping
+|Ctrl-Space, Ctrl-p|Play / Pause
+|Ctrl-e|Pause at End of Track
+|Ctrl-&uarr;|Volume up
+|Ctrl-&darr;|Volume down
+|Ctrl-&rarr;|Next track
+|Ctrl-&larr;|Previous track
+|Ctrl-q|Toggle through Queue Modes
+|Ctrl-a|Append tracks according Queue Mode
+|Ctrl-h|Open help screen
+|Ctrl-c|Quit
+## Common list controls
+|||
+|---|---|
+|&uarr;|Move up
+|&darr;|Move down
+|Home|Move to top
+|End|Move to bottom
+|Page Up|Move page up
+|Page Down|Move page down
+## Browse View
+|||
+|---|---|
+|Enter|Select
+|Esc|Move level up
+|Ctrl-Home|Move to top level
+|F5|Refresh
+|a...z|Multi-character jump to item
+|Backspace|Step back in multi-character jump
+## Queue View
+|||
+|---|---|
+|Enter|Play from here
+## Now Playing View
+|||
+|---|---|
+|m|Mute
+|u|Unmute
+|+|Volume up
+|-|Volume down
+|r|Toggle Repeat
+|s|Toggle Shuffle
+## Zone Select Popup
+|||
+|---|---|
+|Enter|Select Zone
+|Esc|Back to previous view
+|Delete|Delete inactive preset
+## Zone Grouping Popup
+|||
+|---|---|
+|Space|Add or remove output from group
+|Enter|Activate Grouping
+|s|Save as preset
+|Esc|Back to previous view
+## Text Input
+|||
+|---|---|
+|Enter|Confirm input
+|Esc|Cancel input
+
 # AUTHORS
-Written by Ronald Record github@ronrecord.com
+**roontui** written by Ronald Record github@ronrecord.com
+
+**roon-tui** written by Appineer Github Organization
 
 # LICENSING
 ROONTUI is distributed under an Open Source license.

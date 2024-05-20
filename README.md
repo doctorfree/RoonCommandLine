@@ -877,12 +877,21 @@ Any listing command can be turned into a play command in a similar manner.
 
 ### Roon Terminal User Interface
 
-The `roon` command can be used to install the
-[Roon terminal user interface](https://github.com/TheAppgineer/roon-tui)
-(`roon-tui`), a project maintained by `TheAppgineer` organization, authors
-of the [Roon Extension Manager](https://github.com/TheAppgineer/roon-extension-manager).
+Beginning with `RoonCommandLine version 2.1.2` support for the
+[Roon TUI](https://github.com/TheAppgineer/roon-tui) terminal user interface for
+`Roon` is included in `RoonCommandLine`. The `roon-tui` command can be installed
+with the `roon` command and act as a lightweight `Roon Remote` for the terminal.
 
-Install `roon-tui` with the command `roon -I` or via the RoonCommandLine menu interface.
+The `Roon TUI` project is maintained by `TheAppgineer` organization, authors
+of the [Roon Extension Manager](https://github.com/TheAppgineer/roon-extension-manager).
+`Roon TUI` uses its own developed [Rust port](https://github.com/TheAppgineer/rust-roon-api)
+of the Roon API.
+
+#### Roon TUI installation and use
+
+Roon TUI can be installed with the command `roon -I` and opened with the command
+`roon -O`. The RoonCommandLine menu interface can also be used to install and
+open `roon-tui`.
 
 The RoonCommandLine installation of `roon-tui` installs the binary as
 `~/.local/bin/roon-tui` or `/opt/homebrew/bin/roon-tui` on `macOS`.
@@ -918,6 +927,85 @@ Defaults:
   Configuration location:   ~/.config/roon-tui/config.json
   Log file location:        ~/.config/roon-tui/roon-tui.log
 ```
+
+#### Roon TUI Upgrades
+
+Roon TUI can be upgraded with the command `roontui -U`.
+
+#### Authorizing Roon TUI Core Access
+
+On first execution the outside border of the UI will be highlighted without any
+views active, this indicates that pairing with a Roon Core has to take place.
+Use your Roon Remote and select Settings&rarr;Extensions from the hamburger
+menu and then Enable Roon TUI.
+
+#### Roon TUI Key Bindings
+##### Global (useable in all views)
+|||
+|---|---|
+|Tab|Switch between views
+|Shift-Tab|Reverse switch between views
+|Ctrl-z|Open zone selector
+|Ctrl-g|Open zone grouping
+|Ctrl-Space, Ctrl-p|Play / Pause
+|Ctrl-e|Pause at End of Track
+|Ctrl-&uarr;|Volume up
+|Ctrl-&darr;|Volume down
+|Ctrl-&rarr;|Next track
+|Ctrl-&larr;|Previous track
+|Ctrl-q|Toggle through Queue Modes
+|Ctrl-a|Append tracks according Queue Mode
+|Ctrl-h|Open help screen
+|Ctrl-c|Quit
+##### Common list controls
+|||
+|---|---|
+|&uarr;|Move up
+|&darr;|Move down
+|Home|Move to top
+|End|Move to bottom
+|Page Up|Move page up
+|Page Down|Move page down
+##### Browse View
+|||
+|---|---|
+|Enter|Select
+|Esc|Move level up
+|Ctrl-Home|Move to top level
+|F5|Refresh
+|a...z|Multi-character jump to item
+|Backspace|Step back in multi-character jump
+##### Queue View
+|||
+|---|---|
+|Enter|Play from here
+##### Now Playing View
+|||
+|---|---|
+|m|Mute
+|u|Unmute
+|+|Volume up
+|-|Volume down
+|r|Toggle Repeat
+|s|Toggle Shuffle
+##### Zone Select Popup
+|||
+|---|---|
+|Enter|Select Zone
+|Esc|Back to previous view
+|Delete|Delete inactive preset
+##### Zone Grouping Popup
+|||
+|---|---|
+|Space|Add or remove output from group
+|Enter|Activate Grouping
+|s|Save as preset
+|Esc|Back to previous view
+##### Text Input
+|||
+|---|---|
+|Enter|Confirm input
+|Esc|Cancel input
 
 ### Introduction to Using the Command Line
 
