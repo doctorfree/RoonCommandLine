@@ -522,13 +522,15 @@ show_about() {
     rich "and easy control and configuration of [green]Roon[/] in automated environments." -p
     printf "\n"
     rich "[red]RoonCommandLine[/] is written in [yellow]Bash[/] and [yellow]Python[/] by Ronald Record." -p
+    rich "Visit the [red]RoonCommandLine[/] repository at [yellow]https://github.com/doctorfree/RoonCommandLine[/]" -p
   else
-    printf "'RoonCommandLine' is an open source command line suite of utilities to"
-    printf "control the 'Roon' audio system using the 'Python Roon API' facility.\n"
-    printf "'RoonCommandLine' enables automation of 'Roon' actions and provides an"
-    printf "additional layer of convenience. Scripted 'Roon' actions enable quick"
-    printf "and easy control and configuration of 'Roon' in automated environments.\n"
-    printf "'RoonCommandLine' is written in 'Bash' and 'Python' by Ronald Record."
+    printf "\n'RoonCommandLine' is an open source command line suite of utilities to"
+    printf "\ncontrol the 'Roon' audio system using the 'Python Roon API' facility.\n"
+    printf "\n'RoonCommandLine' enables automation of 'Roon' actions and provides an"
+    printf "\nadditional layer of convenience. Scripted 'Roon' actions enable quick"
+    printf "\nand easy control and configuration of 'Roon' in automated environments.\n"
+    printf "\n'RoonCommandLine' is written in 'Bash' and 'Python' by Ronald Record."
+    printf "\nVisit the 'RoonCommandLine' repository at https://github.com/doctorfree/RoonCommandLine\n"
   fi
   show_versions
 }
