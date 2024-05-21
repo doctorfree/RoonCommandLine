@@ -470,10 +470,10 @@ show_versions() {
   fi
   if [ "${have_rich}" ]; then
     if [ "${install_version}" == "${release_version}" ]; then
-      rich "Installed [green]fzf[/] version: [yellow]${install_version}[/] ( current)" -p
+      rich "Installed [green]fzf[/] version:             [yellow]${install_version}[/] ( current)" -p
     else
-      rich "Installed [green]fzf[/] version: [yellow]${install_version}[/]" -p
-      rich "Available [green]fzf[/] version: [yellow]${release_version}[/]" -p
+      rich "Installed [green]fzf[/] version:             [yellow]${install_version}[/]" -p
+      rich "Available [green]fzf[/] version:             [yellow]${release_version}[/]" -p
     fi
   else
     printf "\nInstalled fzf version: ${install_version}"
@@ -488,10 +488,10 @@ show_versions() {
     install_version=$(roon-tui --version | awk '{ print $2 }')
     if [ "${have_rich}" ]; then
       if [ "${install_version}" == "${release_version}" ]; then
-        rich "Installed [green]roon-tui[/] version: [yellow]${install_version}[/] ( current)" -p
+        rich "Installed [green]roon-tui[/] version:        [yellow]${install_version}[/] ( current)" -p
       else
-        rich "Installed [green]roon-tui[/] version: [yellow]${install_version}[/]" -p
-        rich "Available [green]roon-tui[/] version: [yellow]${release_version}[/]" -p
+        rich "Installed [green]roon-tui[/] version:        [yellow]${install_version}[/]" -p
+        rich "Available [green]roon-tui[/] version:        [yellow]${release_version}[/]" -p
       fi
     else
       printf "\nInstalled roon-tui version: ${install_version}"
@@ -531,6 +531,35 @@ show_about() {
     printf "'RoonCommandLine' is written in 'Bash' and 'Python' by Ronald Record."
   fi
   show_versions
+}
+
+# Display RoonCommandLine info, versions, and update availability
+show_info() {
+  clear_screen
+  fullinfo=1
+  [ "$1" == "brief" ] && fullinfo=
+  [ "${fullinfo}" ] && heading "RoonCommandLine Info" "Info"
+  for media in Album Artist Composer Genre Playlist Radio Tag Zone; do
+    DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
+    # Remove leading and trailing spaces
+    DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    if [ "${have_rich}" ]; then
+      numspaces=$((12-${#media}))
+      spaces=""
+      for i in $(seq ${numspaces})
+      do
+        spaces="${spaces} "
+      done
+      rich "[red]Default ${media}[/]:${spaces}[yellow]${DEFAULT}[/]" -p
+    else
+      printf "\nDefault ${media}:\t${DEFAULT}"
+    fi
+  done
+  [ "${fullinfo}" ] && {
+    printf "\n"
+    ${ROON}/bin/get_zone_volume
+    show_now_playing
+  }
 }
 
 # Install the fzf fuzzy finder utility
@@ -1162,14 +1191,7 @@ list_defaults() {
   defaults_options+=("Main Menu            [m]")
   defaults_options+=("Quit                 [q]")
   while true; do
-    clear_screen
-    for media in Album Artist Composer Genre Playlist Radio Tag Zone; do
-      DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
-      # Remove leading and trailing spaces
-      DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-      printf "\nDefault ${media}: ${DEFAULT}"
-    done
-    printf "\n\n"
+    show_info brief
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Defaults Menu[/cyan][/bold]" -p -a rounded -c -C
     }
@@ -1287,7 +1309,7 @@ main_menu() {
     else
       [ -x ${ROONETC}/install-roon-tui ] && options+=("Install roon-tui [I]")
     fi
-    options+=("About            [a]" "Quit             [q]")
+    options+=("About            [a]" "Info             [i]" "Quit             [q]")
 
     select opt in "${options[@]}"; do
       case "$opt,$REPLY" in
@@ -1602,6 +1624,11 @@ main_menu() {
           ;;
         "About"*,* | *,"About"* | "about"*,* | *,"about"* | "a",* | *,"a")
           show_about
+          prompt_continue
+          break
+          ;;
+        "Info"*,* | *,"Info"* | "info"*,* | *,"info"* | "i",* | *,"i")
+          show_info
           prompt_continue
           break
           ;;
