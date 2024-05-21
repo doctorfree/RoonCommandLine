@@ -13,7 +13,6 @@ For example, the man page output for the `roon` command would be found at
 ## Contents
 
 - [**roon.1.md**](roon.1.md) - Markdown input for auto-generation of the Roon man page
-- [**clone_pyroon.1.md**](clone_pyroon.1.md) - Clone the pyroon Python Roon API repo
 - [**get_core_ip.1.md**](get_core_ip.1.md) - Get the Roon Core IP address
 - [**get_zone_info.1.md**](get_zone_info.1.md) - Get Roon Zone Info
 - [**get_zones.1.md**](get_zones.1.md) - Get the Roon Zones

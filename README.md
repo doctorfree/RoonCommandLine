@@ -510,7 +510,6 @@ can be viewed by issueing the command:
 
 Manual pages for each RoonCommandLine backend command can be viewed by issueing any of the following commands:
 
-- [man clone_pyroon](https://github.com/doctorfree/RoonCommandLine/blob/master/markdown/clone_pyroon.1.md)
 - [man get_core_ip](https://github.com/doctorfree/RoonCommandLine/blob/master/markdown/get_core_ip.1.md)
 - [man get_zone_info](https://github.com/doctorfree/RoonCommandLine/blob/master/markdown/get_zone_info.1.md)
 - [man get_zones](https://github.com/doctorfree/RoonCommandLine/blob/master/markdown/get_zones.1.md)
@@ -1149,8 +1148,6 @@ of this package will require little to no manual configuration.
 ## Contents
 
 [**roon**](bin/roon) - Frontend that provides the primary user interface to communicate commands via the Python Roon API. Recommended usage is to issue Roon commands and queries via the `roon` frontend rather than executing the following commands directly.
-
-[**clone_pyroon**](bin/clone_pyroon) - Retrieve the pyroon project source code from Github and apply my patches
 
 [**get_core_ip**](bin/get_core_ip) - Retrieve the Roon Core IP address
 
