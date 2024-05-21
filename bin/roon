@@ -956,37 +956,37 @@ select_media() {
   action="$2"
   [ "${action}" ] || action="Play"
   case "${media}" in
-    album)
+    Album)
       playcom="play_album"
       listcom="list_albums"
       details="list_album_tracks"
       ;;
-    artist)
+    Artist)
       playcom="play_artist"
       listcom="list_artists"
       details="list_artist_albums"
       ;;
-    composer)
+    Composer)
       playcom="play_composer"
       listcom="list_composers"
       details="list_composer_albums"
       ;;
-    genre)
+    Genre)
       playcom="play_genre"
       listcom="list_genres"
       details="list_genre_artists"
       ;;
-    playlist)
+    Playlist)
       playcom="play_playlist"
       listcom="list_playlists"
       details="list_playlist_tracks"
       ;;
-    station)
+    Radio)
       playcom="play_radio"
       listcom="list_radio"
       details=
       ;;
-    tag)
+    Tag)
       playcom="play_tag"
       listcom="list_tags"
       details=
