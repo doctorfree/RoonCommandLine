@@ -355,7 +355,7 @@ usage() {
 
 # Display a heading with rich-cli, figlet, or printf
 heading() {
-  tput clear
+  clear_screen
   if [ "${have_rich}" ]; then
     rich "[cyan]$1[/cyan]" -p -a rounded -c -C
   else
@@ -380,7 +380,7 @@ pathadd() {
 prompt_continue() {
   printf "\nPress ${BOLD}<Enter>${NORM} to continue ... "
   read -r yn
-  tput clear
+  clear_screen
 }
 
 # Get the latest RoonCommandLine version and release
@@ -522,7 +522,7 @@ show_about() {
     rich "and easy control and configuration of [green]Roon[/] in automated environments." -p
     printf "\n"
     rich "[red]RoonCommandLine[/] is written in [yellow]Bash[/] and [yellow]Python[/] by Ronald Record." -p
-    rich "Visit the [red]RoonCommandLine[/] repository at [yellow]https://github.com/doctorfree/RoonCommandLine[/]" -p
+    rich "Visit the [red]RoonCommandLine[/] repository at [link=https://github.com/doctorfree/RoonCommandLine#readme][yellow]https://github.com/doctorfree/RoonCommandLine[/yellow][/link]" -p
   else
     printf "\n'RoonCommandLine' is an open source command line suite of utilities to"
     printf "\ncontrol the 'Roon' audio system using the 'Python Roon API' facility.\n"
@@ -535,16 +535,37 @@ show_about() {
   show_versions
 }
 
-# Display RoonCommandLine info, versions, and update availability
+# Get the value of the specified entry in roon_api.ini
+# get_default_ini <EntryName>
+get_default_ini() {
+  rinfo="$1"
+  DEFAULT=$(grep ^${rinfo} ${ROON_INI} | awk -F '=' ' { print $2 } ')
+  # Remove leading and trailing spaces
+  DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  echo "${DEFAULT}"
+}
+
+# Display RoonCommandLine info
 show_info() {
-  clear_screen
   fullinfo=1
   [ "$1" == "brief" ] && fullinfo=
-  [ "${fullinfo}" ] && heading "RoonCommandLine Info" "Info"
+  [ "${fullinfo}" ] && {
+    rc_version=$(get_default_ini RoonCommandLineVersion)
+    rc_release=$(get_default_ini RoonCommandLineRelease)
+    rc_versrel="v${rc_version}r${rc_release}"
+    rc_port=$(get_default_ini RoonCorePort)
+    rc_ip=$(get_default_ini RoonCoreIP)
+    heading "Roon Command Line ${rc_versrel}" "${rc_versrel}"
+    if [ "${have_rich}" ]; then
+      rich "[red]Roon Core IP[/]:        [link=http://${rc_ip}][yellow]${rc_ip}[/yellow][/link]" -p
+      rich "[red]Roon Core Port[/]:      [yellow]${rc_port}[/]" -p
+    else
+      printf "\nRoon Core IP:\t${rc_ip}"
+      printf "\nRoon Core Port:\t${rc_port}"
+    fi
+  }
   for media in Album Artist Composer Genre Playlist Radio Tag Zone; do
-    DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
-    # Remove leading and trailing spaces
-    DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    DEFAULT=$(get_default_ini Default${media})
     if [ "${have_rich}" ]; then
       numspaces=$((12-${#media}))
       spaces=""
@@ -840,9 +861,7 @@ select_default() {
     fi
     ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   fi
-  DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
-  # Remove leading and trailing spaces
-  DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  DEFAULT=$(get_default_ini Default${media})
   printf " Done\n\n"
   printf "Default${media} = ${DEFAULT}\n\n"
 
@@ -1010,9 +1029,7 @@ select_media() {
   else
     media_options+=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
   fi
-  DEFAULT=$(grep ^Default${media} ${ROON_INI} | awk -F '=' ' { print $2 } ')
-  # Remove leading and trailing spaces
-  DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  DEFAULT=$(get_default_ini Default${media})
   printf " Done\n\n"
   printf "Default ${media}: ${DEFAULT}\n\n"
 
@@ -1193,10 +1210,12 @@ list_defaults() {
   defaults_options+=("Main Menu            [m]")
   defaults_options+=("Quit                 [q]")
   while true; do
-    show_info brief
+    clear_screen
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Defaults Menu[/cyan][/bold]" -p -a rounded -c -C
     }
+    show_info brief
+    printf "\n"
     PS3="${BOLD}Please enter the default you wish to set (numeric or text): ${NORMAL}"
     select opt in "${defaults_options[@]}"; do
       case "$opt,$REPLY" in
