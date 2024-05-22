@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROONCONF=${ROONETC}/pyroonconf
+PLAY=play_track.py
+ALBUM=
+TRACK=
+
+[ -d ${ROONAPI} ] || exit 1
+
+cd ${ROONAPI} || exit 1
+
+[ -f $PLAY ] || exit 2
+
+ZONE=
+# Parse the arguments to get the zone
+while getopts "z:" flag; do
+    case $flag in
+        z)
+            ZONE="$OPTARG"
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+# Argument is track title (required)
+[ "$1" ] && ALBUM="$1"
+[ "$2" ] && TRACK="$2"
+
+[ "${ALBUM}" ] || {
+  printf "\nAlbum title required. Exiting.\n"
+  exit 1
+}
+[ "${TRACK}" ] || TRACK="__all__"
+
+# Use a Python virtual environment
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
+
+# Get the zone if it is set
+if [ -f ${ROONCONF} ]
+then
+    . ${ROONCONF}
+else
+    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+    ${ROON}/bin/set_zone "${DEFZONE}"
+    . ${ROONCONF}
+fi
+[ "${ZONE}" ] && ROON_ZONE="${ZONE}"
+# Use all zones if no zone is specified or set
+[ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
+
+have_python3=$(type -p python3)
+if [ "${have_python3}" ]
+then
+  PYTHON=python3
+else
+  PYTHON=python
+fi
+
+${PYTHON} $PLAY -a "$ALBUM" -t "$TRACK" -z "$ROON_ZONE"

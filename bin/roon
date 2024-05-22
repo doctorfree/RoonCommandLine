@@ -2314,10 +2314,10 @@ done
 shuffled=
 [ "${comm}" == "shuffle" ] && shuffled="-s"
 
-# First, handle album and artist requested
+# Handle album and artist requested
 [ "$album" ] && [ "$artist" ] && {
-  [ "${album}" == "default" ] && album=
-  [ "${artist}" == "default" ] && artist=
+  [ "${album}" == "default" ] && album=$(get_default_ini DefaultAlbum)
+  [ "${artist}" == "default" ] && artist=$(get_default_ini DefaultArtist)
   [ "${exalbum}" ] && {
     [ "${exartist}" ] || exartist="None"
   }
@@ -2337,9 +2337,28 @@ shuffled=
   album=
   artist=
 }
-# Second, handle artist and track requested
+# Handle album and track requested
+[ "$track" ] && [ "$album" ] && {
+  [ "${album}" == "default" ] && album=$(get_default_ini DefaultAlbum)
+  if [ "${LOCAL}" = true ]; then
+    if [ "$zone" ]; then
+      play_album_track -z "$zone" "$album" "$track"
+    else
+      play_album_track "$album" "$track"
+    fi
+  else
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_album_track -z $zone $album $track\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_album_track $album $track\""
+    fi
+  fi
+  album=
+  track=
+}
+# Handle artist and track requested
 [ "$track" ] && [ "$artist" ] && {
-  [ "${artist}" == "default" ] && artist=
+  [ "${artist}" == "default" ] && artist=$(get_default_ini DefaultArtist)
   [ "${exalbum}" ] && {
     [ "${exartist}" ] || exartist="None"
   }
@@ -2361,7 +2380,7 @@ shuffled=
 }
 # Third, handle album or artist and genre requested
 [ "$album" ] && [ "$genre" ] && {
-  [ "${album}" == "default" ] && album=
+  [ "${album}" == "default" ] && album=$(get_default_ini DefaultAlbum)
   [ "${exalbum}" ] && {
     [ "${exartist}" ] || exartist="None"
   }
@@ -2383,8 +2402,8 @@ shuffled=
 }
 # Fourth, handle album and composer requested
 [ "$album" ] && [ "$composer" ] && {
-  [ "${album}" == "default" ] && album=
-  [ "${composer}" == "default" ] && composer=
+  [ "${album}" == "default" ] && album=$(get_default_ini DefaultAlbum)
+  [ "${composer}" == "default" ] && composer=$(get_default_ini DefaultComposer)
   [ "${exalbum}" ] && {
     [ "${exartist}" ] || exartist="None"
   }
@@ -2405,7 +2424,7 @@ shuffled=
   composer=
 }
 [ "$artist" ] && [ "$genre" ] && {
-  [ "${artist}" == "default" ] && artist=
+  [ "${artist}" == "default" ] && artist=$(get_default_ini DefaultArtist)
   [ "${exalbum}" ] && {
     [ "${exartist}" ] || exartist="None"
   }
@@ -2426,7 +2445,7 @@ shuffled=
   genre=
 }
 [ "$artist" ] && {
-  [ "${artist}" == "default" ] && artist=
+  [ "${artist}" == "default" ] && artist=$(get_default_ini DefaultArtist)
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
       play_artist $shuffled -z "$zone" "$artist" "$exartist"
@@ -2442,7 +2461,7 @@ shuffled=
   fi
 }
 [ "$composer" ] && {
-  [ "${composer}" == "default" ] && composer=
+  [ "${composer}" == "default" ] && composer=$(get_default_ini DefaultComposer)
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
       play_composer -z "$zone" "$composer" "$exartist"
@@ -2458,7 +2477,7 @@ shuffled=
   fi
 }
 [ "$genre" ] && {
-  [ "${genre}" == "default" ] && genre=
+  [ "${genre}" == "default" ] && genre=$(get_default_ini DefaultGenre)
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
       play_genre $shuffled -z "$zone" "$genre" "$exalbum"
@@ -2474,7 +2493,7 @@ shuffled=
   fi
 }
 [ "$tag" ] && {
-  [ "${tag}" == "default" ] && tag=
+  [ "${tag}" == "default" ] && tag=$(get_default_ini DefaultTag)
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
       play_tag -z "$zone" "$tag"
@@ -2490,7 +2509,7 @@ shuffled=
   fi
 }
 [ "$radio" ] && {
-  [ "${radio}" == "default" ] && radio=
+  [ "${radio}" == "default" ] && radio=$(get_default_ini DefaultRadio)
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
       play_radio -z "$zone" "${radio}"
@@ -2506,6 +2525,7 @@ shuffled=
   fi
 }
 [ "$track" ] && {
+  printf "\nSearching for track \"$track\"\n"
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
       play_track -z "$zone" "$track"
@@ -2538,7 +2558,7 @@ shuffled=
 }
 
 [ "$album" ] && {
-  [ "${album}" == "default" ] && album=
+  [ "${album}" == "default" ] && album=$(get_default_ini DefaultAlbum)
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
       play_album -z "$zone" "$album" "$exalbum"
@@ -2555,7 +2575,7 @@ shuffled=
 }
 
 [ "$playlist" ] && {
-  [ "${playlist}" == "default" ] && playlist=
+  [ "${playlist}" == "default" ] && playlist=$(get_default_ini DefaultPlaylist)
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
       play_playlist $shuffled -z "$zone" "$playlist" "$exartist"
