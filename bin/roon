@@ -2357,6 +2357,7 @@ shuffled=
     fi
   fi
   artist=
+  track=
 }
 # Third, handle album or artist and genre requested
 [ "$album" ] && [ "$genre" ] && {
@@ -2501,6 +2502,21 @@ shuffled=
       ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio -z ${zone} ${radio}\""
     else
       ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio ${radio}\""
+    fi
+  fi
+}
+[ "$track" ] && {
+  if [ "${LOCAL}" = true ]; then
+    if [ "$zone" ]; then
+      play_track -z "$zone" "$track"
+    else
+      play_track "$track"
+    fi
+  else
+    if [ "$zone" ]; then
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_track -z $zone $track\""
+    else
+      ssh $user@$server "bash -l -c \"${ROON}/bin/play_track $track\""
     fi
   fi
 }
