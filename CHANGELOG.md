@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+May 23, 2024 :
+RoonCommandLine version 2.1.2 release 3
+
+    This release provides support for signal handling and fuzzy track search in menus
+        * Install 'jq' in 'macInstall'
+        * Add signal handler to Python scripts
+        * Add tracks listing and album track play
+        * Improve info when selecting and listing in menus
+
 May 20, 2024 :
 RoonCommandLine version 2.1.2 release 2
 
