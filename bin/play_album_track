@@ -6,7 +6,7 @@ ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
-PLAY=play_track.py
+PLAY=play_album_track.py
 ALBUM=
 TRACK=
 
