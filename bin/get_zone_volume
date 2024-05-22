@@ -51,32 +51,21 @@ have_python3=$(type -p python3)
 have_jq=$(type -p jq)
 if [ "${have_python3}" ]
 then
-  if [ "${have_jq}" ]
-  then
-    if [ "${number}" ]
-    then
-      python3 $SCRIPT ${grparg} -z "$ROON_ZONE" | jq -r '.[].volume.value?'
-    else
-      python3 $SCRIPT ${grparg} -z "$ROON_ZONE" | \
-        jq -r '.[]? | "\(.display_name): Volume = \(.volume.value), Min = \(.volume.min), Max = \(.volume.max)"'
-    fi
-  else
-    # TODO: Parse returned JSON without jq
-    python3 $SCRIPT ${grparg} -z "$ROON_ZONE"
-  fi
+  PYTHON=python3
 else
-  if [ "${have_jq}" ]
-  then
-    if [ "${number}" ]
-    then
-      python $SCRIPT ${grparg} -z "$ROON_ZONE" | jq -r '.[].volume.value?'
-    else
-      python $SCRIPT ${grparg} -z "$ROON_ZONE" | \
-        jq -r '.[]? | "\(.display_name): Volume = \(.volume.value), Min = \(.volume.min), Max = \(.volume.max)"'
-    fi
-  else
-    # TODO: Parse returned JSON without jq
-    python $SCRIPT ${grparg} -z "$ROON_ZONE"
-  fi
+  PYTHON=python
 fi
 
+if [ "${have_jq}" ]
+then
+  if [ "${number}" ]
+  then
+    ${PYTHON} $SCRIPT ${grparg} -z "$ROON_ZONE" | jq -r '.[].volume.value?'
+  else
+    ${PYTHON} $SCRIPT ${grparg} -z "$ROON_ZONE" | \
+      jq -r '.[]? | "\(.display_name): Volume = \(.volume.value), Min = \(.volume.min), Max = \(.volume.max)"'
+  fi
+else
+  # TODO: Parse returned JSON without jq
+  ${PYTHON} $SCRIPT ${grparg} -z "$ROON_ZONE"
+fi

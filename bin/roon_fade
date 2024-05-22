@@ -593,11 +593,20 @@ show_menu() {
   while true
   do
     tput clear
+    [ "${have_rich}" ] && {
+      rich "[bold][cyan]RoonCommandLine Fade Menu[/cyan][/bold]" -p -a rounded -c -C
+    }
     init_conf
     remline=$(get_zone_remaining -z "${FADE_ZONE}")
-    state=$(echo "${remline}" | awk -F ',' ' { print $2 } ' | \
-                               awk -F '=' ' { print $2 } ' | \
-                               sed -e 's/^ *//' -e 's/ *$//')
+    if echo "${remline}" | grep , > /dev/null; then
+      state=$(echo "${remline}" | awk -F ',' ' { print $2 } ' | \
+                                  awk -F '=' ' { print $2 } ' | \
+                                  sed -e 's/^ *//' -e 's/ *$//')
+    else
+      state=$(echo "${remline}" | awk -F ':' ' { print $2 } ' | \
+                                  awk -F '=' ' { print $2 } ' | \
+                                  sed -e 's/^ *//' -e 's/ *$//')
+    fi
     echo ""
     if [ "${state}" == "playing" ]
     then
@@ -606,9 +615,7 @@ show_menu() {
       echo "Audio in zone ${FADE_ZONE} is: ${BOLD}Not playing${NORM}"
     fi
     show_status
-    [ "${have_rich}" ] && {
-      rich "[bold][cyan]RoonCommandLine Fade Menu[/cyan][/bold]" -p -a rounded -c -C
-    }
+    echo ""
     PS3="${BOLD}Please enter your Roon fading choice (numeric or text): ${NORM}"
     options=()
     if [ "${FADE_NOW}" = true ]

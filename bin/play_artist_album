@@ -77,3 +77,5 @@ then
 else
     python $PLAY -A "$ALBUM" -a "$ARTIST" -z "$ROON_ZONE" $EXARGS
 fi
+
+${ROON}/bin/list_album_tracks "${ALBUM}"

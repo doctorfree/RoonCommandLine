@@ -70,9 +70,16 @@ if output_id is None:
 else:
     zone = roonapi.zone_by_output_id(output_id)
     if zone is not None:
-        state = zone["state"]
-        length = zone["now_playing"]["length"]
-        position = zone["now_playing"]["seek_position"]
+        if "state" in zone:
+            state = zone["state"]
+        if "length" in zone["now_playing"]:
+            length = zone["now_playing"]["length"]
+        else:
+            length = None
+        if "seek_position" in zone["now_playing"]:
+            position = zone["now_playing"]["seek_position"]
+        else:
+            position = None
         if length is not None:
             if position is not None:
                 remaining = length - position

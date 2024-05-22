@@ -19,9 +19,48 @@ release = config['DEFAULT']['RoonCommandLineRelease']
 fullver = version + "-" + release
 
 parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-a",
+    "--all",
+    default=False,
+    action="store_true",
+    help="output all zone info"
+)
+parser.add_argument(
+    "-n",
+    "--nowplaying",
+    default=False,
+    action="store_true",
+    help="output zone now playing info"
+)
+parser.add_argument(
+    "-p",
+    "--properties",
+    default=False,
+    action="store_true",
+    help="output zone properties"
+)
+parser.add_argument(
+    "-s",
+    "--settings",
+    default=False,
+    action="store_true",
+    help="output zone settings"
+)
+parser.add_argument(
+    "-v",
+    "--verbose",
+    default=False,
+    action="store_true",
+    help="output verbose zone info"
+)
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
+if args.all:
+    args.nowplaying = True
+    args.properties = True
+    args.settings = True
 if args.zone:
     target_zone = args.zone
 else:
@@ -71,22 +110,32 @@ with RoonApi(appinfo, token, server, port) as roonapi:
             if target_zone in v["display_name"]:
                 zone_name = v["display_name"]
                 output_id = k
-                print("Zone name: %s" % zone_name)
-                print("Output properties: %s" % json.dumps(v, indent=4))
+                if args.properties:
+                    if args.verbose:
+                        print("Zone name: %s" % zone_name)
+                        print("Output properties: %s" % json.dumps(v, indent=4))
+                    else:
+                        print("%s" % json.dumps(v, indent=4))
                 zone = roonapi.zone_by_output_id(output_id)
                 if zone is not None:
-                    print("Zone settings: %s" % json.dumps(zone["settings"],
-                                                           indent=4))
-                    print("\nNow playing: {")
-                    track = json.dumps(
-                        zone["now_playing"]["three_line"]["line1"],
-                        ensure_ascii=False).encode('utf8')
-                    print("\t\"track\": %s," % track.decode())
-                    artist = json.dumps(
-                        zone["now_playing"]["three_line"]["line2"],
-                        ensure_ascii=False).encode('utf8')
-                    print("\t\"artist\": %s," % artist.decode())
-                    album = json.dumps(
-                        zone["now_playing"]["three_line"]["line3"],
-                        ensure_ascii=False).encode('utf8')
-                    print("\t\"album\": %s\n}" % album.decode())
+                    if args.settings:
+                        if args.verbose:
+                            print("Zone settings: %s" % json.dumps(zone["settings"], indent=4))
+                        else:
+                            print("%s" % json.dumps(zone["settings"], indent=4))
+                    if args.nowplaying:
+                        track = json.dumps(zone["now_playing"]["three_line"]["line1"],
+                                           ensure_ascii=False).encode('utf8')
+                        artist = json.dumps(zone["now_playing"]["three_line"]["line2"],
+                                            ensure_ascii=False).encode('utf8')
+                        album = json.dumps(zone["now_playing"]["three_line"]["line3"],
+                                           ensure_ascii=False).encode('utf8')
+                        if args.verbose:
+                            print("\nNow playing: {")
+                            print("\t\"Track\": %s," % track.decode())
+                            print("\t\"Artist\": %s," % artist.decode())
+                            print("\t\"Album\": %s\n}" % album.decode())
+                        else:
+                            print("{\n\t\"Track\": %s," % track.decode())
+                            print("\t\"Artist\": %s," % artist.decode())
+                            print("\t\"Album\": %s\n}" % album.decode())

@@ -71,6 +71,7 @@ zonelist=
 # Check for installed tools
 have_brew=$(type -p brew)
 have_fzf=$(type -p fzf)
+have_jq=$(type -p jq)
 have_rich=$(type -p rich)
 have_tui=$(type -p roon-tui)
 # Download URLs
@@ -972,6 +973,68 @@ select_default() {
   fi
 }
 
+play_zone() {
+  zone_command -c play -z "$1"
+}
+
+zone_info() {
+  this_zone="$1"
+  if [ "${have_rich}" ]; then
+    rich "[red]Zone Name:[/] [yellow]${this_zone}[/]" -p
+  else
+    printf "\nZone Name: ${this_zone}\n"
+  fi
+  ${ROON}/bin/get_zone_volume -z "${this_zone}" | \
+    awk -F ':' '{ print $2 }' | \
+    sed -e 's/^[[:space:]]*/    /' -e 's/[[:space:]]*$//'
+  if [ "${have_rich}" ]; then
+    rich "[red]Groups With:[/]" -p
+  else
+    printf "\nGroups With:\n"
+  fi
+  ${ROON}/bin/get_zone_info -l -z "${this_zone}" | sed -e "s/,/\n    /g" -e "s/^/    /"
+  if [ "${have_rich}" ]; then
+    rich "[red]Zone Settings:[/]" -p
+  else
+    printf "\nZone Settings:\n"
+  fi
+  if [ "${have_jq}" ]; then
+    ${ROON}/bin/get_zone_info -s -z "${this_zone}" | \
+    jq -r 'to_entries[] | "\(.key)=\"\(.value)\""' | while read i
+    do
+      k=$(echo $i | awk -F '=' '{ print $1 }')
+      v=$(echo $i | awk -F '=' '{ print $2 }')
+      if [ "${have_rich}" ]; then
+        rich "    [yellow]$k[/]: [cyan]$v[/]" -p
+      else
+        printf "\n\t$k: $v"
+      fi
+    done
+  else
+    ${ROON}/bin/get_zone_info -s -z "${this_zone}"
+  fi
+  if [ "${have_rich}" ]; then
+    rich "[red]Now Playing:[/]" -p
+  else
+    printf "\nNow Playing:\n"
+  fi
+  if [ "${have_jq}" ]; then
+    ${ROON}/bin/get_zone_info -n -z "${this_zone}" | \
+    jq -r 'to_entries[] | "\(.key)=\"\(.value)\""' | while read i
+    do
+      k=$(echo $i | awk -F '=' '{ print $1 }')
+      v=$(echo $i | awk -F '=' '{ print $2 }')
+      if [ "${have_rich}" ]; then
+        rich "    [yellow]$k[/]: [cyan]$v[/]" -p
+      else
+        printf "\n\t$k: $v"
+      fi
+    done
+  else
+    ${ROON}/bin/get_zone_info -n -z "${this_zone}"
+  fi
+}
+
 select_media() {
   media="$1"
   action="$2"
@@ -1012,6 +1075,11 @@ select_media() {
       listcom="list_tags"
       details=
       ;;
+    Zone)
+      playcom="play_zone"
+      listcom="list_zones"
+      details="zone_info"
+      ;;
     *)
       return 1
       ;;
@@ -1048,18 +1116,19 @@ select_media() {
             break
             ;;
           *)
-            echo "${BOLD}Executing Roon command to ${action} ${media}: ${choice}${NORMAL}"
-            if [ "${LOCAL}" = true ]; then
-              if [ "${action}" = "List" ] || [ "${action}" = "list" ]; then
+            heading "${action} ${media}: ${choice}" "${action} ${media}"
+            if [ "${LOCAL}" == true ]; then
+              if [ "${action}" == "List" ] || [ "${action}" == "list" ]; then
                 [ "${details}" ] && {
                   ${details} "${choice}"
                   prompt_continue
                 }
               else
                 ${playcom} "${choice}"
+                prompt_continue
               fi
             else
-              if [ "${action}" = "List" ] || [ "${action}" = "list" ]; then
+              if [ "${action}" == "List" ] || [ "${action}" == "list" ]; then
                 [ "${details}" ] && {
                   ssh $user@$server "bash -l -c \"${ROON}/bin/${details} ${choice}\""
                   prompt_continue
@@ -1094,18 +1163,19 @@ select_media() {
             farewell_exit "Exiting RoonCommandLine"
             ;;
           *,*)
-            echo "${BOLD}Executing Roon command to ${action} ${media}: ${opt}${NORMAL}"
-            if [ "${LOCAL}" = true ]; then
-              if [ "${action}" = "List" ] || [ "${action}" = "list" ]; then
+            echo "${BOLD}${action} ${media}: ${opt}${NORMAL}"
+            if [ "${LOCAL}" == true ]; then
+              if [ "${action}" == "List" ] || [ "${action}" == "list" ]; then
                 [ "${details}" ] && {
                   ${details} "${opt}"
                   prompt_continue
                 }
               else
                 ${playcom} "${opt}"
+                prompt_continue
               fi
             else
-              if [ "${action}" = "List" ] || [ "${action}" = "list" ]; then
+              if [ "${action}" == "List" ] || [ "${action}" == "list" ]; then
                 [ "${details}" ] && {
                   ssh $user@$server "bash -l -c \"${ROON}/bin/${details} ${opt}\""
                   prompt_continue
@@ -1302,6 +1372,7 @@ main_menu() {
     options+=("Select Radio    [sr]")
     options+=("Select Playlist [sp]")
     options+=("Select Tag      [st]")
+    options+=("Select Zone     [sz]")
     options+=("Play Album      [pa]")
     options+=("Play Artist     [pA]")
     options+=("Play Composer   [pc]")
@@ -1309,6 +1380,7 @@ main_menu() {
     options+=("Play Radio      [pr]")
     options+=("Play Playlist   [pp]")
     options+=("Play Tag        [pt]")
+    options+=("Play Zone       [pz]")
     options+=("Fade Menu        [f]")
     options+=("Volume           [v]")
 
@@ -1520,12 +1592,7 @@ main_menu() {
           break
           ;;
         "List Zones"*,* | *,"List Zones"* | "lz",* | *,"lz")
-          if [ "${LOCAL}" = true ]; then
-            list_zones
-          else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones\""
-          fi
-          prompt_continue
+          select_media Zone List
           break
           ;;
         "Select Album"*,* | *,"Select Album"* | "sa",* | *,"sa")
@@ -1556,9 +1623,14 @@ main_menu() {
           select_media Tag
           break
           ;;
+        "Select Zone"*,* | *,"Select Zone"* | "sz",* | *,"sz")
+          select_media Zone
+          break
+          ;;
         "Play Album"*,* | *,"Play Album"* | "pa",* | *,"pa")
           if [ "${LOCAL}" = true ]; then
             play_album
+            prompt_continue
           else
             ssh $user@$server "bash -l -c ${ROON}/bin/play_album"
           fi
@@ -1567,6 +1639,7 @@ main_menu() {
         "Play Artist"*,* | *,"Play Artist"* | "pA",* | *,"pA")
           if [ "${LOCAL}" = true ]; then
             play_artist
+            prompt_continue
           else
             ssh $user@$server "bash -l -c ${ROON}/bin/play_artist"
           fi
@@ -1575,6 +1648,7 @@ main_menu() {
         "Play Composer"*,* | *,"Play Composer"* | "pc",* | *,"pc")
           if [ "${LOCAL}" = true ]; then
             play_composer
+            prompt_continue
           else
             ssh $user@$server "bash -l -c ${ROON}/bin/play_composer"
           fi
@@ -1583,6 +1657,7 @@ main_menu() {
         "Play Genre"*,* | *,"Play Genre"* | "pg",* | *,"pg")
           if [ "${LOCAL}" = true ]; then
             play_genre
+            prompt_continue
           else
             ssh $user@$server "bash -l -c ${ROON}/bin/play_genre"
           fi
@@ -1591,6 +1666,7 @@ main_menu() {
         "Play Playlist"*,* | *,"Play Playlist"* | "pp",* | *,"pp")
           if [ "${LOCAL}" = true ]; then
             play_playlist
+            prompt_continue
           else
             ssh $user@$server "bash -l -c ${ROON}/bin/play_playlist"
           fi
@@ -1599,6 +1675,7 @@ main_menu() {
         "Play Radio"*,* | *,"Play Radio"* | "pr",* | *,"pr")
           if [ "${LOCAL}" = true ]; then
             play_radio
+            prompt_continue
           else
             ssh $user@$server "bash -l -c ${ROON}/bin/play_radio"
           fi
@@ -1607,15 +1684,22 @@ main_menu() {
         "Play Tag"*,* | *,"Play Tag"* | "pt",* | *,"pt")
           if [ "${LOCAL}" = true ]; then
             play_tag
+            prompt_continue
           else
             ssh $user@$server "bash -l -c ${ROON}/bin/play_tag"
           fi
+          break
+          ;;
+        "Play Zone"*,* | *,"Play Zone"* | "pz",* | *,"pz")
+          zone_command -c play
+          prompt_continue
           break
           ;;
         "Play"*,* | *,"Play"* | "p",* | *,"p")
           printf "\nExecuting Roon command to play ..."
           if [ "${LOCAL}" = true ]; then
             zone_command -c play
+            prompt_continue
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play\""
           fi
@@ -1929,7 +2013,7 @@ done
 [ "$info" ] && {
   if [ "${LOCAL}" = true ]; then
     if [ "$zone" ]; then
-      ${ROON}/bin/get_zone_info -z "$zone"
+      zone_info "$zone"
     else
       ${ROON}/bin/get_zone_info
     fi

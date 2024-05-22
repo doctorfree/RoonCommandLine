@@ -8,7 +8,6 @@ ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
 LIST=list_zones.py
 INFO=zone_properties.py
-ZONE=
 
 [ -d ${ROONAPI} ] || exit 1
 
@@ -34,30 +33,52 @@ else
 fi
 
 getwith=
-while getopts "lz:" flag; do
+infoflags=
+verbose=
+while getopts "alnpsvz:" flag; do
     case $flag in
+        a)
+            infoflags="-a ${infoflags}"
+            ;;
         l)
             getwith="-g"
             ;;
+        n)
+            infoflags="-n ${infoflags}"
+            ;;
+        p)
+            infoflags="-p ${infoflags}"
+            ;;
+        s)
+            infoflags="-s ${infoflags}"
+            ;;
+        v)
+            verbose="-v"
+            ;;
         z)
-            ZONE="$OPTARG"
+            ROON_ZONE="$OPTARG"
             ;;
     esac
 done
+[ "${infoflags}" ] || infoflags="-a"
 
 # Get all zones if no zone is specified
-[ "${ZONE}" ] || ZONE="__all__"
+[ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
 
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
-    python3 $LIST ${getwith} -i -z "${ZONE}"
-    [ "${ZONE}" == "__all__" ] || {
-        [ "${getwith}" ] || python3 $INFO -z "${ZONE}"
-    }
+    PYTHON=python3
 else
-    python $LIST ${getwith} -i -z "${ZONE}"
-    [ "${ZONE}" == "__all__" ] || {
-        [ "${getwith}" ] || python $INFO -z "${ZONE}"
-    }
+    PYTHON=python
+fi
+
+if [ "${ROON_ZONE}" == "__all__" ]; then
+    ${PYTHON} $LIST ${getwith} -i -z "${ROON_ZONE}"
+else
+    if [ "${getwith}" ]; then
+      ${PYTHON} $LIST ${getwith} -i -z "${ROON_ZONE}"
+    else
+      ${PYTHON} $INFO ${infoflags} -z "${ROON_ZONE}"
+    fi
 fi
