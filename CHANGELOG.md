@@ -7,7 +7,7 @@ RoonCommandLine version 2.1.2 release 3
 
     This release provides support for signal handling and fuzzy track search in menus
         * Add signal handler to Python scripts
-        * Add tracks listing and track play
+        * Add tracks listing, track play, and album track play commands
         * Add Examples and Usage to main menu
         * Improve info when selecting and listing in menus
         * Install 'jq' in 'macInstall'
