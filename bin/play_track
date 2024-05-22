@@ -6,11 +6,8 @@ ROON=/usr/local/Roon
 ROONAPI=${ROON}/api
 ROONETC=${ROON}/etc
 ROONCONF=${ROONETC}/pyroonconf
-PLAY=play_album_track.py
-ALBUM=
+PLAY=play_track.py
 TRACK=
-EXALBUM=
-EXTRACK=
 
 [ -d ${ROONAPI} ] || exit 1
 
@@ -29,13 +26,13 @@ while getopts "z:" flag; do
 done
 shift $(( OPTIND - 1 ))
 
-# First argument is album, second is track
-# Third optional argument is album exclusion string (optional)
-# Fourth optional argument is track exclusion string (optional)
-[ "$1" ] && ALBUM="$1"
-[ "$2" ] && TRACK="$2"
-[ "$3" ] && EXALBUM="$3"
-[ "$4" ] && EXTRACK="$4"
+# Argument is track title (required)
+[ "$1" ] && TRACK="$1"
+
+[ "${TRACK}" ] || {
+  printf "\nTrack title required. Exiting.\n"
+  exit 1
+}
 
 # Use a Python virtual environment
 [ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
@@ -56,24 +53,12 @@ fi
 # Use all zones if no zone is specified or set
 [ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
 
-# Get the default album if one is not provided
-[ "${ALBUM}" ] || {
-    ALBUM=$(grep ^DefaultAlbum ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
-    # Remove leading and trailing spaces in ALBUM
-    ALBUM="$(echo -e "${ALBUM}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-}
-
-[ "${TRACK}" ] || TRACK="__all__"
-
-# Construct the exclusion args if passed
-EXARGS=
-[ "${EXTRACK}" ] && EXARGS="-X ${EXTRACK}"
-[ "${EXALBUM}" ] && EXARGS="-x ${EXALBUM} ${EXARGS}"
-
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
-    python3 $PLAY -t "$TRACK" -a "$ALBUM" -z "$ROON_ZONE" $EXARGS
+  PYTHON=python3
 else
-    python $PLAY -t "$TRACK" -a "$ALBUM" -z "$ROON_ZONE" $EXARGS
+  PYTHON=python
 fi
+
+${PYTHON} $PLAY -t "$TRACK" -z "$ROON_ZONE"

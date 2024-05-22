@@ -1183,6 +1183,8 @@ of this package will require little to no manual configuration.
 
 [**play_tag**](bin/play_tag) - Frontend to play a specified tag
 
+[**play_track**](bin/play_track) - Frontend to play a specified track
+
 [**list_albums**](bin/list_albums) - Search and list the available Albums in your Roon Library
 
 [**list_artists**](bin/list_artists) - Search and list the available Artists in your Roon Library

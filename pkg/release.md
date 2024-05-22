@@ -3,7 +3,7 @@
 RoonCommandLine version 2.1.2 release 3 provides support for:
 
 - Add signal handler to Python scripts
-- Add tracks listing and album track play
+- Add tracks listing and track play
 - Add `Examples` and `Usage` to main menu
 - Install `jq` in `macInstall`
 - Improve info when selecting and listing in menus

@@ -976,12 +976,8 @@ select_default() {
   fi
 }
 
-play_track() {
-  play_album_track __all__ "$1"
-}
-
 play_zone() {
-  zone_command -c play -z "$1"
+  ${ROON}/bin/zone_command -c play -z "$1"
 }
 
 zone_info() {
@@ -1253,7 +1249,7 @@ select_set_volume() {
         "Mute/Unmute Zone"*,* | *,"Mute/Unmute Zone"* | "m",* | *,"m")
           printf "\nExecuting Roon command to toggle mute audio ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c mute
+            ${ROON}/bin/zone_command -c mute
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute\""
           fi
@@ -1263,7 +1259,7 @@ select_set_volume() {
         "Mute/Unmute All Zones"*,* | *,"Mute/Unmute All Zones"* | "M",* | *,"M")
           printf "\nExecuting Roon command to toggle mute in all zones ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c mute_all
+            ${ROON}/bin/zone_command -c mute_all
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute_all\""
           fi
@@ -1451,7 +1447,7 @@ main_menu() {
         "Play All"*,* | *,"Play All"* | "A",* | *,"A")
           printf "\nExecuting Roon command to play in all zones ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c play_all
+            ${ROON}/bin/zone_command -c play_all
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play_all\""
           fi
@@ -1461,7 +1457,7 @@ main_menu() {
         "Pause All"*,* | *,"Pause All"* | "Pa",* | *,"Pa")
           printf "\nExecuting Roon command to pause play in all zones ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c pause_all
+            ${ROON}/bin/zone_command -c pause_all
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c pause_all\""
           fi
@@ -1471,7 +1467,7 @@ main_menu() {
         "Pause"*,* | *,"Pause"* | "P",* | *,"P")
           printf "\nExecuting Roon command to pause play ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c pause
+            ${ROON}/bin/zone_command -c pause
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c pause\""
           fi
@@ -1481,7 +1477,7 @@ main_menu() {
         "Next Track"*,* | *,"Next Track"* | "n",* | *,"n")
           printf "\nExecuting Roon command to play next track ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c next
+            ${ROON}/bin/zone_command -c next
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c next\""
           fi
@@ -1491,7 +1487,7 @@ main_menu() {
         "Previous Track"*,* | *,"Previous Track"* | "pt",* | *,"pt")
           printf "\nExecuting Roon command to play previous track ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c previous
+            ${ROON}/bin/zone_command -c previous
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c previous\""
           fi
@@ -1501,7 +1497,7 @@ main_menu() {
         "Stop All"*,* | *,"Stop All"* | "X",* | *,"X")
           printf "\nExecuting Roon command to stop in all zones ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c stop_all
+            ${ROON}/bin/zone_command -c stop_all
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop_all\""
           fi
@@ -1511,7 +1507,7 @@ main_menu() {
         "Stop"*,* | *,"Stop"* | "x",* | *,"x")
           printf "\nExecuting Roon command to stop ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c stop
+            ${ROON}/bin/zone_command -c stop
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop\""
           fi
@@ -1525,7 +1521,7 @@ main_menu() {
         "Toggle Mute"*,* | *,"Toggle Mute"* | "m",* | *,"m")
           printf "\nExecuting Roon command to toggle mute audio ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c mute
+            ${ROON}/bin/zone_command -c mute
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute\""
           fi
@@ -1535,7 +1531,7 @@ main_menu() {
         "Toggle Mute All"*,* | *,"Toggle Mute All"* | "M",* | *,"M")
           printf "\nExecuting Roon command to toggle mute in all zones ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c mute_all
+            ${ROON}/bin/zone_command -c mute_all
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute_all\""
           fi
@@ -1545,7 +1541,7 @@ main_menu() {
         "Disable Repeat"*,* | *,"Disable Repeat"* | "R",* | *,"R")
           printf "\nExecuting Roon command to disable repeat ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c unrepeat
+            ${ROON}/bin/zone_command -c unrepeat
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c unrepeat\""
           fi
@@ -1555,7 +1551,7 @@ main_menu() {
         "Enable Repeat"*,* | *,"Enable Repeat"* | "r",* | *,"r")
           printf "\nExecuting Roon command to enable repeat ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c repeat
+            ${ROON}/bin/zone_command -c repeat
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c repeat\""
           fi
@@ -1565,7 +1561,7 @@ main_menu() {
         "Disable Shuffle"*,* | *,"Disable Shuffle"* | "S",* | *,"S")
           printf "\nExecuting Roon command to disable shuffle ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c unshuffle
+            ${ROON}/bin/zone_command -c unshuffle
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c unshuffle\""
           fi
@@ -1575,7 +1571,7 @@ main_menu() {
         "Enable Shuffle"*,* | *,"Enable Shuffle"* | "s",* | *,"s")
           printf "\nExecuting Roon command to enable shuffle ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c shuffle
+            ${ROON}/bin/zone_command -c shuffle
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c shuffle\""
           fi
@@ -1718,14 +1714,14 @@ main_menu() {
           break
           ;;
         "Play Zone"*,* | *,"Play Zone"* | "pz",* | *,"pz")
-          zone_command -c play
+          ${ROON}/bin/zone_command -c play
           prompt_continue
           break
           ;;
         "Play"*,* | *,"Play"* | "p",* | *,"p")
           printf "\nExecuting Roon command to play ..."
           if [ "${LOCAL}" = true ]; then
-            zone_command -c play
+            ${ROON}/bin/zone_command -c play
             prompt_continue
           else
             ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play\""
@@ -2294,9 +2290,9 @@ done
     "shuffle" | "unshuffle" | "repeat" | "unrepeat" | "mute" | "unmute" | "mute_all" | "next" | "previous" | "play" | "play_all" | "pause" | "pause_all" | "stop" | "stop_all" | "playpause")
       if [ "${LOCAL}" = true ]; then
         if [ "$zone" ]; then
-          zone_command -c ${comm} -z "${zone}"
+          ${ROON}/bin/zone_command -c ${comm} -z "${zone}"
         else
-          zone_command -c ${comm}
+          ${ROON}/bin/zone_command -c ${comm}
         fi
       else
         if [ "$zone" ]; then
