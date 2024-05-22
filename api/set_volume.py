@@ -1,6 +1,7 @@
 import argparse
 import configparser
 from os import path
+import signal
 import sys
 from roonapi import RoonApi
 #
@@ -10,6 +11,10 @@ from roonapi import RoonApi
 #
 # The new volume value, or the increment value or step (as percentage)
 # Method: How to interpret the volume ('absolute'|'relative'|'relative_step')
+
+def signal_handler(sig, frame):
+    sys.exit(0)
+signal.signal(signal.SIGINT, signal_handler)
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')

@@ -14,8 +14,22 @@ export SUDO=sudo
 BOLD=$(tput bold 2>/dev/null)
 NORMAL=$(tput sgr0 2>/dev/null)
 
-[ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+  [ -x /usr/local/bin/brew ] && eval "$(/usr/local/bin/brew shellenv)"
+fi
 export PATH=$PATH:/usr/local/bin
+
+have_git=$(type -p git)
+have_jq=$(type -p jq)
+have_brew=$(type -p brew)
+[ "${have_git}" ] || {
+  [ "${have_brew}" ] && brew install git > /dev/null 2>&1
+}
+[ "${have_jq}" ] || {
+  [ "${have_brew}" ] && brew install jq > /dev/null 2>&1
+}
 
 PYTHON=
 python3_inst=$(type -p python3)

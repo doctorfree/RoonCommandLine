@@ -1,11 +1,16 @@
 import argparse
 import configparser
 from os import path
+import signal
 import sys
 from roonapi import RoonApi
 #
 # Get the volume of a zone's outputs
 #
+
+def signal_handler(sig, frame):
+    sys.exit(0)
+signal.signal(signal.SIGINT, signal_handler)
 
 config = configparser.ConfigParser()
 config.read('/usr/local/Roon/etc/roon_api.ini')

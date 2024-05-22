@@ -1219,6 +1219,7 @@ select_set_volume() {
     [ "${have_rich}" ] && {
       rich "[bold][cyan]RoonCommandLine Volume Control[/cyan][/bold]" -p -a rounded -c -C
     }
+    ${ROON}/bin/get_zone_volume
     printf "\n"
     PS3="${BOLD}Please enter the volume adjustment you wish to make (numeric or text): ${NORMAL}"
     select opt in "${volume_options[@]}"; do
