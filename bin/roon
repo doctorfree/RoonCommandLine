@@ -60,6 +60,7 @@ radio=
 relative=
 search=
 setdefs=
+noexit=
 showusage=1
 showexamples=1
 tag=
@@ -150,7 +151,6 @@ usage() {
       printf "\n"
       rich "Special search term [bold italic magenta]__all__[/] matches all entries" --print
       rich "Special name [bold italic green]default[/] plays the default setting in roon_api.ini" --print
-      printf "\n"
     else
       printf "\nUsage: roon -A album -a artist -C composer -D destination zone -m -n -N -O"
       printf "\n\t-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i"
@@ -285,7 +285,6 @@ usage() {
       rich "    [bold]NOTE:[/] [italic]Use quotes to specify media names which contain spaces.[/]" --print
       rich "    For example, to [magenta]play the album 'Love Bomb':[/]" --print
       rich "        [bold italic green]roon -A \"Love Bomb\"[/]" --print
-      printf "\n"
     else
       printf "\nExample invocations"
       printf "\n\tPlay artist:"
@@ -351,7 +350,7 @@ usage() {
       printf "\n\t\troon -A \"Love Bomb\"\n"
     fi
   }
-  exit 1
+  [ "${noexit}" ] || exit 1
 }
 
 # Display a heading with rich-cli, figlet, or printf
@@ -1350,6 +1349,7 @@ list_defaults() {
 }
 
 main_menu() {
+  noexit=1
   while true; do
     clear_screen
     media_options=()
@@ -1420,7 +1420,8 @@ main_menu() {
     else
       [ -x ${ROONETC}/install-roon-tui ] && options+=("Install roon-tui [I]")
     fi
-    options+=("About            [a]" "Info             [i]" "Quit             [q]")
+    options+=("About            [a]" "Examples         [e]")
+    options+=("Info             [i]" "Usage            [u]" "Quit             [q]")
 
     select opt in "${options[@]}"; do
       case "$opt,$REPLY" in
@@ -1758,8 +1759,22 @@ main_menu() {
           prompt_continue
           break
           ;;
+        "Example"*,* | *,"Example"* | "example"*,* | *,"example"* | "e",* | *,"e")
+          showusage=
+          showexamples=1
+          usage
+          prompt_continue
+          break
+          ;;
         "Info"*,* | *,"Info"* | "info"*,* | *,"info"* | "i",* | *,"i")
           show_info
+          prompt_continue
+          break
+          ;;
+        "Usage"*,* | *,"Usage"* | "usage"*,* | *,"usage"* | "u",* | *,"u")
+          showusage=1
+          showexamples=
+          usage
           prompt_continue
           break
           ;;
