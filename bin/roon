@@ -836,6 +836,10 @@ select_default() {
       setdefcom="${pycom} -t"
       listcom="list_tags"
       ;;
+    "Track")
+      setdefcom="true"
+      listcom="list_tracks"
+      ;;
     "Zone")
       setdefcom="${pycom} -z"
       listcom="list_zones"
@@ -973,6 +977,10 @@ select_default() {
   fi
 }
 
+play_track() {
+  play_album_track __all__ "$1"
+}
+
 play_zone() {
   zone_command -c play -z "$1"
 }
@@ -1075,6 +1083,11 @@ select_media() {
       listcom="list_tags"
       details=
       ;;
+    Track)
+      playcom="play_track"
+      listcom="list_tracks"
+      details=
+      ;;
     Zone)
       playcom="play_zone"
       listcom="list_zones"
@@ -1097,9 +1110,11 @@ select_media() {
   else
     media_options+=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
   fi
-  DEFAULT=$(get_default_ini Default${media})
   printf " Done\n\n"
-  printf "Default ${media}: ${DEFAULT}\n\n"
+  [ "${media}" == "Track" ] || {
+    DEFAULT=$(get_default_ini Default${media})
+    printf "Default ${media}: ${DEFAULT}\n\n"
+  }
 
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   if [ "${have_fzf}" ]; then
@@ -1364,6 +1379,7 @@ main_menu() {
     options+=("List Playlists  [lp]")
     options+=("List Radio      [lr]")
     options+=("List Tags       [lt]")
+    options+=("List Tracks     [lT]")
     options+=("List Zones      [lz]")
     options+=("Select Album    [sa]")
     options+=("Select Artist   [sA]")
@@ -1372,6 +1388,7 @@ main_menu() {
     options+=("Select Radio    [sr]")
     options+=("Select Playlist [sp]")
     options+=("Select Tag      [st]")
+    options+=("Select Track    [sT]")
     options+=("Select Zone     [sz]")
     options+=("Play Album      [pa]")
     options+=("Play Artist     [pA]")
@@ -1591,6 +1608,10 @@ main_menu() {
           select_media Tag List
           break
           ;;
+        "List Tracks"*,* | *,"List Tracks"* | "lT",* | *,"lT")
+          select_media Track List
+          break
+          ;;
         "List Zones"*,* | *,"List Zones"* | "lz",* | *,"lz")
           select_media Zone List
           break
@@ -1621,6 +1642,10 @@ main_menu() {
           ;;
         "Select Tag"*,* | *,"Select Tag"* | "st",* | *,"st")
           select_media Tag
+          break
+          ;;
+        "Select Track"*,* | *,"Select Track"* | "sT",* | *,"sT")
+          select_media Track
           break
           ;;
         "Select Zone"*,* | *,"Select Zone"* | "sz",* | *,"sz")
