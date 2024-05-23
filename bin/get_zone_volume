@@ -21,8 +21,7 @@ cd ${ROONAPI} || exit 1
 }
 
 # Get the zone if it is set
-if [ -f ${ROONCONF} ]
-then
+if [ -f ${ROONCONF} ]; then
     . ${ROONCONF}
 else
     DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
@@ -47,19 +46,17 @@ while getopts "gnz:" flag; do
     esac
 done
 
-have_python3=$(type -p python3)
 have_jq=$(type -p jq)
-if [ "${have_python3}" ]
-then
+have_python3=$(type -p python3)
+
+if [ "${have_python3}" ]; then
   PYTHON=python3
 else
   PYTHON=python
 fi
 
-if [ "${have_jq}" ]
-then
-  if [ "${number}" ]
-  then
+if [ "${have_jq}" ]; then
+  if [ "${number}" ]; then
     ${PYTHON} $SCRIPT ${grparg} -z "$ROON_ZONE" | jq -r '.[].volume.value?'
   else
     ${PYTHON} $SCRIPT ${grparg} -z "$ROON_ZONE" | \

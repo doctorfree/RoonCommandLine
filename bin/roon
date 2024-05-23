@@ -2052,7 +2052,8 @@ done
     if [ "$zone" ]; then
       zone_info "$zone"
     else
-      ${ROON}/bin/get_zone_info
+      infozone=$(get_default_ini DefaultZone)
+      zone_info "$infozone"
     fi
   else
     if [ "$zone" ]; then

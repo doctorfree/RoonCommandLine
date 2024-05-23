@@ -21,8 +21,7 @@ cd ${ROONAPI} || exit 1
   export PATH=/usr/local/Roon/venv/bin:${PATH}
 }
 
-if [ -f ${ROONCONF} ]
-then
+if [ -f ${ROONCONF} ]; then
     . ${ROONCONF}
 else
     DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
@@ -48,9 +47,10 @@ done
 [ "${ZONE}" ] || ZONE="__all__"
 
 have_python3=$(type -p python3)
-if [ "${have_python3}" ]
-then
-    python3 $NOWP ${aflag} -z "${ZONE}"
+if [ "${have_python3}" ]; then
+    PYTHON=python3
 else
-    python $NOWP ${aflag} -z "${ZONE}"
+    PYTHON=python
 fi
+
+${PYTHON} $NOWP ${aflag} -z "${ZONE}"
