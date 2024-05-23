@@ -53,4 +53,34 @@ else
     PYTHON=python
 fi
 
-${PYTHON} $NOWP ${aflag} -z "${ZONE}"
+have_rich=$(type -p rich)
+if [ "${have_rich}" ]; then
+  ${PYTHON} $NOWP ${aflag} -z "${ZONE}" | while read lin
+  do
+    if echo "${lin}" | grep : >/dev/null; then
+      key=$(echo "${lin}" | awk -F ':' '{ print $1 }')
+      key="$(echo -e "${key}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+      val=$(echo "${lin}" | awk -F ':' '{ print $2 }')
+      val="$(echo -e "${val}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+      val="$(echo -e "${val}" | sed -e 's/^\"//' -e 's/\"$//')"
+      if echo "${key}" | grep Now >/dev/null; then
+        pre=""
+        siz=19
+      else
+        pre="    "
+        siz=15
+      fi
+      numspaces=$((${siz}-${#key}))
+      spaces=""
+      for i in $(seq ${numspaces})
+      do
+        spaces="${spaces} "
+      done
+      rich "${pre}[red]${key}[/]:${spaces} [yellow]${val}[/]" -p
+    else
+      rich "[yellow]${lin}[/]" -p
+    fi
+  done
+else
+  ${PYTHON} $NOWP ${aflag} -z "${ZONE}"
+fi

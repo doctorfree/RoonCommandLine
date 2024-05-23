@@ -2,7 +2,7 @@
 #
 # roon - frontend script to issue commands to Roon via the Python Roon API
 #
-#  Copyright 2021-2022, Ronald Joe Record
+#  Copyright 2021-2024, Ronald Joe Record
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
