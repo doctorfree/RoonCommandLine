@@ -9,7 +9,7 @@ date: May 22, 2024
 play_album_track - Play specified Roon Library album track
 
 # SYNOPSIS
-**play_album_track** [ -z ZONE ] [ ALBUM ] [ TRACK ]
+**play_album_track** [ -z ZONE ] [ ALBUM ] [ TRACK ] [ EXCLUDE ]
 
 # DESCRIPTION
 Plays Roon Library album track matching the specified album and track name or substring. This command is invoked by "roon [-A album] [-T track]".
@@ -24,12 +24,15 @@ Plays Roon Library album track matching the specified album and track name or su
 **TRACK**
 : Provide a track name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library track names matching the provided track name or containing the substring will be returned and the first one returned will be played.
 
+**EXCLUDE**
+: An exclusion string, all matched albums with this string in their title will be excluded
+
 # EXAMPLES
 **play_album_track "Magical Mystery Tour" "Strawberry Fields Forever"**
 : Will play the first track returned in a list of all Roon library track names with titles containing the string "Strawberry Fields Forever" on albums matching the name "Magical Mystery Tour"
 
-**play_album_track "Angel Face" "Something About Her"**
-: Will play the first track returned in a list of all Roon library track names with titles containing the string "Something About Her" on albums matching the name "Angel Face"
+**play_album_track "Angel Face" "Something About Her" Love**
+: Will play the first track returned in a list of all Roon library track names with titles containing the string "Something About Her" on albums matching the name "Angel Face" but not "Love"
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

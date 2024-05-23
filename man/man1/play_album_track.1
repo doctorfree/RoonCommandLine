@@ -21,7 +21,7 @@
 play_album_track - Play specified Roon Library album track
 .SH SYNOPSIS
 .PP
-\f[B]play_album_track\f[R] [ -z ZONE ] [ ALBUM ] [ TRACK ]
+\f[B]play_album_track\f[R] [ -z ZONE ] [ ALBUM ] [ TRACK ] [ EXCLUDE ]
 .SH DESCRIPTION
 .PP
 Plays Roon Library album track matching the specified album and track
@@ -46,6 +46,10 @@ case-sensitive substring.
 All Roon library track names matching the provided track name or
 containing the substring will be returned and the first one returned
 will be played.
+.TP
+\f[B]EXCLUDE\f[R]
+An exclusion string, all matched albums with this string in their title
+will be excluded
 .SH EXAMPLES
 .TP
 \f[B]play_album_track \[dq]Magical Mystery Tour\[dq] \[dq]Strawberry Fields Forever\[dq]\f[R]
@@ -53,10 +57,10 @@ Will play the first track returned in a list of all Roon library track
 names with titles containing the string \[dq]Strawberry Fields
 Forever\[dq] on albums matching the name \[dq]Magical Mystery Tour\[dq]
 .TP
-\f[B]play_album_track \[dq]Angel Face\[dq] \[dq]Something About Her\[dq]\f[R]
+\f[B]play_album_track \[dq]Angel Face\[dq] \[dq]Something About Her\[dq] Love\f[R]
 Will play the first track returned in a list of all Roon library track
 names with titles containing the string \[dq]Something About Her\[dq] on
-albums matching the name \[dq]Angel Face\[dq]
+albums matching the name \[dq]Angel Face\[dq] but not \[dq]Love\[dq]
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
