@@ -9,6 +9,7 @@ ROONCONF=${ROONETC}/pyroonconf
 PLAY=play_album_track.py
 ALBUM=
 TRACK=
+EXALBUM=
 
 [ -d ${ROONAPI} ] || exit 1
 
@@ -27,9 +28,9 @@ while getopts "z:" flag; do
 done
 shift $(( OPTIND - 1 ))
 
-# Argument is track title (required)
 [ "$1" ] && ALBUM="$1"
 [ "$2" ] && TRACK="$2"
+[ "$3" ] && EXALBUM="$3"
 
 [ "${ALBUM}" ] || {
   printf "\nAlbum title required. Exiting.\n"
@@ -56,6 +57,8 @@ fi
 # Use all zones if no zone is specified or set
 [ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
 
+[ "${EXALBUM}" ] && EXARGS="-x ${EXALBUM}"
+
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]
 then
@@ -64,4 +67,4 @@ else
   PYTHON=python
 fi
 
-${PYTHON} $PLAY -a "$ALBUM" -t "$TRACK" -z "$ROON_ZONE"
+${PYTHON} $PLAY -a "$ALBUM" -t "$TRACK" -z "$ROON_ZONE" "$EXARGS"

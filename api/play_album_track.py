@@ -22,6 +22,7 @@ tokenfile = config['DEFAULT']['TokenFileName']
 parser = argparse.ArgumentParser()
 parser.add_argument("-a", "--album", help="album title")
 parser.add_argument("-t", "--track", help="track title")
+parser.add_argument("-x", "--exalbum", help="exclude album search term")
 parser.add_argument("-z", "--zone", help="zone selection")
 args = parser.parse_args()
 
@@ -34,6 +35,10 @@ if args.track:
     tracktitle = args.track
 else:
     tracktitle = "__all__"
+if args.exalbum:
+    exalbumsearch = args.exalbum
+else:
+    exalbumsearch = None
 if args.zone:
     target_zone = args.zone
 else:
@@ -75,5 +80,29 @@ for (k, v) in outputs.items():
 if output_id is None:
     err = "No zone found matching " + target_zone
     sys.exit(err)
+else:
+    album = None
+    # List matching albums from Library
+    albums = roonapi.list_media(output_id, ["Library", "Albums", albumtitle])
+    if "Play album" in albums:
+        albums.remove("Play album")
+    # Filter out excluded album titles
+    if exalbumsearch is not None and albums:
+        albums = [chk for chk in albums if exalbumsearch not in chk]
+    if albums:
+        # Select first album from matching albums
+        album = albums[0]
+    if album is None:
+        err = "No albums found matching " + albumtitle
+        sys.exit(err)
 
-roonapi.play_media(output_id, ["Library", "Albums", albumtitle, tracktitle], None, False)
+# Find matching tracks
+tracks = roonapi.list_media(output_id, ["Library", "Albums", album, tracktitle])
+if "Play Album" in tracks:
+    tracks.remove("Play Album")
+if tracks:
+    track = tracks[0]
+    roonapi.play_media(output_id, ["Library", "Albums", album, track], None, False)
+else:
+    err = "No tracks found matching " + tracktitle
+    sys.exit(err)
