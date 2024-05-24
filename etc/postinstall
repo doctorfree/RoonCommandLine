@@ -303,6 +303,7 @@ if [ "${USER}" ]; then
 else
   ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
 fi
+echo "Approval granted, retrieving zones and zone info ..."
 sleep 5
 CORE_IP=$(cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } ')
 CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"

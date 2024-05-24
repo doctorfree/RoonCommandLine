@@ -415,6 +415,7 @@ if [ "${USER}" ]; then
 else
   ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
 fi
+echo "Approval granted, retrieving zones and zone info ..."
 CORE_IP=$(cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } ')
 CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 CORE_PORT=$(cat /tmp/discover$$ | grep RoonCorePort | awk -F '=' ' { print $2 } ')
