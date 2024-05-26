@@ -136,12 +136,17 @@ with RoonApi(appinfo, token, server, port) as roonapi:
                                             ensure_ascii=False).encode('utf8')
                         album = json.dumps(zone["now_playing"]["three_line"]["line3"],
                                            ensure_ascii=False).encode('utf8')
+                        state = "Unknown"
+                        if zone["state"] is not None:
+                            state = zone["state"]
                         if args.verbose:
                             print("\nNow playing: {")
                             print("\t\"Track\": %s," % track.decode())
                             print("\t\"Artist\": %s," % artist.decode())
-                            print("\t\"Album\": %s\n}" % album.decode())
+                            print("\t\"Album\": %s," % album.decode())
+                            print("\t\"State\": \"%s\"\n}" % state)
                         else:
                             print("{\n\t\"Track\": %s," % track.decode())
                             print("\t\"Artist\": %s," % artist.decode())
-                            print("\t\"Album\": %s\n}" % album.decode())
+                            print("\t\"Album\": %s," % album.decode())
+                            print("\t\"State\": \"%s\"\n}" % state)

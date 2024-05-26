@@ -32,13 +32,17 @@ else
 fi
 
 aflag=
-while getopts "az:" flag; do
+pflag=
+while getopts "apz:" flag; do
     case $flag in
         z)
             ZONE="$OPTARG"
             ;;
         a)
             aflag="-a"
+            ;;
+        p)
+            pflag="-p"
             ;;
     esac
 done
@@ -55,7 +59,7 @@ fi
 
 have_rich=$(type -p rich)
 if [ "${have_rich}" ]; then
-  ${PYTHON} $NOWP ${aflag} -z "${ZONE}" | while read lin
+  ${PYTHON} $NOWP ${aflag} ${pflag} -z "${ZONE}" | while read lin
   do
     if echo "${lin}" | grep : >/dev/null; then
       key=$(echo "${lin}" | awk -F ':' '{ print $1 }')
@@ -82,5 +86,5 @@ if [ "${have_rich}" ]; then
     fi
   done
 else
-  ${PYTHON} $NOWP ${aflag} -z "${ZONE}"
+  ${PYTHON} $NOWP ${aflag} ${pflag} -z "${ZONE}"
 fi
