@@ -34,41 +34,12 @@ server="XX.X.X.XXX"
 #
 user="SSH_USERNAME"
 
-album=
-artist=
-composer=
-comm=
-albumlist=
-artistlist=
-artalbumlist=
-albtracklist=
-arttracklist=
-composerlist=
-comalbumlist=
-dest_zone=
-from_zone=
-exalbum=
-exartist=
-genrelist=
-genartistlist=
-genalbumlist=
-playlistlist=
-radiolist=
-taglist=
-playlist=
-radio=
-relative=
-search=
-setdefs=
-noexit=
-showusage=1
-showexamples=1
-tag=
-track=
-volume=
-zone=
-zonegroup=
-zonelist=
+# Set defaults
+album= artist= composer= comm= albumlist= artistlist= artalbumlist=
+albtracklist= arttracklist= composerlist= comalbumlist= dest_zone= from_zone=
+exalbum= exartist= genrelist= genartistlist= genalbumlist= playlistlist=
+radiolist= taglist= playlist= radio= relative= search= setdefs= noexit=
+showusage=1 showexamples=1 tag= track= volume= zone= zonegroup= zonelist=
 # Check for installed tools
 have_brew=$(type -p brew)
 have_fzf=$(type -p fzf)
@@ -581,7 +552,7 @@ show_info() {
   [ "${fullinfo}" ] && {
     printf "\n"
     ${ROON}/bin/get_zone_volume
-    show_now_playing
+    show_now_playing -p
   }
 }
 
@@ -1734,7 +1705,7 @@ main_menu() {
           break
           ;;
         "Now Playing"*,* | *,"Now Playing"* | "N",* | *,"N")
-          show_now_playing
+          show_now_playing -p
           prompt_continue
           break
           ;;
@@ -1853,7 +1824,7 @@ while getopts A:a:c:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       ;;
     n)
       now_playing=1
-      nowarg=
+      nowarg="-p"
       ;;
     O)
       [ -x ${ROON}/bin/roontui ] && open_roon_tui=1

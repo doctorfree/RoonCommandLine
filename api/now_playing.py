@@ -42,6 +42,8 @@ if args.playing:
     filterplaying = 1
 else:
     filterplaying = None
+if args.all:
+    filterplaying = None
 
 appinfo = {
   "extension_id": "roon_command_line",
