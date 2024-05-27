@@ -210,7 +210,7 @@ updatever=$(grep RoonCommandLineVersion ${ROON_INI})
 if [ "${updatever}" ]; then
   cat ${ROON_INI} | sed -e "s/RoonCommandLineVersion.*/RoonCommandLineVersion = ${version}/" >/tmp/v$$
 else
-  cat ${ROON_INI} | sed -e "/RoonCorePort.*/a RoonCommandLineVersion = __VERSION__" >/tmp/v$$
+  cat ${ROON_INI} | sed -e "/RoonCorePort.*/a RoonCommandLineVersion = ${version}" >/tmp/v$$
 fi
 ${SUDO} cp /tmp/v$$ ${ROON_INI}
 ${SUDO} rm -f /tmp/v$$
@@ -219,7 +219,7 @@ updaterel=$(grep RoonCommandLineRelease ${ROON_INI})
 if [ "${updaterel}" ]; then
   cat ${ROON_INI} | sed -e "s/RoonCommandLineRelease.*/RoonCommandLineRelease = ${release}/" >/tmp/r$$
 else
-  cat ${ROON_INI} | sed -e "/RoonCommandLineVersion.*/a RoonCommandLineRelease = __RELEASE__" >/tmp/r$$
+  cat ${ROON_INI} | sed -e "/RoonCommandLineVersion.*/a RoonCommandLineRelease = ${release}" >/tmp/r$$
 fi
 ${SUDO} cp /tmp/r$$ ${ROON_INI}
 ${SUDO} rm -f /tmp/r$$
