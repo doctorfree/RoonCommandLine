@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+May 27, 2024 :
+RoonCommandLine version 2.1.2 release 4
+
+    This release provides improved info and formatting for now playing and media search
+
 May 23, 2024 :
 RoonCommandLine version 2.1.2 release 3
 

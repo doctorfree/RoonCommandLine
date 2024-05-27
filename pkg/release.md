@@ -1,13 +1,6 @@
 # RoonCommandLine Release Notes
 
-RoonCommandLine version 2.1.2 release 3 provides support for:
-
-- Add signal handler to Python scripts
-- Add tracks listing, track play and album track play commands
-- Add `Examples` and `Usage` to main menu
-- Install `jq` in `macInstall`
-- Improve info when selecting and listing in menus
-- Improved `show_info()`
+RoonCommandLine version 2.1.2 release 4 provides improved info and formatting for now playing and media search.
 
 ## Installation
 
@@ -18,13 +11,13 @@ Download the latest Debian or RPM package format release from the **Assets** sec
 Install the package on Debian based systems by executing the command
 
 ```bash
-sudo apt install ./RoonCommandLine_2.1.2-3.deb
+sudo apt install ./RoonCommandLine_2.1.2-4.deb
 ```
 
 Install the package on RPM based systems by executing the command
 
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.1.2-3.rpm
+sudo yum localinstall ./RoonCommandLine-2.1.2-4.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
@@ -48,6 +41,15 @@ cd RoonCommandLine
 ```
 
 ## Release history
+
+RoonCommandLine version 2.1.2 release 3 provides support for:
+
+- Add signal handler to Python scripts
+- Add tracks listing, track play and album track play commands
+- Add `Examples` and `Usage` to main menu
+- Install `jq` in `macInstall`
+- Improve info when selecting and listing in menus
+- Improved `show_info()`
 
 RoonCommandLine version 2.1.2 release 2 provides support for:
 
@@ -116,6 +118,6 @@ Version 2.0.7 release 1 added support for:
 - Add `get_zone_remaining` to get remaining time for now playing in zone
 - Add `get_zone_volume` and `get_zone_attributes.py`
 
-View the full changelog for this release at <https://github.com/doctorfree/RoonCommandLine/blob/v2.1.2r3/CHANGELOG.md>
+View the full changelog for this release at <https://github.com/doctorfree/RoonCommandLine/blob/v2.1.2r4/CHANGELOG.md>
 
 See [CHANGELOG.md](https://github.com/doctorfree/RoonCommandLine/blob/master/CHANGELOG.md) for a full list of changes in every RoonCommandLine release

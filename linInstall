@@ -133,7 +133,7 @@ ${SUDO} cp LICENSE ${DESTDIR}/share/doc/${PKG}/copyright
 ${SUDO} cp CHANGELOG.md ${DESTDIR}/share/doc/${PKG}/changelog
 ${SUDO} cp README.md ${DESTDIR}/share/doc/${PKG}/README
 ${SUDO} cp VERSION ${DESTDIR}/share/doc/${PKG}/VERSION
-${SUDO} gzip -9 ${DESTDIR}/share/doc/${PKG}/changelog
+${SUDO} gzip -9 -f ${DESTDIR}/share/doc/${PKG}/changelog
 
 ${SUDO} chmod 644 man/*/*
 ${SUDO} chmod 755 man man/man*
