@@ -204,9 +204,9 @@ for command in "${ROON}"/bin/*; do
 done
 
 # Copy in distributed roon_api.ini template if no previous one exists
-[ -f ${ROON_INI} ] || {
+[ -s ${ROON_INI} ] || {
   # Restore previously saved roon_api.ini if one exists
-  if [ -f "${TMP_ROON_API}" ]; then
+  if [ -s "${TMP_ROON_API}" ]; then
     if grep defaultalbum "${TMP_ROON_API}" >/dev/null; then
       ${SUDO} cp ${ROONETC}/roon_api.ini-dist ${ROON_INI}
     else
@@ -292,9 +292,9 @@ done
 }
 
 # Copy in saved pyroonconf if it exists
-[ -f ${ROONCONF} ] || {
+[ -s ${ROONCONF} ] || {
   # Restore previously saved pyroonconf
-  if [ -f /tmp/_pyroonconf_.save ]; then
+  if [ -s /tmp/_pyroonconf_.save ]; then
     echo "Restoring saved ${ROONCONF}"
     ${SUDO} cp /tmp/_pyroonconf_.save ${ROONCONF}
     ${SUDO} rm -f /tmp/_pyroonconf_.save
@@ -304,7 +304,7 @@ done
 echo "Setting the Python Roon API server IP address to $IP"
 
 echo "Enabling local access in ${ROONCONF}"
-if [ -f ${ROONCONF} ]; then
+if [ -s ${ROONCONF} ]; then
   grep -v ^LOCAL= ${ROONCONF} >/tmp/roon$$
   echo "LOCAL=true" >>/tmp/roon$$
 else
@@ -334,7 +334,7 @@ for site in ${SITES[@]}; do
 done
 
 if [ "${PYTHONUSERBASE}" ]; then
-  if [ -f ${ROONCONF} ]; then
+  if [ -s ${ROONCONF} ]; then
     grep PYTHONUSERBASE ${ROONCONF} >/dev/null || {
       echo "export PYTHONUSERBASE=${PYTHONUSERBASE}" | ${SUDO} tee -a ${ROONCONF} >/dev/null
     }

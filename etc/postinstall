@@ -96,7 +96,7 @@ else
 fi
 
 # Copy in distributed roon_api.ini template if no previous one exists
-[ -f ${ROON_INI} ] || {
+[ -s ${ROON_INI} ] || {
   # Restore previously saved roon_api.ini and pyroonconf
   TMP_ROON_API="/tmp/_roon_api_ini_.save"
   if [ -s ${TMP_ROON_API} ]; then
@@ -183,7 +183,7 @@ done
 }
 
 # Copy in saved pyroonconf if it exists
-[ -f ${ROONCONF} ] || {
+[ -s ${ROONCONF} ] || {
   # Restore previously saved pyroonconf
   if [ -s /tmp/_pyroonconf_.save ]; then
     echo "Restoring saved ${ROONCONF}"
@@ -193,7 +193,7 @@ done
 }
 
 echo "Enabling local access in ${ROONCONF}"
-if [ -f ${ROONCONF} ]; then
+if [ -s ${ROONCONF} ]; then
   grep -v ^LOCAL= ${ROONCONF} >/tmp/roon$$
   echo "LOCAL=true" >>/tmp/roon$$
 else
@@ -221,7 +221,7 @@ for site in ${SITES[@]}; do
 done
 
 if [ "${PYTHONUSERBASE}" ]; then
-  if [ -f ${ROONCONF} ]; then
+  if [ -s ${ROONCONF} ]; then
     grep PYTHONUSERBASE ${ROONCONF} >/dev/null || {
       echo "export PYTHONUSERBASE=${PYTHONUSERBASE}" >>${ROONCONF}
     }
@@ -462,7 +462,7 @@ DEFZONE=$(grep ^DefaultZone ${ROON_INI} | awk -F '=' ' { print $2 } ')
 # Remove leading and trailing spaces in DEFZONE
 DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 # Set ROON_ZONE in pyroonconf if not already set
-if [ -f ${ROONCONF} ]; then
+if [ -s ${ROONCONF} ]; then
   grep ROON_ZONE ${ROONCONF} >/dev/null || {
     echo "ROON_ZONE=\"$DEFZONE\"" >>${ROONCONF}
   }
