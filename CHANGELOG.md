@@ -6,6 +6,10 @@ May 27, 2024 :
 RoonCommandLine version 2.1.2 release 4
 
     This release provides improved info and formatting for now playing and media search
+        * 'now_playing' info includes state
+        * 'now_playing' output formatted with 'rich' if available
+        * Fixes for upgrades on systems with BSD sed (e.g. macOS)
+        * Media search and selection enhancements
 
 May 23, 2024 :
 RoonCommandLine version 2.1.2 release 3

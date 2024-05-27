@@ -2,6 +2,11 @@
 
 RoonCommandLine version 2.1.2 release 4 provides improved info and formatting for now playing and media search.
 
+- `now_playing` info includes state
+- `now_playing` output formatted with `rich` if available
+- Fixes for upgrades on systems with `BSD sed` (e.g. `macOS`)
+- Media search and selection enhancements
+
 ## Installation
 
 The installation automatically detects and stores the Roon Core IP and port. There is no need for any manual configuration.
