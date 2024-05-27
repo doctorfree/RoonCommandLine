@@ -129,7 +129,7 @@ grep RoonCommandLineVersion ${ROON_INI} >/dev/null && updatever=1
 if [ "${updatever}" ]; then
   cat ${ROON_INI} | sed -e "s/RoonCommandLineVersion.*/RoonCommandLineVersion = ${version}/" >/tmp/v$$
 else
-  cat ${ROON_INI} | sed -e "/RoonCorePort.*/a RoonCommandLineVersion = __VERSION__" >/tmp/v$$
+  cat ${ROON_INI} | sed -e "/RoonCorePort.*/a RoonCommandLineVersion = ${version}" >/tmp/v$$
 fi
 cp /tmp/v$$ ${ROON_INI}
 rm -f /tmp/v$$
@@ -139,7 +139,7 @@ grep RoonCommandLineRelease ${ROON_INI} >/dev/null && updaterel=1
 if [ "${updaterel}" ]; then
   cat ${ROON_INI} | sed -e "s/RoonCommandLineRelease.*/RoonCommandLineRelease = ${release}/" >/tmp/r$$
 else
-  cat ${ROON_INI} | sed -e "/RoonCommandLineVersion.*/a RoonCommandLineRelease = __RELEASE__" >/tmp/r$$
+  cat ${ROON_INI} | sed -e "/RoonCommandLineVersion.*/a RoonCommandLineRelease = ${release}" >/tmp/r$$
 fi
 cp /tmp/r$$ ${ROON_INI}
 rm -f /tmp/r$$
