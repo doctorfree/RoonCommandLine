@@ -9,15 +9,21 @@ date: April 24, 2022
 now_playing - Get track, artist, and album now playing in specified Roon zone
 
 # SYNOPSIS
-**now_playing** [ **-a** ] [ **-z** ZONE ]
+**now_playing** [ **-a** ] [ **-p** ] [ **-P** ] [ **-z** ZONE ]
 
 # DESCRIPTION
-Retrieves now playing information on specified zone or all zones if no zone is specified. Only actively playing zones are displayed unless the `-a` flag is provided then all zone states are displayed regardless of their state.
+Retrieves now playing information on specified zone or all zones if no zone is specified. Only actively playing zones are displayed if **-p** is provided, only paused zones if **-P** is provided. If the **-a** flag is provided then all zone states are displayed regardless of their state.
 
 # COMMAND LINE OPTIONS
 
 **-a**
-: Display all zone states. If no *-a* is provided on the command line then only zones with an actively playing state are displayed.
+: Display all zone states
+
+**-p**
+: Display only zones in the playing state
+
+**-P**
+: Display only zones in the paused state
 
 **-z ZONE**
 : If a *ZONE* is specified then retrieve now playing information for that zone only. If no *ZONE* is provided on the command line then retrieve now playing information for all zones.
@@ -31,6 +37,9 @@ Retrieves now playing information on specified zone or all zones if no zone is s
 
 **now_playing -a**
 : Displays now playing info for all zones regardless of state
+
+**now_playing -p**
+: Displays now playing info for all zones in the playing state
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

@@ -22,20 +22,26 @@ now_playing - Get track, artist, and album now playing in specified Roon
 zone
 .SH SYNOPSIS
 .PP
-\f[B]now_playing\f[R] [ \f[B]-a\f[R] ] [ \f[B]-z\f[R] ZONE ]
+\f[B]now_playing\f[R] [ \f[B]-a\f[R] ] [ \f[B]-p\f[R] ] [ \f[B]-P\f[R] ]
+[ \f[B]-z\f[R] ZONE ]
 .SH DESCRIPTION
 .PP
 Retrieves now playing information on specified zone or all zones if no
 zone is specified.
-Only actively playing zones are displayed unless the \f[V]-a\f[R] flag
-is provided then all zone states are displayed regardless of their
-state.
+Only actively playing zones are displayed if \f[B]-p\f[R] is provided,
+only paused zones if \f[B]-P\f[R] is provided.
+If the \f[B]-a\f[R] flag is provided then all zone states are displayed
+regardless of their state.
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]-a\f[R]
-Display all zone states.
-If no \f[I]-a\f[R] is provided on the command line then only zones with
-an actively playing state are displayed.
+Display all zone states
+.TP
+\f[B]-p\f[R]
+Display only zones in the playing state
+.TP
+\f[B]-P\f[R]
+Display only zones in the paused state
 .TP
 \f[B]-z ZONE\f[R]
 If a \f[I]ZONE\f[R] is specified then retrieve now playing information
@@ -52,6 +58,9 @@ Displays now playing info for the Roon zone named \[dq]Kitchen\[dq]
 .TP
 \f[B]now_playing -a\f[R]
 Displays now playing info for all zones regardless of state
+.TP
+\f[B]now_playing -p\f[R]
+Displays now playing info for all zones in the playing state
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
