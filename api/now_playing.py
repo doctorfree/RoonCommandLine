@@ -68,6 +68,7 @@ else:
     filterplaying = None
 if args.all:
     filterplaying = None
+    filterpaused = None
 
 appinfo = {
     "extension_id": "roon_command_line",
