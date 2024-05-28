@@ -21,7 +21,7 @@
 get_zone_info - Get Roon Zone Info
 .SH SYNOPSIS
 .PP
-\f[B]get_zone_info\f[R] [ \f[B]-l\f[R] ] [ \f[B]-z\f[R] ZONE ]
+\f[B]get_zone_info\f[R] [ \f[B]-ahlnpsv\f[R] ] [ \f[B]-z\f[R] ZONE ]
 .SH DESCRIPTION
 .PP
 Retrieves information on specified zone or all zones if no zone is
@@ -32,15 +32,34 @@ If the \f[V]-l\f[R] flag is provided then only the listing of zone
 grouping is displayed.
 .SH COMMAND LINE OPTIONS
 .TP
+\f[B]-a\f[R]
+indicates display all zone info types
+.TP
+\f[B]-n\f[R]
+indicates display now playing zone info
+.TP
+\f[B]-p\f[R]
+indicates display zone properties
+.TP
+\f[B]-s\f[R]
+indicates display zone settings
+.TP
 \f[B]-l\f[R]
-Retrieve a comma separated list of the zone grouping for
-specified/default zone(s)
+indicates output a comma separated list of zones
+.TP
+\f[B]-v\f[R]
+indicates verbose output
+.TP
+\f[B]-h\f[R]
+displays a usage message and exits
 .TP
 \f[B]-z ZONE\f[R]
 If a \f[I]ZONE\f[R] is specified then retrieve info/grouping for that
 zone only.
 If no \f[I]ZONE\f[R] is sprovided on the command line then retrieve
 info/grouping for all zones.
+\[aq]-z default\[aq] indicates the default zone, \[aq]-z last\[aq] the
+last zone used
 .SH EXAMPLES
 .TP
 \f[B]get_zone_info\f[R]
@@ -48,6 +67,9 @@ Displays info and zone groupings for all zones
 .TP
 \f[B]get_zone_info -l\f[R]
 Retrieves a comma separated list of zone groupings for all zones
+.TP
+\f[B]get_zone_info -n -z default\f[R]
+Displays now playing information for the default Roon zone
 .TP
 \f[B]get_zone_info -z Kitchen\f[R]
 Displays extensive information on the Roon zone named \[dq]Kitchen\[dq]

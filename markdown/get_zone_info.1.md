@@ -9,17 +9,36 @@ date: December 05, 2021
 get_zone_info - Get Roon Zone Info
 
 # SYNOPSIS
-**get_zone_info** [ **-l** ] [ **-z** ZONE ]
+**get_zone_info** [ **-ahlnpsv** ] [ **-z** ZONE ]
+
 
 # DESCRIPTION
 Retrieves information on specified zone or all zones if no zone is specified. If a zone is specified using the `-z zone` option then extended information on that zone is displayed. If the `-l` flag is provided then only the listing of zone grouping is displayed.
 
 # COMMAND LINE OPTIONS
+**-a**
+: indicates display all zone info types
+
+**-n**
+: indicates display now playing zone info
+
+**-p**
+: indicates display zone properties
+
+**-s**
+: indicates display zone settings
+
 **-l**
-: Retrieve a comma separated list of the zone grouping for specified/default zone(s) 
+: indicates output a comma separated list of zones
+
+**-v**
+: indicates verbose output
+
+**-h**
+: displays a usage message and exits
 
 **-z ZONE**
-: If a *ZONE* is specified then retrieve info/grouping for that zone only. If no *ZONE* is sprovided on the command line then retrieve info/grouping for all zones.
+: If a *ZONE* is specified then retrieve info/grouping for that zone only. If no *ZONE* is sprovided on the command line then retrieve info/grouping for all zones. '-z default' indicates the default zone, '-z last' the last zone used
 
 # EXAMPLES
 **get_zone_info**
@@ -27,6 +46,9 @@ Retrieves information on specified zone or all zones if no zone is specified. If
 
 **get_zone_info -l**
 : Retrieves a comma separated list of zone groupings for all zones
+
+**get_zone_info -n -z default**
+: Displays now playing information for the default Roon zone
 
 **get_zone_info -z Kitchen**
 : Displays extensive information on the Roon zone named "Kitchen"

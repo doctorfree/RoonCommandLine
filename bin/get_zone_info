@@ -15,19 +15,35 @@ cd ${ROONAPI} || exit 1
 
 [ -f $LIST ] || exit 2
 
+usage() {
+  printf "\nUsage: get_zone_info [-ahlnpsv] [-z zone]"
+  printf "\nWhere:"
+  printf "\n\t-a indicates display all zone info types"
+  printf "\n\t-n indicates display now playing zone info"
+  printf "\n\t-p indicates display zone properties"
+  printf "\n\t-s indicates display zone settings"
+  printf "\n\t-l indicates output a comma separated list of zones"
+  printf "\n\t-v indicates verbose output"
+  printf "\n\t-z 'zone' specifies the zone from which to retrieve info"
+  printf "\n\t  '-z default' indicates the default zone, '-z last' the last zone used"
+  printf "\n\t-h displays this usage message and exits\n\n"
+  exit 1
+}
+
 # Use a Python virtual environment
 [ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
 [[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
   export PATH=/usr/local/Roon/venv/bin:${PATH}
 }
 
+DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+# Remove leading and trailing spaces in DEFZONE
+DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
 if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
-    # Remove leading and trailing spaces in DEFZONE
-    DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
@@ -35,10 +51,14 @@ fi
 getwith=
 infoflags=
 verbose=
-while getopts "alnpsvz:" flag; do
+ZONE=
+while getopts "ahlnpsvz:" flag; do
     case $flag in
         a)
             infoflags="-a ${infoflags}"
+            ;;
+        h)
+            usage
             ;;
         l)
             getwith="-g"
@@ -56,12 +76,19 @@ while getopts "alnpsvz:" flag; do
             verbose="-v"
             ;;
         z)
-            ROON_ZONE="$OPTARG"
+            ZONE="$OPTARG"
             ;;
     esac
 done
 [ "${infoflags}" ] || infoflags="-a"
 
+[ "${ZONE}" ] && {
+    if [ "${ZONE}" == "default" ]; then
+        ROON_ZONE="${DEFZONE}"
+    else
+        [ "${ZONE}" == "last" ] || ROON_ZONE="${ZONE}"
+    fi
+}
 # Get all zones if no zone is specified
 [ "${ROON_ZONE}" ] || ROON_ZONE="__all__"
 
