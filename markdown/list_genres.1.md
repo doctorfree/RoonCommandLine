@@ -9,12 +9,18 @@ date: December 05, 2021
 list_genres - List Roon Library Genres
 
 # SYNOPSIS
-**list_genres** [ GENRE ] [ EXGENRE ]
+**list_genres** [ -q ] [ -z ZONE ] [ GENRE ] [ EXGENRE ]
 
 # DESCRIPTION
 Lists Roon Library genres matching the specified genre name or substring
 
 # COMMAND LINE OPTIONS
+**-q**
+: Specifies quiet output
+
+**-z ZONE**
+: Specifies the Roon zone, '-z default' indicates the default zone, '-z last' the last zone used
+
 **GENRE**
 : Provide an genre name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library genre names matching the provided genre name or containing the substring will be returned
 

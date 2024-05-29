@@ -21,12 +21,19 @@
 list_radio - List Roon Live Radio Channels
 .SH SYNOPSIS
 .PP
-\f[B]list_radio\f[R] [ RADIO ]
+\f[B]list_radio\f[R] [ -q ] [ -z ZONE ] [ RADIO ]
 .SH DESCRIPTION
 .PP
 Lists Roon Live Radio channels matching the specified radio station name
 or substring
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-q\f[R]
+Specifies quiet output
+.TP
+\f[B]-z ZONE\f[R]
+Specifies the Roon zone, \[aq]-z default\[aq] indicates the default
+zone, \[aq]-z last\[aq] the last zone used
 .TP
 \f[B]RADIO\f[R]
 Provide a radio station name, in quotes if it contains spaces, or a

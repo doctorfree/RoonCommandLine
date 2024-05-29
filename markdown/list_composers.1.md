@@ -9,12 +9,18 @@ date: February 13, 2022
 list_composers - List Roon Library Composers
 
 # SYNOPSIS
-**list_composers** [ COMPOSER ] [ EXCOMPOSER ]
+**list_composers** [ -q ] [ -z ZONE ] [ COMPOSER ] [ EXCOMPOSER ]
 
 # DESCRIPTION
 Lists Roon Library composers matching the specified composer name or substring
 
 # COMMAND LINE OPTIONS
+**-q**
+: Specifies quiet output
+
+**-z ZONE**
+: Specifies the Roon zone, '-z default' indicates the default zone, '-z last' the last zone used
+
 **COMPOSER**
 : Provide an composer name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library composer names matching the provided composer name or containing the substring will be returned
 

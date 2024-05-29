@@ -21,11 +21,18 @@
 list_tags - List Roon Library Tags
 .SH SYNOPSIS
 .PP
-\f[B]list_tags\f[R] [ TAG ]
+\f[B]list_tags\f[R] [ -q ] [ -z ZONE ] [ TAG ]
 .SH DESCRIPTION
 .PP
 Lists Roon Library tags matching the specified tag name or substring
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-q\f[R]
+Specifies quiet output
+.TP
+\f[B]-z ZONE\f[R]
+Specifies the Roon zone, \[aq]-z default\[aq] indicates the default
+zone, \[aq]-z last\[aq] the last zone used
 .TP
 \f[B]TAG\f[R]
 Provide an tag name, in quotes if it contains spaces, or a

@@ -16,7 +16,7 @@ Plays the Roon Live Radio channel named *RADIO*. If no Live Radio channel name m
 
 # COMMAND LINE OPTIONS
 **-z ZONE**
-: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.  '-z default' indicates the default zone, '-z last' the last zone used
 
 **RADIO**
 :  Provide a Live Radio channel name, in quotes if it contains spaces, or a case-sensitive substring. A Roon Live Radio channel name matching the provided Live Radio channel name or containing the substring will be played if a unique match is found.

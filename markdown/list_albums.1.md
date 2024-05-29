@@ -9,12 +9,30 @@ date: December 05, 2021
 list_albums - List Roon Library Albums
 
 # SYNOPSIS
-**list_albums** [ ALBUM ] [ EXALBUM ]
+**list_albums** [-a ALBUM] [-h] [-q] [-t TRACK] [-x EXCLUDE] [-z ZONE] [ALBUM] [EXCLUDE]
 
 # DESCRIPTION
 Lists Roon Library albums matching the specified album name or substring. Optionally, an exclusion string can be provided as the second argument. Album names containing the exclusion string will not be listed.
 
 # COMMAND LINE OPTIONS
+**-a** 'ALBUM'
+: specifies the album title
+
+**-h**
+: displays this usage message and exits
+
+**-q**
+: specifies quiet output
+
+**-t** 'TRACK'
+: specifies a track search term
+
+**-x** 'EXCLUDE'
+: specifies an exclusion search term
+
+**-z** 'ZONE'
+: specifies the zone, '-z default' indicates the default zone, '-z last' the last zone used
+
 **ALBUM**
 : Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library album names matching the provided album name or containing the substring will be listed
 

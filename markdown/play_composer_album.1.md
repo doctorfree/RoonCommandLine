@@ -16,7 +16,7 @@ Plays Roon Library composer's album matching the specified album name or substri
 
 # COMMAND LINE OPTIONS
 **-z ZONE**
-: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.  '-z default' indicates the default zone, '-z last' the last zone used
 
 **COMPOSER**
 : Provide an composer name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library composer names matching the provided composer name or containing the substring will be searched for albums

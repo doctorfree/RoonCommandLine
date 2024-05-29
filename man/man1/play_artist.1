@@ -21,7 +21,7 @@
 play_artist - Play Roon Library Artist
 .SH SYNOPSIS
 .PP
-\f[B]play_artist\f[R] [ -z ZONE ] [ ARTIST ] [ EXARTIST ]
+\f[B]play_artist\f[R] [ -s ] [ -z ZONE ] [ ARTIST ] [ EXARTIST ]
 .SH DESCRIPTION
 .PP
 Plays the Roon Library artist named \f[I]ARTIST\f[R].
@@ -35,9 +35,14 @@ then \f[I]play_artist\f[R] will return a list of matching artist names
 and play the first one in the list.
 .SH COMMAND LINE OPTIONS
 .TP
+\f[B]-s\f[R]
+Play in shuffled mode
+.TP
 \f[B]-z ZONE\f[R]
 Specify the Roon Zone in which to play.
 If no zone is specified the default zone will be used.
+\[aq]-z default\[aq] indicates the default zone, \[aq]-z last\[aq] the
+last zone used
 .TP
 \f[B]ARTIST\f[R]
 Provide an artist name, in quotes if it contains spaces, or a

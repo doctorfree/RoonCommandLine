@@ -16,7 +16,7 @@ Plays Roon Library track matching the specified track name or substring. This co
 
 # COMMAND LINE OPTIONS
 **-z ZONE**
-: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.  '-z default' indicates the default zone, '-z last' the last zone used
 
 **TRACK**
 : Provide a track name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library track names matching the provided track name or containing the substring will be returned and the first one returned will be played.

@@ -16,7 +16,7 @@ Plays the Roon Library tag named *TAG*. If no library tag name matches *TAG* exa
 
 # COMMAND LINE OPTIONS
 **-z ZONE**
-: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.  '-z default' indicates the default zone, '-z last' the last zone used
 
 **TAG**
 :    Provide an tag name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library tag name matching the provided tag name or containing the substring will be played if a unique match is found.

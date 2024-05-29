@@ -9,12 +9,18 @@ date: December 05, 2021
 list_tags - List Roon Library Tags
 
 # SYNOPSIS
-**list_tags** [ TAG ]
+**list_tags** [ -q ] [ -z ZONE ] [ TAG ]
 
 # DESCRIPTION
 Lists Roon Library tags matching the specified tag name or substring
 
 # COMMAND LINE OPTIONS
+**-q**
+: Specifies quiet output
+
+**-z ZONE**
+: Specifies the Roon zone, '-z default' indicates the default zone, '-z last' the last zone used
+
 **TAG**
 : Provide an tag name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library tag names matching the provided tag name or containing the substring will be returned
 

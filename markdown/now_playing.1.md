@@ -26,7 +26,7 @@ Retrieves now playing information on specified zone or all zones if no zone is s
 : Display only zones in the paused state
 
 **-z ZONE**
-: If a *ZONE* is specified then retrieve now playing information for that zone only. If no *ZONE* is provided on the command line then retrieve now playing information for all zones.
+: If a *ZONE* is specified then retrieve now playing information for that zone only. If no *ZONE* is provided on the command line then retrieve now playing information for all zones.  '-z default' indicates the default zone, '-z last' the last zone used
 
 # EXAMPLES
 **now_playing**

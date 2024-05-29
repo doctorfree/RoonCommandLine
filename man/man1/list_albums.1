@@ -21,7 +21,8 @@
 list_albums - List Roon Library Albums
 .SH SYNOPSIS
 .PP
-\f[B]list_albums\f[R] [ ALBUM ] [ EXALBUM ]
+\f[B]list_albums\f[R] [-a ALBUM] [-h] [-q] [-t TRACK] [-x EXCLUDE] [-z
+ZONE] [ALBUM] [EXCLUDE]
 .SH DESCRIPTION
 .PP
 Lists Roon Library albums matching the specified album name or
@@ -29,6 +30,25 @@ substring.
 Optionally, an exclusion string can be provided as the second argument.
 Album names containing the exclusion string will not be listed.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-a\f[R] \[aq]ALBUM\[aq]
+specifies the album title
+.TP
+\f[B]-h\f[R]
+displays this usage message and exits
+.TP
+\f[B]-q\f[R]
+specifies quiet output
+.TP
+\f[B]-t\f[R] \[aq]TRACK\[aq]
+specifies a track search term
+.TP
+\f[B]-x\f[R] \[aq]EXCLUDE\[aq]
+specifies an exclusion search term
+.TP
+\f[B]-z\f[R] \[aq]ZONE\[aq]
+specifies the zone, \[aq]-z default\[aq] indicates the default zone,
+\[aq]-z last\[aq] the last zone used
 .TP
 \f[B]ALBUM\f[R]
 Provide an album name, in quotes if it contains spaces, or a

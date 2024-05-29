@@ -9,12 +9,18 @@ date: December 05, 2021
 list_artists - List Roon Library Artists
 
 # SYNOPSIS
-**list_artists** [ ARTIST ] [ EXARTIST ]
+**list_artists** [ -q ] [ -z ZONE ] [ ARTIST ] [ EXARTIST ]
 
 # DESCRIPTION
 Lists Roon Library artists matching the specified artist name or substring. Optionally, a second argument can be provided which specifies an exclusion string. Artists whose name includes the exclusion string will not be listed.
 
 # COMMAND LINE OPTIONS
+**-q**
+: Specifies quiet output
+
+**-z ZONE**
+: Specifies the Roon zone, '-z default' indicates the default zone, '-z last' the last zone used
+
 **ARTIST**
 : Provide an artist name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library artist names matching the provided artist name or containing the substring will be returned
 

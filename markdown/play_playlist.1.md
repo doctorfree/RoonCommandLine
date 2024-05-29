@@ -19,7 +19,7 @@ Plays the Roon Library playlist named *PLAYLIST*. Search for Roon Library playli
 : Indicates shuffled playlist playback. Without **-s** playlist is played back in order.
 
 **-z ZONE**
-: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.  '-z default' indicates the default zone, '-z last' the last zone used
 
 **PLAYLIST**
 :  Provide an playlist name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library playlist name matching the provided playlist name or containing the substring will be played if a match is found.

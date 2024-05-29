@@ -9,12 +9,18 @@ date: December 05, 2021
 list_radio - List Roon Live Radio Channels
 
 # SYNOPSIS
-**list_radio** [ RADIO ]
+**list_radio** [ -q ] [ -z ZONE ] [ RADIO ]
 
 # DESCRIPTION
 Lists Roon Live Radio channels matching the specified radio station name or substring
 
 # COMMAND LINE OPTIONS
+**-q**
+: Specifies quiet output
+
+**-z ZONE**
+: Specifies the Roon zone, '-z default' indicates the default zone, '-z last' the last zone used
+
 **RADIO**
 : Provide a radio station name, in quotes if it contains spaces, or a case-sensitive substring. All Roon radio station names matching the provided radio station name or containing the substring will be returned
 

@@ -9,14 +9,17 @@ date: December 05, 2021
 play_genre - Play Roon Library Genre
 
 # SYNOPSIS
-**play_genre** [ -z ZONE ] [ GENRE ] [ EXGENRE ]
+**play_genre** [ -s ] [ -z ZONE ] [ GENRE ] [ EXGENRE ]
 
 # DESCRIPTION
 Plays the Roon Library genre named *GENRE*. Search for Roon Library genres whose name contains the case-sensitive string *GENRE*. If there is a match on the search substring then *play_genre* will play the first genre that matches. If more than one Roon Library genre name matches the search substring then *play_genre* will return a list of matching genre names.
 
 # COMMAND LINE OPTIONS
+**-s**
+: Play in shuffled mode
+
 **-z ZONE**
-: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.  '-z default' indicates the default zone, '-z last' the last zone used
 
 **GENRE**
 :  Provide an genre name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library genre name matching the provided genre name or containing the substring will be played if a match is found.

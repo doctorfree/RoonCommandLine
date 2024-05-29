@@ -22,7 +22,7 @@ Retrieves the current volume level and volume range of specified zone or default
 : If *-n* is specified then only return the volume level for specified zone or zone grouping.
 
 **-z ZONE**
-: If a *ZONE* is specified then retrieve volume level and volume range for that zone. If no *ZONE* is provided on the command line then retrieve volume level and range for the default zone.
+: If a *ZONE* is specified then retrieve volume level and volume range for that zone. If no *ZONE* is provided on the command line then retrieve volume level and range for the default zone. '-z default' indicates the default zone, '-z last' the last zone used
 
 # EXAMPLES
 **get_zone_volume**

@@ -21,7 +21,7 @@
 list_artists - List Roon Library Artists
 .SH SYNOPSIS
 .PP
-\f[B]list_artists\f[R] [ ARTIST ] [ EXARTIST ]
+\f[B]list_artists\f[R] [ -q ] [ -z ZONE ] [ ARTIST ] [ EXARTIST ]
 .SH DESCRIPTION
 .PP
 Lists Roon Library artists matching the specified artist name or
@@ -30,6 +30,13 @@ Optionally, a second argument can be provided which specifies an
 exclusion string.
 Artists whose name includes the exclusion string will not be listed.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-q\f[R]
+Specifies quiet output
+.TP
+\f[B]-z ZONE\f[R]
+Specifies the Roon zone, \[aq]-z default\[aq] indicates the default
+zone, \[aq]-z last\[aq] the last zone used
 .TP
 \f[B]ARTIST\f[R]
 Provide an artist name, in quotes if it contains spaces, or a

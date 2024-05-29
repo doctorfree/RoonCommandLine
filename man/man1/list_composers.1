@@ -21,12 +21,19 @@
 list_composers - List Roon Library Composers
 .SH SYNOPSIS
 .PP
-\f[B]list_composers\f[R] [ COMPOSER ] [ EXCOMPOSER ]
+\f[B]list_composers\f[R] [ -q ] [ -z ZONE ] [ COMPOSER ] [ EXCOMPOSER ]
 .SH DESCRIPTION
 .PP
 Lists Roon Library composers matching the specified composer name or
 substring
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-q\f[R]
+Specifies quiet output
+.TP
+\f[B]-z ZONE\f[R]
+Specifies the Roon zone, \[aq]-z default\[aq] indicates the default
+zone, \[aq]-z last\[aq] the last zone used
 .TP
 \f[B]COMPOSER\f[R]
 Provide an composer name, in quotes if it contains spaces, or a

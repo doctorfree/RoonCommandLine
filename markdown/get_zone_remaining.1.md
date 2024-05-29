@@ -16,7 +16,7 @@ Retrieves remaining time in seconds for track playing in specified zone or defau
 
 # COMMAND LINE OPTIONS
 **-z ZONE**
-: If a *ZONE* is specified then retrieve remaining time in seconds for that zone. If no *ZONE* is sprovided on the command line then retrieve remaining time for the default zone.
+: If a *ZONE* is specified then retrieve remaining time in seconds for that zone. If no *ZONE* is sprovided on the command line then retrieve remaining time for the default zone. '-z default' indicates the default zone, '-z last' the last zone used
 
 # EXAMPLES
 **get_zone_remaining**

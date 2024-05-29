@@ -21,12 +21,19 @@
 list_playlists - List Roon Library Playlists
 .SH SYNOPSIS
 .PP
-\f[B]list_playlists\f[R] [ PLAYLIST ] [ EXPLAYLIST ]
+\f[B]list_playlists\f[R] [ -q ] [ -z ZONE ] [ PLAYLIST ] [ EXPLAYLIST ]
 .SH DESCRIPTION
 .PP
 Lists Roon Library playlists matching the specified playlist name or
 substring
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-q\f[R]
+Specifies quiet output
+.TP
+\f[B]-z ZONE\f[R]
+Specifies the Roon zone, \[aq]-z default\[aq] indicates the default
+zone, \[aq]-z last\[aq] the last zone used
 .TP
 \f[B]PLAYLIST\f[R]
 Provide an playlist name, in quotes if it contains spaces, or a

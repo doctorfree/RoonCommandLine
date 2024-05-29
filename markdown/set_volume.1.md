@@ -33,7 +33,7 @@ Desired volume level can be provided either as a volume value (`-v volume`) or a
   : specifies desired volume level
 
 **-z ZONE**
-  : specifies desired zone selection
+  : specifies desired zone selection, '-z default' indicates the default zone, '-z last' the last zone used
 
 # EXAMPLES
 **set_volume -v 70 -z HomePod**

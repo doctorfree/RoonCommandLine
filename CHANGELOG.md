@@ -2,12 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+May 30, 2024 :
+RoonCommandLine version 2.1.3 release 1
+
+    This release provides support for `-z default` and `-z last` to specify default zone and last zone used
+        * Add usage to `get_zone_info`
+        * Updated man pages
+        * Add `-P` flag to `now_playing` to list paused zones
+        * Upgrade checks to prevent malformed `roon_api.ini`
+
 May 27, 2024 :
 RoonCommandLine version 2.1.2 release 4
 
     This release provides improved info and formatting for now playing and media search
-        * 'now_playing' info includes state
-        * 'now_playing' output formatted with 'rich' if available
+        * `now_playing` info includes state
+        * `now_playing` output formatted with `rich` if available
         * Fixes for upgrades on systems with BSD sed (e.g. macOS)
         * Media search and selection enhancements
 
@@ -19,24 +28,24 @@ RoonCommandLine version 2.1.2 release 3
         * Add tracks listing, track play, and album track play commands
         * Add Examples and Usage to main menu
         * Improve info when selecting and listing in menus
-        * Install 'jq' in 'macInstall'
+        * Install `jq` in `macInstall`
 
 May 20, 2024 :
 RoonCommandLine version 2.1.2 release 2
 
-    This release provides support for installation and use of 'roon-tui'
-        * Install 'roon-tui' with 'roon -I'
-        * Add 'roon-tui' wrapper 'roontui'
+    This release provides support for installation and use of `roon-tui`
+        * Install `roon-tui` with `roon -I`
+        * Add `roon-tui` wrapper `roontui`
         * Add shortcuts to menus
-        * Add 'list_album_tracks' command
-        * Use 'fzf' to select media and list media
+        * Add `list_album_tracks` command
+        * Use `fzf` to select media and list media
 
 May 16, 2024 :
 RoonCommandLine version 2.1.1 release 1
 
     This release provides support for shuffled artist/genre/playlist playback
-        * Shuffled playback is accomplished using the play_media 'Shuffle' action
-        * All play commands now accept a '-z ZONE' argument to specify playback zone
+        * Shuffled playback is accomplished using the play_media `Shuffle` action
+        * All play commands now accept a `-z ZONE` argument to specify playback zone
 
 May 09, 2024 :
 RoonCommandLine version 2.1.0 release 6
@@ -57,7 +66,7 @@ Feb 20, 2024 :
 RoonCommandLine version 2.1.0 release 4
 
     This release adds the capability to transfer the current queue to another zone:
-        * Add 'transfer_zone' command and Python backend
+        * Add `transfer_zone` command and Python backend
         * Stop core discovery after core discovered
 
 Feb 14, 2024 :
@@ -66,7 +75,7 @@ RoonCommandLine version 2.1.0 release 3
     This release provides support for Ubuntu 23.04, Debian 12, and later:
         * Use a Python virtual environment
         * Additional checks for valid saved roon_api.ini
-        * Add support for 'q' to quit
+        * Add support for `q` to quit
         * Migrate to Github
         * Add lolcat colored figlet text transparent PNG header
 
@@ -115,7 +124,7 @@ RoonCommandLine version 2.0.8 release 1 provides API compatibility and feature u
     This release adds support for:
         * Compatibility with Python Roon API 0.1.3
         * Support for percentage volume change/setting
-        * Add immediate mode to roon_fade with 'now' argument
+        * Add immediate mode to roon_fade with `now` argument
         * Implement non-interactive immediate fading
         * Add interactive menu system (`roon_fade -i`)
         * Set man permissions correctly in manual install scripts
@@ -196,9 +205,9 @@ RoonCommandLine version 2.0.5 release 1 is a feature update
     Changes to RoonCommandLine commands include changing the `shuffle`
     and `repeat` commands to toggles, similar to what was done for `mute`.
     Note that `repeat` does not mimic the Roon `loop` feature which cycles
-    through three values - 'loop', 'loop_one', and 'disabled'. The `repeat`
+    through three values - `loop`, `loop_one`, and `disabled`. The `repeat`
     command in RoonCommandLine and the Python Roon API is a Boolean and
-    toggles between 'loop' and 'disabled'.
+    toggles between `loop` and `disabled`.
 
     A `mute_all` command was added to toggle playback muting in all Roon zones.
 

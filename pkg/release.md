@@ -1,11 +1,12 @@
 # RoonCommandLine Release Notes
 
-RoonCommandLine version 2.1.2 release 4 provides improved info and formatting for now playing and media search.
+RoonCommandLine version 2.1.3 release 1 provides support for specifying the default zone and last zone used
 
-- `now_playing` info includes state
-- `now_playing` output formatted with `rich` if available
-- Fixes for upgrades on systems with `BSD sed` (e.g. `macOS`)
-- Media search and selection enhancements
+- Add usage to `get_zone_info`
+- Add `-P` flag to `now_playing` to list paused zones
+- Upgrade checks to prevent malformed `roon_api.ini`
+- Add `-z default` and `-z last` to most commands to specify default or last zone used
+- Updated man pages
 
 ## Installation
 
@@ -46,6 +47,13 @@ cd RoonCommandLine
 ```
 
 ## Release history
+
+RoonCommandLine version 2.1.2 release 4 provides improved info and formatting for now playing and media search.
+
+- `now_playing` info includes state
+- `now_playing` output formatted with `rich` if available
+- Fixes for upgrades on systems with `BSD sed` (e.g. `macOS`)
+- Media search and selection enhancements
 
 RoonCommandLine version 2.1.2 release 3 provides support for:
 
@@ -108,7 +116,7 @@ The previous releases added support for:
 - Handle negative volume levels in roon_fade
 - Compatibility with latest `roonapi` volume methods
 - Support for percentage volume change/setting
-- Add immediate mode to roon_fade with 'now' argument
+- Add immediate mode to roon_fade with `now` argument
 - Implement non-interactive immediate fading
 - Add interactive menu system (`roon_fade -i`)
 - Set man permissions correctly in manual install scripts

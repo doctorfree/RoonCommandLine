@@ -16,15 +16,32 @@ cd ${ROONAPI} || exit 1
 
 [ -f $LIST ] || exit 2
 
+usage() {
+  printf "\nUsage: list_albums [-a album] [-h] [-q] [-t track] [-x exclude] [-z zone] [album] [exclude]"
+  printf "\nWhere:"
+  printf "\n\t-a 'album' specifies the album title"
+  printf "\n\t-h displays this usage message and exits"
+  printf "\n\t-q specifies quiet output"
+  printf "\n\t-t 'track' specifies a track search term"
+  printf "\n\t-x 'exclude' specifies an exclusion search term"
+  printf "\n\t-z 'zone' specifies the zone"
+  printf "\n\t'album' title can be provided as an argument rather than '-a album'"
+  printf "\n\t'exclude' exclusion term can be provided as an argument rather than '-x exclude'\n"
+  exit 1
+}
+
 listargs=
 trackargs=
 TRACK=
 ZONE=
 # Parse the arguments to get the zone
-while getopts "a:qt:x:z:" flag; do
+while getopts "a:hqt:x:z:" flag; do
     case $flag in
         a)
             ALBUM="$OPTARG"
+            ;;
+        h)
+            usage
             ;;
         t)
             TRACK="$OPTARG"

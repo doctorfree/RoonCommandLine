@@ -11,7 +11,6 @@ get_zone_info - Get Roon Zone Info
 # SYNOPSIS
 **get_zone_info** [ **-ahlnpsv** ] [ **-z** ZONE ]
 
-
 # DESCRIPTION
 Retrieves information on specified zone or all zones if no zone is specified. If a zone is specified using the `-z zone` option then extended information on that zone is displayed. If the `-l` flag is provided then only the listing of zone grouping is displayed.
 

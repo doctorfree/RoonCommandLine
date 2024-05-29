@@ -19,7 +19,7 @@ Executes the specified Roon command in the given Roon zone. If no *-c COMMAND* i
 : Execute Roon command *COMMAND* in the specified zone
 
 **-z zone**
-: Execute specified Roon command in Roon zone *zone*
+: Execute specified Roon command in Roon zone *zone*, '-z default' indicates the default zone, '-z last' the last zone used
 
 # EXAMPLES
 **zone_command -c mute -z HomePod**

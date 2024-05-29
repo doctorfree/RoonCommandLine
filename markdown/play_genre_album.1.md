@@ -16,7 +16,7 @@ Plays Roon Library genre's album matching the specified album name or substring.
 
 # COMMAND LINE OPTIONS
 **-z ZONE**
-: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.  '-z default' indicates the default zone, '-z last' the last zone used
 
 **GENRE**
 : Provide a genre name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library genre names matching the provided genre name or containing the substring will be searched for albums

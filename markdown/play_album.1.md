@@ -16,7 +16,7 @@ Plays the Roon Library album named *ALBUM*. If no library album name matches *AL
 
 # COMMAND LINE OPTIONS
 **-z ZONE**
-: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.
+: Specify the Roon Zone in which to play. If no zone is specified the default zone will be used.  '-z default' indicates the default zone, '-z last' the last zone used
 
 **ALBUM**
 :  Provide an album name, in quotes if it contains spaces, or a case-sensitive substring. A Roon library album name matching the provided album name or containing the substring will be played if a match is found.

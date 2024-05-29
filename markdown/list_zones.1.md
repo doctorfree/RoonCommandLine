@@ -9,14 +9,17 @@ date: December 05, 2021
 list_zones - List Roon Zones
 
 # SYNOPSIS
-**list_zones** [ ZONE ]
+**list_zones** [ -q ] [ ZONE ]
 
 # DESCRIPTION
 Lists all Roon zones, zone groupings, and configured zone grouping presets. If a zone is specified on the command line then only that zone and its groupings will be retrieved. A case-sensitive substring can be used as the ZONE argument in which case all zones that contain that substring along with their groupings will be returned.
 
 # COMMAND LINE OPTIONS
+**-q**
+: Specifies quiet output
+
 **ZONE**
-: The zone name or case-sensitive substring to match
+: The zone name or case-sensitive substring to match, 'default' indicates the default zone, 'last' the last zone used
 
 # EXAMPLES
 **list_zones HomePod**

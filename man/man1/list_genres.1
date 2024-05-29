@@ -21,11 +21,18 @@
 list_genres - List Roon Library Genres
 .SH SYNOPSIS
 .PP
-\f[B]list_genres\f[R] [ GENRE ] [ EXGENRE ]
+\f[B]list_genres\f[R] [ -q ] [ -z ZONE ] [ GENRE ] [ EXGENRE ]
 .SH DESCRIPTION
 .PP
 Lists Roon Library genres matching the specified genre name or substring
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-q\f[R]
+Specifies quiet output
+.TP
+\f[B]-z ZONE\f[R]
+Specifies the Roon zone, \[aq]-z default\[aq] indicates the default
+zone, \[aq]-z last\[aq] the last zone used
 .TP
 \f[B]GENRE\f[R]
 Provide an genre name, in quotes if it contains spaces, or a

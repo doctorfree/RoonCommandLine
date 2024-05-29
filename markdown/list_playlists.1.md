@@ -9,12 +9,18 @@ date: December 05, 2021
 list_playlists - List Roon Library Playlists
 
 # SYNOPSIS
-**list_playlists** [ PLAYLIST ] [ EXPLAYLIST ]
+**list_playlists** [ -q ] [ -z ZONE ] [ PLAYLIST ] [ EXPLAYLIST ]
 
 # DESCRIPTION
 Lists Roon Library playlists matching the specified playlist name or substring
 
 # COMMAND LINE OPTIONS
+**-q**
+: Specifies quiet output
+
+**-z ZONE**
+: Specifies the Roon zone, '-z default' indicates the default zone, '-z last' the last zone used
+
 **PLAYLIST**
 : Provide an playlist name, in quotes if it contains spaces, or a case-sensitive substring. All Roon library playlist names matching the provided playlist name or containing the substring will be returned
 
