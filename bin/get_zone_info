@@ -73,7 +73,8 @@ while getopts "ahlnpsvz:" flag; do
             infoflags="-s ${infoflags}"
             ;;
         v)
-            verbose="-v"
+            verbose=1
+            infoflags="-v ${infoflags}"
             ;;
         z)
             ZONE="$OPTARG"
@@ -100,12 +101,22 @@ else
     PYTHON=python
 fi
 
-if [ "${ROON_ZONE}" == "__all__" ]; then
+if [ "${getwith}" ]; then
     ${PYTHON} $LIST ${getwith} -i -z "${ROON_ZONE}"
 else
-    if [ "${getwith}" ]; then
-      ${PYTHON} $LIST ${getwith} -i -z "${ROON_ZONE}"
+    if [ "${verbose}" ]; then
+        use_jq=
     else
-      ${PYTHON} $INFO ${infoflags} -z "${ROON_ZONE}"
+        have_jq=$(type -p jq)
+        if [ "${have_jq}" ]; then
+            use_jq=1
+        else
+            use_jq=
+        fi
+    fi
+    if [ "${use_jq}" ]; then
+        ${PYTHON} $INFO ${infoflags} -z "${ROON_ZONE}" | jq -r .
+    else
+        ${PYTHON} $INFO ${infoflags} -z "${ROON_ZONE}"
     fi
 fi

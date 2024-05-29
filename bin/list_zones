@@ -32,18 +32,27 @@ shift $(( OPTIND - 1 ))
   export PATH=/usr/local/Roon/venv/bin:${PATH}
 }
 
+DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+# Remove leading and trailing spaces in DEFZONE
+DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
 if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
-    # Remove leading and trailing spaces in DEFZONE
-    DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
 
 [ "$1" ] && ZONE="$*"
+
+[ "${ZONE}" ] && {
+    if [ "${ZONE}" == "default" ]; then
+        ZONE="${DEFZONE}"
+    else
+        [ "${ZONE}" == "last" ] && ZONE="${ROON_ZONE}"
+    fi
+}
 
 # List all zones if no zones are specified
 [ "${ZONE}" ] || ZONE="__all__"

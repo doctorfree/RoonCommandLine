@@ -11,6 +11,7 @@ VOLUME="-v 50"
 GROUPED=
 RELATIVE=
 STEP=
+ZONE=
 
 [ -d ${ROONAPI} ] || exit 1
 
@@ -24,12 +25,15 @@ cd ${ROONAPI} || exit 1
   export PATH=/usr/local/Roon/venv/bin:${PATH}
 }
 
+DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+# Remove leading and trailing spaces in DEFZONE
+DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
 # Get the zone if it is set
 if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
     ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
@@ -53,10 +57,19 @@ while getopts "gp:rsv:z:" flag; do
             VOLUME="-v $OPTARG"
             ;;
         z)
-            ROON_ZONE="$OPTARG"
+            ZONE="$OPTARG"
             ;;
     esac
 done
+
+[ "${ZONE}" ] && {
+    if [ "${ZONE}" == "default" ]; then
+        ROON_ZONE="${DEFZONE}"
+    else
+        [ "${ZONE}" == "last" ] || ROON_ZONE="${ZONE}"
+    fi
+}
+[ "${ROON_ZONE}" ] || ROON_ZONE="${DEFZONE}"
 
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]

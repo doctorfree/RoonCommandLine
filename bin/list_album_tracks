@@ -32,15 +32,19 @@ cd ${ROONAPI} || exit 1
   export PATH=/usr/local/Roon/venv/bin:${PATH}
 }
 
+DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+# Remove leading and trailing spaces in DEFZONE
+DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
 # Get the zone if it is set
 if [ -f ${ROONCONF} ]
 then
     . ${ROONCONF}
 else
-    DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
     ${ROON}/bin/set_zone "${DEFZONE}"
     . ${ROONCONF}
 fi
+[ "${ROON_ZONE}" ] || ROON_ZONE="${DEFZONE}"
 
 # Get the default album if one is not provided
 [ "${ALBUM}" ] || {

@@ -140,13 +140,13 @@ with RoonApi(appinfo, token, server, port) as roonapi:
                         if zone["state"] is not None:
                             state = zone["state"]
                         if args.verbose:
-                            print("\nNow playing: {")
-                            print("\t\"Track\": %s," % track.decode())
-                            print("\t\"Artist\": %s," % artist.decode())
-                            print("\t\"Album\": %s," % album.decode())
-                            print("\t\"State\": \"%s\"\n}" % state)
+                            print("\nNow playing:")
                         else:
-                            print("{\n\t\"Track\": %s," % track.decode())
-                            print("\t\"Artist\": %s," % artist.decode())
-                            print("\t\"Album\": %s," % album.decode())
-                            print("\t\"State\": \"%s\"\n}" % state)
+                            print("\n{")
+                        print("\t\"Track\": %s," % track.decode())
+                        print("\t\"Artist\": %s," % artist.decode())
+                        print("\t\"Album\": %s," % album.decode())
+                        print("\t\"Zone\": \"%s\"," % zone_name)
+                        print("\t\"State\": \"%s\"" % state)
+                        if not args.verbose:
+                            print("\n}")

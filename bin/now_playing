@@ -21,12 +21,13 @@ cd ${ROONAPI} || exit 1
   export PATH=/usr/local/Roon/venv/bin:${PATH}
 }
 
+DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
+# Remove leading and trailing spaces in DEFZONE
+DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
 if [ -f ${ROONCONF} ]; then
   . ${ROONCONF}
 else
-  DEFZONE=$(grep ^DefaultZone ${ROONETC}/roon_api.ini | awk -F '=' ' { print $2 } ')
-  # Remove leading and trailing spaces in DEFZONE
-  DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
   ${ROON}/bin/set_zone "${DEFZONE}"
   . ${ROONCONF}
 fi
@@ -50,8 +51,16 @@ while getopts "apPz:" flag; do
   esac
 done
 
+[ "${ZONE}" ] && {
+    if [ "${ZONE}" == "default" ]; then
+        ROON_ZONE="${DEFZONE}"
+    else
+        [ "${ZONE}" == "last" ] || ROON_ZONE="${ZONE}"
+    fi
+}
+
 # Get all zones if no zone is specified
-[ "${ZONE}" ] || ZONE="__all__"
+[ "${ZONE}" ] || ROON_ZONE="__all__"
 
 have_python3=$(type -p python3)
 if [ "${have_python3}" ]; then
@@ -62,7 +71,7 @@ fi
 
 have_rich=$(type -p rich)
 if [ "${have_rich}" ]; then
-  ${PYTHON} $NOWP ${aflag} ${pflag} -z "${ZONE}" | while read lin; do
+  ${PYTHON} $NOWP ${aflag} ${pflag} -z "${ROON_ZONE}" | while read lin; do
     if echo "${lin}" | grep : > /dev/null; then
       key=$(echo "${lin}" | awk -F ':' '{ print $1 }')
       key="$(echo -e "${key}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
@@ -87,5 +96,5 @@ if [ "${have_rich}" ]; then
     fi
   done
 else
-  ${PYTHON} $NOWP ${aflag} ${pflag} -z "${ZONE}"
+  ${PYTHON} $NOWP ${aflag} ${pflag} -z "${ROON_ZONE}"
 fi
