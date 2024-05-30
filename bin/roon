@@ -509,11 +509,11 @@ show_about() {
 # Get the value of the specified entry in roon_api.ini
 # get_default_ini <EntryName>
 get_default_ini() {
-  rinfo="$1"
-  DEFAULT=$(grep ^${rinfo} ${ROON_INI} | awk -F '=' ' { print $2 } ')
+  entry="$1"
+  de=$(grep ^${entry} ${ROON_INI} | awk -F '=' ' { print $2 } ')
   # Remove leading and trailing spaces
-  DEFAULT="$(echo -e "${DEFAULT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-  echo "${DEFAULT}"
+  de="$(echo -e "${de}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  echo "${de}"
 }
 
 # Display RoonCommandLine info
@@ -552,7 +552,7 @@ show_info() {
   [ "${fullinfo}" ] && {
     printf "\n"
     ${ROON}/bin/get_zone_volume
-    show_now_playing -p
+    show_now_playing
   }
 }
 
@@ -614,7 +614,7 @@ set_zone_options() {
   if [ "${LOCAL}" == "true" ]; then
     zones=$(${ROON}/bin/get_zones | sed -e 's/\, /\,/g')
   else
-    zones=$(ssh $user@$server "bash -l -c \"${ROON}/bin/get_zones | sed -e 's/\, /\,/g'\"")
+    zones=$(ssh ${user}@${server} "bash -l -c \"${ROON}/bin/get_zones | sed -e 's/\, /\,/g'\"")
   fi
   media_options+=($(echo "${zones}" | awk -F "," ' { for(i=1;i<=NF;i++) printf "%s\n",$i }'))
   ${oldifs+"false"} && unset IFS || IFS="$oldifs"
@@ -625,16 +625,16 @@ show_now_playing() {
   nowarg="$1"
   zone="$2"
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      ${ROON}/bin/now_playing ${nowarg} -z "$zone"
+    if [ "${zone}" ]; then
+      ${ROON}/bin/now_playing ${nowarg} -z "${zone}"
     else
       ${ROON}/bin/now_playing ${nowarg}
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing ${nowarg} -z $zone\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/now_playing ${nowarg} -z ${zone}\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/now_playing ${nowarg}\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/now_playing ${nowarg}\""
     fi
   fi
 }
@@ -669,18 +669,10 @@ fi
 
 clear_screen
 
-get_roon_default() {
-  mt="$1"
-  dz=$(grep ^Default${mt} ${ROON_INI} | awk -F '=' ' { print $2 } ')
-  # Remove leading and trailing spaces in dz
-  dz="$(echo -e "${dz}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-  echo "${dz}"
-}
-
 set_default_conf() {
   if [ -w ${ROONETC} ]; then
     echo "LOCAL=true" >${ROONCONF}
-    DEFZONE=$(get_roon_default Zone)
+    DEFZONE=$(get_default_ini DefaultZone)
     echo "ROON_ZONE=\"$DEFZONE\"" >>${ROONCONF}
   else
     echo "${ROONETC} is not writeable by this user."
@@ -750,7 +742,7 @@ select_zone() {
             if [ "${LOCAL}" = true ]; then
               ${ROON}/bin/set_zone "${opt}"
             else
-              ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone ${opt}\""
+              ssh ${user}@${server} "bash -l -c \"${ROON}/bin/set_zone ${opt}\""
             fi
             status=$?
             [ ${status} -eq 0 ] || {
@@ -832,7 +824,7 @@ select_default() {
     if [ "${LOCAL}" = true ]; then
       media_options+=($(${listcom} -q))
     else
-      media_options+=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
+      media_options+=($(ssh ${user}@${server} "bash -l -c \"${ROON}/bin/${listcom} -q\""))
     fi
     ${oldifs+"false"} && unset IFS || IFS="$oldifs"
   fi
@@ -853,14 +845,14 @@ select_default() {
               echo "No Roon Zone is set in ${ROONCONF}"
             fi
           else
-            roon_zone=$(ssh $user@$server "bash -l -c \"grep ROON_ZONE ${ROONCONF}\"")
+            roon_zone=$(ssh ${user}@${server} "bash -l -c \"grep ROON_ZONE ${ROONCONF}\"")
             if [ "${roon_zone}" ]; then
               echo "Current Roon Zone: ${roon_zone}"
             else
               echo "No Roon Zone is set in ${ROONCONF}"
             fi
           fi
-          DEFZONE=$(get_roon_default Zone)
+          DEFZONE=$(get_default_ini DefaultZone)
           if [ "${DEFZONE}" ]; then
             echo "Default Roon Zone: ${DEFZONE}"
           else
@@ -868,7 +860,7 @@ select_default() {
           fi
           ;;
         *)
-          default=$(get_roon_default ${media})
+          default=$(get_default_ini Default${media})
           if [ "${default}" ]; then
             echo "Default Roon ${media}: ${default}"
           else
@@ -894,13 +886,13 @@ select_default() {
             if [ "${LOCAL}" = true ]; then
               ${setdefcom} "${choice}"
             else
-              ssh $user@$server "bash -l -c \"${ROON}/bin/${setdefcom} ${choice}\""
+              ssh ${user}@${server} "bash -l -c \"${ROON}/bin/${setdefcom} ${choice}\""
             fi
             [ "${media}" == "Zone" ] && {
               if [ "${LOCAL}" = true ]; then
                 ${ROON}/bin/set_zone "${choice}"
               else
-                ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone ${choice}\""
+                ssh ${user}@${server} "bash -l -c \"${ROON}/bin/set_zone ${choice}\""
               fi
             }
             break
@@ -937,7 +929,7 @@ select_default() {
             if [ "${LOCAL}" = true ]; then
               ${setdefcom} "${opt}"
             else
-              ssh $user@$server "bash -l -c \"${ROON}/bin/${setdefcom} ${opt}\""
+              ssh ${user}@${server} "bash -l -c \"${ROON}/bin/${setdefcom} ${opt}\""
             fi
             break 2
             ;;
@@ -1074,7 +1066,7 @@ select_media() {
   if [ "${LOCAL}" = true ]; then
     media_options+=($(${listcom} -q))
   else
-    media_options+=($(ssh $user@$server "bash -l -c \"${ROON}/bin/${listcom} -q\""))
+    media_options+=($(ssh ${user}@${server} "bash -l -c \"${ROON}/bin/${listcom} -q\""))
   fi
   printf " Done\n\n"
   [ "${media}" == "Track" ] || {
@@ -1111,11 +1103,11 @@ select_media() {
             else
               if [ "${action}" == "List" ] || [ "${action}" == "list" ]; then
                 [ "${details}" ] && {
-                  ssh $user@$server "bash -l -c \"${ROON}/bin/${details} ${choice}\""
+                  ssh ${user}@${server} "bash -l -c \"${ROON}/bin/${details} ${choice}\""
                   prompt_continue
                 }
               else
-                ssh $user@$server "bash -l -c \"${ROON}/bin/${playcom} ${choice}\""
+                ssh ${user}@${server} "bash -l -c \"${ROON}/bin/${playcom} ${choice}\""
               fi
             fi
             break
@@ -1158,11 +1150,11 @@ select_media() {
             else
               if [ "${action}" == "List" ] || [ "${action}" == "list" ]; then
                 [ "${details}" ] && {
-                  ssh $user@$server "bash -l -c \"${ROON}/bin/${details} ${opt}\""
+                  ssh ${user}@${server} "bash -l -c \"${ROON}/bin/${details} ${opt}\""
                   prompt_continue
                 }
               else
-                ssh $user@$server "bash -l -c \"${ROON}/bin/${playcom} ${opt}\""
+                ssh ${user}@${server} "bash -l -c \"${ROON}/bin/${playcom} ${opt}\""
               fi
             fi
             break 2
@@ -1195,7 +1187,7 @@ select_set_volume() {
           if [ "${LOCAL}" = true ]; then
             set_volume -v ${volume} -g
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -g\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -g\""
           fi
           break
           ;;
@@ -1204,7 +1196,7 @@ select_set_volume() {
           if [ "${LOCAL}" = true ]; then
             set_volume -v ${volume} -g -r
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -g -r\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -g -r\""
           fi
           break
           ;;
@@ -1213,7 +1205,7 @@ select_set_volume() {
           if [ "${LOCAL}" = true ]; then
             set_volume -v -${volume} -g -r
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v -${volume} -g -r\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/set_volume -v -${volume} -g -r\""
           fi
           break
           ;;
@@ -1222,7 +1214,7 @@ select_set_volume() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c mute
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c mute\""
           fi
           printf " Done\n\n"
           break
@@ -1232,7 +1224,7 @@ select_set_volume() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c mute_all
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute_all\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c mute_all\""
           fi
           printf " Done\n\n"
           break
@@ -1405,7 +1397,7 @@ main_menu() {
               echo "No default Roon Zone is set in ${ROONCONF}"
             fi
           else
-            roon_zone=$(ssh $user@$server "bash -l -c \"grep ROON_ZONE ${ROONCONF}\"")
+            roon_zone=$(ssh ${user}@${server} "bash -l -c \"grep ROON_ZONE ${ROONCONF}\"")
             if [ "${roon_zone}" ]; then
               echo "Current Roon Zone: ${roon_zone}"
             else
@@ -1420,7 +1412,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c play_all
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play_all\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c play_all\""
           fi
           printf " Done\n\n"
           break
@@ -1430,7 +1422,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c pause_all
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c pause_all\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c pause_all\""
           fi
           printf " Done\n\n"
           break
@@ -1440,7 +1432,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c pause
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c pause\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c pause\""
           fi
           printf " Done\n\n"
           break
@@ -1450,7 +1442,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c next
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c next\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c next\""
           fi
           printf " Done\n\n"
           break
@@ -1460,7 +1452,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c previous
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c previous\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c previous\""
           fi
           printf " Done\n\n"
           break
@@ -1470,7 +1462,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c stop_all
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop_all\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c stop_all\""
           fi
           printf " Done\n\n"
           break
@@ -1480,7 +1472,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c stop
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c stop\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c stop\""
           fi
           printf " Done\n\n"
           break
@@ -1494,7 +1486,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c mute
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c mute\""
           fi
           printf " Done\n\n"
           break
@@ -1504,7 +1496,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c mute_all
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c mute_all\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c mute_all\""
           fi
           printf " Done\n\n"
           break
@@ -1514,7 +1506,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c unrepeat
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c unrepeat\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c unrepeat\""
           fi
           printf " Done\n\n"
           break
@@ -1524,7 +1516,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c repeat
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c repeat\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c repeat\""
           fi
           printf " Done\n\n"
           break
@@ -1534,7 +1526,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c unshuffle
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c unshuffle\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c unshuffle\""
           fi
           printf " Done\n\n"
           break
@@ -1544,7 +1536,7 @@ main_menu() {
           if [ "${LOCAL}" = true ]; then
             ${ROON}/bin/zone_command -c shuffle
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c shuffle\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c shuffle\""
           fi
           printf " Done\n\n"
           break
@@ -1626,7 +1618,7 @@ main_menu() {
             play_album
             prompt_continue
           else
-            ssh $user@$server "bash -l -c ${ROON}/bin/play_album"
+            ssh ${user}@${server} "bash -l -c ${ROON}/bin/play_album"
           fi
           break
           ;;
@@ -1635,7 +1627,7 @@ main_menu() {
             play_artist
             prompt_continue
           else
-            ssh $user@$server "bash -l -c ${ROON}/bin/play_artist"
+            ssh ${user}@${server} "bash -l -c ${ROON}/bin/play_artist"
           fi
           break
           ;;
@@ -1644,7 +1636,7 @@ main_menu() {
             play_composer
             prompt_continue
           else
-            ssh $user@$server "bash -l -c ${ROON}/bin/play_composer"
+            ssh ${user}@${server} "bash -l -c ${ROON}/bin/play_composer"
           fi
           break
           ;;
@@ -1653,7 +1645,7 @@ main_menu() {
             play_genre
             prompt_continue
           else
-            ssh $user@$server "bash -l -c ${ROON}/bin/play_genre"
+            ssh ${user}@${server} "bash -l -c ${ROON}/bin/play_genre"
           fi
           break
           ;;
@@ -1662,7 +1654,7 @@ main_menu() {
             play_playlist
             prompt_continue
           else
-            ssh $user@$server "bash -l -c ${ROON}/bin/play_playlist"
+            ssh ${user}@${server} "bash -l -c ${ROON}/bin/play_playlist"
           fi
           break
           ;;
@@ -1671,7 +1663,7 @@ main_menu() {
             play_radio
             prompt_continue
           else
-            ssh $user@$server "bash -l -c ${ROON}/bin/play_radio"
+            ssh ${user}@${server} "bash -l -c ${ROON}/bin/play_radio"
           fi
           break
           ;;
@@ -1680,7 +1672,7 @@ main_menu() {
             play_tag
             prompt_continue
           else
-            ssh $user@$server "bash -l -c ${ROON}/bin/play_tag"
+            ssh ${user}@${server} "bash -l -c ${ROON}/bin/play_tag"
           fi
           break
           ;;
@@ -1695,7 +1687,7 @@ main_menu() {
             ${ROON}/bin/zone_command -c play
             prompt_continue
           else
-            ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c play\""
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c play\""
           fi
           printf " Done\n\n"
           break
@@ -1705,7 +1697,7 @@ main_menu() {
           break
           ;;
         "Now Playing"*,* | *,"Now Playing"* | "N",* | *,"N")
-          show_now_playing -p
+          show_now_playing "" "${ROON_ZONE}"
           prompt_continue
           break
           ;;
@@ -1824,7 +1816,7 @@ while getopts A:a:c:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       ;;
     n)
       now_playing=1
-      nowarg="-p"
+      nowarg=
       ;;
     O)
       [ -x ${ROON}/bin/roontui ] && open_roon_tui=1
@@ -1840,6 +1832,18 @@ while getopts A:a:c:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       ;;
     z)
       zone="$OPTARG"
+      # Support '-z default' and '-z last'
+      if [ "${zone}" == "default" ]; then
+        zone=$(get_default_ini DefaultZone)
+      else
+        [ "${zone}" == "last" ] && {
+          if [ "${ROON_ZONE}" ]; then
+            zone="${ROON_ZONE}"
+          else
+            zone=$(get_default_ini DefaultZone)
+          fi
+        }
+      fi
       ;;
     l)
       listname="$OPTARG"
@@ -1982,55 +1986,64 @@ done
   fi
 }
 
-[ "$search" ] || search="__all__"
+[ "${nowarg}" ] || {
+  [ "${zone}" ] || {
+    if [ "${ROON_ZONE}" ]; then
+      zone="${ROON_ZONE}"
+    else
+      zone=$(get_default_ini DefaultZone)
+    fi
+  }
+}
+[ "${search}" ] || search="__all__"
 
 # Set Defaults
-[ "$setdefs" ] && list_defaults
+[ "${setdefs}" ] && list_defaults
 
 # Set Zone
-[ "$zone" ] && {
+[ "${zone}" ] && {
   if [ "${LOCAL}" = true ]; then
-    ${ROON}/bin/set_zone $zone
+    ${ROON}/bin/set_zone ${zone}
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone $zone\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/set_zone ${zone}\""
   fi
   status=$?
   [ ${status} -eq 0 ] || {
-    echo "Unable to set zone for zone = $zone"
+    echo "Unable to set zone for zone = ${zone}"
     echo "Exiting"
     exit ${status}
   }
 }
 
 # Zone Grouping
-[ "$zonegroup" ] && {
-  [ "$comm" == "group" ] || [ "$comm" == "ungroup" ] || comm=group
+[ "${zonegroup}" ] && {
+  [ "${comm}" == "group" ] || [ "${comm}" == "ungroup" ] || comm=group
   if [ "${LOCAL}" = true ]; then
-    ${ROON}/bin/set_zone_group $comm $zonegroup
+    ${ROON}/bin/set_zone_group ${comm} ${zonegroup}
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/set_zone_group $comm $zonegroup\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/set_zone_group ${comm} ${zonegroup}\""
   fi
   status=$?
   [ ${status} -eq 0 ] || {
-    echo "Unable to set zone group for zone group = $zonegroup"
+    echo "Unable to set zone group for zone group = ${zonegroup}"
     echo "Exiting"
     exit ${status}
   }
 }
 
-[ "$info" ] && {
+[ "${info}" ] && {
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      zone_info "$zone"
+    if [ "${zone}" ]; then
+      zone_info "${zone}"
     else
       infozone=$(get_default_ini DefaultZone)
       zone_info "$infozone"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info -z $zone\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/get_zone_info -z ${zone}\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/get_zone_info\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/get_zone_info\""
     fi
   fi
 }
@@ -2041,7 +2054,7 @@ done
   if [ "${LOCAL}" = true ]; then
     ${ROON}/bin/transfer_zone "$from_zone" "$dest_zone"
   else
-    ssh $user@$server bash -l -c "${ROON}/bin/transfer_zone \"$from_zone\" \"$dest_zone\""
+    ssh ${user}@${server} bash -l -c "${ROON}/bin/transfer_zone \"$from_zone\" \"$dest_zone\""
   fi
   status=$?
   [ ${status} -eq 0 ] || {
@@ -2052,17 +2065,17 @@ done
 [ "${fading}" ] && {
   [ "${fading}" == "status" ] && fading=
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      ${ROON}/bin/roon_fade ${logfade} -z "$zone" ${fading}
+    if [ "${zone}" ]; then
+      ${ROON}/bin/roon_fade ${logfade} -z "${zone}" ${fading}
     else
       ${ROON}/bin/roon_fade ${logfade} ${fading}
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server \
-        "bash -l -c \"${ROON}/bin/roon_fade ${logfade} -z $zone ${fading}\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} \
+        "bash -l -c \"${ROON}/bin/roon_fade ${logfade} -z ${zone} ${fading}\""
     else
-      ssh $user@$server \
+      ssh ${user}@${server} \
         "bash -l -c \"${ROON}/bin/roon_fade ${logfade} ${fading}\""
     fi
   fi
@@ -2078,7 +2091,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_albums "$album" "$exalbum"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_albums $album $exalbum\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_albums $album $exalbum\""
   fi
   album=
 }
@@ -2090,7 +2103,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_artists "$artist" "$exartist"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_artists $artist $exartist\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_artists $artist $exartist\""
   fi
   artist=
 }
@@ -2105,7 +2118,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_artist_albums "$artist" "$album" "$exartist" "$exalbum"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_artist_albums $artist $album $exartist $exalbum\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_artist_albums $artist $album $exartist $exalbum\""
   fi
   album=
   artist=
@@ -2118,7 +2131,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_album_tracks "$album" "$track" "$exalbum" "$extrack"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_album_tracks $album $track $exalbum $extrack\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_album_tracks $album $track $exalbum $extrack\""
   fi
   track=
   album=
@@ -2134,7 +2147,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_artist_tracks "$artist" "$track" "$exartist" "$exalbum"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_artist_tracks $artist $track $exartist $exalbum\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_artist_tracks $artist $track $exartist $exalbum\""
   fi
   track=
   artist=
@@ -2150,7 +2163,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_playlist_tracks "$playlist" "$track" "$explaylist" "$extrack"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlist_tracks $playlist $track $explaylist $extrack\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_playlist_tracks $playlist $track $explaylist $extrack\""
   fi
   track=
   playlist=
@@ -2166,7 +2179,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_composer_albums "$composer" "$album" "$exartist" "$exalbum"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_composer_albums $composer $album $exartist $exalbum\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_composer_albums $composer $album $exartist $exalbum\""
   fi
   album=
   composer=
@@ -2179,7 +2192,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_composers "$composer" "$exartist"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_composers $composer $exartist\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_composers $composer $exartist\""
   fi
   composer=
 }
@@ -2191,7 +2204,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_genres "$genre" "$exalbum"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_genres $genre $exalbum\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_genres $genre $exalbum\""
   fi
   genre=
 }
@@ -2203,7 +2216,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_genre_albums "$genre" "$album" "$exartist" "$exalbum"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_albums $genre $album $exartist $exalbum\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_genre_albums $genre $album $exartist $exalbum\""
   fi
   album=
   genre=
@@ -2218,7 +2231,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_genre_artists "$genre" "$artist" "$exartist" "$exalbum"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_genre_artists $genre $artist $exartist $exalbum\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_genre_artists $genre $artist $exartist $exalbum\""
   fi
   artist=
   genre=
@@ -2230,7 +2243,7 @@ done
   if [ "${LOCAL}" = true ]; then
     list_playlists $playlist "$exartist"
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_playlists $playlist $exartist\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_playlists $playlist $exartist\""
   fi
   playlist=
 }
@@ -2238,21 +2251,21 @@ done
   if [ "${LOCAL}" = true ]; then
     list_radio $search
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_radio $search\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_radio $search\""
   fi
 }
 [ "$taglist" ] && {
   if [ "${LOCAL}" = true ]; then
     list_tags $search
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_tags $search\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_tags $search\""
   fi
 }
 [ "$zonelist" ] && {
   if [ "${LOCAL}" = true ]; then
     list_zones $search
   else
-    ssh $user@$server "bash -l -c \"${ROON}/bin/list_zones $search\""
+    ssh ${user}@${server} "bash -l -c \"${ROON}/bin/list_zones $search\""
   fi
 }
 
@@ -2261,16 +2274,16 @@ done
   case "${comm}" in
     "shuffle" | "unshuffle" | "repeat" | "unrepeat" | "mute" | "unmute" | "mute_all" | "next" | "previous" | "play" | "play_all" | "pause" | "pause_all" | "stop" | "stop_all" | "playpause")
       if [ "${LOCAL}" = true ]; then
-        if [ "$zone" ]; then
+        if [ "${zone}" ]; then
           ${ROON}/bin/zone_command -c ${comm} -z "${zone}"
         else
           ${ROON}/bin/zone_command -c ${comm}
         fi
       else
-        if [ "$zone" ]; then
-          ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c ${comm} -z ${zone}\""
+        if [ "${zone}" ]; then
+          ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c ${comm} -z ${zone}\""
         else
-          ssh $user@$server "bash -l -c \"${ROON}/bin/zone_command -c ${comm}\""
+          ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c ${comm}\""
         fi
       fi
       ;;
@@ -2295,16 +2308,16 @@ shuffled=
     [ "${exartist}" ] || exartist="None"
   }
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_artist_album -z "$zone" "$artist" "$album" "$exartist" "$exalbum"
+    if [ "${zone}" ]; then
+      play_artist_album -z "${zone}" "$artist" "$album" "$exartist" "$exalbum"
     else
       play_artist_album "$artist" "$album" "$exartist" "$exalbum"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_album -z $zone $artist $album $exartist $exalbum\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_artist_album -z ${zone} $artist $album $exartist $exalbum\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_album $artist $album $exartist $exalbum\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_artist_album $artist $album $exartist $exalbum\""
     fi
   fi
   album=
@@ -2315,16 +2328,16 @@ shuffled=
   [ "${album}" == "default" ] && album=$(get_default_ini DefaultAlbum)
   printf "\nSearching for album and track: \"$album\" and \"$track\"\n"
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_album_track -z "$zone" "$album" "$track"
+    if [ "${zone}" ]; then
+      play_album_track -z "${zone}" "$album" "$track"
     else
       play_album_track "$album" "$track"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_album_track -z $zone $album $track\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_album_track -z ${zone} $album $track\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_album_track $album $track\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_album_track $album $track\""
     fi
   fi
   album=
@@ -2338,16 +2351,16 @@ shuffled=
     [ "${exartist}" ] || exartist="None"
   }
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_artist_track -z "$zone" "$artist" "$track" "$exartist" "$exalbum"
+    if [ "${zone}" ]; then
+      play_artist_track -z "${zone}" "$artist" "$track" "$exartist" "$exalbum"
     else
       play_artist_track "$artist" "$track" "$exartist" "$exalbum"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_track -z $zone $artist $track $exartist $exalbum\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_artist_track -z ${zone} $artist $track $exartist $exalbum\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist_track $artist $track $exartist $exalbum\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_artist_track $artist $track $exartist $exalbum\""
     fi
   fi
   artist=
@@ -2361,16 +2374,16 @@ shuffled=
     [ "${exartist}" ] || exartist="None"
   }
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_genre_album -z "$zone" "$genre" "$album" "$exartist" "$exalbum"
+    if [ "${zone}" ]; then
+      play_genre_album -z "${zone}" "$genre" "$album" "$exartist" "$exalbum"
     else
       play_genre_album "$genre" "$album" "$exartist" "$exalbum"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album -z $zone $genre $album $exartist $exalbum\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_genre_album -z ${zone} $genre $album $exartist $exalbum\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_album $genre $album $exartist $exalbum\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_genre_album $genre $album $exartist $exalbum\""
     fi
   fi
   album=
@@ -2385,16 +2398,16 @@ shuffled=
     [ "${exartist}" ] || exartist="None"
   }
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_composer_album -z "$zone" "$composer" "$album" "$exartist" "$exalbum"
+    if [ "${zone}" ]; then
+      play_composer_album -z "${zone}" "$composer" "$album" "$exartist" "$exalbum"
     else
       play_composer_album "$composer" "$album" "$exartist" "$exalbum"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer_album -z $zone $composer $album $exartist $exalbum\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_composer_album -z ${zone} $composer $album $exartist $exalbum\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer_album $composer $album $exartist $exalbum\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_composer_album $composer $album $exartist $exalbum\""
     fi
   fi
   album=
@@ -2407,16 +2420,16 @@ shuffled=
     [ "${exartist}" ] || exartist="None"
   }
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_genre_artist -z "$zone" "$genre" "$artist" "$exartist" "$exalbum"
+    if [ "${zone}" ]; then
+      play_genre_artist -z "${zone}" "$genre" "$artist" "$exartist" "$exalbum"
     else
       play_genre_artist "$genre" "$artist" "$exartist" "$exalbum"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist -z $zone $genre $artist $exartist $exalbum\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_genre_artist -z ${zone} $genre $artist $exartist $exalbum\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre_artist $genre $artist $exartist $exalbum\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_genre_artist $genre $artist $exartist $exalbum\""
     fi
   fi
   artist=
@@ -2426,16 +2439,16 @@ shuffled=
   [ "${artist}" == "default" ] && artist=$(get_default_ini DefaultArtist)
   printf "\nSearching for artist: \"$artist\"\n"
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_artist $shuffled -z "$zone" "$artist" "$exartist"
+    if [ "${zone}" ]; then
+      play_artist $shuffled -z "${zone}" "$artist" "$exartist"
     else
       play_artist $shuffled "$artist" "$exartist"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $shuffled -z $zone $artist $exartist\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_artist $shuffled -z ${zone} $artist $exartist\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_artist $shuffled $artist $exartist\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_artist $shuffled $artist $exartist\""
     fi
   fi
 }
@@ -2443,16 +2456,16 @@ shuffled=
   [ "${composer}" == "default" ] && composer=$(get_default_ini DefaultComposer)
   printf "\nSearching for composer: \"$composer\"\n"
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_composer -z "$zone" "$composer" "$exartist"
+    if [ "${zone}" ]; then
+      play_composer -z "${zone}" "$composer" "$exartist"
     else
       play_composer "$composer" "$exartist"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer -z $zone $composer $exartist\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_composer -z ${zone} $composer $exartist\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_composer $composer $exartist\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_composer $composer $exartist\""
     fi
   fi
 }
@@ -2460,16 +2473,16 @@ shuffled=
   [ "${genre}" == "default" ] && genre=$(get_default_ini DefaultGenre)
   printf "\nSearching for genre: \"$genre\"\n"
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_genre $shuffled -z "$zone" "$genre" "$exalbum"
+    if [ "${zone}" ]; then
+      play_genre $shuffled -z "${zone}" "$genre" "$exalbum"
     else
       play_genre $shuffled "$genre" "$exalbum"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $shuffled -z $zone $genre $exalbum\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_genre $shuffled -z ${zone} $genre $exalbum\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_genre $shuffled $genre $exalbum\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_genre $shuffled $genre $exalbum\""
     fi
   fi
 }
@@ -2477,16 +2490,16 @@ shuffled=
   [ "${tag}" == "default" ] && tag=$(get_default_ini DefaultTag)
   printf "\nSearching for tag: \"$tag\"\n"
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_tag -z "$zone" "$tag"
+    if [ "${zone}" ]; then
+      play_tag -z "${zone}" "$tag"
     else
       play_tag "$tag"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_tag -z $zone $tag\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_tag -z ${zone} $tag\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_tag $tag\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_tag $tag\""
     fi
   fi
 }
@@ -2494,48 +2507,48 @@ shuffled=
   [ "${radio}" == "default" ] && radio=$(get_default_ini DefaultRadio)
   printf "\nSearching for radio station: \"$radio\"\n"
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_radio -z "$zone" "${radio}"
+    if [ "${zone}" ]; then
+      play_radio -z "${zone}" "${radio}"
     else
       play_radio "${radio}"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio -z ${zone} ${radio}\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_radio -z ${zone} ${radio}\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_radio ${radio}\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_radio ${radio}\""
     fi
   fi
 }
 [ "$track" ] && {
   printf "\nSearching for track: \"$track\"\n"
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_track -z "$zone" "$track"
+    if [ "${zone}" ]; then
+      play_track -z "${zone}" "$track"
     else
       play_track "$track"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_track -z $zone $track\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_track -z ${zone} $track\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_track $track\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_track $track\""
     fi
   fi
 }
 
 [ "${volume}" ] && {
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
+    if [ "${zone}" ]; then
       set_volume -v ${volume} -z "${zone}" ${grouped} ${relative} ${step}
     else
       set_volume -v ${volume} ${grouped} ${relative} ${step}
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -z ${zone} ${grouped} ${relative} ${step}\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/set_volume -v ${volume} -z ${zone} ${grouped} ${relative} ${step}\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/set_volume -v ${volume} ${grouped} ${relative} ${step}\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/set_volume -v ${volume} ${grouped} ${relative} ${step}\""
     fi
   fi
 }
@@ -2544,16 +2557,16 @@ shuffled=
   [ "${album}" == "default" ] && album=$(get_default_ini DefaultAlbum)
   printf "\nSearching for album: \"$album\"\n"
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_album -z "$zone" "$album" "$exalbum"
+    if [ "${zone}" ]; then
+      play_album -z "${zone}" "$album" "$exalbum"
     else
       play_album "$album" "$exalbum"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_album -z $zone $album $exalbum\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_album -z ${zone} $album $exalbum\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_album $album $exalbum\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_album $album $exalbum\""
     fi
   fi
 }
@@ -2562,16 +2575,16 @@ shuffled=
   [ "${playlist}" == "default" ] && playlist=$(get_default_ini DefaultPlaylist)
   printf "\nSearching for playlist: \"$playlist\"\n"
   if [ "${LOCAL}" = true ]; then
-    if [ "$zone" ]; then
-      play_playlist $shuffled -z "$zone" "$playlist" "$exartist"
+    if [ "${zone}" ]; then
+      play_playlist $shuffled -z "${zone}" "$playlist" "$exartist"
     else
       play_playlist $shuffled "$playlist" "$exartist"
     fi
   else
-    if [ "$zone" ]; then
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $shuffled -z $zone $playlist $exartist\""
+    if [ "${zone}" ]; then
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_playlist $shuffled -z ${zone} $playlist $exartist\""
     else
-      ssh $user@$server "bash -l -c \"${ROON}/bin/play_playlist $shuffled $playlist $exartist\""
+      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/play_playlist $shuffled $playlist $exartist\""
     fi
   fi
 }
