@@ -483,17 +483,24 @@ show_versions() {
 
 # Display RoonCommandLine info, versions, and update availability
 show_about() {
+  F_URL="https://community.roonlabs.com/search?q=RoonCommandLine"
+  R_URL="https://github.com/doctorfree/RoonCommandLine"
+  W_URL="https://github.com/doctorfree/RoonCommandLine/wiki"
   heading "About RoonCommandLine" "About"
   if [ "${have_rich}" ]; then
-    rich "[red]RoonCommandLine[/] is an open source command line suite of utilities to" -p
+    rich "[cyan]RoonCommandLine[/] is an open source command line suite of utilities to" -p
     rich "control the [green]Roon[/] audio system using the [green]Python Roon API[/] facility." -p
     printf "\n"
-    rich "[red]RoonCommandLine[/] enables automation of [green]Roon[/] actions and provides an" -p
+    rich "[cyan]RoonCommandLine[/] enables automation of [green]Roon[/] actions and provides an" -p
     rich "additional layer of convenience. Scripted [green]Roon[/] actions enable quick" -p
     rich "and easy control and configuration of [green]Roon[/] in automated environments." -p
     printf "\n"
-    rich "[red]RoonCommandLine[/] is written in [yellow]Bash[/] and [yellow]Python[/] by Ronald Record." -p
-    rich "Visit the [red]RoonCommandLine[/] repository at [link=https://github.com/doctorfree/RoonCommandLine#readme][yellow]https://github.com/doctorfree/RoonCommandLine[/yellow][/link]" -p
+    rich "[cyan]RoonCommandLine[/] is written in [yellow]Bash[/] and [yellow]Python[/] by Ronald Record." -p
+    rich "The [green]Python Roon API[/] is written and maintained by Greg Dowling." -p
+    printf "\n"
+    rich "Visit the [magenta]RoonCommandLine repo[/] at [link=${R_URL}#readme][yellow]${R_URL}[/yellow][/link]" -p
+    rich "Visit the [magenta]RoonCommandLine wiki[/] at [link=${W_URL}][yellow]${W_URL}[/yellow][/link]" -p
+    rich "View [magenta]Roon Community posts[/] on [cyan]RoonCommandLine[/] at [link=${F_URL}][yellow]${F_URL}[/yellow][/link]" -p
   else
     printf "\n'RoonCommandLine' is an open source command line suite of utilities to"
     printf "\ncontrol the 'Roon' audio system using the 'Python Roon API' facility.\n"
@@ -501,7 +508,10 @@ show_about() {
     printf "\nadditional layer of convenience. Scripted 'Roon' actions enable quick"
     printf "\nand easy control and configuration of 'Roon' in automated environments.\n"
     printf "\n'RoonCommandLine' is written in 'Bash' and 'Python' by Ronald Record."
-    printf "\nVisit the 'RoonCommandLine' repository at https://github.com/doctorfree/RoonCommandLine\n"
+    printf "\nThe 'Python Roon API' is written and maintained by Greg Dowling.\n"
+    printf "\nVisit the 'RoonCommandLine' repository at ${R_URL}"
+    printf "\nVisit the 'RoonCommandLine' wiki at ${W_URL}"
+    printf "\nView Roon Community posts on 'RoonCommandLine' at ${F_URL}\n"
   fi
   show_versions
 }
@@ -552,7 +562,7 @@ show_info() {
   [ "${fullinfo}" ] && {
     printf "\n"
     ${ROON}/bin/get_zone_volume
-    show_now_playing
+    show_now_playing -p
   }
 }
 
@@ -748,6 +758,7 @@ select_zone() {
             [ ${status} -eq 0 ] || {
               echo "Unable to set zone for zone = $opt"
             }
+            [ -f ${ROONCONF} ] && . ${ROONCONF}
             break 2
           else
             printf "\n\nInvalid option: ${opt}"
@@ -894,6 +905,7 @@ select_default() {
               else
                 ssh ${user}@${server} "bash -l -c \"${ROON}/bin/set_zone ${choice}\""
               fi
+              [ -f ${ROONCONF} ] && . ${ROONCONF}
             }
             break
             ;;
@@ -1697,7 +1709,7 @@ main_menu() {
           break
           ;;
         "Now Playing"*,* | *,"Now Playing"* | "N",* | *,"N")
-          show_now_playing "" "${ROON_ZONE}"
+          show_now_playing -p
           prompt_continue
           break
           ;;
@@ -2013,6 +2025,7 @@ done
     echo "Exiting"
     exit ${status}
   }
+  [ -f ${ROONCONF} ] && . ${ROONCONF}
 }
 
 # Zone Grouping
