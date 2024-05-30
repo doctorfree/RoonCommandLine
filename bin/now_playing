@@ -15,6 +15,18 @@ cd ${ROONAPI} || exit 1
 
 [ -f $NOWP ] || exit 2
 
+usage() {
+  printf "\nUsage: now_playing [-a] [-h] [-p] [-P] [-z ZONE]"
+  printf "\nWhere:"
+  printf "\n\t-a indicates all states"
+  printf "\n\t-p indicates list only playing states"
+  printf "\n\t-P indicates list only paused states"
+  printf "\n\t-z ZONE specifies the Roon zone in which to query"
+  printf "\n\t   '-z default' indicates the default zone, '-z last' the last zone used"
+  printf "\n\t-h displays this usage message and exits\n\n"
+  exit 1
+}
+
 # Use a Python virtual environment
 [ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
 [[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
@@ -34,13 +46,16 @@ fi
 
 aflag=
 pflag=
-while getopts "apPz:" flag; do
+while getopts "ahpPz:" flag; do
   case $flag in
     z)
       ZONE="$OPTARG"
       ;;
     a)
       aflag="-a"
+      ;;
+    h)
+      usage
       ;;
     p)
       pflag="-p"

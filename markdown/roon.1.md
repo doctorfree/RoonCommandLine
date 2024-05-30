@@ -148,7 +148,7 @@ The `volume` argument has the format `[g:][r:][s:]num` where:
 Outputs are queried and the specified volume level converted to dB if necessary
 
 **-z** zone
-: Selects the Roon Zone in which to play
+: Selects the Roon Zone in which to play, '-z default' indicates the default zone, '-z last' the last zone used
 
 **-c** **[**group | ungroup | play | play_all | pause | pause_all | playpause | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all**]**
 : Issues the command in the selected zone or all zones (`mute_all`, `play_all`, `pause_all`, `stop_all`)
