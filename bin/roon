@@ -324,19 +324,14 @@ usage() {
   [ "${noexit}" ] || exit 1
 }
 
-# Display a heading with rich-cli, figlet, or printf
+# Display a heading with rich-cli or printf
 heading() {
   clear_screen
   if [ "${have_rich}" ]; then
     rich "[cyan]$1[/cyan]" -p -a rounded -c -C
   else
-    if [ "${use_figlet}" ]; then
-      show_figlet "$2"
-    else
-      printf "\n$1\n"
-    fi
+    printf "\n$1\n"
   fi
-  printf "\n"
 }
 
 # Add a component to the PATH environment variable
