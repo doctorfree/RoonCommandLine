@@ -272,8 +272,10 @@ clear
 trap 'cleanup' SIGINT SIGKILL SIGTERM
 
 title=$(gum style --bold --foreground 12 "$(figlet -d /usr/local/Roon/etc -f Graceful Roon)")
+title2=$(gum style --bold --foreground 12 "$(figlet -d /usr/local/Roon/etc -f Graceful Command)")
+title3=$(gum style --bold --foreground 12 "$(figlet -d /usr/local/Roon/etc -f Graceful Line)")
 subtitle=$(gum style --italic --foreground 12 'Automated Control of Roon')
-info=$(gum join --vertical --align center "${title}" "${subtitle}")
+info=$(gum join --vertical --align center "${title}" "${title2}" "${title3}" "${subtitle}")
 
 art=$(gum style --foreground "${main_color}" '          ,~-.
          (  ʻ )-.          ,~ʻ`-.
