@@ -475,11 +475,13 @@ show_versions() {
       fi
     fi
   else
-    if [ "${have_rich}" ]; then
-      rich "[red]Roon GUI[/] not installed" -p
-    else
-      printf "\nRoon GUI not installed\n"
-    fi
+    [ "${have_flat}" ] && {
+      if [ "${have_rich}" ]; then
+        rich "[red]Roon GUI[/] not installed" -p
+      else
+        printf "\nRoon GUI not installed\n"
+      fi
+    }
   fi
   if [ "${have_tui}" ]; then
     release_version=$(${ROON}/etc/install-roon-tui version)
@@ -569,6 +571,14 @@ install_roon_tui() {
 
 # Display RoonCommandLine info, versions, and update availability
 show_about() {
+  [ "${have_gum}" ] && [ "${have_figlet}" ] && {
+    [ -x ${ROON}/bin/asciifetch ] && {
+      clear
+      ${ROON}/bin/asciifetch -a -q
+      [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
+      sleep 3
+    }
+  }
   F_URL="https://community.roonlabs.com/search?q=RoonCommandLine"
   R_URL="https://github.com/doctorfree/RoonCommandLine"
   W_URL="https://github.com/doctorfree/RoonCommandLine/wiki"
@@ -1464,7 +1474,7 @@ main_menu() {
     else
       [ -x ${ROONETC}/install-fzf ] && options+=("Install fzf")
     fi
-    if [ "${have_flat}" ]; then
+    [ "${have_flat}" ] && {
       if [ "${have_gui}" ]; then
         options+=("Open Roon GUI    [G]")
         [ "${update_gui}" ] && {
@@ -1473,7 +1483,7 @@ main_menu() {
       else
         [ -x ${ROONETC}/install-roon-gui ] && options+=("Install Roon GUI [G]")
       fi
-    fi
+    }
     have_tui=$(type -p roon-tui)
     if [ "${have_tui}" ]; then
       options+=("Open Roon TUI    [T]")
