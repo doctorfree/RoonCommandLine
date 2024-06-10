@@ -57,6 +57,15 @@ install_roon_tui() {
   touch ${HOME}/.config/roon-tui/config.json
 }
 
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$1${PATH:+":$PATH"}"
+  fi
+}
+
+pathadd "${HOME}/.local/bin"
+export PATH
+
 # Use a Github API token if one is set
 [ "${GITHUB_TOKEN}" ] || {
   [ "${GH_API_TOKEN}" ] && export GITHUB_TOKEN="${GH_API_TOKEN}"

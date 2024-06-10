@@ -2745,22 +2745,37 @@ shuffled=
 if [ "${open_roon_gui}" ]; then
   [ -x ${ROON}/bin/roongui ] && ${ROON}/bin/roongui
 else
-  [ "${show_roon_menu}" ] && {
-    set_fzf_release
-    set_gui_release
-    set_tui_release
-    main_menu
-  }
-fi
-if [ "${open_roon_tui}" ]; then
-  [ -x ${ROON}/bin/roontui ] && ${ROON}/bin/roontui
-else
-  [ "${show_roon_menu}" ] && {
-    set_fzf_release
-    set_gui_release
-    set_tui_release
-    main_menu
-  }
+  if [ "${open_roon_tui}" ]; then
+    [ -x ${ROON}/bin/roontui ] && ${ROON}/bin/roontui
+  else
+    [ "${show_roon_menu}" ] && {
+      clear
+      have_gum=$(type -p gum)
+      have_figlet=$(type -p figlet)
+      if [ "${have_gum}" ] && [ "${have_figlet}" ]; then
+        if [ -x ${ROON}/bin/asciifetch ]; then
+          ${ROON}/bin/asciifetch -a -q
+          [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
+        else
+          if [ "${have_rich}" ]; then
+            heading "Welcome to RoonCommandLine" "Roon Command"
+          else
+            printf "\nWelcome to RoonCommandLine\n"
+          fi
+        fi
+      else
+        if [ "${have_rich}" ]; then
+          heading "Welcome to RoonCommandLine" "Roon Command"
+        else
+          printf "\nWelcome to RoonCommandLine\n"
+        fi
+      fi
+      set_fzf_release
+      set_gui_release
+      set_tui_release
+      main_menu
+    }
+  fi
 fi
 
 exit 0

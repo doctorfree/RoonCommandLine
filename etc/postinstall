@@ -280,10 +280,28 @@ else
   echo "List commands will not function properly."
 fi
 
-[ "${USER}" ] && {
+if [ "${USER}" ]; then
   GROUP=$(id -g -n "${USER}")
   chown -R "${USER}":"${GROUP}" ${ROONETC}
-}
+  if [ "${USER}" == "root" ]; then
+    SUDO=
+    SARG=
+    SUSR=
+  else
+    SUDO="sudo"
+    SARG="-u"
+    SUSR="${USER}"
+  fi
+else
+  SUDO=
+  SARG=
+  SUSR=
+fi
+
+# Install utilities used by the RoonCommandLine menu system
+[ -x ${ROON}/etc/install-figlet ] && ${SUDO} ${SARG} ${SUSR} ${ROON}/etc/install-figlet
+[ -x ${ROON}/etc/install-fzf ] && ${SUDO} ${SARG} ${SUSR} ${ROON}/etc/install-fzf
+[ -x ${ROON}/etc/install-gum ] && ${SUDO} ${SARG} ${SUSR} ${ROON}/etc/install-gum
 
 echo ""
 echo "In order to configure the Python Roon API we must set the IP address"
@@ -294,15 +312,8 @@ echo "to authorize discovery"
 echo ""
 
 # Get and set the Roon Core IP address
-if [ "${USER}" ]; then
-  if [ "${USER}" == "root" ]; then
-    ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
-  else
-    sudo -E -u "${USER}" ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
-  fi
-else
-  ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
-fi
+${SUDO} ${SARG} ${SUSR} ${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
+
 echo "Approval granted, retrieving zones and zone info ..."
 sleep 5
 CORE_IP=$(cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } ')
@@ -320,28 +331,12 @@ groupOne=
 groupTwo=
 groupRee=
 groupFor=
-if [ "${USER}" ]; then
-  if [ "${USER}" == "root" ]; then
-    zones=$(${ROON}/bin/get_zones)
-  else
-    zones=$(sudo -E -u "${USER}" ${ROON}/bin/get_zones)
-  fi
-else
-  zones=$(${ROON}/bin/get_zones)
-fi
+zones=$(${SUDO} ${SARG} ${SUSR} ${ROON}/bin/get_zones)
 numZones=$(echo "${zones}" | awk -F ',' ' { print NF } ')
 numWith=0
 [ ${numZones} -gt 0 ] && {
   defaultZone=$(echo "${zones}" | awk -F ',' ' { print $1 } ')
-  if [ "${USER}" ]; then
-    if [ "${USER}" == "root" ]; then
-      withDefaultZone=$(${ROON}/bin/get_zone_info -l -z "${defaultZone}")
-    else
-      withDefaultZone=$(sudo -E -u ${USER} ${ROON}/bin/get_zone_info -l -z "${defaultZone}")
-    fi
-  else
-    withDefaultZone=$(${ROON}/bin/get_zone_info -l -z "${defaultZone}")
-  fi
+  withDefaultZone=$(${SUDO} ${SARG} ${SUSR} ${ROON}/bin/get_zone_info -l -z "${defaultZone}")
   numWith=$(echo "${withDefaultZone}" | awk -F ',' ' { print NF } ')
 }
 [ ${numZones} -gt 2 ] && {
@@ -374,15 +369,7 @@ numWith=0
 
     zoneTwo=${Array3[0]}
     [ "${zoneTwo}" ] || zoneTwo=${arrayone[1]}
-    if [ "${USER}" ]; then
-      if [ "${USER}" == "root" ]; then
-        withZoneTwo=$(${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
-      else
-        withZoneTwo=$(sudo -E -u ${USER} ${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
-      fi
-    else
-      withZoneTwo=$(${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
-    fi
+    withZoneTwo=$(${SUDO} ${SARG} ${SUSR} ${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
     numWithTwo=$(echo "${withZoneTwo}" | awk -F ',' ' { print NF } ')
     [ "${numWithTwo}" ] && {
       [ -z "${numWithTwo//[0-9]}" ] && {
@@ -400,15 +387,7 @@ numWith=0
 }
 [ ${numZones} -gt 3 ] && {
   secondZone=$(echo "${zones}" | awk -F ',' ' { print $2 } ' | sed -e "s/^ //")
-  if [ "${USER}" ]; then
-    if [ "${USER}" == "root" ]; then
-      withSecondZone=$(${ROON}/bin/get_zone_info -l -z "${secondZone}")
-    else
-      withSecondZone=$(sudo -E -u ${USER} ${ROON}/bin/get_zone_info -l -z "${secondZone}")
-    fi
-  else
-    withSecondZone=$(${ROON}/bin/get_zone_info -l -z "${secondZone}")
-  fi
+  withSecondZone=$(${SUDO} ${SARG} ${SUSR} ${ROON}/bin/get_zone_info -l -z "${secondZone}")
   withSecondZone=$(echo ${withSecondZone} | sed -e "s/${defaultZone},//")
   numWith=$(echo "${withSecondZone}" | awk -F ',' ' { print NF } ')
   [ -z "${numWith//[0-9]}" ] && {
@@ -425,15 +404,7 @@ numWith=0
 }
 [ ${numZones} -gt 4 ] && {
   lastZone=$(echo "${zones}" | awk -F ',' ' { print $(NF) } ' | sed -e "s/^ //")
-  if [ "${USER}" ]; then
-    if [ "${USER}" == "root" ]; then
-      withLastZone=$(${ROON}/bin/get_zone_info -l -z "${lastZone}")
-    else
-      withLastZone=$(sudo -E -u ${USER} ${ROON}/bin/get_zone_info -l -z "${lastZone}")
-    fi
-  else
-    withLastZone=$(${ROON}/bin/get_zone_info -l -z "${lastZone}")
-  fi
+  withLastZone=$(${SUDO} ${SARG} ${SUSR} ${ROON}/bin/get_zone_info -l -z "${lastZone}")
   withLastZone=$(echo ${withLastZone} | sed -e "s/${defaultZone},//")
   withLastZone=$(echo ${withLastZone} | sed -e "s/${secondZone},//")
   numWith=$(echo "${withLastZone}" | awk -F ',' ' { print NF } ')

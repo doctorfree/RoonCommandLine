@@ -4,7 +4,6 @@
 #
 # Run with the command:
 #    flatpak run com.theappgineer.community_remote
-#    https://github.com/TheAppgineer/community_remote/releases/download/0.0.3/community_remote-linux-x86_64.tar.gz
 
 set_download_url() {
   OWNER=TheAppgineer
@@ -26,6 +25,15 @@ get_roon_gui_release() {
 install_roon_gui() {
   flatpak install -y --noninteractive flathub com.theappgineer.community_remote
 }
+
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$1${PATH:+":$PATH"}"
+  fi
+}
+
+pathadd "${HOME}/.local/bin"
+export PATH
 
 # Use a Github API token if one is set
 [ "${GITHUB_TOKEN}" ] || {

@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$1${PATH:+":$PATH"}"
+  fi
+}
+
+pathadd "${HOME}/.local/bin"
+pathadd "/usr/local/bin"
+export PATH
+
+have_figlet=$(type -p figlet)
+[ "${have_figlet}" ] || {
+  have_make=$(type -p make)
+  if [ "${have_make}" ]; then
+    printf "\nInstalling figlet\n"
+    uid=$(id -u)
+    SUDO="sudo"
+    if [ "${EUID}" ]; then
+      [ ${EUID} -eq 0 ] && SUDO=
+    else
+      [ ${uid} -eq 0 ] && SUDO=
+    fi
+    HERE=$(pwd)
+    git clone https://github.com/cmatsuoka/figlet /tmp/figlet$$ > /dev/null 2>&1
+    cd /tmp/figlet$$
+    ${SUDO} make install > /dev/null 2>&1
+    cd "${HERE}"
+    ${SUDO} rm -rf /tmp/figlet$$
+  else
+    printf "\nInstallation of figlet requires 'make' but 'make' not found."
+    printf "\nInstall 'make' and try again. Skipping installation of figlet.\n"
+  fi
+}

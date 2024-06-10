@@ -1,0 +1,103 @@
+#!/bin/bash
+#
+# Install GUM
+
+set_download_url() {
+  OWNER=charmbracelet
+  PROJECT=gum
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+  [ "${have_curl}" ] && [ "${have_jq}" ] && {
+    DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+      | jq --raw-output '.assets | .[]?.browser_download_url' \
+      | grep "Linux_${mach}\.tar\.gz$")
+  }
+}
+
+get_gum_release() {
+  DL_URL=
+  set_download_url
+  echo "${DL_URL}" | awk -F '/' '{ print $8 }'
+}
+
+install_gum() {
+  darwin=
+  mach=$(uname -m)
+  platform=$(uname -s)
+  [ "${platform}" == "Darwin" ] && darwin=1
+  have_brew=$(type -p brew)
+  have_go=$(type -p go)
+  printf "\nInstalling gum ..."
+  if [ "${have_brew}" ] && [ "${darwin}" ]; then
+    brew install gum >/dev/null 2>&1
+  else
+    if [ "${have_go}" ]; then
+      go install github.com/charmbracelet/gum@latest >/dev/null 2>&1
+    else
+      DL_URL=
+      set_download_url
+      [ "${DL_URL}" ] && {
+        [ "${have_wget}" ] && {
+          printf "\nDownloading gum release asset ..."
+          TEMP_ASS="$(mktemp --suffix=.tgz)"
+          wget --quiet -O "${TEMP_ASS}" "${DL_URL}" > /dev/null 2>&1
+          chmod 644 "${TEMP_ASS}"
+          mkdir -p /tmp/gumd$$
+          tar -C /tmp/gumd$$ -xzf "${TEMP_ASS}"
+          [ -f /tmp/gumd$$/*/gum ] && {
+            [ -d ${HOME}/.local ] || mkdir -p ${HOME}/.local
+            [ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
+            rm -f ${HOME}/.local/bin/gum
+            cp /tmp/gumd$$/*/gum ${HOME}/.local/bin/gum
+            chmod 755 ${HOME}/.local/bin/gum
+          }
+          [ -f /tmp/gumd$$/*/manpages/gum* ] && {
+            [ -d ${HOME}/.local ] || mkdir -p ${HOME}/.local
+            [ -d ${HOME}/.local/share ] || mkdir -p ${HOME}/.local/share
+            [ -d ${HOME}/.local/share/man ] || mkdir -p ${HOME}/.local/share/man
+            [ -d ${HOME}/.local/share/man/man1 ] || mkdir -p ${HOME}/.local/share/man/man1
+            cp /tmp/gumd$$/*/manpages/gum* ${HOME}/.local/share/man/man1
+            chmod 644 ${HOME}/.local/share/man/man1/gum*
+          }
+          rm -f "${TEMP_ASS}"
+          rm -rf /tmp/gumd$$
+        }
+      }
+    fi
+  fi
+}
+
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$1${PATH:+":$PATH"}"
+  fi
+}
+
+pathadd "${HOME}/.local/bin"
+pathadd "${HOME}/go/bin"
+export PATH
+
+# Use a Github API token if one is set
+[ "${GITHUB_TOKEN}" ] || {
+  [ "${GH_API_TOKEN}" ] && export GITHUB_TOKEN="${GH_API_TOKEN}"
+  [ "${GITHUB_TOKEN}" ] || {
+    [ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
+  }
+}
+if [ "${GITHUB_TOKEN}" ]; then
+  AUTH_HEADER="-H \"Authorization: Bearer ${GITHUB_TOKEN}\""
+else
+  AUTH_HEADER=
+fi
+
+have_brew=$(type -p brew)
+have_curl=$(type -p curl)
+have_jq=$(type -p jq)
+have_wget=$(type -p wget)
+
+[ "$1" == "version" ] && {
+  get_gum_release
+  exit 0
+}
+
+have_gum=$(type -p gum)
+[ "${have_gum}" ] || install_gum

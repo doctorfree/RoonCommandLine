@@ -117,6 +117,8 @@ ${SUDO} chmod 755 "${OUT_DIR}"/${ROON}/bin/* \
                   "${OUT_DIR}"/${ROON}/etc/install-fzf \
                   "${OUT_DIR}"/${ROON}/etc/install-roon-gui \
                   "${OUT_DIR}"/${ROON}/etc/install-roon-tui \
+	                "${OUT_DIR}"/${ROON}/etc/install-figlet \
+	                "${OUT_DIR}"/${ROON}/etc/install-gum \
                   "${OUT_DIR}"/${ROON}/etc/roon_faded \
                   "${OUT_DIR}"/${ROON}/etc \
                   "${OUT_DIR}"/${ROON}/etc/postinstall \
