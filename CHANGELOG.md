@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+June 11, 2024 :
+RoonCommandLine version 2.1.3 release 2
+
+    This release integrates the `Roon Community Remote` GUI for Linux
+        * Add menu options to install, update, and open the Roon GUI
+        * Install `figlet`, `gum`, and `fzf` in postinstall
+        * Add splash screen to menu open
+
 May 30, 2024 :
 RoonCommandLine version 2.1.3 release 1
 

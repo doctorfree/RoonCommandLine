@@ -1,12 +1,10 @@
 # RoonCommandLine Release Notes
 
-RoonCommandLine version 2.1.3 release 1 provides support for specifying the default zone and last zone used
+RoonCommandLine version 2.1.3 release 2 integrates the `Roon Community Remote` GUI for Linux
 
-- Add usage to `get_zone_info`
-- Add `-P` flag to `now_playing` to list paused zones
-- Upgrade checks to prevent malformed `roon_api.ini`
-- Add `-z default` and `-z last` to most commands to specify default or last zone used
-- Updated man pages
+- Add menu options to install, update, and open the Roon GUI
+- Install `figlet`, `gum`, and `fzf` in postinstall
+- Add splash screen to menu open
 
 ## Installation
 
@@ -17,13 +15,13 @@ Download the latest Debian or RPM package format release from the **Assets** sec
 Install the package on Debian based systems by executing the command
 
 ```bash
-sudo apt install ./RoonCommandLine_2.1.2-4.deb
+sudo apt install ./RoonCommandLine_2.1.3-2.deb
 ```
 
 Install the package on RPM based systems by executing the command
 
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.1.2-4.rpm
+sudo yum localinstall ./RoonCommandLine-2.1.3-2.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
@@ -47,6 +45,14 @@ cd RoonCommandLine
 ```
 
 ## Release history
+
+RoonCommandLine version 2.1.3 release 1 provides support for specifying the default zone and last zone used
+
+- Add usage to `get_zone_info`
+- Add `-P` flag to `now_playing` to list paused zones
+- Upgrade checks to prevent malformed `roon_api.ini`
+- Add `-z default` and `-z last` to most commands to specify default or last zone used
+- Updated man pages
 
 RoonCommandLine version 2.1.2 release 4 provides improved info and formatting for now playing and media search.
 
@@ -131,6 +137,6 @@ Version 2.0.7 release 1 added support for:
 - Add `get_zone_remaining` to get remaining time for now playing in zone
 - Add `get_zone_volume` and `get_zone_attributes.py`
 
-View the full changelog for this release at <https://github.com/doctorfree/RoonCommandLine/blob/v2.1.2r4/CHANGELOG.md>
+View the full changelog for this release at <https://github.com/doctorfree/RoonCommandLine/blob/v2.1.3r2/CHANGELOG.md>
 
 See [CHANGELOG.md](https://github.com/doctorfree/RoonCommandLine/blob/master/CHANGELOG.md) for a full list of changes in every RoonCommandLine release
