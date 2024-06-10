@@ -23,6 +23,8 @@ get_roon_gui_release() {
 }
 
 install_roon_gui() {
+  flatpak remote-add --if-not-exists \
+    flathub https://dl.flathub.org/repo/flathub.flatpakrepo
   flatpak install -y --noninteractive flathub com.theappgineer.community_remote
 }
 
