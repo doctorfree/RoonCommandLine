@@ -177,8 +177,8 @@ ${SUDO} chmod 755 ${ROON}/bin/* \
   ${ROON}/etc/install-fzf \
   ${ROON}/etc/install-roon-gui \
   ${ROON}/etc/install-roon-tui \
-	${ROON}/etc/install-figlet
-	${ROON}/etc/install-gum
+  ${ROON}/etc/install-figlet
+  ${ROON}/etc/install-gum
   ${ROON}/etc/roon_faded \
   ${ROON}/etc \
   ${ROON}/api \
@@ -405,6 +405,11 @@ fi
   GROUP=$(id -g -n "${USER}")
   ${SUDO} chown -R "${USER}":"${GROUP}" ${ROONETC}
 }
+
+# Install utilities used by the RoonCommandLine menu system
+[ -x ${ROON}/etc/install-figlet ] && ${ROON}/etc/install-figlet
+[ -x ${ROON}/etc/install-fzf ] && ${ROON}/etc/install-fzf
+[ -x ${ROON}/etc/install-gum ] && ${ROON}/etc/install-gum
 
 echo ""
 echo "In order to configure the Python Roon API we must set the IP address"
