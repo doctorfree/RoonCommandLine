@@ -21,16 +21,16 @@
 roon - Command line control of the Roon Audio System
 .SH SYNOPSIS
 .PP
-\f[B]roon\f[R] [ \f[B]-EuU\f[R] ] [ \f[B]-L\f[R] ] [ \f[B]-S\f[R] ] [
-\f[B]-l\f[R] albums | artists | artalbums | composers | genres |
+\f[B]roon\f[R] [ \f[B]-bBEIOuU\f[R] ] [ \f[B]-L\f[R] ] [ \f[B]-S\f[R] ]
+[ \f[B]-l\f[R] albums | artists | artalbums | composers | genres |
 genalbums | genartists | playlists | tags | zones ] [ \f[B]-A\f[R] album
 ] [ \f[B]-a\f[R] artist ] [ \f[B]-C\f[R] composer ] [ \f[B]-g\f[R] genre
-] [ \f[B]-m\f[R] ] [ \f[B]-n\f[R] ] [ \f[B]-N\f[R] ] [ \f[B]-O\f[R] ] [
-\f[B]-p\f[R] playlist ] [ \f[B]-r\f[R] radio ] [ \f[B]-t\f[R] tag ] [
-\f[B]-s\f[R] search ] [-v volume] [ \f[B]-z\f[R] zone ] [ \f[B]-G\f[R]
-zone_group ] [ \f[B]-c\f[R] group | ungroup | play | play_all | pause |
-pause_all | stop | stop_all | next | previous | shuffle | repeat | mute
-| mute_all ] [ \f[B]-T\f[R] track ] [ \f[B]-f\f[R] on|onlog|off|status ]
+] [ \f[B]-m\f[R] ] [ \f[B]-n\f[R] ] [ \f[B]-N\f[R] ] [ \f[B]-p\f[R]
+playlist ] [ \f[B]-r\f[R] radio ] [ \f[B]-t\f[R] tag ] [ \f[B]-s\f[R]
+search ] [-v volume] [ \f[B]-z\f[R] zone ] [ \f[B]-G\f[R] zone_group ] [
+\f[B]-c\f[R] group | ungroup | play | play_all | pause | pause_all |
+stop | stop_all | next | previous | shuffle | repeat | mute | mute_all ]
+[ \f[B]-T\f[R] track ] [ \f[B]-f\f[R] on|onlog|off|status ]
 .SH DESCRIPTION
 .PP
 The \f[I]roon\f[R] command acts as a front-end for executing the
@@ -140,6 +140,12 @@ Selects an album to play
 \f[B]-a\f[R] artist
 Selects an artist to play
 .TP
+\f[B]-B\f[R]
+Installs the \f[B]Roon Community GUI\f[R]
+.TP
+\f[B]-b\f[R]
+Opens the \f[B]Roon Community GUI\f[R]
+.TP
 \f[B]-C\f[R] composer
 Selects a composer to play
 .TP
@@ -163,8 +169,13 @@ displays \[aq]now playing\[aq] information for zones actively playing
 displays \[aq]now playing\[aq] information for all zones regardless of
 state
 .TP
+\f[B]-I\f[R]
+Installs the \f[B]Roon TUI\f[R] terminal user interface for
+\f[I]Roon\f[R] and exits
+.TP
 \f[B]-O\f[R]
-opens the \f[B]roon-tui\f[R] terminal user interface for \f[I]Roon\f[R]
+Opens \f[B]Roon TUI\f[R] terminal user interface for \f[I]Roon\f[R] if
+available
 .TP
 \f[B]-p\f[R] playlist
 Selects a playlist to play

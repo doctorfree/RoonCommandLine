@@ -9,13 +9,15 @@ Usage: roon -A album -a artist -C composer -D destination zone -m -n -N -O
 Where:
 	-A album selects an album to play
 	-a artist selects an artist to list/play
+	-B installs the Roon Community GUI
+	-b opens the Roon Community GUI
 	-C composer selects a composer to play
 	-D 'destination zone' specifies the zone to transfer current queue to
 	-F 'from zone' specifies the zone to transfer from (default: last played)
 	-g genre selects a genre to list/play
 	-i displays zone information (combine with '-z zone' for extended
 		info on a specified zone, otherwise display info on all zones)
-	-I installs the roon-tui terminal user interface for Roon and exits
+	-I installs the Roon TUI terminal user interface for Roon and exits
 	-f [on|onlog|off|status] enables/disables fading/logging in specified zone
 		'on' enables fading, 'onlog' fading and logging, 'off' disables fading
 		(combine with '-z zone' for 'fading' in that zone)
@@ -23,7 +25,7 @@ Where:
 	-n displays 'now playing' information for zones actively playing
 	-N displays 'now playing' information for all zones
 		(combine with '-z zone' for 'now playing' in only that zone)
-	-O opens 'roon-tui' terminal user interface for Roon if available
+	-O opens 'Roon TUI' terminal user interface for Roon if available
 	-p playlist selects a playlist to play
 	-G zone_group specifies a zone grouping specified in roon_api.ini
 	-L setup roon to execute local commands rather than remote via SSH

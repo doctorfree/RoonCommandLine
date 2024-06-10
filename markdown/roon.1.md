@@ -10,7 +10,7 @@ roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
 
-**roon** [ **-EuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-m** ] [ **-n** ] [ **-N** ] [ **-O** ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | play_all | pause | pause_all | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ] [ **-f** on|onlog|off|status ]
+**roon** [ **-bBEIOuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-m** ] [ **-n** ] [ **-N** ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** group | ungroup | play | play_all | pause | pause_all | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ] [ **-f** on|onlog|off|status ]
 
 # DESCRIPTION
 The *roon* command acts as a front-end for executing the RoonCommandLine
@@ -84,6 +84,12 @@ Additional detail and info can be found in the
 **-a** artist
 : Selects an artist to play
 
+**-B**
+: Installs the **Roon Community GUI**
+
+**-b**
+: Opens the **Roon Community GUI**
+
 **-C** composer
 : Selects a composer to play
 
@@ -102,8 +108,11 @@ Additional detail and info can be found in the
 **-N**
 : displays 'now playing' information for all zones regardless of state
 
+**-I**
+: Installs the **Roon TUI** terminal user interface for *Roon* and exits
+
 **-O**
-: opens the **roon-tui** terminal user interface for *Roon*
+: Opens **Roon TUI** terminal user interface for *Roon* if available
 
 **-p** playlist
 : Selects a playlist to play
