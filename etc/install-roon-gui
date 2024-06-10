@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# Install roon-gui, a GUI front-end for Roon on Linux (uses Flatpak)
+#
+# Run with the command:
+#    flatpak run com.theappgineer.community_remote
+#    https://github.com/TheAppgineer/community_remote/releases/download/0.0.3/community_remote-linux-x86_64.tar.gz
+
+set_download_url() {
+  OWNER=TheAppgineer
+  PROJECT=community_remote
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+  [ "${have_curl}" ] && [ "${have_jq}" ] && {
+    DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+      | jq --raw-output '.assets | .[]?.browser_download_url' \
+      | grep "community_remote-linux")
+  }
+}
+
+get_roon_gui_release() {
+  DL_URL=
+  set_download_url
+  echo "${DL_URL}" | awk -F '/' '{ print $8 }'
+}
+
+install_roon_gui() {
+  flatpak install -y --noninteractive flathub com.theappgineer.community_remote
+}
+
+# Use a Github API token if one is set
+[ "${GITHUB_TOKEN}" ] || {
+  [ "${GH_API_TOKEN}" ] && export GITHUB_TOKEN="${GH_API_TOKEN}"
+  [ "${GITHUB_TOKEN}" ] || {
+    [ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
+  }
+}
+if [ "${GITHUB_TOKEN}" ]; then
+  AUTH_HEADER="-H \"Authorization: Bearer ${GITHUB_TOKEN}\""
+else
+  AUTH_HEADER=
+fi
+
+have_brew=$(type -p brew)
+have_curl=$(type -p curl)
+have_jq=$(type -p jq)
+have_wget=$(type -p wget)
+
+[ "$1" == "version" ] && {
+  get_roon_gui_release
+  exit 0
+}
+
+arm=
+darwin=
+mach=$(uname -m)
+platform=$(uname -s)
+[ "${platform}" == "Darwin" ] && darwin=1
+[ "${mach}" == "arm64" ] && arm=1
+[ "${darwin}" ] || {
+  [ "${arm}" ] && {
+    echo "Arm architecture not yet supported. Exiting."
+    exit 1
+  }
+}
+
+ROON="/usr/local/Roon"
+install_roon_gui

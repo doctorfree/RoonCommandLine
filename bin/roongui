@@ -1,0 +1,19 @@
+#!/bin/bash
+
+have_flat=$(type -p flatpak)
+
+if [ "${have_flat}" ]; then
+  flatpak info com.theappgineer.community_remote >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    flatpak run com.theappgineer.community_remote >/dev/null 2>&1 &
+  else
+    echo "The flatpak for com.theappgineer.community_remote not installed"
+    echo "Install with the command:"
+    echo "  flatpak install -y --noninteractive flathub com.theappgineer.community_remote"
+    echo "Then rerun roongui"
+    exit 1
+  fi
+else
+  echo "Cannot locate flatpak. Exiting."
+  exit 1
+fi

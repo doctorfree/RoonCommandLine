@@ -46,6 +46,8 @@ have_fzf=$(type -p fzf)
 have_jq=$(type -p jq)
 have_rich=$(type -p rich)
 have_tui=$(type -p roon-tui)
+have_flat=$(type -p flatpak)
+
 # Download URLs
 fzf_url="https://raw.githubusercontent.com/junegunn/fzf/master/install"
 rcl_url="https://raw.githubusercontent.com/doctorfree/RoonCommandLine"
@@ -53,7 +55,7 @@ rcl_url="https://raw.githubusercontent.com/doctorfree/RoonCommandLine"
 usage() {
   [ "${showusage}" ] && {
     if [ "${have_rich}" ]; then
-      rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-C[/] [yellow]composer[/] [cyan]-D[/] [yellow]destination zone[/] [cyan]-m -n -N -O[/]" --print
+      rich "[bold]Usage:[/] [bold italic green]roon[/] [cyan]-A[/] [yellow]album[/] [cyan]-a[/] [yellow]artist[/] [cyan]-bB -C[/] [yellow]composer[/] [cyan]-D[/] [yellow]destination zone[/] [cyan]-m -n -N -O[/]" --print
       rich "    [cyan]-F[/] [yellow]\[from zone][/] [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i[/]" --print
       rich "    [cyan]-I -l[/] [yellow]\[albums|artists|artalbums|albtracks|arttracks|composers|comalbums|[/]" --print
       rich "        [yellow]genres|genalbums|genartists|playlists|playtracks|tags|zones][/]" --print
@@ -64,13 +66,15 @@ usage() {
       rich "[bold]Where:[/]" --print
       rich "    [cyan]-A[/] [yellow]album[/] selects an album to play" --print
       rich "    [cyan]-a[/] [yellow]artist[/] selects an artist to list/play" --print
+      rich "    [cyan]-B[/] installs the Roon Community GUI" --print
+      rich "    [cyan]-b[/] opens the Roon Community GUI" --print
       rich "    [cyan]-C[/] [yellow]composer[/] selects a composer to play" --print
       rich "    [cyan]-D[/] [yellow]destination zone[/] specifies the zone to transfer current queue to" --print
       rich "    [cyan]-F[/] [yellow]from zone[/] specifies the zone to transfer from (default: last played)" --print
       rich "    [cyan]-g[/] [yellow]genre[/] selects a genre to list/play" --print
       rich "    [cyan]-i[/] displays zone information (combine with '[cyan]-z[/] [yellow]zone[/]' for extended" --print
       rich "        info on a specified zone, otherwise display info on all zones)" --print
-      rich "    [cyan]-I[/] installs the [green]roon-tui[/] terminal user interface for Roon and exits" --print
+      rich "    [cyan]-I[/] installs the [green]Roon TUI[/] terminal user interface for Roon and exits" --print
       rich "    [cyan]-f[/] [yellow]\[on|onlog|off|status][/] enables/disables fading/logging in specified zone" --print
       rich "        '[yellow]on[/]' enables fading, '[yellow]onlog[/]' fading and logging, '[yellow]off[/]' disables fading" --print
       rich "        (combine with '[cyan]-z[/] [yellow]zone[/]' for 'fading' in that zone)" --print
@@ -78,7 +82,7 @@ usage() {
       rich "    [cyan]-n[/] displays 'now playing' information for zones actively playing" --print
       rich "    [cyan]-N[/] displays 'now playing' information for all zones" --print
       rich "        (combine with '[cyan]-z[/] [yellow]zone[/]' for 'now playing' in only that zone)" --print
-      rich "    [cyan]-O[/] opens [green]roon-tui[/] terminal user interface for Roon if available" --print
+      rich "    [cyan]-O[/] opens [green]Roon TUI[/] terminal user interface for Roon if available" --print
       rich "    [cyan]-p[/] [yellow]playlist[/] selects a playlist to play" --print
       rich "    [cyan]-G[/] [yellow]zone_group[/] specifies a zone grouping specified in roon_api.ini" --print
       rich "    [cyan]-L[/] setup roon to execute local commands rather than remote via SSH" --print
@@ -133,13 +137,15 @@ usage() {
       printf "\n\t-X ex_album -x ex_artist [-EuU]"
       printf "\nWhere:\n\t-A album selects an album to play"
       printf "\n\t-a artist selects an artist to list/play"
+      printf "\n\t-B installs the Roon Community GUI"
+      printf "\n\t-b opens the Roon Community GUI"
       printf "\n\t-C composer selects a composer to play"
       printf "\n\t-D 'destination zone' specifies the zone to transfer current queue to"
       printf "\n\t-F 'from zone' specifies the zone to transfer from (default: last played)"
       printf "\n\t-g genre selects a genre to list/play"
       printf "\n\t-i displays zone information (combine with '-z zone' for extended"
       printf "\n\t\tinfo on a specified zone, otherwise display info on all zones)"
-      printf "\n\t-I installs the roon-tui terminal user interface for Roon and exits"
+      printf "\n\t-I installs the Roon TUI terminal user interface for Roon and exits"
       printf "\n\t-f [on|onlog|off|status] enables/disables fading/logging in specified zone"
       printf "\n\t\t'on' enables fading, 'onlog' fading and logging, 'off' disables fading"
       printf "\n\t\t(combine with '-z zone' for 'fading' in that zone)"
@@ -147,7 +153,7 @@ usage() {
       printf "\n\t-n displays 'now playing' information for zones actively playing"
       printf "\n\t-N displays 'now playing' information for all zones"
       printf "\n\t\t(combine with '-z zone' for 'now playing' in only that zone)"
-      printf "\n\t-O opens 'roon-tui' terminal user interface for Roon if available"
+      printf "\n\t-O opens 'Roon TUI' terminal user interface for Roon if available"
       printf "\n\t-p playlist selects a playlist to play"
       printf "\n\t-G zone_group specifies a zone grouping specified in roon_api.ini"
       printf "\n\t-L setup roon to execute local commands rather than remote via SSH"
@@ -449,31 +455,116 @@ show_versions() {
       printf "\nAvailable fzf version: ${release_version}\n"
     fi
   fi
+  if [ "${have_gui}" ]; then
+    release_version=$(${ROON}/etc/install-roon-gui version)
+    gv=$(flatpak info com.theappgineer.community_remote | grep Version | awk -F ':' '{ print $2 }')
+    install_version="$(echo -e "${gv}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    if [ "${have_rich}" ]; then
+      if [ "${install_version}" == "${release_version}" ]; then
+        rich "Installed [green]Roon GUI[/] version:        [yellow]${install_version}[/] ( current)" -p
+      else
+        rich "Installed [green]Roon GUI[/] version:        [yellow]${install_version}[/]" -p
+        rich "Available [green]Roon GUI[/] version:        [yellow]${release_version}[/]" -p
+      fi
+    else
+      printf "\nInstalled Roon GUI version: ${install_version}"
+      if [ "${install_version}" == "${release_version}" ]; then
+        printf " ( current)\n"
+      else
+        printf "\nAvailable Roon GUI version: ${release_version}\n"
+      fi
+    fi
+  else
+    if [ "${have_rich}" ]; then
+      rich "[red]Roon GUI[/] not installed" -p
+    else
+      printf "\nRoon GUI not installed\n"
+    fi
+  fi
   if [ "${have_tui}" ]; then
     release_version=$(${ROON}/etc/install-roon-tui version)
     install_version=$(roon-tui --version | awk '{ print $2 }')
     if [ "${have_rich}" ]; then
       if [ "${install_version}" == "${release_version}" ]; then
-        rich "Installed [green]roon-tui[/] version:        [yellow]${install_version}[/] ( current)" -p
+        rich "Installed [green]Roon TUI[/] version:        [yellow]${install_version}[/] ( current)" -p
       else
-        rich "Installed [green]roon-tui[/] version:        [yellow]${install_version}[/]" -p
-        rich "Available [green]roon-tui[/] version:        [yellow]${release_version}[/]" -p
+        rich "Installed [green]Roon TUI[/] version:        [yellow]${install_version}[/]" -p
+        rich "Available [green]Roon TUI[/] version:        [yellow]${release_version}[/]" -p
       fi
     else
-      printf "\nInstalled roon-tui version: ${install_version}"
+      printf "\nInstalled Roon TUI version: ${install_version}"
       if [ "${install_version}" == "${release_version}" ]; then
         printf " ( current)\n"
       else
-        printf "\nAvailable roon-tui version: ${release_version}\n"
+        printf "\nAvailable Roon TUI version: ${release_version}\n"
       fi
     fi
   else
     if [ "${have_rich}" ]; then
-      rich "[red]roon-tui[/] not installed" -p
+      rich "[red]Roon TUI[/] not installed" -p
     else
-      printf "\nroon-tui not installed\n"
+      printf "\nRoon TUI not installed\n"
     fi
   fi
+}
+
+set_fzf_release() {
+  fzf_release_version=$(curl -fsSL "${fzf_url}" | grep ^version= | awk -F '=' '{ print $2 }')
+  if [ "${have_fzf}" ]; then
+    fzf_install_version=$(fzf --version | awk '{ print $1 }')
+    update_fzf=$(check_three_version "${fzf_release_version}" "${fzf_install_version}")
+  else
+    fzf_install_version="uninstalled"
+    update_fzf=
+  fi
+}
+
+set_gui_release() {
+  gui_release_version=$(${ROON}/etc/install-roon-gui version)
+  if [ "${have_gui}" ]; then
+    gv=$(flatpak info com.theappgineer.community_remote | grep Version | awk -F ':' '{ print $2 }')
+    gui_install_version="$(echo -e "${gv}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    update_gui=$(check_three_version "${gui_release_version}" "${gui_install_version}")
+  else
+    gui_install_version="uninstalled"
+    update_gui=
+  fi
+}
+
+set_tui_release() {
+  tui_release_version=$(${ROON}/etc/install-roon-tui version)
+  if [ "${have_tui}" ]; then
+    tui_install_version=$(roon-tui --version | awk '{ print $2 }')
+    update_tui=$(check_three_version "${tui_release_version}" "${tui_install_version}")
+  else
+    tui_install_version="uninstalled"
+    update_tui=
+  fi
+}
+
+set_have_gui() {
+  if [ "${have_flat}" ]; then
+    flatpak info com.theappgineer.community_remote >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      have_gui=1
+    else
+      have_gui=
+    fi
+  else
+    have_gui=
+  fi
+}
+
+install_roon_gui() {
+  ${ROONETC}/install-roon-gui
+  set_have_gui
+  set_gui_release
+}
+
+install_roon_tui() {
+  ${ROONETC}/install-roon-tui
+  have_tui=$(type -p roon-tui)
+  set_tui_release
 }
 
 # Display RoonCommandLine info, versions, and update availability
@@ -485,28 +576,25 @@ show_about() {
   if [ "${have_rich}" ]; then
     rich "[cyan]RoonCommandLine[/] is an open source command line suite of utilities to" -p
     rich "control the [green]Roon[/] audio system using the [green]Python Roon API[/] facility." -p
-    printf "\n"
     rich "[cyan]RoonCommandLine[/] enables automation of [green]Roon[/] actions and provides an" -p
     rich "additional layer of convenience. Scripted [green]Roon[/] actions enable quick" -p
     rich "and easy control and configuration of [green]Roon[/] in automated environments." -p
-    printf "\n"
     rich "[cyan]RoonCommandLine[/] is written in [yellow]Bash[/] and [yellow]Python[/] by Ronald Record." -p
     rich "The [green]Python Roon API[/] is written and maintained by Greg Dowling." -p
-    printf "\n"
-    rich "Visit the [magenta]RoonCommandLine repo[/] at [link=${R_URL}#readme][yellow]${R_URL}[/yellow][/link]" -p
-    rich "Visit the [magenta]RoonCommandLine wiki[/] at [link=${W_URL}][yellow]${W_URL}[/yellow][/link]" -p
-    rich "View [magenta]Roon Community posts[/] on [cyan]RoonCommandLine[/] at [link=${F_URL}][yellow]${F_URL}[/yellow][/link]" -p
+    rich "[magenta]RoonCommandLine Repo[/]: [link=${R_URL}#readme][yellow]${R_URL}[/yellow][/link]" -p
+    rich "[magenta]RoonCommandLine Wiki[/]: [link=${W_URL}][yellow]${W_URL}[/yellow][/link]" -p
+    rich "[magenta]Roon Community Forum[/]: [link=${F_URL}][yellow]${F_URL}[/yellow][/link]" -p
   else
     printf "\n'RoonCommandLine' is an open source command line suite of utilities to"
-    printf "\ncontrol the 'Roon' audio system using the 'Python Roon API' facility.\n"
+    printf "\ncontrol the 'Roon' audio system using the 'Python Roon API' facility."
     printf "\n'RoonCommandLine' enables automation of 'Roon' actions and provides an"
     printf "\nadditional layer of convenience. Scripted 'Roon' actions enable quick"
-    printf "\nand easy control and configuration of 'Roon' in automated environments.\n"
+    printf "\nand easy control and configuration of 'Roon' in automated environments."
     printf "\n'RoonCommandLine' is written in 'Bash' and 'Python' by Ronald Record."
-    printf "\nThe 'Python Roon API' is written and maintained by Greg Dowling.\n"
-    printf "\nVisit the 'RoonCommandLine' repository at ${R_URL}"
-    printf "\nVisit the 'RoonCommandLine' wiki at ${W_URL}"
-    printf "\nView Roon Community posts on 'RoonCommandLine' at ${F_URL}\n"
+    printf "\nThe 'Python Roon API' is written and maintained by Greg Dowling."
+    printf "\nRoonCommandLine Repo: ${R_URL}"
+    printf "\nRoonCommandLine Wiki: ${W_URL}"
+    printf "\nRoon Community Forum: ${F_URL}\n"
   fi
   show_versions
 }
@@ -555,9 +643,8 @@ show_info() {
     fi
   done
   [ "${fullinfo}" ] && {
-    printf "\n"
-    ${ROON}/bin/get_zone_volume
     show_now_playing -p
+    ${ROON}/bin/get_zone_volume
   }
 }
 
@@ -1371,20 +1458,30 @@ main_menu() {
     have_fzf=$(type -p fzf)
     if [ "${have_fzf}" ]; then
       options+=("Now Playing      [N]")
-      fzf_release_version=$(curl -fsSL "${fzf_url}" | grep ^version= | awk -F '=' '{ print $2 }')
-      fzf_install_version=$(fzf --version | awk '{ print $1 }')
-      update_fzf=$(check_three_version "${fzf_release_version}" "${fzf_install_version}")
       [ "${update_fzf}" ] && {
         options+=("Upgrade Fzf -> ${fzf_release_version}")
       }
     else
       [ -x ${ROONETC}/install-fzf ] && options+=("Install fzf")
     fi
+    if [ "${have_flat}" ]; then
+      if [ "${have_gui}" ]; then
+        options+=("Open Roon GUI    [G]")
+        [ "${update_gui}" ] && {
+          options+=("Upgrade GUI -> ${gui_release_version}")
+        }
+      else
+        [ -x ${ROONETC}/install-roon-gui ] && options+=("Install Roon GUI [G]")
+      fi
+    fi
     have_tui=$(type -p roon-tui)
     if [ "${have_tui}" ]; then
-      options+=("Open roon-tui    [O]")
+      options+=("Open Roon TUI    [T]")
+      [ "${update_tui}" ] && {
+        options+=("Upgrade TUI -> ${tui_release_version}")
+      }
     else
-      [ -x ${ROONETC}/install-roon-tui ] && options+=("Install roon-tui [I]")
+      [ -x ${ROONETC}/install-roon-tui ] && options+=("Install Roon TUI [T]")
     fi
     options+=("About            [a]" "Examples         [e]")
     options+=("Info             [i]" "Usage            [u]" "Quit             [q]")
@@ -1708,16 +1805,43 @@ main_menu() {
           prompt_continue
           break
           ;;
-        "Open roon-tui"*,* | *,"Open roon-tui"* | "O",* | *,"O")
-          roontui
+        "Open Roon GUI"*,* | *,"Open Roon GUI"* | "G",* | *,"G")
+          if [ "${have_gui}" ]; then
+            roongui
+          else
+            install_roon_gui
+          fi
           break
           ;;
-        "Install roon-tui"*,* | *,"Install roon-tui"* | "I",* | *,"I")
-          ${ROONETC}/install-roon-tui
+        "Install Roon GUI"*,* | *,"Install Roon GUI"* | "G",* | *,"G")
+          install_roon_gui
+          break
+          ;;
+        "Upgrade GUI"*,* | *,"Upgrade GUI"*)
+          flatpak update -y --noninteractive com.theappgineer.community_remote
+          set_gui_release
+          break
+          ;;
+        "Open Roon TUI"*,* | *,"Open Roon TUI"* | "T",* | *,"T")
+          if [ "${have_tui}" ]; then
+            roontui
+          else
+            install_roon_tui
+          fi
+          break
+          ;;
+        "Install Roon TUI"*,* | *,"Install Roon TUI"* | "T",* | *,"T")
+          install_roon_tui
+          break
+          ;;
+        "Upgrade TUI"*,* | *,"Upgrade TUI"*)
+          ${ROON}/etc/install-roon-tui
+          set_tui_release
           break
           ;;
         "Upgrade Fzf"*,* | *,"Upgrade Fzf"* | "upgrade fzf"*,* | *,"upgrade fzf"*)
           upgrade_fzf
+          set_fzf_release
           break
           ;;
         "About"*,* | *,"About"* | "about"*,* | *,"about"* | "a",* | *,"a")
@@ -1752,20 +1876,29 @@ main_menu() {
   done
 }
 
+set_have_gui
 debug=
 info=
 fading=
 logfade=
 now_playing=
+inst_roon_gui=
+open_roon_gui=
 inst_roon_tui=
 open_roon_tui=
-while getopts A:a:c:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
+while getopts A:a:bBc:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
   case $flag in
     A)
       album="$OPTARG"
       ;;
     a)
       artist="$OPTARG"
+      ;;
+    B)
+      inst_roon_gui=1
+      ;;
+    b)
+      [ -x ${ROON}/bin/roongui ] && open_roon_gui=1
       ;;
     c)
       comm="$OPTARG"
@@ -1980,14 +2113,26 @@ while getopts A:a:c:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
   esac
 done
 
+[ "${inst_roon_gui}" ] && {
+  [ -x ${ROON}/etc/install-roon-gui ] && ${ROON}/etc/install-roon-gui
+  if [ -x ${ROON}/bin/roongui ]; then
+    ${ROON}/bin/roongui
+    echo ""
+    farewell_exit "Successful installation of Roon GUI"
+  else
+    echo "Installation of Roon GUI failed or unable to locate $ROON/bin/roongui"
+    echo "Exiting"
+    exit 1
+  fi
+}
 [ "${inst_roon_tui}" ] && {
   [ -x ${ROON}/etc/install-roon-tui ] && ${ROON}/etc/install-roon-tui
   if [ -x ${ROON}/bin/roontui ]; then
     ${ROON}/bin/roontui
     echo ""
-    farewell_exit "Successful installation of roon-tui"
+    farewell_exit "Successful installation of Roon TUI"
   else
-    echo "Installation of roon-tui failed or unable to locate $ROON/bin/roontui"
+    echo "Installation of Roon TUI failed or unable to locate $ROON/bin/roontui"
     echo "Exiting"
     exit 1
   fi
@@ -2597,10 +2742,25 @@ shuffled=
   fi
 }
  
+if [ "${open_roon_gui}" ]; then
+  [ -x ${ROON}/bin/roongui ] && ${ROON}/bin/roongui
+else
+  [ "${show_roon_menu}" ] && {
+    set_fzf_release
+    set_gui_release
+    set_tui_release
+    main_menu
+  }
+fi
 if [ "${open_roon_tui}" ]; then
   [ -x ${ROON}/bin/roontui ] && ${ROON}/bin/roontui
 else
-  [ "${show_roon_menu}" ] && main_menu
+  [ "${show_roon_menu}" ] && {
+    set_fzf_release
+    set_gui_release
+    set_tui_release
+    main_menu
+  }
 fi
 
 exit 0

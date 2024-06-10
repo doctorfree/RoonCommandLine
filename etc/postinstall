@@ -384,8 +384,12 @@ numWith=0
       withZoneTwo=$(${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
     fi
     numWithTwo=$(echo "${withZoneTwo}" | awk -F ',' ' { print NF } ')
-    [ ${numWithTwo} -gt 0 ] && {
-      groupTwo=$(echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/")
+    [ "${numWithTwo}" ] && {
+      [ -z "${numWithTwo//[0-9]}" ] && {
+        [ ${numWithTwo} -gt 0 ] && {
+          groupTwo=$(echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/")
+        }
+      }
     }
     unset IFS
     [ -n "${saved_IFS+set}" ] && {
@@ -407,15 +411,17 @@ numWith=0
   fi
   withSecondZone=$(echo ${withSecondZone} | sed -e "s/${defaultZone},//")
   numWith=$(echo "${withSecondZone}" | awk -F ',' ' { print NF } ')
-  if [ ${numWith} -gt 1 ]; then
-    withDefOne=$(echo "${withSecondZone}" | awk -F ',' ' { print $1 ", " $2 } ')
-    groupRee="${secondZone}, ${withDefOne}"
-  else
-    [ ${numWith} -gt 0 ] && {
-      withDefOne=$(echo "${withSecondZone}" | awk -F ',' ' { print $1 } ')
+  [ -z "${numWith//[0-9]}" ] && {
+    if [ ${numWith} -gt 1 ]; then
+      withDefOne=$(echo "${withSecondZone}" | awk -F ',' ' { print $1 ", " $2 } ')
       groupRee="${secondZone}, ${withDefOne}"
-    }
-  fi
+    else
+      [ ${numWith} -gt 0 ] && {
+        withDefOne=$(echo "${withSecondZone}" | awk -F ',' ' { print $1 } ')
+        groupRee="${secondZone}, ${withDefOne}"
+      }
+    fi
+  }
 }
 [ ${numZones} -gt 4 ] && {
   lastZone=$(echo "${zones}" | awk -F ',' ' { print $(NF) } ' | sed -e "s/^ //")
