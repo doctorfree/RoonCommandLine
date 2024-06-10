@@ -177,8 +177,8 @@ ${SUDO} chmod 755 ${ROON}/bin/* \
   ${ROON}/etc/install-fzf \
   ${ROON}/etc/install-roon-gui \
   ${ROON}/etc/install-roon-tui \
-  ${ROON}/etc/install-figlet
-  ${ROON}/etc/install-gum
+  ${ROON}/etc/install-figlet \
+  ${ROON}/etc/install-gum \
   ${ROON}/etc/roon_faded \
   ${ROON}/etc \
   ${ROON}/api \
