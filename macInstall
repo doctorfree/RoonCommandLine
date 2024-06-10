@@ -477,8 +477,10 @@ numWith=0
     [ "${zoneTwo}" ] || zoneTwo=${arrayone[1]}
     withZoneTwo=$(${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
     numWithTwo=$(echo "${withZoneTwo}" | awk -F ',' ' { print NF } ')
-    [ ${numWithTwo} -gt 0 ] && {
-      groupTwo=$(echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/")
+    [ -z "${numWithTwo//[0-9]}" ] && {
+      [ ${numWithTwo} -gt 0 ] && {
+        groupTwo=$(echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/")
+      }
     }
     unset IFS
     [ -n "${saved_IFS+set}" ] && {
