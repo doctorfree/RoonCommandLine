@@ -13,24 +13,33 @@ export PATH
 
 have_figlet=$(type -p figlet)
 [ "${have_figlet}" ] || {
-  have_make=$(type -p make)
-  if [ "${have_make}" ]; then
-    printf "\nInstalling figlet\n"
-    uid=$(id -u)
-    SUDO="sudo"
-    if [ "${EUID}" ]; then
-      [ ${EUID} -eq 0 ] && SUDO=
-    else
-      [ ${uid} -eq 0 ] && SUDO=
-    fi
-    HERE=$(pwd)
-    git clone https://github.com/cmatsuoka/figlet /tmp/figlet$$ > /dev/null 2>&1
-    cd /tmp/figlet$$
-    ${SUDO} make install > /dev/null 2>&1
-    cd "${HERE}"
-    ${SUDO} rm -rf /tmp/figlet$$
+  darwin=
+  platform=$(uname -s)
+  [ "${platform}" == "Darwin" ] && darwin=1
+  have_brew=$(type -p brew)
+  if [ "${have_brew}" ] && [ "${darwin}" ]; then
+    printf "\nInstalling figlet with Homebrew\n"
+    brew install figlet >/dev/null 2>&1
   else
-    printf "\nInstallation of figlet requires 'make' but 'make' not found."
-    printf "\nInstall 'make' and try again. Skipping installation of figlet.\n"
+    have_make=$(type -p make)
+    if [ "${have_make}" ]; then
+      printf "\nInstalling figlet\n"
+      uid=$(id -u)
+      SUDO="sudo"
+      if [ "${EUID}" ]; then
+        [ ${EUID} -eq 0 ] && SUDO=
+      else
+        [ ${uid} -eq 0 ] && SUDO=
+      fi
+      HERE=$(pwd)
+      git clone https://github.com/cmatsuoka/figlet /tmp/figlet$$ > /dev/null 2>&1
+      cd /tmp/figlet$$
+      ${SUDO} make install > /dev/null 2>&1
+      cd "${HERE}"
+      ${SUDO} rm -rf /tmp/figlet$$
+    else
+      printf "\nInstallation of figlet requires 'make' but 'make' not found."
+      printf "\nInstall 'make' and try again. Skipping installation of figlet.\n"
+    fi
   fi
 }
