@@ -854,8 +854,8 @@ select_zone() {
             break 2
           else
             printf "\n\nInvalid option: ${opt}"
-            printf "\n\tPlease enter either the exact text, shortcut, or numeric designation"
-            printf "\n\tfor one of the listed options below.\n\n"
+            printf "\n\tPlease enter either the exact text, shortcut, or"
+            printf "\n\tnumeric designation for one of the listed options.\n\n"
             break
           fi
           ;;
@@ -1493,7 +1493,7 @@ main_menu() {
     else
       [ -x ${ROONETC}/install-roon-tui ] && options+=("Install Roon TUI [T]")
     fi
-    options+=("About            [a]" "Examples         [e]")
+    options+=("Zone Info        [Z]" "About            [a]" "Examples         [e]")
     options+=("Info             [i]" "Usage            [u]" "Quit             [q]")
 
     select opt in "${options[@]}"; do
@@ -1871,6 +1871,13 @@ main_menu() {
           prompt_continue
           break
           ;;
+        "Zone Info"*,* | *,"Zone Info"* | "zone info"*,* | *,"zone info"* | "Z",* | *,"Z")
+          infozone=$(get_default_ini DefaultZone)
+          heading "Default Roon Zone" "Roon Zone"
+          zone_info "$infozone"
+          prompt_continue
+          break
+          ;;
         "Usage"*,* | *,"Usage"* | "usage"*,* | *,"usage"* | "u",* | *,"u")
           showusage=1
           showexamples=
@@ -1880,6 +1887,13 @@ main_menu() {
           ;;
         "Quit"*,* | *,"Quit"* | "quit"*,* | *,"quit"* | "q",* | *,"q")
           farewell_exit "Exiting RoonCommandLine"
+          ;;
+        *,*)
+          printf "\n\tUnrecognized menu selection: ${opt} ${REPLY}"
+          printf "\n\tPlease enter either the exact text, shortcut, or"
+          printf "\n\tnumeric designation for one of the listed options.\n"
+          prompt_continue
+          break
           ;;
       esac
     done
@@ -1896,6 +1910,7 @@ inst_roon_gui=
 open_roon_gui=
 inst_roon_tui=
 open_roon_tui=
+skip_anim=
 while getopts A:a:bBc:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
   case $flag in
     A)
@@ -1959,6 +1974,7 @@ while getopts A:a:bBc:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
       ;;
     m)
       show_roon_menu=1
+      skip_anim=1
       ;;
     N)
       now_playing=1
@@ -2759,13 +2775,21 @@ else
     [ -x ${ROON}/bin/roontui ] && ${ROON}/bin/roontui
   else
     [ "${show_roon_menu}" ] && {
-      clear
-      have_gum=$(type -p gum)
-      have_figlet=$(type -p figlet)
-      if [ "${have_gum}" ] && [ "${have_figlet}" ]; then
-        if [ -x ${ROON}/bin/roonanim ]; then
-          ${ROON}/bin/roonanim -a -q
-          [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
+      [ "${skip_anim}" ] || {
+        clear
+        have_gum=$(type -p gum)
+        have_figlet=$(type -p figlet)
+        if [ "${have_gum}" ] && [ "${have_figlet}" ]; then
+          if [ -x ${ROON}/bin/roonanim ]; then
+            ${ROON}/bin/roonanim -a -q
+            [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
+          else
+            if [ "${have_rich}" ]; then
+              heading "Welcome to RoonCommandLine" "Roon Command"
+            else
+              printf "\nWelcome to RoonCommandLine\n"
+            fi
+          fi
         else
           if [ "${have_rich}" ]; then
             heading "Welcome to RoonCommandLine" "Roon Command"
@@ -2773,13 +2797,7 @@ else
             printf "\nWelcome to RoonCommandLine\n"
           fi
         fi
-      else
-        if [ "${have_rich}" ]; then
-          heading "Welcome to RoonCommandLine" "Roon Command"
-        else
-          printf "\nWelcome to RoonCommandLine\n"
-        fi
-      fi
+      }
       set_fzf_release
       set_gui_release
       set_tui_release

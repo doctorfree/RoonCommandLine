@@ -489,7 +489,7 @@ select_fade_duration() {
                 break 2
                 ;;
             "Main Roon Menu"*,*|*,"Main Roon Menu"* | "M",* | *,"M")
-                exec roon
+                exec roon -m
                 break 2
                 ;;
             "Quit"*,*|*,"Quit"*|"quit"*,*|*,"quit"* | "q",* | *,"q")
@@ -542,7 +542,7 @@ select_fade_zone() {
                 break 2
                 ;;
             "Main Roon Menu"*,*|*,"Main Roon Menu"* | "M",* | *,"M")
-                exec roon
+                exec roon -m
                 break 2
                 ;;
             "Quit"*,*|*,"Quit"*|"quit"*,*|*,"quit"* | "q",* | *,"q")
@@ -697,7 +697,7 @@ show_menu() {
                 break
                 ;;
             "Main Roon Menu"*,*|*,"Main Roon Menu"* | "m",* | *,"m")
-                exec roon
+                exec roon -m
                 break
                 ;;
             "Quit"*,*|*,"Quit"*|"quit"*,*|*,"quit"* | "q",* | *,"q")
