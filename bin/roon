@@ -652,10 +652,7 @@ show_info() {
       printf "\nDefault ${media}:\t${DEFAULT}"
     fi
   done
-  [ "${fullinfo}" ] && {
-    show_now_playing -p
-    ${ROON}/bin/get_zone_volume
-  }
+  [ "${fullinfo}" ] && show_now_playing
 }
 
 # Install the fzf fuzzy finder utility
@@ -724,20 +721,70 @@ set_zone_options() {
 
 # Display currently playing info for specified zone or all zones
 show_now_playing() {
-  nowarg="$1"
-  zone="$2"
-  if [ "${LOCAL}" = true ]; then
-    if [ "${zone}" ]; then
-      ${ROON}/bin/now_playing ${nowarg} -z "${zone}"
+  zone="$1"
+  nowarg="$2"
+  if [ "${nowarg}" ]; then
+    if [ "${LOCAL}" = true ]; then
+      if [ "${zone}" ]; then
+        ${ROON}/bin/now_playing ${nowarg} -z "${zone}"
+      else
+        ${ROON}/bin/now_playing ${nowarg}
+      fi
     else
-      ${ROON}/bin/now_playing ${nowarg}
+      if [ "${zone}" ]; then
+        ssh ${user}@${server} "bash -l -c \"${ROON}/bin/now_playing ${nowarg} -z ${zone}\""
+      else
+        ssh ${user}@${server} "bash -l -c \"${ROON}/bin/now_playing ${nowarg}\""
+      fi
     fi
   else
-    if [ "${zone}" ]; then
-      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/now_playing ${nowarg} -z ${zone}\""
+    [ "${zone}" ] || zone=$(get_default_ini DefaultZone)
+    if [ "${have_rich}" ]; then
+      rich "[red]Now Playing[/]:" -p
     else
-      ssh ${user}@${server} "bash -l -c \"${ROON}/bin/now_playing ${nowarg}\""
+      printf "\nNow Playing:\n"
     fi
+    if [ "${have_jq}" ]; then
+      ${ROON}/bin/get_zone_info -n -z "${zone}" | \
+      jq -r 'to_entries[] | "\(.key)=\"\(.value)\""' | while read i
+      do
+        k=$(echo $i | awk -F '=' '{ print $1 }')
+        v=$(echo $i | awk -F '=' '{ print $2 }')
+        k="$(echo -e "${k}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+        v="$(echo -e "${v}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+        v="$(echo -e "${v}" | sed -e 's/^\"//' -e 's/\"$//')"
+        if echo "${k}" | grep Now > /dev/null; then
+          pre=""
+          siz=19
+        else
+          pre="    "
+          siz=15
+        fi
+        numspaces=$((${siz} - ${#k}))
+        spaces=""
+        for i in $(seq ${numspaces}); do
+          spaces="${spaces} "
+        done
+        if [ "${have_rich}" ]; then
+          rich "${pre}[red]${k}[/]:${spaces} [yellow]${v}[/]" -p
+        else
+          printf "\n\t${pre}$k:${spaces} $v"
+        fi
+      done
+    else
+      ${ROON}/bin/get_zone_info -n -z "${zone}"
+    fi
+  fi
+  if [ "${have_jq}" ]; then
+    pre="    "
+    vol=$(${ROON}/bin/get_zone_volume -n)
+    if [ "${have_rich}" ]; then
+      rich "${pre}[red]Volume[/]:          [yellow]${vol}[/]" -p
+    else
+      printf "\n\t${pre}Volume:          $vol"
+    fi
+  else
+    ${ROON}/bin/get_zone_volume
   fi
 }
 
@@ -1050,19 +1097,19 @@ play_zone() {
 zone_info() {
   this_zone="$1"
   if [ "${have_rich}" ]; then
-    rich "[red]Zone Name:[/] [yellow]${this_zone}[/]" -p
+    rich "[red]Zone[/] [yellow]${this_zone}[/] [red]Groups With:[/]" -p
   else
-    printf "\nZone Name: ${this_zone}\n"
+    printf "\nZone '${this_zone}' Groups With:"
   fi
-  ${ROON}/bin/get_zone_volume -z "${this_zone}" | \
-    awk -F ':' '{ print $2 }' | \
-    sed -e 's/^[[:space:]]*/    /' -e 's/[[:space:]]*$//'
-  if [ "${have_rich}" ]; then
-    rich "[red]Groups With:[/]" -p
-  else
-    printf "\nGroups With:\n"
-  fi
-  ${ROON}/bin/get_zone_info -l -z "${this_zone}" | sed -e "s/,/\n    /g" -e "s/^/    /"
+  ${ROON}/bin/get_zone_info -l -z "${this_zone}" | sed -e "s/,/\n    /g" -e "s/^/    /" \
+    | while read l
+    do
+      if [ "${have_rich}" ]; then
+        rich "     [yellow]$l[/]" -p
+      else
+        printf "\n\t$l"
+      fi
+    done
   if [ "${have_rich}" ]; then
     rich "[red]Zone Settings:[/]" -p
   else
@@ -1075,7 +1122,7 @@ zone_info() {
       k=$(echo $i | awk -F '=' '{ print $1 }')
       v=$(echo $i | awk -F '=' '{ print $2 }')
       if [ "${have_rich}" ]; then
-        rich "    [yellow]$k[/]: [cyan]$v[/]" -p
+        rich "     [yellow]$k[/]: [cyan]$v[/]" -p
       else
         printf "\n\t$k: $v"
       fi
@@ -1083,26 +1130,7 @@ zone_info() {
   else
     ${ROON}/bin/get_zone_info -s -z "${this_zone}"
   fi
-  if [ "${have_rich}" ]; then
-    rich "[red]Now Playing:[/]" -p
-  else
-    printf "\nNow Playing:\n"
-  fi
-  if [ "${have_jq}" ]; then
-    ${ROON}/bin/get_zone_info -n -z "${this_zone}" | \
-    jq -r 'to_entries[] | "\(.key)=\"\(.value)\""' | while read i
-    do
-      k=$(echo $i | awk -F '=' '{ print $1 }')
-      v=$(echo $i | awk -F '=' '{ print $2 }')
-      if [ "${have_rich}" ]; then
-        rich "    [yellow]$k[/]: [cyan]$v[/]" -p
-      else
-        printf "\n\t$k: $v"
-      fi
-    done
-  else
-    ${ROON}/bin/get_zone_info -n -z "${this_zone}"
-  fi
+  show_now_playing "${this_zone}"
 }
 
 select_media() {
@@ -1811,7 +1839,8 @@ main_menu() {
           break
           ;;
         "Now Playing"*,* | *,"Now Playing"* | "N",* | *,"N")
-          show_now_playing -p
+          heading "Roon Now Playing" "Now Playing"
+          show_now_playing
           prompt_continue
           break
           ;;
@@ -1873,7 +1902,7 @@ main_menu() {
           ;;
         "Zone Info"*,* | *,"Zone Info"* | "zone info"*,* | *,"zone info"* | "Z",* | *,"Z")
           infozone=$(get_default_ini DefaultZone)
-          heading "Default Roon Zone" "Roon Zone"
+          heading "Roon Zone $infozone" "$infozone"
           zone_info "$infozone"
           prompt_continue
           break
@@ -2260,7 +2289,7 @@ done
   fi
 }
 
-[ "$now_playing" ] && show_now_playing "${nowarg}" "${zone}"
+[ "$now_playing" ] && show_now_playing "${zone}" "${nowarg}"
 
 [ "$albumlist" ] && {
   [ "$album" ] || {
