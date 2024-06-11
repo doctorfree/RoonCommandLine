@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# asciifetch - display, animate, zoom RoonCommandLine splash screen using Kitty
+# roonanim - display, animate, zoom RoonCommandLine splash screen using Kitty
 #
 # Written by Ronald Joe Record <ronaldrecord@gmail.com>
 #
@@ -32,7 +32,7 @@ else
 fi
 
 usage() {
-  printf "\nUsage: asciifetch [-a] [-f] [-k] [-q] [-z] [-u]"
+  printf "\nUsage: roonanim [-a] [-f] [-k] [-q] [-z] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates animate display"
   printf "\n\t-f indicates fullscreen mode"
@@ -75,7 +75,7 @@ cleanup() {
   tput cnorm
   tput cup ${terminal_height} 0
   parent_name=$(ps -p ${PPID} -o comm=)
-  if [ "${parent_name}" == "asciifetch" ]
+  if [ "${parent_name}" == "roonanim" ]
   then
     exit 2
   else
@@ -152,7 +152,7 @@ zoom() {
         --override startup_session=none \
         ${KITTY_QUIT_OPT} \
         --listen-on unix:${sock_name} \
-        asciifetch -k 2> /dev/null &
+        roonanim -k 2> /dev/null &
   kitty_pid=$!
   trap 'cleanup' USR1
   wait_for_pid ${kitty_pid} > /dev/null 2>&1 &
@@ -207,10 +207,10 @@ set_term_sizes() {
 print_info() {
   no_color=$(printf '%b' "${1}" | sed -e 's/\x1B\[[0-9;]*[JKmsu]//g')
 
-  [ "$(printf '%s' "${no_color}" | wc --lines)" -gt ${terminal_height} ] && {
+  [ "$(printf '%s' "${no_color}" | wc -l)" -gt ${terminal_height} ] && {
     return 1
   }
-  [ "$(printf '%s' "${no_color}" | wc --max-line-length)" -gt "${terminal_width}" ] && {
+  [ "$(printf '%s' "${no_color}" | wc -L)" -gt "${terminal_width}" ] && {
     return 1
   }
 

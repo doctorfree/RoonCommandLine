@@ -572,9 +572,9 @@ install_roon_tui() {
 # Display RoonCommandLine info, versions, and update availability
 show_about() {
   [ "${have_gum}" ] && [ "${have_figlet}" ] && {
-    [ -x ${ROON}/bin/asciifetch ] && {
+    [ -x ${ROON}/bin/roonanim ] && {
       clear
-      ${ROON}/bin/asciifetch -a -q
+      ${ROON}/bin/roonanim -a -q
       [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
       sleep 3
     }
@@ -2763,8 +2763,8 @@ else
       have_gum=$(type -p gum)
       have_figlet=$(type -p figlet)
       if [ "${have_gum}" ] && [ "${have_figlet}" ]; then
-        if [ -x ${ROON}/bin/asciifetch ]; then
-          ${ROON}/bin/asciifetch -a -q
+        if [ -x ${ROON}/bin/roonanim ]; then
+          ${ROON}/bin/roonanim -a -q
           [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
         else
           if [ "${have_rich}" ]; then

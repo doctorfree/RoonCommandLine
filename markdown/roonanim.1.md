@@ -1,18 +1,18 @@
 ---
-title: ASCIIFETCH
+title: ROONANIM
 section: 1
 header: User Manual
-footer: asciifetch 2.0.1
+footer: roonanim 2.0.1
 date: June 10, 2024
 ---
 # NAME
-asciifetch - display animated splash screen
+roonanim - display animated splash screen
 
 # SYNOPSIS
-**asciifetch** [-a] [-f] [-k] [-q] [-z] [-u]
+**roonanim** [-a] [-f] [-k] [-q] [-z] [-u]
 
 # DESCRIPTION
-The `RoonCommandLine` animated splash screen is displayed with the command **asciifetch -a -q** on `roon` command menu startup and when the `About` page is displayed. 
+The `RoonCommandLine` animated splash screen is displayed with the command **roonanim -a -q** on `roon` command menu startup and when the `About` page is displayed. 
 
 # COMMAND LINE OPTIONS
 **-a**
@@ -37,10 +37,10 @@ The `RoonCommandLine` animated splash screen is displayed with the command **asc
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-ASCIIFETCH is distributed under an Open Source license.
-See the file LICENSE in the ASCIIFETCH source distribution
+ROONANIM is distributed under an Open Source license.
+See the file LICENSE in the ROONANIM source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using ASCIIFETCH and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using ROONANIM and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at: https://github.com/doctorfree/RoonCommandLine/issues
