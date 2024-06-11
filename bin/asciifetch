@@ -138,7 +138,7 @@ zoom() {
   sock_name="/tmp/fetch_kitty$$"
   init_size=32
   interval="0.1"
-  kitty --title="Asciiville Zoom" \
+  kitty --title="RoonCommandLine Zoom" \
         --start-as ${fullscreen} \
         --override initial_window_width=98c \
         --override initial_window_height=26c \
