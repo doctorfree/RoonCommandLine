@@ -127,7 +127,7 @@ if [ "${updatever}" ]; then
 else
   cat ${ROON_INI} | sed -e "/RoonCorePort.*/a RoonCommandLineVersion = ${version}" >/tmp/v$$
 fi
-cp /tmp/v$$ ${ROON_INI}
+[ -s /tmp/v$$ ] && cp /tmp/v$$ ${ROON_INI}
 rm -f /tmp/v$$
 
 updaterel=
@@ -137,7 +137,7 @@ if [ "${updaterel}" ]; then
 else
   cat ${ROON_INI} | sed -e "/RoonCommandLineVersion.*/a RoonCommandLineRelease = ${release}" >/tmp/r$$
 fi
-cp /tmp/r$$ ${ROON_INI}
+[ -s /tmp/r$$ ] && cp /tmp/r$$ ${ROON_INI}
 rm -f /tmp/r$$
 
 IP=$(hostname -I | awk ' { print $1 } ')
@@ -205,13 +205,13 @@ if [ -s ${ROONCONF} ]; then
 else
   echo "LOCAL=true" >/tmp/roon$$
 fi
-cp /tmp/roon$$ ${ROONCONF}
+[ -s /tmp/roon$$ ] && cp /tmp/roon$$ ${ROONCONF}
 rm -f /tmp/roon$$
 
 echo "Setting the Python Roon API server IP address to $IP"
 cat ${ROON}/bin/roon | sed -e "s/XX.X.X.XXX/$IP/" -e "s/SSH_USERNAME/$ROON_SSH_USER/" >/tmp/roon$$
 cp ${ROON}/bin/roon ${ROON}/bin/roon.orig
-cp /tmp/roon$$ ${ROON}/bin/roon
+[ -s /tmp/roon$$ ] && cp /tmp/roon$$ ${ROON}/bin/roon
 rm -f /tmp/roon$$
 
 PYTHONUSERBASE=
