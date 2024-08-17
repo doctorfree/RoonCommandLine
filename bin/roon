@@ -59,8 +59,8 @@ usage() {
       rich "    [cyan]-F[/] [yellow]\[from zone][/] [cyan]-f[/] [yellow]\[on|onlog|off|status][/] [cyan]-g[/] [yellow]genre[/] [cyan]-G[/] [yellow]zone_group[/] [cyan]-i[/]" --print
       rich "    [cyan]-I -l[/] [yellow]\[albums|artists|artalbums|albtracks|arttracks|composers|comalbums|[/]" --print
       rich "        [yellow]genres|genalbums|genartists|playlists|playtracks|tags|zones][/]" --print
-      rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|stop|stop_all|[/]" --print
-      rich "        [yellow]next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
+      rich "    [cyan]-c[/] [yellow]\[discover|group|ungroup|play|play_all|pause|pause_all|stop|[/]" --print
+      rich "        [yellow]stop_all|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
       rich "    [cyan]-s[/] [yellow]search[/] [cyan]-p[/] [yellow]playlist[/] [cyan]-T[/] [yellow]track[/] [cyan]-t[/] [yellow]tag[/] [cyan]-z[/] [yellow]zone[/] [cyan]-L[/] [cyan]-S[/] [cyan]-r[/] [yellow]radio[/]" --print
       rich "    [cyan]-X[/] [yellow]ex_album[/] [cyan]-x[/] [yellow]ex_artist[/] [cyan]\[-EuU][/]" --print
       rich "[bold]Where:[/]" --print
@@ -97,9 +97,10 @@ usage() {
       rich "    [cyan]-T[/] [yellow]track[/] specifies a track to play" --print
       rich "    [cyan]-t[/] [yellow]tag[/] selects an tag to play" --print
       rich "    [cyan]-z[/] [yellow]zone[/] selects the Roon Zone in which to play" --print
-      rich "    [cyan]-c[/] [yellow]\[group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|[/]" --print
-      rich "        [yellow]next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
+      rich "    [cyan]-c[/] [yellow]\[discover|group|ungroup|play|play_all|pause|pause_all|playpause|stop|[/]" --print
+      rich "        [yellow]stop_all|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
       rich "            issues the command in the selected zone" --print
+      rich "            '[italic green]roon -c discover[/]' performs Roon Core discovery and exits" --print
       rich "            '[italic green]roon -c mute[/]' toggles the zone's muted or unmuted state" --print
       rich "            '[italic green]roon -c mute_all[/]' toggles all zones' muted or unmuted state" --print
       rich "            '[italic green]roon -c pause_all[/]' pauses playback in all zones" --print
@@ -131,7 +132,7 @@ usage() {
       printf "\n\t-F [from zone] -f [on|onlog|off|status] -g genre -G zone_group -i"
       printf "\n\t-I -l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|"
       printf "\n\t    genres|genalbums|genartists|playlists|playtracks|tags|zones]"
-      printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|"
+      printf "\n\t-c [discover|group|ungroup|play|play_all|pause|pause_all|stop|stop_all|"
       printf "\n\t    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]"
       printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
       printf "\n\t-X ex_album -x ex_artist [-EuU]"
@@ -168,9 +169,10 @@ usage() {
       printf "\n\t-T track specifies a track to play"
       printf "\n\t-t tag selects an tag to play"
       printf "\n\t-z zone selects the Roon Zone in which to play"
-      printf "\n\t-c [group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|"
-      printf "\n\t    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]"
+      printf "\n\t-c [discover|group|ungroup|play|play_all|pause|pause_all|playpause|stop|"
+      printf "\n\t    stop_all|next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]"
       printf "\n\t        issues the command in the selected zone"
+      printf "\n\t        'discover' performs Roon Core discovery and exits"
       printf "\n\t        'mute' toggles the zone's muted or unmuted state"
       printf "\n\t        'mute_all' toggles all zones' muted or unmuted state"
       printf "\n\t        'pause_all' pauses playback in all zones"
@@ -2168,6 +2170,9 @@ while getopts A:a:bBc:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
   esac
 done
 
+# Check if RoonCommandLine has been initialized
+[ -f ${ROONETC}/.initialized ] || ${ROON}/etc/discover
+
 [ "${inst_roon_gui}" ] && {
   [ -x ${ROON}/etc/install-roon-gui ] && ${ROON}/etc/install-roon-gui
   if [ -x ${ROON}/bin/roongui ]; then
@@ -2495,6 +2500,10 @@ done
         fi
       fi
       ;;
+    "discover"* | "init"*)
+      ${ROON}/etc/discover
+      exit 0
+      ;;
     "group" | "ungroup") ;;
     *)
       echo "Unrecognized Roon command: $comm"
@@ -2796,7 +2805,7 @@ shuffled=
     fi
   fi
 }
- 
+
 if [ "${open_roon_gui}" ]; then
   [ -x ${ROON}/bin/roongui ] && ${ROON}/bin/roongui
 else

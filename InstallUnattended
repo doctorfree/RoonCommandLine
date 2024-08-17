@@ -1,0 +1,239 @@
+#!/bin/bash
+#
+# Usage: ./InstallUnattended [package names]
+#   Performs an unattended installation. Post install run 'roon -c discover'
+#   If no package names are specified then all currently
+#   supported packages will be installed
+#
+# Versions of apt prior to 1.1 do not support install by Debian filename
+# You should probably be running a more recent version of apt
+# On these early versions, install with the following:
+#
+# sudo -E dpkg -i "${PKG}"
+# sudo -E apt-get install -f
+
+export ROON_UNATTENDED=1
+DIR_NAME="RoonCommandLine"
+PKG_NAMES="RoonCommandLine"
+APT_NAMES="rooncommandline"
+BOLD=$(tput bold 2>/dev/null)
+NORM=$(tput sgr0 2>/dev/null)
+PKG_AVAILABLE=
+PKG_SELECTED=
+
+# User should not be root. Prompt to proceed if root user
+iamroot=
+if [ "${EUID}" ]
+then
+  [ ${EUID} -eq 0 ] && iamroot=1
+else
+  uid=`id -u`
+  [ ${uid} -eq 0 ] && iamroot=1
+fi
+
+[ "${iamroot}" ] && {
+  printf "\nThe ${BOLD}Install${NORM} command should be run as a normal user."
+  printf "\nIt appears it has been invoked with 'root' user privileges.\n\n"
+  while true
+  do
+    read -p "Do you intend to use RoonCommandLine as the 'root' user ? (y/n) " yn
+    case $yn in
+        [Yy]* )
+                break
+                ;;
+        [Nn]* )
+                printf "\nRe-run this command as a normal user."
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+            * ) echo "Please answer yes or no."
+                ;;
+    esac
+  done
+}
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+[ -f "${SCRIPT_DIR}/VERSION" ] || {
+  echo "Missing VERSION file: ${SCRIPT_DIR}/VERSION"
+  echo "Exiting"
+  exit 1
+}
+
+. "${SCRIPT_DIR}/VERSION"
+PKG_VER=${VERSION}
+PKG_REL=${RELEASE}
+
+get_available_packages() {
+  for pkgs in ${SCRIPT_DIR}/releases/${PKG_VER}/*.${SUF}
+  do
+    [ "${pkgs}" == "${SCRIPT_DIR}/releases/${PKG_VER}/*.${SUF}" ] || {
+      for pkg in ${pkgs}
+      do
+        pkgname=`basename ${pkg} | sed -e "s/_${PKG_VER}-${PKG_REL}.${SUF}//"`
+        PKG_AVAILABLE="${PKG_AVAILABLE} ${pkgname}"
+      done
+    }
+  done
+  PKG_AVAILABLE=`echo $PKG_AVAILABLE | sed -e "s/^ //"`
+}
+
+install_selected() {
+  for pkg in ${PKG_AVAILABLE}
+  do
+    while true
+    do
+      read -p "Install ${pkg} ? ('Y'/'N'): " yn
+      case $yn in
+          [Yy]*)
+              PKG_SELECTED="${PKG_SELECTED} $pkg"
+              break
+              ;;
+          [Nn]*)
+              break
+              ;;
+          * )
+              echo "Please answer yes or no."
+              ;;
+      esac
+    done
+  done
+  PKG_SELECTED=`echo $PKG_SELECTED | sed -e "s/^ //"`
+}
+
+plat=`uname -s`
+if [ "$plat" == "Darwin" ]
+then
+  ./macInstall
+else
+  debian=
+  have_apt=`type -p apt`
+  have_dpkg=`type -p dpkg`
+  have_rpm=`type -p rpm`
+  have_yum=`type -p yum`
+  [ -f /etc/os-release ] && . /etc/os-release
+  [ "${ID_LIKE}" == "debian" ] && debian=1
+  [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
+
+  SUF=deb
+  [ "${debian}" ] || SUF=rpm
+
+  get_available_packages
+
+  if [ "${PKG_AVAILABLE}" ]
+  then
+    [ "$1" ] && {
+      # If invoked with -i argument, present a menu of options to select from
+      if [ "$1" == "-i" ]
+      then
+        shift
+        PKG_NAMES="$*"
+        [ "${PKG_AVAILABLE}" ] && {
+          echo "Currently available RoonCommandLine packages:"
+          echo ""
+          for avaipkg in ${PKG_AVAILABLE}
+          do
+            echo "$avaipkg"
+          done
+          echo ""
+        }
+        while true
+        do
+          PS3="${BOLD}Please enter your desire (numeric or text): ${NORM}"
+          options=("Install All" "Install Selected" "Quit")
+          select opt in "${options[@]}"
+          do
+            case "$opt,$REPLY" in
+                "Install All",*|*,"Install All")
+                    PKG_NAMES="${PKG_AVAILABLE}"
+                    break 2
+                    ;;
+                "Install Selected",*|*,"Install Selected")
+                    install_selected
+                    PKG_NAMES="${PKG_SELECTED}"
+                    break 2
+                    ;;
+                "Quit",*|*,"Quit"|"quit",*|*,"quit")
+                    printf "\nExiting\n"
+                    exit 0
+                    ;;
+            esac
+          done
+        done
+      else
+        PKG_NAMES="$*"
+      fi
+    }
+
+    [ "${PKG_NAMES}" ] || {
+      echo "No valid Package names specified. Exiting."
+      exit 1
+    }
+
+    for PKG_NAME in ${PKG_NAMES}
+    do
+      PKG="${SCRIPT_DIR}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF}"
+      [ -f "${PKG}" ] || {
+        echo "${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF} not found."
+        for pkgs in ${SCRIPT_DIR}/releases/*/${PKG_NAME}_*.${SUF}
+        do
+          [ "${pkgs}" == "${SCRIPT_DIR}/releases/*/${PKG_NAME}_*.${SUF}" ] || {
+            echo "Found existing packages:"
+            echo "${pkgs}"
+          }
+        done
+        echo ""
+        continue
+      }
+
+      echo "Installing ${PKG}"
+      if [ "${debian}" ]
+      then
+        if [ "${have_apt}" ]
+        then
+          sudo -E apt install "${PKG}"
+        else
+          if [ "${have_dpkg}" ]
+          then
+            sudo -E dpkg -i "${PKG}"
+          else
+            echo "Cannot locate either apt or dpkg to install. Skipping."
+          fi
+        fi
+      else
+        if [ "${have_yum}" ]
+        then
+          sudo -E yum localinstall "${PKG}"
+        else
+          if [ "${have_rpm}" ]
+          then
+            sudo -E rpm -i "${PKG}"
+          else
+            echo "Cannot locate either yum or rpm to install. Skipping."
+          fi
+        fi
+      fi
+    done
+  else
+    while true
+    do
+      echo ""
+      echo "No packages for version ${PKG_VER} are currently available."
+      echo "Would you like to perform a scripted install on this platform?"
+      echo ""
+      read -p "Install ${pkg} ? ('Y'/'N'): " yn
+      case $yn in
+          [Yy]*)
+              ./linInstall
+              break
+              ;;
+          [Nn]*)
+              break
+              ;;
+          *)
+              echo "Please answer yes or no."
+              ;;
+      esac
+    done
+  fi
+fi

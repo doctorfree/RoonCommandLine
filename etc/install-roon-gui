@@ -12,7 +12,7 @@ set_download_url() {
   [ "${have_curl}" ] && [ "${have_jq}" ] && {
     DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
       | jq --raw-output '.assets | .[]?.browser_download_url' \
-      | grep "community_remote-linux")
+      | grep "community_remote-linux-x86")
   }
 }
 

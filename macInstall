@@ -174,6 +174,7 @@ ${SUDO} chmod 644 ${ROON}/etc/* \
   ${ROON}/patches/roon-web-controller/*
 ${SUDO} chmod 755 ${ROON}/bin/* \
   ${ROON}/bin \
+  ${ROON}/etc/discover \
   ${ROON}/etc/install-fzf \
   ${ROON}/etc/install-roon-gui \
   ${ROON}/etc/install-roon-tui \

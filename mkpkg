@@ -8,9 +8,16 @@ PKG_NAME="RoonCommandLine"
 TOP="usr"
 DESTDIR="${TOP}/local"
 ROON="${DESTDIR}/Roon"
-SRC=${HOME}/src
 SUDO=sudo
 GCI=
+
+SCRIPT_PATH="$(
+  cd "$(dirname "$0")"
+  pwd -P
+)"
+have_real=$(type -p realpath)
+[ "${have_real}" ] && SCRIPT_PATH="$(realpath $SCRIPT_PATH)"
+SRC=$(dirname "${SCRIPT_PATH}")
 
 dpkg=$(type -p dpkg-deb)
 [ "${dpkg}" ] || {
@@ -121,6 +128,7 @@ ${SUDO} chmod 755 "${OUT_DIR}"/${ROON}/bin/* \
 	                "${OUT_DIR}"/${ROON}/etc/install-gum \
                   "${OUT_DIR}"/${ROON}/etc/roon_faded \
                   "${OUT_DIR}"/${ROON}/etc \
+                  "${OUT_DIR}"/${ROON}/etc/discover \
                   "${OUT_DIR}"/${ROON}/etc/postinstall \
                   "${OUT_DIR}"/${ROON}/etc/preremove \
                   "${OUT_DIR}"/${ROON}/api \

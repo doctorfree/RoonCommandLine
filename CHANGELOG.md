@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+August 18, 2024 :
+RoonCommandLine version 2.1.4 release 1
+
+    This release provides support for unattended installation
+        * Set and export the `ROON_USER` environment variable to specify the SSH user
+        * Set and export the `ROON_UNATTENDED` environment variable to specify unattended installation
+          * e.g. `export ROON_UNATTENDED=1` then `sudo -E apt install ...`
+        * Update `roonanim` man page
+        * Format now playing and zone info
+        * Add Zone Info to main menu
+        * Skip animation in roon exec from `roon_fade menu`
+        * Shorten Command to CMD in `roonanim`
+        * Use single dash options to `wc`
+        * Rename `asciifetch` to `roonanim`
+        * Change `Asciiville` to `RoonCommandLine` in `asciifetch`
+        * Add `asciifetch` man page
+        * Update usage message and `roon` man page
+
 June 11, 2024 :
 RoonCommandLine version 2.1.3 release 2
 
