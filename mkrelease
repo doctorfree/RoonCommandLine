@@ -7,25 +7,35 @@
 . ./VERSION
 
 usage() {
-    printf "\nUsage: mkrelease [-c] [-d] [-p] [-u]"
+    printf "\nUsage: mkrelease [-b branch] [-c] [-d] [-n] [-p] [-u]"
     printf "\nWhere:"
+    printf "\n\t-b 'branch' specifies the git branch to use"
     printf "\n\t-c indicates clean first"
     printf "\n\t-d indicates create draft release"
+    printf "\n\t-n indicates dry run, tell me what you would do without doing it"
     printf "\n\t-p indicates skip package creation step"
     printf "\n\t-u displays this usage message and exits\n"
     exit 1
 }
 
+BRANCH=
 CLEAN=
+DRYRUN=
 DRAFT=
 PACKAGE=1
-while getopts "cdpu" flag; do
+while getopts "b:cdnpu" flag; do
     case $flag in
+        b)
+            BRANCH="${OPTARG}"
+            ;;
         c)
             CLEAN=1
             ;;
         d)
             DRAFT="--draft"
+            ;;
+        n)
+            DRYRUN=1
             ;;
         p)
             PACKAGE=
@@ -37,17 +47,33 @@ while getopts "cdpu" flag; do
 done
 shift $(( OPTIND - 1 ))
 
-[ "$CLEAN" ] && ./clean
-[ "$PACKAGE" ] && ./mkpkg
-
 ANNO="RoonCommandLine Version ${VERSION} Release ${RELEASE}"
-gittag v${VERSION}r${RELEASE} ${ANNO}
+BOPTS=
+[ "${BRANCH}" ] && BOPTS="--prerelease --target ${BRANCH}"
+if [ "${DRYRUN}" ]; then
+  [ "${BRANCH}" ] && echo "git checkout ${BRANCH}"
+  [ "${CLEAN}" ] && echo "./clean"
+  [ "${PACKAGE}" ] && echo "./mkpkg"
+  echo "gittag v${VERSION}r${RELEASE} ${ANNO}"
+  echo "Creating release for version ${VERSION} release ${RELEASE} [dryrun]"
 
-echo "Creating release for version ${VERSION} release ${RELEASE}"
+  echo "gh release create v${VERSION}r${RELEASE} ${DRAFT} ${BOPTS} \\"
+  echo "   --title \"${ANNO}\" \\"
+  echo "   --notes-file pkg/release.md releases/${VERSION}/*"
 
-gh release create v${VERSION}r${RELEASE} ${DRAFT} \
-                  --title "${ANNO}" \
-                  --notes-file pkg/release.md \
-                  releases/${VERSION}/*
+  echo "git fetch --tags origin"
+else
+  [ "${BRANCH}" ] && git checkout ${BRANCH}
+  [ "${CLEAN}" ] && ./clean
+  [ "${PACKAGE}" ] && ./mkpkg
+  gittag v${VERSION}r${RELEASE} ${ANNO}
 
-git fetch --tags origin
+  echo "Creating release for version ${VERSION} release ${RELEASE}"
+
+  gh release create v${VERSION}r${RELEASE} ${DRAFT} ${BOPTS} \
+                    --title "${ANNO}" \
+                    --notes-file pkg/release.md \
+                    releases/${VERSION}/*
+
+  git fetch --tags origin
+fi
