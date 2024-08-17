@@ -56,11 +56,10 @@ if [ "${DRYRUN}" ]; then
   [ "${PACKAGE}" ] && echo "./mkpkg"
   echo "gittag v${VERSION}r${RELEASE} ${ANNO}"
   echo "Creating release for version ${VERSION} release ${RELEASE} [dryrun]"
-
-  echo "gh release create v${VERSION}r${RELEASE} ${DRAFT} ${BOPTS} \\"
+  echo "gh release create v${VERSION}r${RELEASE} ${DRAFT} \\"
+  [ "${BOPTS}" ] && echo "   ${BOPTS} \\"
   echo "   --title \"${ANNO}\" \\"
   echo "   --notes-file pkg/release.md releases/${VERSION}/*"
-
   echo "git fetch --tags origin"
 else
   [ "${BRANCH}" ] && git checkout ${BRANCH}
