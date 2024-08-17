@@ -4,7 +4,24 @@ RoonCommandLine version 2.1.4 release 1 provides support for unattended installa
 
 - Set and export the `ROON_USER` environment variable to specify the SSH user
 - Set and export the `ROON_UNATTENDED` environment variable to specify unattended installation
-  - e.g. `export ROON_UNATTENDED=1` then `sudo -E apt install ...`
+
+For example, to perform an unattended install on a Debian based system:
+
+```bash
+# Specify an unattended non-interactive install
+export ROON_UNATTENDED=1
+# Specify the SSH user (optional)
+# If not specified, the last username found in /home will be used
+export ROON_USER=myusername
+# Perform the installation
+sudo -E apt install ./RoonCommandLine_2.1.4-1.deb
+```
+
+After completing an unattended installation, in an interactive shell, execute the command:
+
+```bash
+/usr/local/bin/roon -c discover
+```
 
 ## Installation
 
