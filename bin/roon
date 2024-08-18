@@ -2171,7 +2171,19 @@ while getopts A:a:bBc:C:dD:f:F:g:G:hHiImnNOp:T:t:z:l:s:LSr:v:x:X:EuU flag; do
 done
 
 # Check if RoonCommandLine has been initialized
-[ -f ${ROONETC}/.initialized ] || ${ROON}/etc/discover
+[ -f ${ROONETC}/.initialized ] || {
+  if [ "${comm}" ]; then
+    case "${comm}" in
+      "discover"* | "init"*)
+        ;;
+      *)
+        ${ROON}/etc/discover
+        ;;
+    esac
+  else
+    ${ROON}/etc/discover
+  fi
+}
 
 [ "${inst_roon_gui}" ] && {
   [ -x ${ROON}/etc/install-roon-gui ] && ${ROON}/etc/install-roon-gui

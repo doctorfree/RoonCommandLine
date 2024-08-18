@@ -34,22 +34,9 @@ fi
 [ "${iamroot}" ] && {
   printf "\nThe ${BOLD}Install${NORM} command should be run as a normal user."
   printf "\nIt appears it has been invoked with 'root' user privileges.\n\n"
-  while true
-  do
-    read -p "Do you intend to use RoonCommandLine as the 'root' user ? (y/n) " yn
-    case $yn in
-        [Yy]* )
-                break
-                ;;
-        [Nn]* )
-                printf "\nRe-run this command as a normal user."
-                printf "\nExiting.\n\n"
-                exit 0
-                ;;
-            * ) echo "Please answer yes or no."
-                ;;
-    esac
-  done
+  printf "\nRe-run this command as a normal user."
+  printf "\nExiting.\n\n"
+  exit 0
 }
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -78,29 +65,6 @@ get_available_packages() {
   PKG_AVAILABLE=`echo $PKG_AVAILABLE | sed -e "s/^ //"`
 }
 
-install_selected() {
-  for pkg in ${PKG_AVAILABLE}
-  do
-    while true
-    do
-      read -p "Install ${pkg} ? ('Y'/'N'): " yn
-      case $yn in
-          [Yy]*)
-              PKG_SELECTED="${PKG_SELECTED} $pkg"
-              break
-              ;;
-          [Nn]*)
-              break
-              ;;
-          * )
-              echo "Please answer yes or no."
-              ;;
-      esac
-    done
-  done
-  PKG_SELECTED=`echo $PKG_SELECTED | sed -e "s/^ //"`
-}
-
 plat=`uname -s`
 if [ "$plat" == "Darwin" ]
 then
@@ -122,49 +86,6 @@ else
 
   if [ "${PKG_AVAILABLE}" ]
   then
-    [ "$1" ] && {
-      # If invoked with -i argument, present a menu of options to select from
-      if [ "$1" == "-i" ]
-      then
-        shift
-        PKG_NAMES="$*"
-        [ "${PKG_AVAILABLE}" ] && {
-          echo "Currently available RoonCommandLine packages:"
-          echo ""
-          for avaipkg in ${PKG_AVAILABLE}
-          do
-            echo "$avaipkg"
-          done
-          echo ""
-        }
-        while true
-        do
-          PS3="${BOLD}Please enter your desire (numeric or text): ${NORM}"
-          options=("Install All" "Install Selected" "Quit")
-          select opt in "${options[@]}"
-          do
-            case "$opt,$REPLY" in
-                "Install All",*|*,"Install All")
-                    PKG_NAMES="${PKG_AVAILABLE}"
-                    break 2
-                    ;;
-                "Install Selected",*|*,"Install Selected")
-                    install_selected
-                    PKG_NAMES="${PKG_SELECTED}"
-                    break 2
-                    ;;
-                "Quit",*|*,"Quit"|"quit",*|*,"quit")
-                    printf "\nExiting\n"
-                    exit 0
-                    ;;
-            esac
-          done
-        done
-      else
-        PKG_NAMES="$*"
-      fi
-    }
-
     [ "${PKG_NAMES}" ] || {
       echo "No valid Package names specified. Exiting."
       exit 1
@@ -191,7 +112,7 @@ else
       then
         if [ "${have_apt}" ]
         then
-          sudo -E apt install "${PKG}"
+          sudo -E apt -y install "${PKG}"
         else
           if [ "${have_dpkg}" ]
           then
@@ -203,7 +124,7 @@ else
       else
         if [ "${have_yum}" ]
         then
-          sudo -E yum localinstall "${PKG}"
+          sudo -E yum -y localinstall "${PKG}"
         else
           if [ "${have_rpm}" ]
           then
@@ -215,25 +136,10 @@ else
       fi
     done
   else
-    while true
-    do
-      echo ""
-      echo "No packages for version ${PKG_VER} are currently available."
-      echo "Would you like to perform a scripted install on this platform?"
-      echo ""
-      read -p "Install ${pkg} ? ('Y'/'N'): " yn
-      case $yn in
-          [Yy]*)
-              ./linInstall
-              break
-              ;;
-          [Nn]*)
-              break
-              ;;
-          *)
-              echo "Please answer yes or no."
-              ;;
-      esac
-    done
+    echo ""
+    echo "No packages for version ${PKG_VER} are currently available."
+    echo "Performing a scripted install on this platform."
+    echo ""
+    ./linInstall
   fi
 fi

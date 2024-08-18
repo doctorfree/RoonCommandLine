@@ -236,7 +236,7 @@ if [ "${PYTHONUSERBASE}" ]; then
   fi
   . ${ROONCONF}
 
-  RVER=$(${PYTHON} -m pip show roonapi | grep Version | awk -F ':' ' { print $2 } ')
+  RVER=$(${PYTHON} -m pip show roonapi 2>/dev/null | grep Version | awk -F ':' ' { print $2 } ')
   # Remove leading and trailing spaces in RVER
   RVER="$(echo -e "${RVER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
   # Only patch Roonapi version 0.0.38 and earlier
