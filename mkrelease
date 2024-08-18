@@ -47,16 +47,24 @@ while getopts "b:cdnpu" flag; do
 done
 shift $(( OPTIND - 1 ))
 
-ANNO="RoonCommandLine Version ${VERSION} Release ${RELEASE}"
-BOPTS=
-[ "${BRANCH}" ] && BOPTS="--prerelease --target ${BRANCH}"
+if [ "${BRANCH}" ]; then
+  ANNO="RoonCommandLine Version ${VERSION} Pre-Release ${RELEASE}"
+  BOPTS="--prerelease --target ${BRANCH}"
+  r=p
+  rel=prerelease
+else
+  ANNO="RoonCommandLine Version ${VERSION} Release ${RELEASE}"
+  BOPTS=
+  r=r
+  rel=release
+fi
 if [ "${DRYRUN}" ]; then
   [ "${BRANCH}" ] && echo "git checkout ${BRANCH}"
   [ "${CLEAN}" ] && echo "./clean"
   [ "${PACKAGE}" ] && echo "./mkpkg"
-  echo "gittag v${VERSION}r${RELEASE} ${ANNO}"
-  echo "Creating release for version ${VERSION} release ${RELEASE} [dryrun]"
-  echo "gh release create v${VERSION}r${RELEASE} ${DRAFT} \\"
+  echo "gittag v${VERSION}${r}${RELEASE} ${ANNO}"
+  echo "Creating ${rel} for version ${VERSION} ${rel} ${RELEASE} [dryrun]"
+  echo "gh release create v${VERSION}${r}${RELEASE} ${DRAFT} \\"
   [ "${BOPTS}" ] && echo "   ${BOPTS} \\"
   echo "   --title \"${ANNO}\" \\"
   echo "   --notes-file pkg/release.md releases/${VERSION}/*"
@@ -65,11 +73,11 @@ else
   [ "${BRANCH}" ] && git checkout ${BRANCH}
   [ "${CLEAN}" ] && ./clean
   [ "${PACKAGE}" ] && ./mkpkg
-  gittag v${VERSION}r${RELEASE} ${ANNO}
+  gittag v${VERSION}${r}${RELEASE} ${ANNO}
 
-  echo "Creating release for version ${VERSION} release ${RELEASE}"
+  echo "Creating ${rel} for version ${VERSION} ${rel} ${RELEASE}"
 
-  gh release create v${VERSION}r${RELEASE} ${DRAFT} ${BOPTS} \
+  gh release create v${VERSION}${r}${RELEASE} ${DRAFT} ${BOPTS} \
                     --title "${ANNO}" \
                     --notes-file pkg/release.md \
                     releases/${VERSION}/*
