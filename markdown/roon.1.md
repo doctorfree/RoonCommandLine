@@ -10,7 +10,7 @@ roon - Command line control of the Roon Audio System
 
 # SYNOPSIS
 
-**roon** [ **-bBEIOuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-m** ] [ **-n** ] [ **-N** ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** discover | group | ungroup | play | play_all | pause | pause_all | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ] [ **-f** on|onlog|off|status ]
+**roon** [ **-bBEIOuU** ] [ **-L** ] [ **-S** ] [ **-l** albums | artists | artalbums | composers | genres | genalbums | genartists | playlists | tags | zones ] [ **-A** album ] [ **-a** artist ] [ **-C** composer ] [ **-g** genre ] [ **-m** ] [ **-n** ] [ **-N** ] [ **-p** playlist ] [ **-r** radio ] [ **-t** tag ] [ **-s** search ] [-v volume] [ **-z** zone ] [ **-G** zone_group ] [ **-c** discover | group | ungroup | play | play_all | pause | pause_all | set | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all ] [ **-T** track ] [ **-f** on|onlog|off|status ]
 
 # DESCRIPTION
 The *roon* command acts as a front-end for executing the RoonCommandLine
@@ -159,7 +159,7 @@ Outputs are queried and the specified volume level converted to dB if necessary
 **-z** zone
 : Selects the Roon Zone in which to play, '-z default' indicates the default zone, '-z last' the last zone used
 
-**-c** **[**discover | group | ungroup | play | play_all | pause | pause_all | playpause | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all**]**
+**-c** **[**discover | group | ungroup | play | play_all | pause | pause_all | playpause | set | stop | stop_all | next | previous | shuffle | repeat | mute | mute_all**]**
 : Issues the command in the selected zone or all zones (`mute_all`, `play_all`, `pause_all`, `stop_all`)
 
 Combine '-a artist' and '-A album' to play an album by a specified artist

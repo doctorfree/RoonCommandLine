@@ -1,0 +1,102 @@
+#!/bin/bash
+#
+# shellcheck disable=SC1090,SC2220,SC2207
+
+ROON=/usr/local/Roon
+ROONAPI=${ROON}/api
+ROONETC=${ROON}/etc
+ROON_INI=${ROONETC}/roon_api.ini
+ROONCONF=${ROONETC}/pyroonconf
+SCRIPT="set_default.py"
+
+BOLD=$(tput bold 2>/dev/null)
+NORMAL=$(tput sgr0 2>/dev/null)
+
+usage() {
+  printf "\nUsage: set_roon_default [-A album] [-a artist] [-c composer] [-g genre]"
+  printf "\n                        [-p playlist] [-r radio] [-t tag] [-z zone] [-u]"
+  printf "\nWhere:"
+  printf "\n\t-A 'album' specifies the album title to set as the default album"
+  printf "\n\t-a 'artist' specifies the artist name to set as the default artist"
+  printf "\n\t-c 'composer' specifies the composer name to set as the default composer"
+  printf "\n\t-g 'genre' specifies the genre name to set as the default genre"
+  printf "\n\t-p 'playlist' specifies the playlist name to set as the default playlist"
+  printf "\n\t-r 'radio' specifies the radio name to set as the default radio"
+  printf "\n\t-t 'tag' specifies the tag name to set as the default tag"
+  printf "\n\t-z 'zone' specifies the zone name to set as the default zone"
+  printf "\n\t-u displays this usage message and exits\n"
+  exit 1
+}
+
+[ -f ${ROONAPI}/${SCRIPT} ] || {
+    echo "Roon Command Line scripts not installed. Missing ${ROONAPI}/$SCRIPT"
+    exit 1
+}
+cd ${ROONAPI} || exit 1
+
+# Use a Python virtual environment
+[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
+[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
+  export PATH=/usr/local/Roon/venv/bin:${PATH}
+}
+
+have_python3=$(type -p python3)
+if [ "${have_python3}" ]
+then
+  PYTHON=python3
+else
+  PYTHON=python
+fi
+pycom="${PYTHON} ${ROONAPI}/${SCRIPT}"
+
+while getopts ":A:a:c:g:p:r:t:z:u" flag; do
+  case $flag in
+    A)
+      echo "${BOLD}Setting RoonCommandLine default album to: ${OPTARG}${NORMAL}"
+      ${pycom} -A "${OPTARG}"
+      ;;
+    a)
+      echo "${BOLD}Setting RoonCommandLine default artist to: ${OPTARG}${NORMAL}"
+      ${pycom} -a "${OPTARG}"
+      ;;
+    c)
+      echo "${BOLD}Setting RoonCommandLine default composer to: ${OPTARG}${NORMAL}"
+      ${pycom} -c "${OPTARG}"
+      ;;
+    g)
+      echo "${BOLD}Setting RoonCommandLine default genre to: ${OPTARG}${NORMAL}"
+      ${pycom} -g "${OPTARG}"
+      ;;
+    p)
+      echo "${BOLD}Setting RoonCommandLine default playlist to: ${OPTARG}${NORMAL}"
+      ${pycom} -p "${OPTARG}"
+      ;;
+    r)
+      echo "${BOLD}Setting RoonCommandLine default radio to: ${OPTARG}${NORMAL}"
+      ${pycom} -r "${OPTARG}"
+      ;;
+    t)
+      echo "${BOLD}Setting RoonCommandLine default tag to: ${OPTARG}${NORMAL}"
+      ${pycom} -t "${OPTARG}"
+      ;;
+    z)
+      defzone="${OPTARG}"
+      ZONE=$(${PYTHON} ${ROONAPI}/zone_command.py -c verify -z "${defzone}")
+      if [ "${ZONE}" ]; then
+        echo "${BOLD}Setting RoonCommandLine default zone to: ${ZONE}${NORMAL}"
+        ${pycom} -z "${ZONE}"
+        ${ROON}/bin/set_zone "${ZONE}"
+      else
+        echo "No zone matching ${defzone}"
+      fi
+      ;;
+    u)
+      usage
+      ;;
+    \?)
+      echo "Invalid option: $flag"
+      usage
+      ;;
+  esac
+done
+shift $(( OPTIND - 1 ))
