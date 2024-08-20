@@ -14,7 +14,7 @@ export ROON_UNATTENDED=1
 # If not specified, the last username found in /home will be used
 export ROON_USER=myusername
 # Perform the installation
-sudo -E apt install ./RoonCommandLine_2.1.4-1.deb
+sudo -E apt -y install ./RoonCommandLine_2.1.4-1.deb
 ```
 
 After completing an unattended installation, in an interactive shell, execute the command:

@@ -212,7 +212,7 @@ Once the Python 3 dependency is met, install RoonCommandLine by
 cloning the RoonCommandLine repository and executing the `Install` script:
 
 ```bash
-    git clone `https://github.com/doctorfree/RoonCommandLine.git`
+    git clone https://github.com/doctorfree/RoonCommandLine.git
     cd RoonCommandLine
     ./Install
 ```
@@ -234,7 +234,7 @@ Once the Python 3 dependency is met, install RoonCommandLine by
 cloning the RoonCommandLine repository and executing the `Install` script:
 
 ```bash
-    git clone `https://github.com/doctorfree/RoonCommandLine.git`
+    git clone https://github.com/doctorfree/RoonCommandLine.git
     cd RoonCommandLine
     ./Install
 ```
@@ -437,15 +437,15 @@ following setup:
 sudo mkdir -p /usr/local/bin
 sudo cp roon /usr/local/bin/roon
 sudo chmod 755 /usr/local/bin/roon
-# Edit the `server` and `user` settings near the top of the script
+# Edit the 'server' and 'user' settings near the top of the script
 sudo vi /usr/local/bin/roon
 sudo mkdir /usr/local/Roon
 sudo mkdir /usr/local/Roon/etc
 sudo cp etc/pyroonconf /usr/local/Roon/etc/pyroonconf
 sudo cp etc/roon_api.ini /usr/local/Roon/etc/roon_api.ini
 # Make the RoonCommandLine configuration directory writeable by your user
-USER=`id -u -n`
-GROUP=`id -g -n`
+USER=$(id -u -n)
+GROUP=$(id -g -n)
 sudo chown -R ${USER}:${GROUP} /usr/local/Roon/etc
 sudo chmod 755 /usr/local/Roon/etc
 sudo chmod 644 /usr/local/Roon/etc/*
