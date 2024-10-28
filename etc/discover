@@ -23,6 +23,11 @@ else
   fi
 fi
 
+EX_CORE_IP=$(cat ${ROON_INI} | grep RoonCoreIP | awk -F '=' ' { print $2 } ')
+EX_CORE_IP="$(echo -e "${EX_CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+EX_CORE_PORT=$(cat ${ROON_INI} | grep RoonCorePort | awk -F '=' ' { print $2 } ')
+EX_CORE_PORT="$(echo -e "${EX_CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
 echo "In order to configure the Python Roon API we must set the IP address"
 echo "of the Roon Core. Discovery will be used to determine the Roon Core IP."
 echo "When prompted for authorization, go to a Roon Remote window and click"
