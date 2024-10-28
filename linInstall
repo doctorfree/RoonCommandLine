@@ -11,7 +11,25 @@ ROONETC=${ROON}/etc
 ROON_INI=${ROONETC}/roon_api.ini
 ROONCONF=${ROONETC}/pyroonconf
 TMP_ROON_API="/tmp/_roon_api_ini_.save"
-export SUDO=sudo
+
+# User should not be root. Prompt to proceed if root user
+iamroot=
+SUDO="sudo -E"
+if [ "${EUID}" ]
+then
+  [ ${EUID} -eq 0 ] && {
+    iamroot=1
+    SUDO=
+  }
+else
+  uid=`id -u`
+  [ ${uid} -eq 0 ] && {
+    iamroot=1
+    SUDO=
+  }
+fi
+
+[ "$1" == "unattended" ] && export ROON_UNATTENDED="unattended"
 
 BOLD=$(tput bold 2>/dev/null)
 NORMAL=$(tput sgr0 2>/dev/null)
@@ -52,20 +70,22 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 version=${VERSION}
 release=${RELEASE}
 
-while true; do
-  read -r -p "Install ${PKG_NAME} version ${version}r${release} ? ('Y'/'N'): " yn
-  case $yn in
-    [Yy]*)
-      break
-      ;;
-    [Nn]*)
-      exit 0
-      ;;
-    *)
-      echo "Please answer yes or no."
-      ;;
-  esac
-done
+[ "${ROON_UNATTENDED}" ] || {
+  while true; do
+    read -r -p "Install ${PKG_NAME} version ${version}r${release} ? ('Y'/'N'): " yn
+    case $yn in
+      [Yy]*)
+        break
+        ;;
+      [Nn]*)
+        exit 0
+        ;;
+      *)
+        echo "Please answer yes or no."
+        ;;
+    esac
+  done
+}
 
 [ -d /usr/local ] || ${SUDO} mkdir /usr/local
 [ -d /usr/local/bin ] || ${SUDO} mkdir /usr/local/bin
@@ -175,7 +195,7 @@ ${SUDO} chown -R root:root ${ROON}
 
 # Try to configure the roon script with the IP and username
 IP=$(hostname -I | awk ' { print $1 } ')
-USER=$(id -u -n)
+ROON_SSH_USER=$(id -u -n)
 
 cd /usr/local/bin || exit 1
 for command in "${ROON}"/bin/*; do
@@ -227,6 +247,7 @@ fi
 ${SUDO} cp /tmp/r$$ ${ROON_INI}
 ${SUDO} rm -f /tmp/r$$
 
+ROON_SSH_USER="root"
 users=()
 numusers=0
 for homedir in /home/*; do
@@ -235,12 +256,23 @@ for homedir in /home/*; do
     username=$(basename "${homedir}")
     exists=$(id -g -n "${username}")
     [ "${exists}" ] && {
+      ROON_SSH_USER="${username}"
       users+=("${username}")
       numusers=$((numusers + 1))
     }
   }
 done
 
+[ $numusers -gt 1 ] && {
+  # Check for ROON_USER environment variable, use if set
+  if [ "${ROON_USER}" ] && [ -d /home/"${ROON_USER}" ]; then
+      ROON_SSH_USER="${ROON_USER}"
+      numusers=1
+  else
+    # Unattended installs use the last user found
+    [ "${ROON_UNATTENDED}" ] && numusers=1
+  fi
+}
 [ ${numusers} -gt 1 ] && {
   while true; do
     read -r -p "Using ${USER} as the Roon user. 'Y' for OK, 'N' to select a different user: " yn
@@ -255,7 +287,7 @@ done
               ;;
             *)
               [ -d /home/"${opt}" ] && {
-                USER="${opt}"
+                ROON_SSH_USER="${opt}"
                 break
               }
               printf "\nInvalid entry. Please try again"
@@ -287,7 +319,7 @@ fi
 ${SUDO} cp /tmp/roon$$ ${ROONCONF}
 ${SUDO} rm -f /tmp/roon$$
 
-cat ${ROON}/bin/roon | sed -e "s/XX.X.X.XXX/$IP/" -e "s/SSH_USERNAME/$USER/" >/tmp/roon$$
+cat ${ROON}/bin/roon | sed -e "s/XX.X.X.XXX/$IP/" -e "s/SSH_USERNAME/$ROON_SSH_USER/" >/tmp/roon$$
 ${SUDO} cp ${ROON}/bin/roon ${ROON}/bin/roon.orig
 ${SUDO} cp /tmp/roon$$ ${ROON}/bin/roon
 ${SUDO} rm -f /tmp/roon$$
@@ -372,9 +404,9 @@ else
   echo "List commands will not function properly."
 fi
 
-[ "${USER}" ] && {
-  GROUP=$(id -g -n "${USER}")
-  ${SUDO} chown -R "${USER}":"${GROUP}" ${ROONETC}
+[ "${ROON_SSH_USER}" ] && {
+  GROUP=$(id -g -n "${ROON_SSH_USER}")
+  ${SUDO} chown -R "${ROON_SSH_USER}":"${GROUP}" ${ROONETC}
 }
 
 # Install utilities used by the RoonCommandLine menu system
@@ -383,151 +415,14 @@ fi
 [ -x ${ROON}/etc/install-gum ] && ${ROON}/etc/install-gum
 
 echo ""
-echo "In order to configure the Python Roon API we must set the IP address"
-echo "of the Roon Core. Discovery will be used to determine the Roon Core IP."
-echo "When prompted for authorization, go to a Roon Remote window and click"
-echo "    Settings -> Extensions -> Enable"
-echo "to authorize discovery"
-echo ""
-
-# Get and set the Roon Core IP address
-${ROON}/bin/get_core_ip 2>&1 | tee /tmp/discover$$
-echo "Approval granted, retrieving zones and zone info ..."
-CORE_IP=$(cat /tmp/discover$$ | grep RoonCoreIP | awk -F '=' ' { print $2 } ')
-CORE_IP="$(echo -e "${CORE_IP}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-CORE_PORT=$(cat /tmp/discover$$ | grep RoonCorePort | awk -F '=' ' { print $2 } ')
-CORE_PORT="$(echo -e "${CORE_PORT}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-
-cat ${ROON_INI} | sed -e "s/${EX_CORE_IP}/${CORE_IP}/" -e "s/${EX_CORE_PORT}/${CORE_PORT}/" >/tmp/core$$
-${SUDO} cp /tmp/core$$ ${ROON_INI}
-${SUDO} rm -f /tmp/core$$ /tmp/discover$$
-
-# Get and set the default zone and initial zone groupings
-# Attempting to avoid grouping incompatible zones is somewhat convoluted
-defaultZone=
-groupOne=
-groupTwo=
-groupRee=
-groupFor=
-zones=$(${ROON}/bin/get_zones)
-numZones=$(echo "${zones}" | awk -F ',' ' { print NF } ')
-numWith=0
-[ ${numZones} -gt 0 ] && {
-  defaultZone=$(echo "${zones}" | awk -F ',' ' { print $1 } ')
-  withDefaultZone=$(${ROON}/bin/get_zone_info -l -z "${defaultZone}")
-  numWith=$(echo "${withDefaultZone}" | awk -F ',' ' { print NF } ')
-}
-[ ${numZones} -gt 2 ] && {
-  [ ${numWith} -gt 0 ] && {
-    groupOne=$(echo "${defaultZone},${withDefaultZone}" | sed -e "s/,/, /g" -e "s/:/,/")
-    # Find a zone not in groupOne and use it for the second zone group
-    zoneTwo=
-    numWithTwo=0
-    zonearray=()
-    arrayone=()
-    unset saved_IFS
-    [ -n "${IFS+set}" ] && saved_IFS=$IFS
-    IFS=","
-    for i in ${zones}; do
-      thiszone="$(echo -e "$i" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-      zonearray+=("${thiszone}")
-    done
-    for i in ${groupOne}; do
-      thisgroup="$(echo -e "$i" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-      arrayone+=("${thisgroup}")
-    done
-
-    Array3=()
-    for zone in ${zonearray[@]}; do
-      for one in ${arrayone[@]}; do
-        [ "${zone}" == "${one}" ] && continue 2
-      done
-      Array3+=("${zone}")
-    done
-
-    zoneTwo=${Array3[0]}
-    [ "${zoneTwo}" ] || zoneTwo=${arrayone[1]}
-    withZoneTwo=$(${ROON}/bin/get_zone_info -l -z "${zoneTwo}")
-    numWithTwo=$(echo "${withZoneTwo}" | awk -F ',' ' { print NF } ')
-    [ -z "${numWithTwo//[0-9]}" ] && {
-      [ ${numWithTwo} -gt 0 ] && {
-        groupTwo=$(echo "${zoneTwo},${withZoneTwo}" | sed -e "s/${defaultZone},//" -e "s/,/, /g" -e "s/:/,/")
-      }
-    }
-    unset IFS
-    [ -n "${saved_IFS+set}" ] && {
-      IFS=$saved_IFS
-      unset saved_IFS
-    }
-  }
-}
-[ ${numZones} -gt 3 ] && {
-  secondZone=$(echo "${zones}" | awk -F ',' ' { print $2 } ' | sed -e "s/^ //")
-  withSecondZone=$(${ROON}/bin/get_zone_info -l -z "${secondZone}")
-  withSecondZone=$(echo ${withSecondZone} | sed -e "s/${defaultZone},//")
-  numWith=$(echo "${withSecondZone}" | awk -F ',' ' { print NF } ')
-  if [ ${numWith} -gt 1 ]; then
-    withDefOne=$(echo "${withSecondZone}" | awk -F ',' ' { print $1 ", " $2 } ')
-    groupRee="${secondZone}, ${withDefOne}"
-  else
-    [ ${numWith} -gt 0 ] && {
-      withDefOne=$(echo "${withSecondZone}" | awk -F ',' ' { print $1 } ')
-      groupRee="${secondZone}, ${withDefOne}"
-    }
-  fi
-}
-[ ${numZones} -gt 4 ] && {
-  lastZone=$(echo "${zones}" | awk -F ',' ' { print $(NF) } ' | sed -e "s/^ //")
-  withLastZone=$(${ROON}/bin/get_zone_info -l -z "${lastZone}")
-  withLastZone=$(echo ${withLastZone} | sed -e "s/${defaultZone},//")
-  withLastZone=$(echo ${withLastZone} | sed -e "s/${secondZone},//")
-  numWith=$(echo "${withLastZone}" | awk -F ',' ' { print NF } ')
-  if [ ${numWith} -gt 2 ]; then
-    withDefOne=$(echo "${withLastZone}" | awk -F ',' ' { print $(NF-2) ", " $(NF-1) ", " $(NF) } ')
-    groupFor="${lastZone}, ${withDefOne}"
-  else
-    if [ ${numWith} -gt 1 ]; then
-      withDefOne=$(echo "${withLastZone}" | awk -F ',' ' { print $(NF-1) ", " $(NF) } ')
-      groupFor="${lastZone}, ${withDefOne}"
-    else
-      [ ${numWith} -gt 0 ] && {
-        withDefOne=$(echo "${withLastZone}" | awk -F ',' ' { print $(NF) } ')
-        groupFor="${lastZone}, ${withDefOne}"
-      }
-    fi
-  fi
-}
-cat ${ROON_INI} \
-  | sed -e "s/__ALL_ZONES__/${zones}/" \
-  -e "s/__GROUP_ONE__/${groupOne}/" \
-  -e "s/__GROUP_TWO__/${groupTwo}/" \
-  -e "s/__GROUP_REE__/${groupRee}/" \
-  -e "s/__GROUP_FOR__/${groupFor}/" \
-  -e "s/__VERSION__/${version}/" \
-  -e "s/__RELEASE__/${release}/" \
-  -e "s/__DEF_ZONE__/${defaultZone}/" >/tmp/zones$$
-${SUDO} cp /tmp/zones$$ ${ROON_INI}
-rm -f /tmp/zones$$
-
-DEFZONE=$(grep ^DefaultZone ${ROON_INI} | awk -F '=' ' { print $2 } ')
-# Remove leading and trailing spaces in DEFZONE
-DEFZONE="$(echo -e "${DEFZONE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-# Set ROON_ZONE in pyroonconf if not already set
-if [ -s ${ROONCONF} ]; then
-  grep ROON_ZONE ${ROONCONF} >/dev/null || {
-    echo "ROON_ZONE=\"$DEFZONE\"" | ${SUDO} tee -a ${ROONCONF} >/dev/null
-  }
+if [ "${ROON_UNATTENDED}" ]; then
+  echo "Roon Core discovery and authorizing the RoonCommandLine extension"
+  echo "must be performed post-installation in unattended installations."
+  echo "After the installation of RoonCommandLine completes, run the command:"
+  echo "    /usr/local/bin/roon -c discover"
 else
-  echo "ROON_ZONE=\"$DEFZONE\"" | ${SUDO} tee ${ROONCONF} >/dev/null
+  ${ROON}/etc/discover "${SUDO}" "${SARG}" "${SUSR}"
 fi
+echo ""
 
-echo ""
-echo "Verify the 'server' and 'user' settings in the roon script are correct."
-echo "If you wish to deploy RoonCommandLine on other systems, install the package"
-echo "there or copy the 'roon' frontend shell script to a location in your execution"
-echo "PATH on those systems from which you wish to control Roon via SSH."
-echo ""
-echo "Edit the Roon Command Line configuration settings at:"
-echo "${ROON_INI}"
-echo "and verify the settings in the configuration file ${ROONCONF}"
-echo ""
+[ "${ROON_SSH_USER}" ] && chown -R ${ROON_SSH_USER}:${GROUP} ${ROONETC}

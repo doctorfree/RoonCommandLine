@@ -1,10 +1,15 @@
 # RoonCommandLine Release Notes
 
-RoonCommandLine version 2.1.3 release 2 integrates the `Roon Community Remote` GUI for Linux
+RoonCommandLine version 2.1.4 release 1 provides support for unattended installation.
 
-- Add menu options to install, update, and open the Roon GUI
-- Install `figlet`, `gum`, and `fzf` in postinstall
-- Add splash screen to menu open
+- Set and export the `ROON_UNATTENDED` environment variable to perform an unattended installation
+  - `export ROON_UNATTENDED="unattended"`
+  - Use `sudo -E ...` to install Debian or RPM format packages
+  - Alternately, `./Install unattended` will also perform an unattended installation
+  - After an unattended installation, execute `/usr/local/bin/roon -c discover`.
+- This release checks and repairs the RoonCommandLine Python virtual environment
+  - Can occur if the system Python is upgraded and the previously installed Python is removed
+  - Typically this issue is restricted to Homebrew installs of Python
 
 ## Installation
 
@@ -15,13 +20,13 @@ Download the latest Debian or RPM package format release from the **Assets** sec
 Install the package on Debian based systems by executing the command
 
 ```bash
-sudo apt install ./RoonCommandLine_2.1.3-2.deb
+sudo apt install ./RoonCommandLine_2.1.4-1.deb
 ```
 
 Install the package on RPM based systems by executing the command
 
 ```bash
-sudo yum localinstall ./RoonCommandLine-2.1.3-2.rpm
+sudo yum localinstall ./RoonCommandLine-2.1.4-1.rpm
 ```
 
 Removal of the package on Debian based systems can be accomplished by issuing the command:
@@ -45,6 +50,12 @@ cd RoonCommandLine
 ```
 
 ## Release history
+
+RoonCommandLine version 2.1.3 release 2 integrates the `Roon Community Remote` GUI for Linux
+
+- Add menu options to install, update, and open the Roon GUI
+- Install `figlet`, `gum`, and `fzf` in postinstall
+- Add splash screen to menu open
 
 RoonCommandLine version 2.1.3 release 1 provides support for specifying the default zone and last zone used
 

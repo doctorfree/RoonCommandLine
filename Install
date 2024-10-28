@@ -21,33 +21,44 @@ PKG_SELECTED=
 
 # User should not be root. Prompt to proceed if root user
 iamroot=
+SUDO="sudo -E"
 if [ "${EUID}" ]
 then
-  [ ${EUID} -eq 0 ] && iamroot=1
+  [ ${EUID} -eq 0 ] && {
+    iamroot=1
+    SUDO=
+  }
 else
   uid=`id -u`
-  [ ${uid} -eq 0 ] && iamroot=1
+  [ ${uid} -eq 0 ] && {
+    iamroot=1
+    SUDO=
+  }
 fi
 
+[ "$1" == "unattended" ] && export ROON_UNATTENDED="unattended"
+
 [ "${iamroot}" ] && {
-  printf "\nThe ${BOLD}Install${NORM} command should be run as a normal user."
-  printf "\nIt appears it has been invoked with 'root' user privileges.\n\n"
-  while true
-  do
-    read -p "Do you intend to use RoonCommandLine as the 'root' user ? (y/n) " yn
-    case $yn in
-        [Yy]* )
+  [ "${ROON_UNATTENDED}" ] || {
+    printf "\nThe ${BOLD}Install${NORM} command should be run as a normal user."
+    printf "\nIt appears it has been invoked with 'root' user privileges.\n\n"
+    while true
+    do
+      read -p "Do you intend to use RoonCommandLine as the 'root' user ? (y/n) " yn
+      case $yn in
+          [Yy]* )
                 break
                 ;;
-        [Nn]* )
+          [Nn]* )
                 printf "\nRe-run this command as a normal user."
                 printf "\nExiting.\n\n"
                 exit 0
                 ;;
-            * ) echo "Please answer yes or no."
+              * ) echo "Please answer yes or no."
                 ;;
-    esac
-  done
+      esac
+    done
+  }
 }
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -79,10 +90,13 @@ get_available_packages() {
 install_selected() {
   for pkg in ${PKG_AVAILABLE}
   do
-    while true
-    do
-      read -p "Install ${pkg} ? ('Y'/'N'): " yn
-      case $yn in
+    if [ "${ROON_UNATTENDED}" ]; then
+      PKG_SELECTED="${PKG_SELECTED} $pkg"
+    else
+      while true
+      do
+        read -p "Install ${pkg} ? ('Y'/'N'): " yn
+        case $yn in
           [Yy]*)
               PKG_SELECTED="${PKG_SELECTED} $pkg"
               break
@@ -93,8 +107,9 @@ install_selected() {
           * )
               echo "Please answer yes or no."
               ;;
-      esac
-    done
+        esac
+      done
+    fi
   done
   PKG_SELECTED=`echo $PKG_SELECTED | sed -e "s/^ //"`
 }
@@ -102,7 +117,7 @@ install_selected() {
 plat=`uname -s`
 if [ "$plat" == "Darwin" ]
 then
-  ./macInstall
+  ./macInstall ${ROON_UNATTENDED}
 else
   debian=
   have_apt=`type -p apt`
@@ -189,11 +204,11 @@ else
       then
         if [ "${have_apt}" ]
         then
-          sudo apt install "${PKG}"
+          ${SUDO} apt install "${PKG}"
         else
           if [ "${have_dpkg}" ]
           then
-            sudo dpkg -i "${PKG}"
+            ${SUDO} dpkg -i "${PKG}"
           else
             echo "Cannot locate either apt or dpkg to install. Skipping."
           fi
@@ -201,11 +216,11 @@ else
       else
         if [ "${have_yum}" ]
         then
-          sudo yum localinstall "${PKG}"
+          ${SUDO} yum localinstall "${PKG}"
         else
           if [ "${have_rpm}" ]
           then
-            sudo rpm -i "${PKG}"
+            ${SUDO} rpm -i "${PKG}"
           else
             echo "Cannot locate either yum or rpm to install. Skipping."
           fi
@@ -213,25 +228,29 @@ else
       fi
     done
   else
-    while true
-    do
-      echo ""
-      echo "No packages for version ${PKG_VER} are currently available."
-      echo "Would you like to perform a scripted install on this platform?"
-      echo ""
-      read -p "Install ${pkg} ? ('Y'/'N'): " yn
-      case $yn in
-          [Yy]*)
-              ./linInstall
-              break
-              ;;
-          [Nn]*)
-              break
-              ;;
-          *)
-              echo "Please answer yes or no."
-              ;;
-      esac
-    done
+    if [ "${ROON_UNATTENDED}" ]; then
+      ./linInstall unattended
+    else
+      while true
+      do
+        echo ""
+        echo "No packages for version ${PKG_VER} are currently available."
+        echo "Would you like to perform a scripted install on this platform?"
+        echo ""
+        read -p "Install ${pkg} ? ('Y'/'N'): " yn
+        case $yn in
+            [Yy]*)
+                ./linInstall
+                break
+                ;;
+            [Nn]*)
+                break
+                ;;
+            *)
+                echo "Please answer yes or no."
+                ;;
+        esac
+      done
+    fi
   fi
 fi

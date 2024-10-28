@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # roontui - Frontend for roon-tui terminal user interface for Roon
 #           Default to ~/.config/roon-tui/ for roon-tui configuration and log files

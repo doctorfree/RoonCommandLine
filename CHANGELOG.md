@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+October 27, 2024 :
+RoonCommandLine version 2.1.4 release 1
+
+    This release primarily provides support for unattended installation
+        * Check and repair the RoonCommandLine Python virtual environment
+
 June 11, 2024 :
 RoonCommandLine version 2.1.3 release 2
 

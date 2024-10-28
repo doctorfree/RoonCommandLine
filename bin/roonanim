@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # roonanim - display, animate, zoom RoonCommandLine splash screen using Kitty
 #
