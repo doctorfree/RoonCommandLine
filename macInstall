@@ -27,7 +27,10 @@ else
   }
 fi
 
-[ "$1" == "unattended" ] && export ROON_UNATTENDED="unattended"
+[ "$1" == "unattended" ] && {
+  export ROON_UNATTENDED="unattended"
+  shift
+}
 
 BOLD=$(tput bold 2>/dev/null)
 NORMAL=$(tput sgr0 2>/dev/null)
@@ -445,10 +448,14 @@ fi
 
 echo ""
 if [ "${ROON_UNATTENDED}" ]; then
+  echo ""
+  echo "*************************** IMPORTANT ***************************"
   echo "Roon Core discovery and authorizing the RoonCommandLine extension"
   echo "must be performed post-installation in unattended installations."
   echo "After the installation of RoonCommandLine completes, run the command:"
+  echo ""
   echo "    /usr/local/bin/roon -c discover"
+  echo "*****************************************************************"
 else
   ${ROON}/etc/discover "${SUDO}" "${SARG}" "${SUSR}"
 fi

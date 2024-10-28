@@ -36,7 +36,10 @@ else
   }
 fi
 
-[ "$1" == "unattended" ] && export ROON_UNATTENDED="unattended"
+[ "$1" == "unattended" ] && {
+  export ROON_UNATTENDED="unattended"
+  shift
+}
 
 [ "${iamroot}" ] && {
   [ "${ROON_UNATTENDED}" ] || {

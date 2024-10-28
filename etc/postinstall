@@ -240,7 +240,7 @@ if [ "${PYTHONUSERBASE}" ]; then
   fi
   . ${ROONCONF}
 
-  RVER=$(${PYTHON} -m pip show roonapi | grep Version | awk -F ':' ' { print $2 } ')
+  RVER=$(${PYTHON} -m pip show roonapi 2>/dev/null | grep Version | awk -F ':' ' { print $2 } ')
   # Remove leading and trailing spaces in RVER
   RVER="$(echo -e "${RVER}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
   # Only patch Roonapi version 0.0.38 and earlier
@@ -309,16 +309,20 @@ else
 fi
 
 # Install utilities used by the RoonCommandLine menu system
-[ -x ${ROON}/etc/install-figlet ] && ${SUDO} ${SARG} ${SUSR} ${ROON}/etc/install-figlet
-[ -x ${ROON}/etc/install-fzf ] && ${SUDO} ${SARG} ${SUSR} ${ROON}/etc/install-fzf
-[ -x ${ROON}/etc/install-gum ] && ${SUDO} ${SARG} ${SUSR} ${ROON}/etc/install-gum
+[ -x ${ROON}/etc/install-figlet ] && ${SUDO} ${SARG} ${SUSR} ${ROON}/etc/install-figlet 2>/dev/null
+[ -x ${ROON}/etc/install-fzf ] && ${SUDO} ${SARG} ${SUSR} ${ROON}/etc/install-fzf 2>/dev/null
+[ -x ${ROON}/etc/install-gum ] && ${SUDO} ${SARG} ${SUSR} ${ROON}/etc/install-gum 2>/dev/null
 
 echo ""
 if [ "${ROON_UNATTENDED}" ]; then
+  echo ""
+  echo "*************************** IMPORTANT ***************************"
   echo "Roon Core discovery and authorizing the RoonCommandLine extension"
   echo "must be performed post-installation in unattended installations."
   echo "After the installation of RoonCommandLine completes, run the command:"
+  echo ""
   echo "    /usr/local/bin/roon -c discover"
+  echo "*****************************************************************"
 else
   ${ROON}/etc/discover "${SUDO}" "${SARG}" "${SUSR}"
 fi
