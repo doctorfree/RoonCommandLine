@@ -114,6 +114,7 @@ ${SUDO} chmod 644 "${OUT_DIR}"/${ROON}/etc/* \
                   "${OUT_DIR}"/${ROON}/patches/roon-web-controller/*
 ${SUDO} chmod 755 "${OUT_DIR}"/${ROON}/bin/* \
                   "${OUT_DIR}"/${ROON}/bin \
+                  "${OUT_DIR}"/${ROON}/etc/discover \
                   "${OUT_DIR}"/${ROON}/etc/install-fzf \
                   "${OUT_DIR}"/${ROON}/etc/install-roon-gui \
                   "${OUT_DIR}"/${ROON}/etc/install-roon-tui \
