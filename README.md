@@ -25,6 +25,7 @@
     1. [RPM Package installation](#rpm-package-installation)
     1. [Scripted Linux installation](#scripted-linux-installation)
     1. [Mac OS X installation](#mac-os-x-installation)
+    1. [Unattended installation](#unattended-installation)
     1. [Post installation configuration](#post-installation-configuration)
         1. [Zone groupings and defaults](#zone-groupings-and-defaults)
         1. [SSH public key authentication](#ssh-public-key-authentication)
@@ -243,6 +244,19 @@ cloning the RoonCommandLine repository and executing the `Install` script:
 script as a user with `sudo` privileges and as the user which will be used
 to SSH in to the system. If you are not going to enable SSH support, at least
 make sure the user has sudo privileges.
+
+### Unattended installation
+
+Each of the installation scenarios described above may be performed without the
+need for user input, an unattended installation.
+
+To perform an unattended installation:
+
+- Set and export the `ROON_UNATTENDED` environment variable
+  - `export ROON_UNATTENDED="unattended"`
+  - Use `sudo -E ...` to install Debian or RPM format packages
+- Alternately, `./Install unattended` will also perform an unattended installation
+- After an unattended installation, execute `/usr/local/bin/roon -c discover`
 
 ### Post installation configuration
 
