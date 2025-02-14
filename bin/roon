@@ -797,6 +797,10 @@ ROONETC=${ROON}/etc
 ROON_INI=${ROONETC}/roon_api.ini
 ROONCONF=${ROONETC}/pyroonconf
 LOCAL=false
+
+# Set a default TERM if one not already set
+[ "${TERM}" ] || export TERM="vt100"
+
 BOLD=$(tput bold 2>/dev/null)
 NORMAL=$(tput sgr0 2>/dev/null)
 
@@ -2813,7 +2817,7 @@ shuffled=
     fi
   fi
 }
- 
+
 if [ "${open_roon_gui}" ]; then
   [ -x ${ROON}/bin/roongui ] && ${ROON}/bin/roongui
 else
