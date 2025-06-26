@@ -144,6 +144,14 @@ installation and use of `RoonCommandLine` on the following platforms:
 
 Tell us what you're running `RoonCommandLine` on and we'll add it to the list.
 
+#### Microsoft Windows Subsystem for Linux
+
+`RoonCommandLine` is not supported on Microsoft Windows platforms. However,
+some `RoonCommandLine` users have had success deploying it or or the Python
+code on which it is based on the Windows Subsystem for Linux (WSL).
+
+See [RoonCommandLine on WSL Notes](https://github.com/doctorfree/RoonCommandLine/blob/master/WSL.md)
+
 ## Installation
 
 RoonCommandLine v2.0.0 and later can be installed on Linux systems using
