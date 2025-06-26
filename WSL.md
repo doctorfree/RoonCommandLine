@@ -44,14 +44,8 @@ pip install websocket-client requests
 
 #### Patch roonapi.py
 
-We modified the file at:
-
-```
-C:\Windows\System32\roonenv\Lib\site-packages\roonapi\roonapi.py
-
-```
-
-to accept a `token_path` argument in the RoonApi constructor and to
+Modify `C:\Windows\System32\roonenv\Lib\site-packages\roonapi\roonapi.py`
+to accept a `token_path` argument in the `RoonApi` constructor and to
 load/store the token persistently. This prevents the need for extension
 approval every time the script is run.
 
