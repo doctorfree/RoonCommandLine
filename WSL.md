@@ -12,6 +12,9 @@ Windows users who wish to run `RoonCommandLine` or the Python Roon API.
 Roon community forum user Jon Spijker provides these notes on his successful
 deployment of the Python Roon API (`roonapi.py`) on WSL.
 
+**Note:** Jon provides a more detailed explanation and code in his
+[RoonCommandLine + SmartSleep Integration for Windows](https://gist.github.com/jonspijker/d9dfd12751b319ebf835ba02da0eb7c9) gist on Github.
+
 Steps to get the Python `roonapi.py` working successfully on Windows 11 using PowerShell.
 
 ### Goal
