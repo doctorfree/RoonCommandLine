@@ -589,6 +589,63 @@ Interactive menus when invoked with no arguments<br/>
 
 ## Troubleshooting
 
+This section describes some troubleshooting for commonly reported issues.
+
+### Installation failure communicating with the Roon Core
+
+If during installation of `RoonCommandLine` you see something like the following error
+then the system on which you are installing `RoonCommandLine` had some difficulty
+communicating with the Roon Core and was unable to retrieve the IP address, Port,
+or Zones. This has happened with Roon Nucleus and investigation is underway.
+
+The error message looks like:
+
+```
+Traceback (most recent call last):
+  File "/usr/local/Roon/api/get_core_ip.py", line 26, in <module>
+    apis = [RoonApi(app, None, server[0], server[1], False)]
+            ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Roon/venv/lib/python3.13/site-packages/roonapi/roonapi.py", line 798, in __init__
+    raise RoonApiException("Host and port of the roon core must be specified!")
+roonapi.roonapi.RoonApiException: Host and port of the roon core must be specified!
+Approval granted, retrieving zones and zone info ...
+Traceback (most recent call last):
+  File "/usr/local/Roon/api/list_zones.py", line 65, in <module>
+    roonapi = RoonApi(appinfo, token, server, port)
+  File "/usr/local/Roon/venv/lib/python3.13/site-packages/roonapi/roonapi.py", line 798, in __init__
+    raise RoonApiException("Host and port of the roon core must be specified!")
+roonapi.roonapi.RoonApiException: Host and port of the roon core must be specified!
+```
+
+It is possible to manually configure the Roon Core IP and Port after this type of failed installation.
+
+First, verify the `RoonCommandLine` system can reach the Roon Core. The `telnet` command can be used to check
+network connectivity between the two systems (replace `<roon.core.ip>` with the IP address of your Roon Core):
+
+```bash
+telnet <roon.core.ip> 9330
+```
+
+If you do not see a `Connected to ...` message then there is some networking issue between the 2 systems.
+Make sure the two systems are on the same local area network in the same subnet.
+
+You can exit `telnet` with `Ctrl-]` and `quit`.
+
+If `telnet` was able to connect to the Roon Core then edit `/usr/local/Roon/etc/roon_api.ini` and add the
+settings for the Roon Core IP and Port:
+
+```
+RoonCoreIP = <roon.core.ip>
+RoonCorePort = 9330
+```
+
+After adding the Core IP and Port to `roon_api.ini` execute the command `list_zones`. If you see error
+output then manual configuration failed. If you see no output from the `list_zones` command then it is
+waiting for the extension to be enabled. In the Roon GUI got to `Settings -> Extensions` and click the
+`Enable` button for RoonCommandLine.
+
+### Public Key Authentication in SSH
+
 The most common difficulty encountered during initial setup of the Roon Command
 Line package is the configuration of public key authentication in SSH. This allows
 the "roon" command on your systems to execute Roon Command Line commands remotely
@@ -606,6 +663,8 @@ same system and run the roon commands locally, avoiding the need for SSH.
 To enable local execution of the roon command line tools, issue the command:
 
     `roon -L`
+
+### Configuration failure
 
 In some cases the initial installation may fail to configure the system properly.
 The Roon Command Line install creates two configuration files:
@@ -639,6 +698,8 @@ Much of the Roon Command Line setup is automatically configured during the execu
 of the ./Install script. If you have some expertise in Bash scripting you can
 examine this script to see what commands were issued.
 
+### Python Roon API remote debugging
+
 Another area that may be causing problems is the installation of the Python Roon API
 package and its ability to communicate with your Roon Core. To debug problems I have
 found it useful to SSH in to the system running the Python Roon API package and run
@@ -653,6 +714,8 @@ which remotely runs the list_zones command, SSH in as the configured user and ru
 This eliminates SSH and remote execution as well as the intermediate shell script
 used to execute the python script. Similar python commands can be issued directly
 on the Python Roon API system in the /usr/local/Roon/api directory.
+
+### RoonCommandLine frontend command configuration
 
 Verify that the "roon" frontend command shell script has been configured properly.
 Open the roon shell script in an editor and find the two lines near the top of the
