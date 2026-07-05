@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+July 5, 2026 :
+RoonCommandLine version 2.1.4 release 2
+
+    This release provides support for Python 3.9 installation
+
 October 27, 2024 :
 RoonCommandLine version 2.1.4 release 1
 

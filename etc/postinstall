@@ -10,6 +10,8 @@ ROON_INI=${ROONETC}/roon_api.ini
 ROONCONF=${ROONETC}/pyroonconf
 PIPARGS="--no-cache-dir --upgrade --force-reinstall"
 
+[ -d /usr/local ] || mkdir /usr/local
+[ -d /usr/local/bin ] || mkdir /usr/local/bin
 export PATH=$PATH:/usr/local/bin
 if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -33,34 +35,25 @@ fi
 # Create the RoonCommandLine Python virtual environment
 ${PYTHON} -m venv ${ROON}/venv >/dev/null 2>&1
 # Use the RoonCommandLine Python virtual environment
-[ -f ${ROON}/venv/bin/activate ] && source ${ROON}/venv/bin/activate
-[[ ":$PATH:" == *":/usr/local/Roon/venv/bin:"* ]] || {
-  export PATH=/usr/local/Roon/venv/bin:${PATH}
-}
-[ -x ${ROON}/venv/bin/python ] && export PYTHON=${ROON}/venv/bin/python
+if [ -f ${ROON}/venv/bin/activate ]; then
+  source ${ROON}/venv/bin/activate
+else
+  echo "ERROR: ${ROON}/venv/bin/activate not found!"
+fi
+
+export PATH="${ROON}/venv/bin:${PATH}"
+if [ -x ${ROON}/venv/bin/python ]; then
+  export PYTHON=${ROON}/venv/bin/python
+else
+  if [ -x ${ROON}/venv/bin/python3 ]; then
+    export PYTHON=${ROON}/venv/bin/python3
+  else
+    echo "WARNING: ${ROON}/venv/bin/python not found"
+  fi
+fi
 # Make sure we have pip installed
+${PYTHON} -m pip install --upgrade pip >/dev/null 2>&1
 ${PYTHON} -m ensurepip --upgrade >/dev/null 2>&1
-[ -x ${ROON}/venv/bin/pip ] || {
-  PYOUT="/tmp/get-pip$$.py"
-  PYURL="https://bootstrap.pypa.io/get-pip.py"
-  have_curl=$(type -p curl)
-  if [ "${have_curl}" ]; then
-    curl -sSL -o ${PYOUT} ${PYURL}
-  else
-    have_wget=$(type -p wget)
-    if [ "${have_wget}" ]; then
-      wget -q -O ${PYOUT} ${PYURL}
-    else
-      echo "WARNING: Unable to locate curl or wget to download pip install script"
-    fi
-  fi
-  if [ -f ${PYOUT} ]; then
-    ${PYTHON} ${PYOUT}
-  else
-    echo "WARNING: pip install script not found"
-  fi
-  rm -f ${PYOUT}
-}
 [ -x ${ROON}/venv/bin/pip ] || {
   echo "WARNING: ${ROON}/venv/bin/pip not found or not executable"
 }
@@ -68,8 +61,6 @@ ${PYTHON} -m ensurepip --upgrade >/dev/null 2>&1
 ${PYTHON} -m pip install ${PIPARGS} roonapi >/dev/null 2>&1
 ${PYTHON} -m pip install ${PIPARGS} rich-cli >/dev/null 2>&1
 
-[ -d /usr/local ] || mkdir /usr/local
-[ -d /usr/local/bin ] || mkdir /usr/local/bin
 cd /usr/local/bin
 
 for command in "${ROON}"/bin/*; do
@@ -92,7 +83,7 @@ if [ -f "${ROON_DOC}/VERSION" ]; then
 else
   # Should not happen but if it did we fake it
   version="2.1.4"
-  release="1"
+  release="2"
 fi
 
 # Copy in distributed roon_api.ini template if no previous one exists
