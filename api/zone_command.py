@@ -56,6 +56,31 @@ else:
 
 roonapi = RoonApi(appinfo, token, server, port)
 
+TRANSPORT_SERVICE = "com.roonlabs.transport:2"
+
+
+def set_loop(out_id, loop):
+    """Set the zone loop setting: 'loop', 'loop_one', or 'disabled'.
+
+    Sent directly because RoonApi.repeat() only accepts a bool and
+    cannot select 'loop_one'.
+    """
+    data = {"zone_or_output_id": out_id, "loop": loop}
+    return roonapi._request(TRANSPORT_SERVICE + "/change_settings", data)
+
+
+def toggle_repeat_one(out_id):
+    """Switch loop_one on, or off if the zone is already in loop_one."""
+    current = None
+    zone_id = roonapi.outputs.get(out_id, {}).get("zone_id")
+    if zone_id is not None:
+        zone = roonapi.zones.get(zone_id, {})
+        current = zone.get("settings", {}).get("loop")
+    if current == "loop_one":
+        set_loop(out_id, "disabled")
+    else:
+        set_loop(out_id, "loop_one")
+
 # save the token for next time
 with open(tokenfile, "w") as f:
     f.write(str(roonapi.token))
@@ -114,10 +139,13 @@ else:
                 roonapi.pause_all()
                 not_executed = False
             elif zone_command == "repeat":
-                roonapi.repeat(output_id, "loop")
+                set_loop(output_id, "loop")
                 not_executed = False
             elif zone_command == "unrepeat":
-                roonapi.repeat(output_id, "disabled")
+                set_loop(output_id, "disabled")
+                not_executed = False
+            elif zone_command == "repeat_one":
+                toggle_repeat_one(output_id)
                 not_executed = False
             elif zone_command == "shuffle":
                 roonapi.shuffle(output_id, True)
@@ -140,9 +168,11 @@ else:
             if zone_command == "pause_all":
                 roonapi.pause_all()
             elif zone_command == "repeat":
-                roonapi.repeat(output_id, "loop")
+                set_loop(output_id, "loop")
             elif zone_command == "unrepeat":
-                roonapi.repeat(output_id, "disabled")
+                set_loop(output_id, "disabled")
+            elif zone_command == "repeat_one":
+                toggle_repeat_one(output_id)
             elif zone_command == "shuffle":
                 roonapi.shuffle(output_id, True)
             elif zone_command == "unshuffle":

@@ -87,6 +87,7 @@ Currently the command line Roon control scripts provide support for:
   - mute_all (toggle muted/unmuted in all zones)
   - shuffle (toggle shuffle/unshuffle zone playback)
   - repeat (toggle loop/unlooped zone playback)
+  - repeat_one (toggle repeating the current track)
 - Get zone information and settings
 - Get track/artist/album now playing in specified zone or all zones
 - List albums, artists, albums by artist, tracks by artist, albums by composer, composers, albums by genre, artists by genre, genres, playlists, live radio stations, tags, and Roon zones
@@ -752,7 +753,7 @@ Usage: roon -A album -a artist -C composer -D destination zone -m -n -N -O
 	-I -l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|
 	    genres|genalbums|genartists|playlists|playtracks|tags|zones]
 	-c [group|ungroup|play|play_all|pause|pause_all|stop|stop_all|
-	    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
+	    next|previous|shuffle|unshuffle|repeat|unrepeat|repeat_one|mute|mute_all]
 	-s search -p playlist -T track -t tag -z zone -L -S -r radio
 	-X ex_album -x ex_artist [-EuU]
 Where:
@@ -790,7 +791,7 @@ Where:
 	-t tag selects an tag to play
 	-z zone selects the Roon Zone in which to play
 	-c [group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|
-	    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]
+	    next|previous|shuffle|unshuffle|repeat|unrepeat|repeat_one|mute|mute_all]
 	        issues the command in the selected zone
 	        'mute' toggles the zone's muted or unmuted state
 	        'mute_all' toggles all zones' muted or unmuted state
@@ -800,7 +801,8 @@ Where:
 	        'shuffle' enables the zone's shuffled setting
 	        'unshuffle' disables the zone's shuffled setting
 	        'repeat' enables the zone's looping setting
-	        'repeat' disables the zone's looping setting
+	        'unrepeat' disables the zone's looping setting
+	        'repeat_one' toggles repeating the current track
 	-v volume sets the volume level in the selected zone
 		The volume argument has the format [g:][r:][s:]num
 		Where 'g' indicates set volume for all zones in the group

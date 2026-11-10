@@ -60,7 +60,7 @@ usage() {
       rich "    [cyan]-I -l[/] [yellow]\[albums|artists|artalbums|albtracks|arttracks|composers|comalbums|[/]" --print
       rich "        [yellow]genres|genalbums|genartists|playlists|playtracks|tags|zones][/]" --print
       rich "    [cyan]-c[/] [yellow]\[discover|group|ungroup|play|play_all|pause|pause_all|stop|stop_all|[/]" --print
-      rich "        [yellow]next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
+      rich "        [yellow]next|previous|shuffle|unshuffle|repeat|unrepeat|repeat_one|mute|mute_all][/]" --print
       rich "    [cyan]-s[/] [yellow]search[/] [cyan]-p[/] [yellow]playlist[/] [cyan]-T[/] [yellow]track[/] [cyan]-t[/] [yellow]tag[/] [cyan]-z[/] [yellow]zone[/] [cyan]-L[/] [cyan]-S[/] [cyan]-r[/] [yellow]radio[/]" --print
       rich "    [cyan]-X[/] [yellow]ex_album[/] [cyan]-x[/] [yellow]ex_artist[/] [cyan]\[-EuU][/]" --print
       rich "[bold]Where:[/]" --print
@@ -98,7 +98,7 @@ usage() {
       rich "    [cyan]-t[/] [yellow]tag[/] selects an tag to play" --print
       rich "    [cyan]-z[/] [yellow]zone[/] selects the Roon Zone in which to play" --print
       rich "    [cyan]-c[/] [yellow]\[discover|group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|[/]" --print
-      rich "        [yellow]next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all][/]" --print
+      rich "        [yellow]next|previous|shuffle|unshuffle|repeat|unrepeat|repeat_one|mute|mute_all][/]" --print
       rich "            issues the command in the selected zone" --print
       rich "            '[italic green]roon -c mute[/]' toggles the zone's muted or unmuted state" --print
       rich "            '[italic green]roon -c mute_all[/]' toggles all zones' muted or unmuted state" --print
@@ -109,6 +109,7 @@ usage() {
       rich "            '[italic green]roon -c unshuffle[/]' disables the zone's shuffled setting" --print
       rich "            '[italic green]roon -c repeat[/]' enables the zone's looping setting" --print
       rich "            '[italic green]roon -c unrepeat[/]' disables the zone's looping setting" --print
+      rich "            '[italic green]roon -c repeat_one[/]' toggles repeating the current track" --print
       rich "    [cyan]-v[/] [yellow]volume[/] sets the volume level in the selected zone" --print
       rich "        The volume argument has the format [yellow]\[g:]\[r:]\[s:]num[/]" --print
       rich "        Where '[yellow]g[/]' indicates set volume for all zones in the group" --print
@@ -132,7 +133,7 @@ usage() {
       printf "\n\t-I -l [albums|artists|artalbums|albtracks|arttracks|composers|comalbums|"
       printf "\n\t    genres|genalbums|genartists|playlists|playtracks|tags|zones]"
       printf "\n\t-c [discover|group|ungroup|play|play_all|pause|pause_all|stop|stop_all|"
-      printf "\n\t    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]"
+      printf "\n\t    next|previous|shuffle|unshuffle|repeat|unrepeat|repeat_one|mute|mute_all]"
       printf "\n\t-s search -p playlist -T track -t tag -z zone -L -S -r radio"
       printf "\n\t-X ex_album -x ex_artist [-EuU]"
       printf "\nWhere:\n\t-A album selects an album to play"
@@ -169,7 +170,7 @@ usage() {
       printf "\n\t-t tag selects an tag to play"
       printf "\n\t-z zone selects the Roon Zone in which to play"
       printf "\n\t-c [discover|group|ungroup|play|play_all|pause|pause_all|playpause|stop|stop_all|"
-      printf "\n\t    next|previous|shuffle|unshuffle|repeat|unrepeat|mute|mute_all]"
+      printf "\n\t    next|previous|shuffle|unshuffle|repeat|unrepeat|repeat_one|mute|mute_all]"
       printf "\n\t        issues the command in the selected zone"
       printf "\n\t        'mute' toggles the zone's muted or unmuted state"
       printf "\n\t        'mute_all' toggles all zones' muted or unmuted state"
@@ -179,7 +180,8 @@ usage() {
       printf "\n\t        'shuffle' enables the zone's shuffled setting"
       printf "\n\t        'unshuffle' disables the zone's shuffled setting"
       printf "\n\t        'repeat' enables the zone's looping setting"
-      printf "\n\t        'repeat' disables the zone's looping setting"
+      printf "\n\t        'unrepeat' disables the zone's looping setting"
+      printf "\n\t        'repeat_one' toggles repeating the current track"
       printf "\n\t-v volume sets the volume level in the selected zone"
       printf "\n\t\tThe volume argument has the format [g:][r:][s:]num"
       printf "\n\t\tWhere 'g' indicates set volume for all zones in the group"
@@ -1473,6 +1475,7 @@ main_menu() {
     options+=("Toggle Mute All  [M]")
     options+=("Disable Repeat   [R]")
     options+=("Enable Repeat    [r]")
+    options+=("Toggle Repeat 1 [r1]")
     options+=("Disable Shuffle  [S]")
     options+=("Enable Shuffle   [s]")
     options+=("List Albums     [la]")
@@ -1670,6 +1673,16 @@ main_menu() {
             ${ROON}/bin/zone_command -c repeat
           else
             ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c repeat\""
+          fi
+          printf " Done\n\n"
+          break
+          ;;
+        "Toggle Repeat 1"*,* | *,"Toggle Repeat 1"* | "r1",* | *,"r1")
+          printf "\nExecuting Roon command to toggle repeat one ..."
+          if [ "${LOCAL}" = true ]; then
+            ${ROON}/bin/zone_command -c repeat_one
+          else
+            ssh ${user}@${server} "bash -l -c \"${ROON}/bin/zone_command -c repeat_one\""
           fi
           printf " Done\n\n"
           break
@@ -2501,7 +2514,7 @@ done
 # Issue commands before playback begins
 [ "${comm}" ] && {
   case "${comm}" in
-    "shuffle" | "unshuffle" | "repeat" | "unrepeat" | "mute" | "unmute" | "mute_all" | "next" | "previous" | "play" | "play_all" | "pause" | "pause_all" | "stop" | "stop_all" | "playpause")
+    "shuffle" | "unshuffle" | "repeat" | "unrepeat" | "repeat_one" | "mute" | "unmute" | "mute_all" | "next" | "previous" | "play" | "play_all" | "pause" | "pause_all" | "stop" | "stop_all" | "playpause")
       if [ "${LOCAL}" = true ]; then
         if [ "${zone}" ]; then
           ${ROON}/bin/zone_command -c ${comm} -z "${zone}"
