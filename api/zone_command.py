@@ -58,19 +58,14 @@ roonapi = RoonApi(appinfo, token, server, port)
 
 TRANSPORT_SERVICE = "com.roonlabs.transport:2"
 
-
 def set_loop(out_id, loop):
-    """Set the zone loop setting: 'loop', 'loop_one', or 'disabled'.
-
-    Sent directly because RoonApi.repeat() only accepts a bool and
-    cannot select 'loop_one'.
-    """
+    # Set the zone loop setting: 'loop', 'loop_one', or 'disabled'
+    # Sent directly because RoonApi.repeat() only accepts a bool and cannot select 'loop_one'
     data = {"zone_or_output_id": out_id, "loop": loop}
     return roonapi._request(TRANSPORT_SERVICE + "/change_settings", data)
 
-
 def toggle_repeat_one(out_id):
-    """Switch loop_one on, or off if the zone is already in loop_one."""
+    # Switch loop_one on, or off if the zone is already in loop_one
     current = None
     zone_id = roonapi.outputs.get(out_id, {}).get("zone_id")
     if zone_id is not None:
@@ -81,11 +76,11 @@ def toggle_repeat_one(out_id):
     else:
         set_loop(out_id, "loop_one")
 
-# save the token for next time
+# Save the token for next time
 with open(tokenfile, "w") as f:
     f.write(str(roonapi.token))
 
-# get target zone output_id
+# Get target zone output_id
 outputs = roonapi.outputs
 
 output_id = None
