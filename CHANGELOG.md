@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+November 10, 2026 :
+RoonCommandLine version 2.1.4 release 3
+
+    This release adds a `repeat_one` command that toggles Roon's "repeat one" (loop_one) setting from the command line
+
 July 5, 2026 :
 RoonCommandLine version 2.1.4 release 2
 
